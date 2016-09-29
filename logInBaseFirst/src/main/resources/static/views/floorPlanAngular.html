@@ -26,11 +26,22 @@
     <div id="glassbox">
         <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
             id="{{unit.square.id}}" ng-mouseover=showDetails(unit)  draggable resizable  on-resize="resize(unit,$evt, $ui)"
-              ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 'background-color':'{{unit.square.color}}' }" ><p>{{unit.id}}</p> </div>
+              ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 
+              'background-color':'{{unit.square.color}}' }" ><p>{{unit.unitNumber}}<img  class="svgtest" src="{{unit.square.type}}" alt="notloaded"></p> </div>
         </div>
-        
+     
   <button ng-click="viewUnit()">Start</button>
   <button ng-click="addUnit()">Add a Unit</button>
+  <select ng-model="specialType">
+    <option value="./svg/entry.svg">Entry
+    <option value="./svg/escalator.svg">Escalator
+    <option value="./svg/exit.svg">Exit
+    <option value="./svg/lift.svg">Lift
+    <option value="./svg/servicelift.svg">Service Lift
+    <option value="./svg/staircase.svg">Staircase
+    <option value="./svg/toilet.svg">Toilet
+</select>
+   <button ng-click="addSpecialUnit(specialType)">Add a Unit</button>
   <button ng-click="saveUnits()">Save Units</button>
  <a href="/#/viewLevels" ng-click="viewLevelsByBuildingId()"><button>Back to View Levels</button></a>
  <div><p id="display" >{{showDetail}}</p></div>
@@ -52,11 +63,11 @@
   <tr ng-repeat="x in units track by $index" >
   <td><a class="btn" ng-click="remove(x)">Delete</a> </td>
     <td>{{ x.id }} </td>
-     <td><input type="number" name="left" ng-model="x.square.left" required></td>
-     <td><input type="number" name="top" ng-model="x.square.top" required> </td>
-         <td><input type="number" name="height" ng-model="x.square.height" required></td>
-     <td><input type="number" name="width" ng-model="x.square.width" required></td>
-    <td>{{ x.square.color }} </td>
+     <td>{{x.square.left}}</td>
+     <td>{{x.square.top}}</td>
+     <td>{{x.square.height}}</td>
+     <td>{{x.square.width}}</td>
+        <td> {{x.square.color }} </td>
     <td>{{ x.square.type }} </td>
     <td><input type="text" name="unitNumber" ng-model="x.unitNumber" required> </td>
     <td><input type="number" name="length" ng-model="x.length" ></td>
