@@ -1,0 +1,114 @@
+simple-calendar * {
+  user-select: none;
+}
+
+simple-calendar .calendar{
+  padding: 0;
+  border: 1px solid #dddddd;
+  user-select: none;
+  background-color: #fff;
+}
+
+simple-calendar .move-month {
+  cursor: pointer;
+}
+
+simple-calendar .prev-month {
+  float: left;
+}
+
+simple-calendar .next-month {
+  float: right;
+}
+
+simple-calendar .current-month {
+  text-align: center;
+  padding: 20px 8px;
+}
+
+/* *********************** */
+/* START Week CSS Settings */
+/* *********************** */
+
+simple-calendar .week {
+  height: 55px;
+}
+
+simple-calendar .week:last-child .day {
+	height: inherit;
+	overflow:hidden;
+  border-bottom: 1px solid #dddddd;
+}
+
+/* ********************* */
+/* END Week CSS Settings */
+/* ********************* */
+
+/* ************************** */
+/* START Weekday CSS Settings */
+/* ************************** */
+
+simple-calendar .weekday {
+  text-align: center;
+  padding-right: 0.9px;
+  border-top: 1px solid #dddddd;
+}
+
+simple-calendar .weekday:first-child {
+  text-align: center;
+  border-left: 1px solid #dddddd;
+}
+
+simple-calendar .weekday:last-child {
+  text-align: center;
+  border-right: 1px solid #dddddd;
+}
+
+/* ************************ */
+/* END Weekday CSS Settings */
+/* ************************ */
+
+simple-calendar .week .day:last-child {
+  border-right: 1px solid #dddddd;
+}
+
+simple-calendar .week .day:nth-child(1) {
+  border-left: 1px solid #dddddd;
+}
+
+simple-calendar .week .day:nth-child(7) {
+  border-right: 1px solid #dddddd;
+}
+
+simple-calendar .weekday, .day {
+  display: inline-block;
+  width: calc(95% / 7);
+}
+
+simple-calendar .day {
+  height: inherit;
+  padding-bottom: 2px;
+  padding-top: 2px;
+  border: 1px solid #dddddd;
+  border-bottom: none;
+  border-left: none;
+  overflow: hidden;
+}
+
+simple-calendar .day:hover {
+  cursor: pointer;
+}
+
+simple-calendar .day.default {
+  background-color: lightblue;
+}
+
+simple-calendar .day.event {
+  background-color: #fb0c48;
+}
+
+simple-calendar .day.disabled {
+  cursor: default;
+  color: silver;
+  background-color: white;
+}

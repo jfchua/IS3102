@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="floorplan.css" type="text/css" />
+    <link rel="stylesheet" href="jquery-ui.css">  
+    <script src="jquery-1.12.4.min.js"></script> 
+    <script src="jquery-ui.js"></script>
+   </head>
+<body>
+    <div id="glassbox">
+        <div id="element"><p></p></div>
+    </div>
+    <div id="respond"></div>
+    
+  
+    <script type="text/javascript">
+        $(document).ready(function(){
+        var $i=0;//number of squares; 
+        var ids = new Set(); //set of all existing rectangles: loaded rectangles, new rectangles, excluding deleted ones
+        var sqList=[];//array of all rectangles: loaded rectangles, new rectangles, including deleted ones
+
+        //find rectangle object by id from array sqList;
+        function findRectagleById(id){
+            var rect=sqList.find(findUnit);
+            function findUnit(rectangle) { 
+            return rectangle.id.toString() == id;
+            }
+            return rect;             
+        }
+
+        //index for id of new rectangles;
+        var $a=0;
+        function getId() {
+            var id="new"+$a;
+            ids.add(id);
+            $a++;
+           return id;
+        }
+
+        //rectangle object
+        function Rectangle(id,left,top,height,width,color,type,unitNumber,dimensionLength,dimensionWidth,description) {
+           this.id =id;           
+           this.unitNumber=unitNumber;
+           this.dimensionLength=dimensionLength;
+           this.dimensionWidth=dimensionWidth;
+           this.description=description;
+           this.square= new Square(left,top,height,width,color,type);
+          //console.log(this.square);
+        }
+
+         //square object
+         function Square(left,top,height,width,color,type) {        
+           this.left = left;
+           this.top = top;   
+           this.height = height;
+           this.width = width;
+           this.color = color;
+           this.type=type;
+        }
+     
+       
+           
+
+        //enable draggable, resizable and mouseover display information for rectangles
+        function manage(){
+            
+            $(".ui-widget-content" ).mouseover(function(){
+             var left=document.getElementById(this.id).style.left;
+             var top=document.getElementById(this.id).style.top;
+             if(left=="" && top==""){
+              left="0px";
+              top="0px";
+             }
+             var height=$(this).height();
+             var width=$(this).width();
+             var id = this.id;
+             var color = $(this).css("background-color");
+            var oneRectangle=findRectagleById(id);
+          
+              $("#display").text( "left: " + parseInt((document.getElementById(this.id).style.left).slice(0,left.length-2)) + ", top: " +  parseInt((document.getElementById(this.id).style.top).slice(0,top.length-2))+ ", height: " + $(this).height() + ", width: " + $(this).width() +", id: " + id +", color: " + color+", unitNumber: " + oneRectangle.unitNumber+", dimensionLength: " + oneRectangle.dimensionLength+", dimensionWidth: " + oneRectangle.dimensionWidth+", description: " + oneRectangle.description) ;  
+            })
+        }
+
+       
+
+             //when the page was ready, start loading the json file into object
+            //input: need to request and receive json file, read json file to get json_text and may need to format the input string
+            //var sqList=JSON.parse(json_text);
+           
+            //var sqList=[];
+            var json_text=' [{"id": 8,"unitNumber": "SR1","dimensionLength": 200,"dimensionWidth": 400,"description": "For lectures of SOC students","square": {"left": 422,"top": 283,"height": 100,"width": 160, "color": "rgb(255, 255, 0)","type": "rect"}},{"id": 7,"unitNumber": "Staircase 1","dimensionLength": 0,"dimensionWidth": 0,"description": "","square": {"left": 147,"top": 93,"height": 58,"width": 68, "color": "rgba(255, 255, 255, 0)","type": "staircase.svg"}},{ "id": 5,"unitNumber": "#02-44","dimensionLength": 50,"dimensionWidth": 50,"description": "Office for professor X","square": {"left": 444,"top": 26,"height": 116,"width": 69,"color": "rgb(255, 255, 0)","type": "rect"}},{"id": 4,"unitNumber": "Male Toilet","dimensionLength": 20,"dimensionWidth": 20,"description": "","square": {"left": 740,"top": 174,"height": 40,"width": 40,"color": "rgba(255, 255, 255, 0)","type": "toilet.svg"}}]';//hardcoded input jsonstring
+            var load=JSON.parse(json_text);
+      
+            while(load.length!=0){
+              var oneRectangle=load.pop();
+              var $k=oneRectangle.id;
+             
+              var left=oneRectangle.square.left;
+              var top=oneRectangle.square.top;
+              var height=oneRectangle.square.height;
+              var width=oneRectangle.square.width;
+              var type=oneRectangle.square.type;
+              var color=oneRectangle.square.color;
+              var unitNumber=oneRectangle.unitNumber;
+              var dimensionLength=oneRectangle.dimensionLength;
+              var dimensionWidth=oneRectangle.dimensionWidth;
+              var description=oneRectangle.description;
+              //console.log(typeof $k +"  "+typeof width+"  "+typeof dimensionWidth);
+             if(type=="rect"){
+                   $("#element").append("<div id=\""+$k+"\" class=\"ui-widget-content\" draggable=true style=\"height: "+height+"px; width:"+width+"px; background-color:"+color+"\" ><p></p></div>");
+                   manage();
+             }else{
+              $("#element").append("<div id=\""+$k+"\" class=\"ui-widget-content\" draggable=true style=\"height: "+height+"px; width:"+width+"px; background-color:rgba(255, 255, 255, 0)\" ><img  class=\"svgtest\" src=\""+type+"\" alt=\""+type+"\"></div>");
+              manage();
+             } 
+              
+               document.getElementById($k).style.left=(""+left+"px");
+               document.getElementById($k).style.top=(""+top+"px");
+               var newRectangle= new Rectangle($k, left, top, height, width, color,type,unitNumber,dimensionLength,dimensionWidth,description);
+               sqList.push(newRectangle);
+               ids.add($k.toString());
+              $i++;
+              manage();
+
+            }
+                   
+    });
+    </script>
+    <div><p id="display"> </p></div>
+</body>
+</html>
+

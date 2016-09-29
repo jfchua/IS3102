@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="floorplan.css" type="text/css" />
+    <link rel="stylesheet" href="jquery-ui.css">  
+    <script src="jquery-1.12.4.min.js"></script> 
+    <script src="jquery-ui.js"></script>
+   </head>
+<body>
+    <div id="glassbox">
+        <div id="element"><p></p></div>
+    </div>
+    <div id="respond"></div>
+    <button id = "addSquare" style="float: center;">Unit</button>
+    <button id = "addToilet" style="float: center;">Toilet</button>
+    <button id = "addExit" style="float: center;">Emergency Exit</button>
+    <button id = "addEntry" style="float: center;">Entry</button>
+    <button id = "addStaircase" style="float: center;">Staircase</button>
+    <button id = "addLift" style="float: center;">Lift</button>
+    <button id = "addEscalator" style="float: center;">Escalator</button>
+    <button id = "addServiceLift" style="float: center;">Service Lift</button>
+
+    <button id = "deleteSquare" style="float: center;">Delete</button>
+    <button id = "cancelDelete" style="float: center;">Finish Delete</button>
+    <button id = "editUnit" style="float: center;">Edit Unit</button>
+    <button id = "cancelEdit" style="float: center;">Finish Edit</button>
+    <button id = "saveSquares" style="float: center;">Save Squares</button>
+  
+    <script type="text/javascript">
+        $(document).ready(function(){
+        var $i=0;//number of squares; 
+        var ids = new Set(); //set of all existing rectangles: loaded rectangles, new rectangles, excluding deleted ones
+        var sqList=[];//array of all rectangles: loaded rectangles, new rectangles, including deleted ones
+
+        //find rectangle object by id from array sqList;
+        function findRectagleById(id){
+            var rect=sqList.find(findUnit);
+            function findUnit(rectangle) { 
+            return rectangle.id.toString() == id;
+            }
+            return rect;             
+        }
+
+        //index for id of new rectangles;
+        var $a=0;
+        function getId() {
+            var id="new"+$a;
+            ids.add(id);
+            $a++;
+           return id;
+        }
+
+        //rectangle object
+        function Rectangle(id,left,top,height,width,color,type,unitNumber,dimensionLength,dimensionWidth,description) {
+           this.id =id;           
+           this.unitNumber=unitNumber;
+           this.dimensionLength=dimensionLength;
+           this.dimensionWidth=dimensionWidth;
+           this.description=description;
+           this.square= new Square(left,top,height,width,color,type);
+          //console.log(this.square);
+        }
+
+         //square object
+         function Square(left,top,height,width,color,type) {        
+           this.left = left;
+           this.top = top;   
+           this.height = height;
+           this.width = width;
+           this.color = color;
+           this.type=type;
+        }
+     
+        function createNewRectangle(){
+            var id=getId();
+            $("#element").append("<div id=\""+id+"\" class=\"ui-widget-content\" draggable=true style=\"background-color:yellow\" ><p></p></div>");//
+            $i++;
+            var newRectangle= new Rectangle(id, 10, 10, 10, 10, "rgba(255, 255, 255, 0)","rect","#unitNumber",0,0,"description");
+            sqList.push(newRectangle);
+            manage();
+        }
+          function createSpecialUnit(type){
+            var id=getId();
+            $("#element").append("<div id=\""+id+"\" class=\"ui-widget-content\" draggable=true style=\"background-color:rgba(255, 255, 255, 0) \" ><img  class=\"svgtest\" src=\""+type+"\" alt=\""+type+"\"></div>");//for adding rectangle div svg
+            $i++;
+            var newRectangle= new Rectangle(id, 0, 0, 0, 0, "rgba(255, 255, 255, 0)",type,"#unit",0,0,"0");
+            sqList.push(newRectangle);
+            manage();
+        }
+           
+
+        //enable draggable, resizable and mouseover display information for rectangles
+        function manage(){
+            $(".ui-widget-content" ).draggable(
+                { containment: '#glassbox'});
+            $(".ui-widget-content").resizable();     
+            $(".ui-widget-content" ).mouseover(function(){
+             var left=document.getElementById(this.id).style.left;
+             var top=document.getElementById(this.id).style.top;
+             if(left=="" && top==""){
+              left="0px";
+              top="0px";
+             }
+             var height=$(this).height();
+             var width=$(this).width();
+             var id = this.id;
+             var color = $(this).css("background-color");
+            var oneRectangle=findRectagleById(id);
+          
+              $("#display").text( "left: " + parseInt((document.getElementById(this.id).style.left).slice(0,left.length-2)) + ", top: " +  parseInt((document.getElementById(this.id).style.top).slice(0,top.length-2))+ ", height: " + $(this).height() + ", width: " + $(this).width() +", id: " + id +", color: " + color+", unitNumber: " + oneRectangle.unitNumber+", dimensionLength: " + oneRectangle.dimensionLength+", dimensionWidth: " + oneRectangle.dimensionWidth+", description: " + oneRectangle.description) ;  
+            })
+        }
+
+        $("#addSquare").click(function(){       
+           createNewRectangle();
+            })
+         $("#addToilet").click(function(){       
+           createSpecialUnit("toilet.svg");
+            })
+        $("#addExit").click(function(){     
+           createSpecialUnit("exit.svg");
+            })
+       $("#addEntry").click(function(){       
+           createSpecialUnit("entry.svg");
+            })
+        $("#addStaircase").click(function(){       
+          createSpecialUnit("staircase.svg");
+            })
+        $("#addLift").click(function(){       
+           createSpecialUnit("lift.svg");
+            })       
+        $("#addEscalator").click(function(){    
+           createSpecialUnit("escalator.svg");
+            })
+        $("#addServiceLift").click(function(){     
+             createSpecialUnit("servicelift.svg");
+            })
+        
+        
+            $("#saveSquares").click(function(){
+              if(ids.size>0){
+                    var saveList=[];
+                    console.log(ids.size);
+                for (let $id of ids)  {
+                  //reade from div
+                    var idString="#"+$id;
+                    var div = $(idString);
+                    var left=document.getElementById($id).style.left; //will show px and null if not moved
+                    var top=document.getElementById($id).style.top;
+                    if(left=="" && top==""){
+                    left="0px";
+                    top="0px";
+                    }
+                     
+                    var height=$(div).height();  
+                    var width=$(div).width();
+                    var color = $(div).css("background-color");
+                    var type;
+                    if (typeof $(div).children('img').attr('src')=='undefined') {
+                        type='rect';
+                      }else{
+                        type=$(div).children('img').attr('src');
+                  }
+                   
+
+                   //find correspondng object;
+                     var oneRectangle=findRectagleById($id);               
+                  
+                     oneRectangle.square.left=parseInt(left.slice(0,left.length-2));
+                     oneRectangle.square.top=parseInt(top.slice(0,top.length-2));
+                     oneRectangle.square.height=height;
+                     oneRectangle.square.width=width;
+                     oneRectangle.square.color=color;
+                     oneRectangle.square.type=type;
+                 
+                    //change id of new squares to 0 for connecting to savesUnit method in unitcontroller.java of backend
+                    var $idT=$id;
+                    if($idT.length>=3 &&( $idT.slice(0,3)=="new")){
+                   $idT=0;
+                   }
+
+                   //save a copy of oneRectangle as saveRectangle with id of new rectangles set to 0
+                     var saveRectangle=new Rectangle(parseInt($idT),parseInt(left.slice(0,left.length-2)),parseInt(top.slice(0,top.length-2)),height,width,color,type,oneRectangle.unitNumber,oneRectangle.dimensionLength,oneRectangle.dimensionWidth,oneRectangle.description);        saveList.push(saveRectangle);     
+                }
+                   var json_text = JSON.stringify(saveList, null, 2);
+                  console.log(json_text);
+               }else{
+                    console.log("Error: Number of Rectangles is 0.");
+               }
+            })
+            
+
+             $("#deleteSquare").click(function(){
+              $(".ui-widget-content").bind("click");
+                $(".ui-widget-content" ).click(function(){
+                 var index = this.id;  
+                    ids.delete(index);//delete will only delete the index set;             
+                  $(this).remove();
+                  $("#display").text( "deleted");
+                  $i--;
+                });  
+            });
+            $("#cancelDelete").click(function(){ 
+                $(".ui-widget-content").unbind("click");               
+                  manage();
+                });
+             $("#editUnit").click(function(){
+              $(".ui-widget-content").bind("click");
+                $(".ui-widget-content" ).click(function(){
+                 var index = this.id;            
+                  $(".ui-widget-content").unbind("mouseover");            
+              var unitObj=findRectagleById(index);   
+             var unitNumber=unitObj.unitNumber;
+             var dimensionLength=unitObj.dimensionLength;
+             var dimensionWidth=unitObj.dimensionWidth;
+             var description=unitObj.description;
+  
+                  $("#display").text( "Edit unit "+unitNumber+" here").append("<form id=\"form\">Unit Number: <input type=\"text\" id=\"unitNumber\" name=\"unitNumber\" value=\""+unitNumber+"\"><br>Length: <input type=\"number\" id=\"length\" name=\"lname\" value=\""+dimensionLength+"\">meter<br>Width: <input type=\"number\" id=\"width\" value=\""+dimensionWidth+"\">meter<br>Description: <input type=\"text\" id=\"description\" name=\"description\" value=\""+description+"\"><br><button type=\"button\">Save Unit Information</button>");
+          
+                    var newunitNumber = document.getElementById("unitNumber");
+                    // var newunitNumberValue = newunitNumber.value;
+                     newunitNumber.onchange = function() {
+                          //newunitNumberValue = newunitNumber.value;
+                          unitObj.unitNumber=newunitNumber.value;
+                          console.log(unitObj.unitNumber);
+                          };
+
+                    var newLength = document.getElementById("length");
+                     // var newLengthValue = newLength.value;
+                     newLength.onchange = function() {
+                         unitObj.dimensionLength=newLength.value;
+                           console.log( unitObj.dimensionLength);
+                        };
+
+                    var newWidth = document.getElementById("width");
+                    //var newWidthValue = newWidth.value;
+                     newWidth.onchange = function() {
+                          unitObj.dimensionWidth = newWidth.value;
+                            console.log(unitObj.dimensionWidth);
+                          };
+                      var newDescription = document.getElementById("description");
+                      // var newDescriptionValue = newDescription.value;
+                      newDescription.onchange = function() {
+                          unitObj.description = newDescription.value;
+                          console.log(unitObj.description);
+                             };
+                  
+                });  
+            });
+            $("#cancelEdit").click(function(){ 
+                $(".ui-widget-content").unbind("click");
+                  manage();
+                });
+
+             //when the page was ready, start loading the json file into object
+            //input: need to request and receive json file, read json file to get json_text and may need to format the input string
+            //var sqList=JSON.parse(json_text);
+            //pass jason string in page and save in var json_text
+            var json_text=' [{"id": 8,"unitNumber": "SR1","dimensionLength": 200,"dimensionWidth": 400,"description": "For lectures of SOC students","square": {"left": 422,"top": 283,"height": 100,"width": 160, "color": "rgb(255, 255, 0)","type": "rect"}},{"id": 7,"unitNumber": "Staircase 1","dimensionLength": 0,"dimensionWidth": 0,"description": "","square": {"left": 147,"top": 93,"height": 58,"width": 68, "color": "rgba(255, 255, 255, 0)","type": "staircase.svg"}},{ "id": 5,"unitNumber": "#02-44","dimensionLength": 50,"dimensionWidth": 50,"description": "Office for professor X","square": {"left": 444,"top": 26,"height": 116,"width": 69,"color": "rgb(255, 255, 0)","type": "rect"}},{"id": 4,"unitNumber": "Male Toilet","dimensionLength": 20,"dimensionWidth": 20,"description": "","square": {"left": 740,"top": 174,"height": 40,"width": 40,"color": "rgba(255, 255, 255, 0)","type": "toilet.svg"}}]';//hardcoded input jsonstring
+            var load=JSON.parse(json_text);
+      
+            while(load.length!=0){
+              var oneRectangle=load.pop();
+              var $k=oneRectangle.id;
+             
+              var left=oneRectangle.square.left;
+              var top=oneRectangle.square.top;
+              var height=oneRectangle.square.height;
+              var width=oneRectangle.square.width;
+              var type=oneRectangle.square.type;
+              var color=oneRectangle.square.color;
+              var unitNumber=oneRectangle.unitNumber;
+              var dimensionLength=oneRectangle.dimensionLength;
+              var dimensionWidth=oneRectangle.dimensionWidth;
+              var description=oneRectangle.description;
+              //console.log(typeof $k +"  "+typeof width+"  "+typeof dimensionWidth);
+             if(type=="rect"){
+                   $("#element").append("<div id=\""+$k+"\" class=\"ui-widget-content\" draggable=true style=\"height: "+height+"px; width:"+width+"px; background-color:"+color+"\" ><p></p></div>");
+                   manage();
+             }else{
+              $("#element").append("<div id=\""+$k+"\" class=\"ui-widget-content\" draggable=true style=\"height: "+height+"px; width:"+width+"px; background-color:rgba(255, 255, 255, 0)\" ><img  class=\"svgtest\" src=\""+type+"\" alt=\""+type+"\"></div>");
+              manage();
+             } 
+              
+               document.getElementById($k).style.left=(""+left+"px");
+               document.getElementById($k).style.top=(""+top+"px");
+               var newRectangle= new Rectangle($k, left, top, height, width, color,type,unitNumber,dimensionLength,dimensionWidth,description);
+               sqList.push(newRectangle);
+               ids.add($k.toString());
+              $i++;
+              manage();
+
+            }
+                   
+    });
+    </script>
+    <div><p id="display"> </p></div>
+</body>
+</html>
+

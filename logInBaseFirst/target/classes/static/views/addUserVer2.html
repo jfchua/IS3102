@@ -1,0 +1,29 @@
+<div ng-app="app" ng-controller="userCtrl">
+    <table>
+        <thead>
+            <th>Name</th>
+            <th>Age</th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="contact in model.contact" ng-include="getTemplate(model.contact)">
+            </tr>
+        </tbody>
+    </table>
+    
+    <script type="text/ng-template" id="display">
+        <td>{{contact.name}}</td>
+        <td>{{contact.age}}</td>
+        <td>
+            <button ng-click="editContact(contact)">Edit</button>
+        </td>
+    </script>
+    <script type="text/ng-template" id="edit">
+        <td><input type="text" ng-model="model.selected.name" /></td>
+        <td><input type="text" ng-model="model.selected.age" /></td>
+        <td>
+            <button ng-click="saveContact($index)">Save</button>
+            <button ng-click="reset()">Cancel</button>
+        </td>
+    </script>
+</div>

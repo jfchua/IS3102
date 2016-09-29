@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+<title>Message List</title>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<script src="angular/app.js"></script>
+<script src="angular/controller.js"></script>
+<script src="angular/user_service.js"></script>
+<script src="angular/user_controller.js"></script>
+
+</head>
+<body class="container" style="">
+	<div ng-cloak ng-controller="ListController as listCtrl" >
+		<h1>Message List</h1>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Sender</th>
+					<th>Subject</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="message in messages" padding-top: 50px;
+    padding-right: 30px;
+    padding-bottom: 50px;
+    padding-left: 80px;>
+				<td>{{message.sender}}</td>
+				<td><a href="#/view/{{message.id}}">{{message.subject}}</a></td>
+				<td>{{message.date}}</td>
+			</tr>
+		</table>
+		<a class="btn btn-primary pull-right" href="#/new" >New message</a>
+		<br>
+		<a class="btn" href="#/workspace" >Back To Home</a>
+
+	</div>
+</body>
+</html>

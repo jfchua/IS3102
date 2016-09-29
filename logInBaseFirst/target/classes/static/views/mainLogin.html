@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Login to IFMS</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="css/font-awesome.css" rel="stylesheet" />
+    <!-- Custom styles -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet" />
+    </head>
+<body class="login-img3-body" background="img/bg-1.jpg">
+
+<div class="container" ng-controller="UserController as controller">
+	<section id="content">
+		<form class="login-form" ng-submit="controller.login()">
+            <div class="login-wrap">
+            <p class="login-img"><i class="icon_lock_alt"></i></p>
+			<h1 style="text-align:center;">Login</h1> 
+			
+            <div class="input-group">
+                <span class="input-group-addon"><i class="icon_profile"></i></span>
+				<input type="text" class="form-control" placeholder="Username" required="" id="username"
+					ng-model="controller.credentials.username" />
+			</div>
+            
+			<div class="input-group">
+                <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+				<input type="password" ng-model="controller.credentials.password"
+					id="password" class="form-control" placeholder="Password"> 
+            </div>
+            <div class="input-group">              
+                <label class="checkbox">
+				<input type="checkbox" value="remember-me"> Remember me
+				</label>
+                <span class="pull-right"><a href="#/reset">Lost your password?</a></span>
+                <br>
+                <br>
+            </div>
+            <input align="centre" class="btn btn-primary btn-lg btn-block" type="submit" value="Log in">
+            <!--<button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>-->
+			
+            </div>
+		</form>
+	</section>
+	<!-- content -->
+</div>
+<!-- container -->
+</body>
+</html>

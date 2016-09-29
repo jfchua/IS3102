@@ -1,0 +1,61 @@
+<!DOCTYPE html >
+<html lang="en" ng-app="app">
+<head>
+<meta charset="utf-8">
+
+<title>IFMS</title>
+   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+ <!--   <script src="../js/jquery-1.12.4.min.js"></script>-->
+ <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>-->
+ <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/themes/smoothness/jquery-ui.css">-->
+    <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
+
+</head>
+
+<body >
+
+	<!-- MAIN BODY -->
+	
+  
+        <h1>Select a unit</h1>
+        
+       
+ <div ng-controller="MyCtrl as myCtrl">    
+    <div id="respond"></div>
+    <div id="glassbox">
+        <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
+            id="{{unit.square.id}}" ng-mouseover=showDetails(unit)   ng-dblclick="addToUnitIds(unit.id)"
+              ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 'background-color':'{{unit.square.color}}' }" ><p>{{unit.id}}</p> </div>
+        </div>
+        
+  <button ng-click="viewUnit()">View Floor Plan</button>
+ <a href="/#/viewLevelsEx" ng-click="viewLevelsByBuildingId()"><button>Back to View Levels</button></a>
+ <a href="/#/addEventEx" ng-click="passUnitIds()"><button>Continue the form</button></a>
+ 
+ <div><p id="display" >{{showDetail}}</p></div>
+ <div><p  >Please double click on selected unit(s).</p></div>
+<table>
+<th></th>
+<th>id</th>
+       <th>Unit Number</th>
+       <th>Dimension Length (meter)</th>
+       <th>Dimension width (meter)</th>
+        <th>Description</th>
+         
+  <tr ng-repeat="x in units track by $index" >
+    <td>{{ x.id }} </td>
+    <td>{{x.unitNumber}} </td>
+    <td>{{x.length}}</td>
+     <td>{{x.width}}</td>
+      <td>{{x.description}} </td>
+  </tr>
+</table>
+  
+</div>
+       
+
+  
+		
+		<!--main content end-->
+</body>
+</html>

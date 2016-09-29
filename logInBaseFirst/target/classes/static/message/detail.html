@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>NEW MESSAGE</title>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+</head>
+<body>
+	<div ng-cloak ng-controller="DetailController">
+<div> <strong>Sender:</strong> {{message.sender}}</div>
+<div><strong>Date:</strong> {{message.date}}</div>
+<div>
+  <strong>To:</strong>
+  <span ng-repeat="recipient in message.recipients">{{recipient}}</span>
+</div>
+  
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">{{ message.subject }}</h3>
+  </div>
+  <div class="panel-body">
+    {{ message.message }}
+  </div>
+</div>
+
+<a class="btn btn-primary pull-right" href="#/messageList">Back to message list</a>
+	</div>
+</body>
+</html>

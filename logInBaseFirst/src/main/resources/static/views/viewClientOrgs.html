@@ -1,0 +1,60 @@
+<html ng-app="app">
+<head>
+<title>VIEW ALL CLIENT ORGANISATIONS</title>
+</head>
+<body ng-controller="viewClientOrgs as ctrl">
+	<table>
+		<tr>
+			<td>Name</td>
+			<td>Subscriptions</td>
+			<td><span ng-click="add()">Add New</span></td>
+		</tr>
+		<tr ng-repeat="profile in Profiles | orderBy:'$index'">
+			<td><input type="text" ng-model="ctrl.profile.name"
+			ng-change="updateValue(ctrl.profile.name)"
+				ng-show="profile.editable"> <span ng-hide="profile.editable">{{
+					profile.organisationName }}</span></td>
+			<td>{{
+					profile.systemSubscriptions }}</span></td>
+					<td>
+			<div ng-repeat="gender in genders" ng-show="profile.editable">
+				<div class="action-checkbox">
+					<input id="{{gender}}" type="checkbox" value="{{gender}}"
+						ng-checked="selection.indexOf(gender) > -1"
+						ng-click="toggleSelection(gender)" /> <label for="{{gender}}"></label>
+					{{gender}}
+				</div>
+			</div>
+			</td>
+			<td><span ng-click="edit($index)" ng-hide="profile.editable">Edit</span>
+				<span ng-click="save($index)" ng-show="profile.editable">Save</span>
+				<span ng-click="
+				delete($index)"> | Delete</span></td>
+		</tr>
+	</table>
+<a href="#/workspace">Back to dashboard</a>
+	<style>
+/* Styles go here */
+body {
+	margin: 10px;
+	font-size: 14px;
+	font-family: Arial;
+}
+
+table {
+	border: 1px solid #333;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+table tr td {
+	border: 1px solid #333;
+	padding: 10px;
+}
+
+table tr td span {
+	cursor: pointer;
+}
+</style>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<div class="section">
+<script src="angular/app.js"></script>
+	<script src="angular/controller.js"></script>
+	<script src="angular/user_service.js"></script>
+	<script src="angular/user_controller.js"></script>
+<h1>Reset your password</h1>
+	<ul class="menu-list">
+	</ul>
+	<div ng-controller="UserController as ctrl">
+<form ng-submit="ctrl.submitResetPass()" >
+    <div>
+        <label for="email">Email address</label>
+        <input ng-model="ctrl.email"  required autofocus/>
+    </div>
+
+    <button type="submit">Change</button>
+    <br />
+    <a href="#/login"> Click to go back to login</a>
+</form>
+</div>
+</div>
+
