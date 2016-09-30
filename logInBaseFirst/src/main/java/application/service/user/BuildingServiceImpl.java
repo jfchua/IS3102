@@ -3,6 +3,8 @@ package application.service.user;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +33,18 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 	
 	@Override
-	public void create(ClientOrganisation client, String name, String address, int postalCode, String city, int numFloor, String filePath) {
+	public boolean create(ClientOrganisation client, String name, String address, int postalCode, String city, int numFloor, String filePath) {
 		// TODO Auto-generated method stub
 		Building building = new Building();
 		building.setName(name);
 		building.setAddress(address);
+		CharSequence post =String.valueOf(postalCode);
+		String regex = "^[0-9]{6}$";
+		Pattern pat = Pattern.compile(regex);
+		Matcher get = pat.matcher(post);
+		if(!get.matches())
+			return false;
+		else{
 		building.setPostalCode(postalCode);
 		building.setCity(city);
 		building.setNumFloor(numFloor);
@@ -44,6 +53,8 @@ public class BuildingServiceImpl implements BuildingService {
 		Set<Building> buildings = client.getBuildings();
 		buildings.add(building);
 		clientOrganisationRepository.save(client);
+		return true;
+		}
 	}
 
 	@Override

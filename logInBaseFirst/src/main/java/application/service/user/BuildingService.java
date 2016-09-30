@@ -10,7 +10,7 @@ import application.domain.ClientOrganisation;
 public interface BuildingService {
 //Building create(BuildingCreateForm form);
 
-public void create(ClientOrganisation client, String name, String address, int postalCode, String city, int numFloor,
+public boolean create(ClientOrganisation client, String name, String address, int postalCode, String city, int numFloor,
 		String filePath);
 
 public Set<Building> getAllBuildings(ClientOrganisation client);

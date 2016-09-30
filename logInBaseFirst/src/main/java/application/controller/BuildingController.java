@@ -172,8 +172,9 @@ private final AuditLogRepository auditLogRepository;
 				int numFloor = ((Long)jsonObject.get("numFloor")).intValue();
 				String filePath = (String)jsonObject.get("filePath");
 				
-				buildingService.create(client, name, address, postalCode, city, numFloor, filePath);
+				boolean bl = buildingService.create(client, name, address, postalCode, city, numFloor, filePath);
 				System.out.println("adding building " + name);
+				if(bl){
 				AuditLog al = new AuditLog();
 				al.setTimeToNow();
 				al.setSystem("Property System");
@@ -182,6 +183,9 @@ private final AuditLogRepository auditLogRepository;
 				al.setUser(usr.get());
 				al.setUserEmail(usr.get().getEmail());
 				auditLogRepository.save(al);
+				}
+				else
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			}
 			catch (Exception e){
 				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
