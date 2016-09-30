@@ -33,7 +33,7 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 	
 	@Override
-	public boolean create(ClientOrganisation client, String name, String address, int postalCode, String city, int numFloor, String filePath) {
+	public boolean create(ClientOrganisation client, String name, String address, String postalCode, String city, int numFloor, String filePath) {
 		// TODO Auto-generated method stub
 		Building building = new Building();
 		building.setName(name);
@@ -83,7 +83,7 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 
 	@Override
-	public boolean editBuildingInfo(long id, String name, String address, int postalCode, String city, int numFloor,
+	public boolean editBuildingInfo(long id, String name, String address, String postalCode, String city, int numFloor,
 			String filePath) {
 		// TODO Auto-generated method stub
 		try{

@@ -17,7 +17,7 @@ public class Building {
     private String address;
     
     @Column(name = "postal_code", nullable = false, unique = true)
-    private int postalCode;
+    private String postalCode;
     
     @Column(name = "city", nullable = false)
     private String city;
@@ -51,11 +51,11 @@ public class Building {
         this.address = address;
     }
     
-    public int getPostalCode() {
+    public String getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(int postalCode) {
+    public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
     

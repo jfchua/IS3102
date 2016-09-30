@@ -10,12 +10,12 @@ import application.domain.ClientOrganisation;
 public interface BuildingService {
 //Building create(BuildingCreateForm form);
 
-public boolean create(ClientOrganisation client, String name, String address, int postalCode, String city, int numFloor,
+public boolean create(ClientOrganisation client, String name, String address, String postalCode, String city, int numFloor,
 		String filePath);
 
 public Set<Building> getAllBuildings(ClientOrganisation client);
 
-boolean editBuildingInfo(long id, String name, String address, int postalCode, String city, int numFloor,
+boolean editBuildingInfo(long id, String name, String address, String postalCode, String city, int numFloor,
 		String filePath);
 
 boolean deleteBuilding(ClientOrganisation client, long id);
