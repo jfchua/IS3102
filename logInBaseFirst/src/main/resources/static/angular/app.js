@@ -2757,10 +2757,13 @@ app.controller('MyCtrl', function ($scope, $http,shareData) {
 	}
 
 	$scope.addUnit = function () {  
-		alert("Please edit information of the new unit in the table below.");
-		console.log(this);
-		console.log($scope);
-		$scope.units.push({"id": 0,"unitNumber": "#unit","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "rect"}});
+		$scope.units.push({"id": 0,"unitNumber": "#unit","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "./svg/rect.svg"}});
+		console.log("test "+JSON.stringify($scope.units));
+
+	} 
+	$scope.specialType;
+	$scope.addSpecialUnit = function (type) {  	
+		$scope.units.push({"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "transparent","type": type}});
 		console.log("test "+JSON.stringify($scope.units));
 
 	} 
