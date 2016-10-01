@@ -1,5 +1,7 @@
 package application.controller;
+import java.security.Principal;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,10 +24,13 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.reflect.TypeToken;
 import application.domain.Building;
+import application.domain.ClientOrganisation;
 import application.service.user.BuildingService;
 import application.domain.Level;
 import application.domain.Unit;
+import application.domain.User;
 import application.service.user.LevelService;
+import application.service.user.UserService;
 
 @Controller
 @RequestMapping("/level")
@@ -33,14 +38,15 @@ public class LevelController {
 	@Autowired
 	//private final BuildingService buildingService;
 	private final LevelService levelService;
-	
+	private final UserService userService;
 	private JSONParser parser = new JSONParser();
 
 	@Autowired
-	public LevelController(LevelService levelService) {
+	public LevelController(LevelService levelService, UserService userService) {
 		super();
 		//this.buildingService = buildingService;
 		this.levelService = levelService;
+		this.userService = userService;
 	}
 	
 	// Call this method using $http.get and you will get a JSON format containing an array of level objects.
@@ -48,12 +54,15 @@ public class LevelController {
 			@RequestMapping(value = "/viewLevels/{id}",  method = RequestMethod.GET)
 			@ResponseBody
 			public String viewLevels(@PathVariable("id") String buildingId, HttpServletRequest rq) {
-				//Principal principal = rq.getUserPrincipal();
-				//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-			try{
-				
+				Principal principal = rq.getUserPrincipal();
+				Optional<User> usr = userService.getUserByEmail(principal.getName());
+				if ( !usr.isPresent() ){
+					return null; 
+				}
+				try{
+				    ClientOrganisation client = usr.get().getClientOrganisation();				
 				long buildingIdLong = Long.parseLong(buildingId);
-				Set<Level> levels = levelService.getAllLevels(buildingIdLong);
+				Set<Level> levels = levelService.getAllLevels(client, buildingIdLong);
 				System.err.println("There are " + levels.size() + " levels in the building");
 				
 				//Gson gson = new Gson();
@@ -106,10 +115,16 @@ public class LevelController {
 				@RequestMapping(value = "/getLevel/{id}", method = RequestMethod.GET)
 				@ResponseBody
 				public String getLevel(@PathVariable("id") String levelId, HttpServletRequest rq) {
+					Principal principal = rq.getUserPrincipal();
+					Optional<User> usr = userService.getUserByEmail(principal.getName());
+					if ( !usr.isPresent() ){
+						return null; 
+					}
 					try{
-					
+					    ClientOrganisation client = usr.get().getClientOrganisation();	
 						long id = Long.parseLong(levelId);
 						Level level = levelService.getLevelById(id).get();
+						boolean bl = levelService.checkLevel(client, id);
 						Gson gson2 = new GsonBuilder()
 								.setExclusionStrategies(new ExclusionStrategy() {
 									public boolean shouldSkipClass(Class<?> clazz) {
@@ -151,8 +166,13 @@ public class LevelController {
 			@ResponseBody
 			public ResponseEntity<Void> addLevel(@RequestBody String levelJSON,
 					HttpServletRequest rq) {
-
+				Principal principal = rq.getUserPrincipal();
+				Optional<User> usr = userService.getUserByEmail(principal.getName());
+				if ( !usr.isPresent() ){
+					return null; 
+				}
 				try{
+				    ClientOrganisation client = usr.get().getClientOrganisation();	
 					//Principal principal = rq.getUserPrincipal();
 					//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 					Object obj = parser.parse(levelJSON);
@@ -167,7 +187,7 @@ public class LevelController {
 					
 					long buildingId = (Long)jsonObject.get("id");
 					
-					boolean bl = levelService.create(buildingId, levelNum, length, width, filePath);
+					boolean bl = levelService.create(client, buildingId, levelNum, length, width, filePath);
 					//levelService.updateBuilding(buildingId, level.getId());
 					System.out.println("adding level " + levelNum);
 					if(!bl){
@@ -188,16 +208,24 @@ public class LevelController {
 			@RequestMapping(value = "/deleteLevel", method = RequestMethod.POST)
 			@ResponseBody
 			public ResponseEntity<Void> deleteLevel(@RequestBody String levelJSON, HttpServletRequest rq) {
-
+				Principal principal = rq.getUserPrincipal();
+				Optional<User> usr = userService.getUserByEmail(principal.getName());
+				if ( !usr.isPresent() ){
+					return null; 
+				}
 				try{
+				    ClientOrganisation client = usr.get().getClientOrganisation();	
 					//Principal principal = rq.getUserPrincipal();
 					//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 					Object obj = parser.parse(levelJSON);
 					JSONObject jsonObject = (JSONObject) obj;
 					//long buildingId = (Long)jsonObject.get("buildingId");
 					long levelId = (Long)jsonObject.get("levelId");
-					levelService.deleteLevel(levelId);
-					
+					boolean bl = levelService.deleteLevel(client, levelId);
+					if(!bl){
+						System.out.println("cannot delete");
+						return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+					}	
 				}
 				catch (Exception e){
 					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -211,8 +239,13 @@ public class LevelController {
 			@RequestMapping(value = "/updateLevel", method = RequestMethod.POST)
 			@ResponseBody
 			public ResponseEntity<Void> updateLevel(@RequestBody String levelJSON, HttpServletRequest rq) {
-
+				Principal principal = rq.getUserPrincipal();
+				Optional<User> usr = userService.getUserByEmail(principal.getName());
+				if ( !usr.isPresent() ){
+					return null; 
+				}
 				try{
+				    ClientOrganisation client = usr.get().getClientOrganisation();
 					Object obj = parser.parse(levelJSON);
 					JSONObject jsonObject = (JSONObject) obj;
 					//long buildingId = (Long)jsonObject.get("buildingId");
@@ -223,7 +256,7 @@ public class LevelController {
 					String filePath = (String)jsonObject.get("filePath");		
 					//Principal principal = rq.getUserPrincipal();
 					//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-					boolean bl=levelService.editLevelInfo(levelId,levelNum, length, width, filePath);
+					boolean bl=levelService.editLevelInfo(client, levelId,levelNum, length, width, filePath);
 					//levelService.updateBuildingWithOnlyLevelId(levelId);
 					if(!bl){
 						System.out.println("out of range");
@@ -240,24 +273,25 @@ public class LevelController {
 			@RequestMapping(value = "/getBuildingId",  method = RequestMethod.POST)//hailing
 			@ResponseBody
 			public String getBuildingId(@RequestBody String level,HttpServletRequest rq) {
-				//Principal principal = rq.getUserPrincipal();
-				//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-			try{
+				Principal principal = rq.getUserPrincipal();
+				Optional<User> usr = userService.getUserByEmail(principal.getName());
+				if ( !usr.isPresent() ){
+					return null; 
+				}
+				try{
+				    ClientOrganisation client = usr.get().getClientOrganisation();
 				System.out.println("test hailing");
 				Object obj = parser.parse(level);
 				JSONObject jsonObject = (JSONObject) obj;
 				
 				long levelId = (Long)jsonObject.get("id");
-				System.out.println("Returning building id : "+levelService.getBuildingByLevelId(levelId));
-				long buildingId = levelService.getBuildingByLevelId(levelId);
-	
+				System.out.println("Returning building id : "+levelService.getBuildingByLevelId(client, levelId));
+				long buildingId = levelService.getBuildingByLevelId(client, levelId);
 				if(buildingId==0){
 					return "{\"error\":\"cannot fetch}\"";
-				}else{
-					
+				}else{					
 					JSONObject bd = new JSONObject(); 
-					bd.put("buildingId", buildingId); 
-					
+					bd.put("buildingId", buildingId); 				
 				    System.out.println("Returning building id : " + bd.toString());
 					return bd.toString();
 				}

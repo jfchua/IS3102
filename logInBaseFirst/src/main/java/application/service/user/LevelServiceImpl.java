@@ -14,6 +14,7 @@ import application.domain.Level;
 import application.repository.BuildingRepository;
 import application.repository.LevelRepository;
 import application.domain.Building;
+import application.domain.ClientOrganisation;
 @Service
 public class LevelServiceImpl implements LevelService {
 	private final LevelRepository levelRepository;
@@ -28,11 +29,11 @@ public class LevelServiceImpl implements LevelService {
 	}
 	
 	@Override
-	public boolean create(long buildingId, int levelNum, int length, int width, String filePath){
+	public boolean create(ClientOrganisation client, long buildingId, int levelNum, int length, int width, String filePath){
 		// TODO Auto-generated method stub
 		try{
 		Optional<Building> building1 = Optional.ofNullable(buildingRepository.findOne(buildingId));
-		if(building1.isPresent()){
+		if(building1.isPresent()&&client.getBuildings().contains(building1.get())){
 		Building building = building1.get();
 		int numFloor = building.getNumFloor();
 		boolean isExist = true;
@@ -65,28 +66,30 @@ public class LevelServiceImpl implements LevelService {
 	}
 
 	@Override
-	public Set<Level> getAllLevels(long buildingId) {
+	public Set<Level> getAllLevels(ClientOrganisation client, long buildingId) {
 		// TODO Auto-generated method stub
-		LOGGER.debug("Getting all levels given the building ID");
-		
-		Optional<Building> building;
+		LOGGER.debug("Getting all levels given the building ID");	
+		Optional<Building> building1;
 		try{
-			building= Optional.ofNullable(buildingRepository.findOne(buildingId));
+			building1= Optional.ofNullable(buildingRepository.findOne(buildingId));
+			if(client.getBuildings().contains(building1.get()))
+				return building1.get().getLevels();
+			else
+				return null;
 		}catch (Exception e){
 			return null;
 		}
-	
-		return building.get().getLevels();
 	}
 
 	@Override
-	public boolean editLevelInfo(long id, int levelNum, int length, int width, String filePath){
+	public boolean editLevelInfo(ClientOrganisation client, long id, int levelNum, int length, int width, String filePath){
 		// TODO Auto-generated method stub
 		try{
 			Optional<Level> level1 = getLevelById(id);
 			if (level1.isPresent()){
 				Level level = level1.get();
 				Building building = level.getBuilding();
+				if(client.getBuildings().contains(building)){
 				int numFloor = building.getNumFloor();
 				boolean isExist = true;
 				Set<Level> levels = building.getLevels();
@@ -108,6 +111,7 @@ public class LevelServiceImpl implements LevelService {
 				building.setLevels(levels);
 				buildingRepository.save(building);
 			}
+			}
 			}catch (Exception e){
 				return false;
 			}
@@ -116,18 +120,20 @@ public class LevelServiceImpl implements LevelService {
 	}
 
 	@Override
-	public boolean deleteLevel(long id) {
+	public boolean deleteLevel(ClientOrganisation client, long id) {
 		// TODO Auto-generated method stub
 		try{
 			
 			Optional<Level> level = getLevelById(id);
 			if(level.isPresent()){			
 				Building build = level.get().getBuilding();
+				if(client.getBuildings().contains(build)){
 				Set<Level> levels = build.getLevels();
 				levels.remove(level.get());
 				build.setLevels(levels);
 				levelRepository.delete(level.get());
 				buildingRepository.save(build);
+			}
 			}
 			}catch(Exception e){
 				return false;
@@ -182,20 +188,44 @@ public class LevelServiceImpl implements LevelService {
 	}
 	
 	@Override
-	public long getBuildingByLevelId(long levelId) {
+	public long getBuildingByLevelId(ClientOrganisation client, long levelId) {
 		long buildingId=0;
 		try{
 		Optional<Level> levelOpt = getLevelById(levelId);
 		if(levelOpt.isPresent()){
 		Level level=levelOpt.get();
 		Building build = level.getBuilding();
+		if(client.getBuildings().contains(build)){
 		buildingId=build.getId();
+		}
 		}
 		}
 		catch(Exception e){
 			return buildingId;
 			}
 		return buildingId;
+	}
+
+	@Override
+	public boolean checkLevel(ClientOrganisation client, long id) {
+		// TODO Auto-generated method stub
+		Set<Building> builds = client.getBuildings();
+		boolean doesHave = false;
+		try{
+		Optional<Level> levelOpt = getLevelById(id);
+		if(levelOpt.isPresent()){
+			Level level = levelOpt.get();
+		for(Building b: builds){
+			if(b.getLevels().contains(level)){
+				doesHave = true;
+			break;
+			}
+		}
+		}
+		}catch(Exception e){
+			return false;
+			}
+		return doesHave;
 	}
 
 }

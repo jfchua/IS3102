@@ -2,16 +2,17 @@ package application.service.user;
 import java.util.Optional;
 import java.util.Set;
 
+import application.domain.ClientOrganisation;
 import application.domain.Level;
 //import application.domain.Building;
 public interface LevelService {
-	boolean create(long buildingId, int levelNum, int length, int width, String filePath);
+	boolean create(ClientOrganisation client, long buildingId, int levelNum, int length, int width, String filePath);
 
-	Set<Level> getAllLevels(long buildingId);
+	Set<Level> getAllLevels(ClientOrganisation client, long buildingId);
 
-	boolean editLevelInfo(long id, int levelNum, int length, int width, String filePath);
+	boolean editLevelInfo(ClientOrganisation client, long id, int levelNum, int length, int width, String filePath);
 
-	boolean deleteLevel(long id);
+	boolean deleteLevel(ClientOrganisation client, long id);
 
 	Optional<Level> getLevelById(long id);
 	
@@ -19,5 +20,7 @@ public interface LevelService {
 	
 	boolean updateBuildingWithOnlyLevelId(long levelId);
 	
-	 long getBuildingByLevelId(long levelId);
+	long getBuildingByLevelId(ClientOrganisation client, long levelId);
+	 
+	boolean checkLevel(ClientOrganisation client, long id);
 }
