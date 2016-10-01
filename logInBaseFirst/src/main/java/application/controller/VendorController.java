@@ -101,12 +101,19 @@ public class VendorController {
 							Object obj = parser.parse(vendorJSON);
 							JSONObject jsonObject = (JSONObject) obj;
 				            String email = (String)jsonObject.get("email");
+				            System.out.println("email1");
 				            System.out.println(email);
+				            System.out.println("email2");
 							String name = (String)jsonObject.get("name");
 							String description = (String)jsonObject.get("description");
 							String contact = (String)jsonObject.get("contact");				
-							vendorService.createVendor(client, email, name, description, contact);
+							boolean bl = vendorService.createVendor(client, email, name, description, contact);
 							System.out.println("adding vendor " + name);
+							if(!bl){
+								System.out.println("invalid email");
+								return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+							}
+								
 						}
 						catch (Exception e){
 							System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
@@ -191,6 +198,9 @@ public class VendorController {
 				String contact = (String)jsonObject.get("contact");	
 				boolean bl = vendorService.editVendor( vendorId, email, name, description, contact);
 				System.out.println("editing vendor " + name);
+				if(!bl){
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
 			}
 			catch (Exception e){
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
