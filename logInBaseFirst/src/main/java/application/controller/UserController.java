@@ -31,6 +31,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import application.domain.AuditLog;
 import application.domain.ClientOrganisation;
 import application.domain.Message;
 import application.domain.Role;
@@ -38,6 +39,7 @@ import application.domain.ToDoTask;
 import application.domain.User;
 import application.domain.Vendor;
 import application.domain.validator.UserCreateFormValidator;
+import application.repository.AuditLogRepository;
 import application.repository.ClientOrganisationRepository;
 import application.repository.RoleRepository;
 import application.repository.UserRepository;
@@ -56,18 +58,20 @@ public class UserController {
 	private final UserService userService;
 	private final RoleRepository roleRepository;
 	private final UserRepository userRepository;
+	private final AuditLogRepository auditLogRepository;
 
 	private JSONParser parser = new JSONParser();
 	//private final UserCreateFormValidator userCreateFormValidator;
 
 	@Autowired
-	public UserController(ClientOrganisationRepository clientOrganisationRepository, ClientOrganisationService clientOrganisationService,UserService userService, RoleRepository roleRepository, UserRepository userRepository) {
+	public UserController(AuditLogRepository auditLogRepository, ClientOrganisationRepository clientOrganisationRepository, ClientOrganisationService clientOrganisationService,UserService userService, RoleRepository roleRepository, UserRepository userRepository) {
 		//this.userService = userService;
 		this.clientOrganisationService = clientOrganisationService;
 		this.userService = userService;
 		this.roleRepository =  roleRepository;
 		this.userRepository = userRepository;
 		this.clientOrganisationRepository = clientOrganisationRepository;
+		this.auditLogRepository = auditLogRepository;
 		//  this.userCreateFormValidator = userCreateFormValidator;
 	}
 	// ----------------------- START SUPER ADMIN METHODS WITH ROLE CHECKING ------------------------
@@ -293,6 +297,8 @@ public class UserController {
 
 		//Assume client org has ClientOrg name, One admin user which is to be created.
 		try{
+			
+			
 
 			/*		JSONParser parser = new JSONParser();
 
@@ -332,7 +338,14 @@ public class UserController {
 			if ( !userService.createNewUser(currUser.getClientOrganisation(), name,email, userRolesToAddIn) ) return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			//if ( !u.createNewClientOrganisation(name, email) ) return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			//System.out.println( "CREATED CLIENT ORGANISATION : " + userService.getUserByEmail(email).get().getClientOrganisation().getOrganisationName() );
-
+			
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("User Management");
+			al.setAction("Added new user: " + email);
+			al.setUser(currUser);
+			al.setUserEmail(currUser.getEmail());
+			auditLogRepository.save(al);
 
 		}
 		catch (Exception e){
@@ -394,16 +407,28 @@ public class UserController {
 	public ResponseEntity<Void> deleteUser(@RequestBody String userJSON, HttpServletRequest rq) {
 
 		try{
+			Principal principal = rq.getUserPrincipal();
+			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 			Object obj = parser.parse(userJSON);
 			JSONObject jsonObject = (JSONObject) obj;
 			String email = (String)jsonObject.get("email");
 			System.err.println("email: " + email);
 			//	Principal principal = rq.getUserPrincipal();
 			User userToDelete = (User)userService.getUserByEmail(email).get();
-			System.out.println("USER TO BE DELETED: " + userToDelete);
+			System.out.println("USER TO BE DELETED: " + userToDelete.getEmail());
 			//userRepository.delete(userToDelete);
+			
+			auditLogRepository.deleteAuditLogsOfUserId(userToDelete.getId());
 			userService.deleteUser(userToDelete);
-			System.err.println("deledted");
+			System.err.println("Deleted");
+			
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("User Management");
+			al.setAction("Deleted user: " + userToDelete.getEmail());
+			al.setUser(currUser);
+			al.setUserEmail(currUser.getEmail());
+			auditLogRepository.save(al);
 
 		}catch(Exception e){
 			System.out.println("ERROR IN DELETING USER");
@@ -418,6 +443,9 @@ public class UserController {
 	public ResponseEntity<Void> updateUser(@RequestBody String userJSON, HttpServletRequest rq) {
 
 		try{
+			Principal principal = rq.getUserPrincipal();
+			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
+			
 			Object obj = parser.parse(userJSON);
 			JSONObject jsonObject = (JSONObject) obj;
 			//email to find user
@@ -453,7 +481,7 @@ public class UserController {
 			userRepository.saveAndFlush(userToEdit);
 			System.out.println("GG");
 			userToEdit.setRoles(userRolesToAddIn);
-			userRepository.saveAndFlush(userToEdit);
+		    userRepository.saveAndFlush(userToEdit);
 			System.err.println("set " + userToEdit.getName());
 			System.err.println(userToEdit.getName());
 
@@ -462,6 +490,14 @@ public class UserController {
 
 			System.out.println("USER TO BE EDITED: " + userToEdit + "   " +email);
 			//userToEdit.setRoles(roles);
+			
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("User Management");
+			al.setAction("Updated user: " + email);
+			al.setUser(currUser);
+			al.setUserEmail(currUser.getEmail());
+			auditLogRepository.save(al);
 
 
 
@@ -515,6 +551,14 @@ public class UserController {
 			String hashedPassword = encoder.encode(pass);
 			currUser.setPasswordHash(hashedPassword); //add salt?
 			userRepository.saveAndFlush(currUser);
+			
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("User Management");
+			al.setAction("Changed password");
+			al.setUser(currUser);
+			al.setUserEmail(currUser.getEmail());
+			auditLogRepository.save(al);
 
 		}catch(Exception e){
 			System.out.println("ERROR IN CHANGING PASSWORD" + e.getMessage());

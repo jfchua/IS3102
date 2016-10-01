@@ -14,7 +14,7 @@ import application.domain.Level;
 
 public interface LevelRepository extends JpaRepository<Level, Long>{
 	@Query(
-	        value = "SELECT * FROM Level l where l.building = :buildingId", 
+	        value = "SELECT * FROM Level l where l.building_id = :buildingId", 
 	        nativeQuery=true
 	   )
  public Set<Level> getLevelsByBuilding(@Param("buildingId") long buildingId);

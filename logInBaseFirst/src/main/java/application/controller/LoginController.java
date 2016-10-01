@@ -378,7 +378,7 @@ public class LoginController {
 
 			startDate = (String)jsonObject.get("startDate");
 			endDate = (String)jsonObject.get("endDate");
-
+//****************FIX THE DATE TIMEZONE PROBLEM AS CAN'T INCREMENT BY 1 DAY ***************************
 			sb.append("WHERE (time >= '");
 			sb.append( startDate + " 00:00:00");
 			sb.append("' AND ");
@@ -386,13 +386,13 @@ public class LoginController {
 			sb.append(endDate + " 23:59:59");
 			sb.append( "' )");
 			if ( username != null &&  userService.getUserByEmail(username).isPresent() ){
-				sb.append("AND user = '" +  userService.getUserByEmail(username).get().getId()  + "'");
+				sb.append("AND user_id = '" +  userService.getUserByEmail(username).get().getId()  + "'");
 			}
 			else{
 				sb.append("AND( ");
 				User curUser = userService.getUserByEmail(principal.getName()).get();
 				for ( User us : curUser.getClientOrganisation().getUsers() ){
-					sb.append("user =" +  us.getId() );
+					sb.append("user_id =" +  us.getId() );
 					sb.append(" OR ");
 				}
 				

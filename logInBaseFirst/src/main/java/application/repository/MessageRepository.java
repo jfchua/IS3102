@@ -17,7 +17,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>, JpaSpec
 	//public Collection<Message> getMessagesByRecipient(@Param("recipient") String recipient);
 	
 	 @Query(
-		        value = "SELECT * FROM Message m where m.recipient = :recipient", 
+		        value = "SELECT * FROM Message m where m.recipient_id = :recipient", 
 		        nativeQuery=true
 		   )
 	 public Set<Message> getMessagesByRecipient(@Param("recipient") String recipient);
