@@ -5,7 +5,7 @@ import java.util.Set;
 import application.domain.Level;
 //import application.domain.Building;
 public interface LevelService {
-	Level create(int levelNum, int length, int width, String filePath);
+	boolean create(long buildingId, int levelNum, int length, int width, String filePath);
 
 	Set<Level> getAllLevels(long buildingId);
 
