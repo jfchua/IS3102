@@ -7,7 +7,7 @@ import application.domain.ClientOrganisation;
 import application.domain.Vendor;
 
 public interface VendorService {
-void createVendor(ClientOrganisation client, String email, String name, String description, String contact);
+boolean createVendor(ClientOrganisation client, String email, String name, String description, String contact);
 	
 Set<Vendor> getAllVendors(ClientOrganisation client);
 	

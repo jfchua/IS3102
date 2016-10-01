@@ -2,6 +2,8 @@ package application.service.user;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,18 +30,27 @@ public class VendorServiceImpl implements VendorService {
 	}
 	
 	@Override
-	public void createVendor(ClientOrganisation client, String email, String name, String description, String contact) {
+	public boolean createVendor(ClientOrganisation client, String email, String name, String description, String contact) {
 		// TODO Auto-generated method stub	
+		Pattern pat = Pattern.compile("^.+@.+\\..+$");
+		Matcher get = pat.matcher(email);		
+		if(!get.matches()){
+			System.out.println("invalid email address");
+			return false;
+		}
+		else{
 		Vendor vendor = new Vendor();
 		vendor.setEmail(email);
 		vendor.setName(name);
 		vendor.setDescription(description);
 		vendor.setContact(contact);
+		System.out.println("finish setting");
 		vendorRepository.save(vendor);	
 		Set<Vendor> vendors = client.getVendors();
 		vendors.add(vendor);
 		clientOrganisationRepository.save(client);
-		
+		return true;
+		}
 	}
 
 	@Override
@@ -74,6 +85,12 @@ public class VendorServiceImpl implements VendorService {
 		try{
 			Optional<Vendor> vendor1 = getVendorById(id);
 			if(vendor1.isPresent()){
+				Pattern pat = Pattern.compile("^.+@.+\\..+$");
+				Matcher get = pat.matcher(email);		
+				if(!get.matches()){
+					System.out.println("invalid email address");
+					return false;
+				}
 				Vendor vendor = vendor1.get();
 				vendor.setEmail(email);
 				vendor.setName(name);
