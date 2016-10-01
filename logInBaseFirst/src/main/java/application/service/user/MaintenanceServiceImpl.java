@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import application.domain.Building;
 import application.domain.ClientOrganisation;
+import application.domain.Level;
 import application.domain.Maintenance;
 import application.domain.Unit;
 import application.domain.Vendor;
@@ -45,7 +47,11 @@ public class MaintenanceServiceImpl implements MaintenanceService {
   		  String[] vendors = vendorsId.split(" ");
   		Date d1 = start;
 		Date d2 = end;
+		if(d1.compareTo(d2)>0)
+			return false;
 		boolean isAvailable = true;
+		boolean doesHave = false;
+		Set<Building> buildings = client.getBuildings();
 		for(int i = 0; i<units.length; i ++){
 			long uId = Long.valueOf(units[i]);
 			Optional<Unit> unit1 = unitRepository.getUnitById(uId);
@@ -53,7 +59,18 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 			System.out.println(unit1.isPresent());
 			if(unit1.isPresent()&&isAvailable){
 				System.out.println("inside if");
-				Unit unit = unit1.get();
+				Unit unit = unit1.get();				
+				Level level = unit.getLevel();
+				for(Building b: buildings){
+					if(b.getLevels().contains(level)){
+						doesHave = true;
+						break;
+					}
+				}
+				if(!doesHave){
+					isAvailable = false;
+					break;
+				}
 				System.out.println("get unit");
 				maint.getUnits().add(unit);
 				System.out.println("add unit lol");
@@ -98,7 +115,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 				  if(client.getVendors().contains(ven1.get()))
 	        	  vendorList.add(ven1.get());
 				  else
-					  isAvailable = false;
+					  return false;
 				}
 			}
         	  maint.setDescription(description);
@@ -118,6 +135,8 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 		  String[] vendors = vendorsId.split(" ");
 		Date d1 = start;
 		Date d2 = end;
+		if(d1.compareTo(d2)>0)
+			return false;
 		boolean isAvailable = true;
 		int diffInDays = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
 		Calendar c = Calendar.getInstance();
@@ -130,9 +149,22 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 				Date d4 = maint.getEnd();
 			    int diffInDays2 = (int) ((d4.getTime() - d3.getTime()) / (1000 * 60 * 60 * 24));
 				Set<Unit> units = maint.getUnits();
+				boolean doesHave = false;
+				Set<Building> buildings = client.getBuildings();
 				for(Unit u: units){
 					ArrayList<Date> avail = u.getAvail();
-					//ArrayList<Date> newAvail = new ArrayList<Date>();
+					//ArrayList<Date> newAvail = new ArrayList<Date>();				
+					Level level = u.getLevel();
+					for(Building b: buildings){
+						if(b.getLevels().contains(level)){
+							doesHave = true;
+							break;
+						}
+					}
+					if(!doesHave){
+						isAvailable = false;
+						break;
+					}
 					for(int startNum = 0; startNum <= diffInDays; startNum ++){
 						if(avail.contains(d1)){
 						if(d1.before(d3) || d1.after(d4)){
@@ -158,7 +190,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 							if(client.getVendors().contains(ven1.get()))
 					        	  vendorList.add(ven1.get());
 								  else
-									  isAvailable = false;
+									  return false;
 			        	  vendorList.add(ven1.get());
 						}
 					}
@@ -176,14 +208,26 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 	}
 
 	@Override
-	public boolean deleteMaintenance(long id) {
+	public boolean deleteMaintenance(ClientOrganisation client, long id) {
 		try{
 	        Optional<Maintenance> maintenance1 = Optional.ofNullable(maintenanceRepository.findOne(id));
+	        boolean doesHave = false;
+			Set<Building> buildings = client.getBuildings();
 	        if(maintenance1.isPresent()){
 	        	  Maintenance maint = maintenance1.get();
 	        	  Set<Unit> units = maint.getUnits();
 	        	  for(Unit u: units){
 						ArrayList<Date> avail = u.getAvail();
+						Level level = u.getLevel();
+						for(Building b: buildings){
+							if(b.getLevels().contains(level)){
+								doesHave = true;
+								break;
+							}
+						}
+					    if(!doesHave)
+					    	return false;
+					    else{
 						Date d1 = maint.getStart();
 						Date d2 = maint.getEnd();
 						int diffInDays = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
@@ -198,7 +242,8 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 						maintFromUnit.remove(maint);
 						u.setMaintenances(maintFromUnit);
 					}
-
+	        	  }
+	        	  System.out.println("delete successfully");
 	        	  maintenanceRepository.delete(maint);
 	        }
 		}catch(Exception e){
@@ -257,9 +302,48 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 		LOGGER.debug("Getting maintenance={}", id);
 		return Optional.ofNullable(maintenanceRepository.findOne(id));
 	}
+	
 	@Override
-	public Set<Maintenance> getAllMaintenance(){
-		return maintenanceRepository.fetchAllMaintenances();
+	public Set<Maintenance> getAllMaintenance(ClientOrganisation client){
+		Set<Building> buildings = client.getBuildings();
+		Set<Maintenance> maint = new HashSet<Maintenance>();
+		for(Building b: buildings){
+			Set<Level> levels = b.getLevels();
+			for(Level l: levels){
+				Set<Unit> units = l.getUnits();
+				for(Unit u : units){
+					Set<Maintenance> maints = u.getMaintenances();
+					for(Maintenance m : maints)
+						maint.add(m);
+				}
+			}
+		}
+		return maint;
+	}
+
+	@Override
+	public boolean checkMaintenance(ClientOrganisation client, long id) {
+		boolean doesHave = false;
+		try{
+	   Optional<Maintenance> maintenance1 = Optional.ofNullable(maintenanceRepository.findOne(id));
+	   if(maintenance1.isPresent()){
+		   Maintenance maint = maintenance1.get();
+		Set<Building> buildings = client.getBuildings();		
+		for(Building b: buildings){
+			Set<Level> levels = b.getLevels();
+			for(Level l: levels){
+				Set<Unit> units = l.getUnits();
+				for(Unit u : units){
+					if(u.getMaintenances().contains(maint))
+						doesHave = true;
+				}
+			}
+		}
+	      }
+		}catch(Exception e){
+			return false;
+		}
+		return doesHave;
 	}
 
 }

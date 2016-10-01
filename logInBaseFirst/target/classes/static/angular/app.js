@@ -557,6 +557,30 @@ app.config(
 
 			/*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
 		})
+app.factory('httpAuthInterceptor', function () {
+		return {
+		'response': function(response) {
+		                    return response;
+		                 },
+		  'responseError': function (response) {
+		    // NOTE: detect error because of unauthenticated user
+		    if ([401, 403, 500].indexOf(response.status) >= 0) {
+		      // redirecting to login page
+		  	  event.preventDefault();
+		  	  $location.path("/login");
+		  	  alert("Session Timeout!");
+		  	  $window.location.reload();
+		      return response;
+		    } else {
+		      return $q.reject(response);
+		    }
+		  }
+		};
+})
+
+app.config(function ($httpProvider) {
+		$httpProvider.interceptors.push('httpAuthInterceptor');
+});
 
 		app.service('Session',  function () {
 			this.create = function (sessionId, userId, userRole) {
@@ -592,85 +616,7 @@ app.config(
 				$scope.currentUser = user;
 			};
 		})
-		app.factory('Auth', function($window, $localStorage, $window){
-			var user;
-			var storageUser; 
-			var authenticated;
-			var userRoles = new Array();
-			var authService = {};
-			var state;
-
-			authService.setUser = function(aUser){
-				user = aUser;
-				//console.log("User " + user.name +" is set");
-				$window.localStorage.setItem('user', JSON.stringify(user));
-				//console.log("User " + user.name +" is set in localstorage");
-
-			},
-			
-			authService.getUser = function() {
-				  if (this.currentUser) {
-				      return this.currentUser;
-				  }
-				  var storageUser = $window.localStorage.getItem('user');
-				  if (storageUser) {
-				    try {
-				      this.user = JSON.parse(storageUser);
-				    } catch (e) {
-				      $window.localStorage.removeItem('user');
-				    }
-				  }
-				  return this.currentUser;
-				}
-			authService.remove= function() {
-			    $window.localStorage.removeItem('user');
-			    this.user = null;
-			},
-			authService.isAuthenticated = function(){
-
-				if (user == null) {
-					console.log("User is null");
-					authenticated = false;
-				}
-				else if (authenticated == null){
-					console.log("authenticated is null");
-					if (user.authenticated == undefined)
-					authenticated = false;
-				}
-					//console.log(user.authenticated);
-				return(authenticated);
-			},
-			authService.isAuthorized = function (authorizedRoles) {
-				//console.log("In isAuthorized " + authorizedRoles);
-				if (user == null || user == undefined){
-					console.log("User is not logged in!");
-					return false;
-				}
-				for (i = 0; i<user.authorities.length;i++) {
-					userRoles [i] = user.authorities[i].authority;
-					console.log("Authority present is " + userRoles[i]);
-				}
-				if ( authService.hasRoles(authorizedRoles)){
-					return true;
-				}
-				//console.log("Returning unauthorized");
-				return false;
-
-
-			}
-
-			authService.hasRoles = function(authorizedRoles){
-				for (j = 0; j < userRoles.length; j++) {
-					if (userRoles[j] == authorizedRoles) {
-						console.log("Returning authorized");
-						return true;
-					}
-				}
-			}
-
-
-			return authService;
-		} )
+		
 		/*    authorised: function(role){
 	    for (i = 0; i<user.authorities.length;i++){
 	    	console.log("Authority present is " + user.authorities[i].authority);
@@ -685,47 +631,7 @@ app.config(
 
 
 
-		app.run(['$rootScope', 'AUTH_EVENTS', 'Auth' ,'$location','$window', function ($rootScope, AUTH_EVENTS, Auth, $location, $window) {
-
-			$rootScope.$on('$stateChangeStart', function (event, next) {
-			//	if (Auth.getUser() != null) {
-				var authorizedRoles = next.data.authorizedRoles;
-				console.log("Next authorized roles are " + authorizedRoles);
-				//no idea how to put multiple conditions together, && and || doesnt seem to work
-				if ($location.path() != '/login'){
-					if ( $location.path() != '/#/login') {
-						if ($location.path() != '/reset') {
-							if (  $location.path().indexOf('/resetPassword/') == -1) {
-								if (!Auth.isAuthorized(authorizedRoles)) {
-									console.log("role is authorizing")
-									event.preventDefault();
-									if (Auth.isAuthenticated()) {
-										// user is not allowed
-										console.log("notauthorised");
-										$window.location.reload();
-										alert('You are not authorised to view this page!');
-										//  $window.location.href = '/#/401';
-										//   $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
-									} else {
-										// user is not logged in
-										console.log("notauthenticated");
-										// $location.path('/login');
-										alert('You are not logged in!');
-										$window.location.href = '/#/login';
-									}
-									//  $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-								}
-								
-									
-							}
-						}}}
-				
-					}//}
-
-			);
-
-		}])
-
+		
 
 		/*		app.controller('eventController', ["$scope",'$http', function ($scope, $http){
 			$scope.viewEvents = function(event){
@@ -1668,7 +1574,7 @@ app.controller('buildingController', ['$scope', '$http','$location','$routeParam
 				numFloor: parseInt($scope.building.numFloor),
 				address: $scope.building.address,
 				city: $scope.building.city,
-				postalCode: parseInt($scope.building.postalCode),
+				postalCode: $scope.building.postalCode,
 				filePath: $scope.building.filePath
 		};		
 		console.log("REACHED HERE FOR SUBMIT BUILDING " + JSON.stringify(dataObj));
@@ -2649,6 +2555,39 @@ app.controller('eventController', ['$scope', '$http','$location','$routeParams',
 		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event);
 	}
 
+	
+	$scope.getNotifications = function(id){		
+		$scope.dataToShare = [];	  
+		console.log(id);
+		$scope.shareMyData = function (myValue) {
+		    //$scope.dataToShare = myValue;
+		    //shareData.addData($scope.dataToShare);
+		  }
+		$scope.url = "https://localhost:8443/eventManager/getNotifications/"+id;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE NOTIFICATIONS")
+		var getNotifications = $http({
+	           method  : 'GET',
+	           url     : 'https://localhost:8443/eventManager/getNotifications/' + id        
+	         });
+		console.log("Getting the event organizer using the url: " + $scope.url);
+		getNotifications.success(function(response){
+			//$scope.dataToShare.push(id);
+			//$location.path("/viewLevels/"+id);
+			console.log('GET NOTIFCATIONS SUCCESS! ' + JSON.stringify(response));
+			console.log("ID IS " + id);
+			shareData.addData(JSON.stringify(response));
+			//$location.path("/viewLevels");
+		});
+		getNotifications.error(function(response){
+			$location.path("/viewEventOrganizers");
+			console.log('GET NOTIFICATIONS FAILED! ' + JSON.stringify(response));
+		});
+		
+	}
+	
+	
+	
 
 }]);
 
@@ -2828,7 +2767,7 @@ app.controller('MyCtrl', function ($scope, $http,shareData) {
 		console.log("test "+JSON.stringify($scope.units));
 
 	} 
-	
+
 	$scope.saveUnits = function () {   
 
 
@@ -3535,48 +3474,3 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http', functi
 
 ////////ASSIGNING FUNCTIONS BASED ON ROLES
 
-app.controller('AccountController', function($scope, Auth) {
-	$scope.IsAdmin = function(){
-		return Auth.hasRoles('ROLE_ADMIN');
-	}
-	$scope.IsEvent = function(){
-		return Auth.hasRoles('ROLE_EVENT');
-	}
-	$scope.IsProperty = function(){
-		return Auth.hasRoles('ROLE_PROPERTY');
-	}
-	$scope.IsExtEve = function(){
-		return Auth.hasRoles('ROLE_EXTEVE');
-	}
-
-	$scope.IsUser = function(){
-		return Auth.hasRoles('ROLE_USER');
-	}
-
-	$scope.IsSuperAdmin = function(){
-		return Auth.hasRoles('ROLE_SUPERADMIN');
-	}
-
-});
-app.factory('httpAuthInterceptor', function ($q, $location, $window) {
-	  return {
-	    'responseError': function (response) {
-	      // NOTE: detect error because of unauthenticated user
-	      if ([401, 403, 500].indexOf(response.status) >= 0) {
-	        // redirecting to login page
-	    	  event.preventDefault();
-	    	  alert("Session Timeout!");
-	    	  $location.path("/login");
-	    	  $window.location.reload();
-	    	  console.log('401 detected, redirecting to login');
-	        return response;
-	      } else {
-	        return $q.reject(response);
-	      }
-	    }
-	  };
-	})
-
-app.config(function ($httpProvider) {
-	  $httpProvider.interceptors.push('httpAuthInterceptor');
-	});
