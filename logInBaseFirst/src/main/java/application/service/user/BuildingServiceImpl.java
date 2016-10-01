@@ -88,7 +88,11 @@ public class BuildingServiceImpl implements BuildingService {
 		// TODO Auto-generated method stub
 		try{
 		Optional<Building> building1 = getBuildingById(id);
-		if (building1.isPresent()){
+		CharSequence post =String.valueOf(postalCode);
+		String regex = "^[0-9]{6}$";
+		Pattern pat = Pattern.compile(regex);
+		Matcher get = pat.matcher(post);
+		if (building1.isPresent()&&get.matches()){
 		   //uilding building = building1.get();
 			//if(building1.get().getName().)
 		    building1.get().setName(name);
@@ -100,6 +104,8 @@ public class BuildingServiceImpl implements BuildingService {
 			//buildingRepository.save(building);
 			buildingRepository.flush();
 		}
+		else
+			return false;
 		}catch (Exception e){
 			return false;
 		}

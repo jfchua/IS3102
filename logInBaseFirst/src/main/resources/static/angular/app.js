@@ -1574,7 +1574,7 @@ app.controller('buildingController', ['$scope', '$http','$location','$routeParam
 				numFloor: parseInt($scope.building.numFloor),
 				address: $scope.building.address,
 				city: $scope.building.city,
-				postalCode: parseInt($scope.building.postalCode),
+				postalCode: $scope.building.postalCode,
 				filePath: $scope.building.filePath
 		};		
 		console.log("REACHED HERE FOR SUBMIT BUILDING " + JSON.stringify(dataObj));

@@ -245,14 +245,18 @@ private final AuditLogRepository auditLogRepository;
 				String name = (String)jsonObject.get("name");
 				System.out.println("after name");
 				String address = (String)jsonObject.get("address");
+				System.out.println("after address");
 				String postalCode = (String)jsonObject.get("postalCode");
+				System.out.println("after post");
 				String city = (String)jsonObject.get("city");
 				System.out.println("after city");
 				int numFloor = ((Long)jsonObject.get("numFloor")).intValue();
 				String filePath = (String)jsonObject.get("filePath");
 				//Principal principal = rq.getUserPrincipal();
 				//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-				buildingService.editBuildingInfo(id, name, address, postalCode, city, numFloor, filePath);
+				boolean bl = buildingService.editBuildingInfo(id, name, address, postalCode, city, numFloor, filePath);
+				if(!bl)
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			}
 			catch (Exception e){
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
