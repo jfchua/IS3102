@@ -2626,7 +2626,12 @@ app.directive('draggable', function() {
 		link: function (scope, element, attrs) {
 			element.draggable({
 				//revert:'invalid'
-				containment: '#glassbox'
+				containment: '#glassbox',
+				
+				 obstacle: "#1",
+				    preventCollision: true
+			
+				
 
 			});
 			element.on('drag', function (unit,evt, ui) {
@@ -2658,7 +2663,9 @@ app.directive('resizable', function () {
 
 		},
 		link: function postLink(scope, element, attrs) {
-			element.resizable();
+			element.resizable({
+				containment: '#glassbox'
+			});
 			console.log("test jquery ui");
 			element.on('resize', function (unit,evt, ui) {
 				//console.log(evt);
@@ -2684,8 +2691,9 @@ app.controller('MyCtrl', function ($scope, $http,shareData) {
 	//console.log(jQuery.ui);
 	var levelIdObj;
 	var levelId;
+	var level;
 	angular.element(document).ready(function () {
-		var level = JSON.parse(shareData.getData());
+		level = JSON.parse(shareData.getData());
 	    console.log("test, hailing, after ready");
 	    $scope.levelLength;
 		$scope.levelWidth;
@@ -2860,17 +2868,15 @@ app.controller('MyCtrl', function ($scope, $http,shareData) {
 
 
 	}
+	//$scope.showDetail="test";
+	 $scope.showDetails= function (thisUnit) {   
+		 console.log(thisUnit);
+		// console.log(event);
+		// console.log(event.target.classList);
+		 $scope.showDetail="unitNumber: "+thisUnit.unitNumber  +  " Unit Width: " + parseInt((thisUnit.square.height)*(level.length)/900) + "meter, Unit Length: " + parseInt((thisUnit.square.width)*(level.length)/900) +"meter";
+		 console.log($scope.showDetail);
+	    } 
 
-	$scope.showDetails= function (thisUnit) {   
-		//console.log(thisUnit.id); 
-
-		$scope.showDetail="id: "+ thisUnit.id+", unitNumber: " + thisUnit.unitNumber+", dimensionLength: " + thisUnit.length+", dimensionWidth: " + thisUnit.width+", description: " + thisUnit.description+"left: " + thisUnit.square.left + ", top: " +  thisUnit.square.top+ ", height: " + thisUnit.square.height + ", width: " + thisUnit.square.width;
-
-
-
-		//  $("#display").text( "left: " + parseInt((document.getElementById(this.id).style.left).slice(0,left.length-2)) + ", top: " +  parseInt((document.getElementById(this.id).style.top).slice(0,top.length-2))+ ", height: " + $(this).height() + ", width: " + $(this).width() +", id: " + id +", color: " + color+", unitNumber: " + oneRectangle.unitNumber+", dimensionLength: " + oneRectangle.dimensionLength+", dimensionWidth: " + oneRectangle.dimensionWidth+", description: " + oneRectangle.description) ;  
-
-	} 
 	$scope.resize = function(unit,evt,ui) {
 
 		console.log("resize");
@@ -2879,6 +2885,10 @@ app.controller('MyCtrl', function ($scope, $http,shareData) {
 		unit.square.height = evt.size.height;
 		unit.square.left = parseInt(evt.position.left);
 		unit.square.top = parseInt(evt.position.top);
+		
+		
+
+		
 	}
 	$scope.drag = function(unit,evt,ui) {
 
