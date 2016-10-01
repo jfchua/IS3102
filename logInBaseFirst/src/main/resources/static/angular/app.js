@@ -1625,10 +1625,13 @@ app.service('shareData', function($window) {
 		data = newObj;
 		if (mydata) {
 			mydata = JSON.parse(mydata);
+			//console.log(mydata);
 		} else {
 			mydata = [];
 		}
 		mydata.push(newObj);
+		//console.log("hailing test");
+		//console.log(mydata);
 		$window.sessionStorage.setItem(KEY, JSON.stringify(mydata));
 	};
 
@@ -2676,23 +2679,62 @@ app.directive('resizable', function () {
 
 //floorplan
 app.controller('MyCtrl', function ($scope, $http,shareData) {
-	jQuery = window.jQuery;
-	console.log(jQuery);
-	console.log(jQuery.ui);
+	//jQuery = window.jQuery;
+	//console.log(jQuery);
+	//console.log(jQuery.ui);
+	var levelIdObj;
+	var levelId;
+	angular.element(document).ready(function () {
+		var level = JSON.parse(shareData.getData());
+	    console.log("test, hailing, after ready");
+	    $scope.levelLength;
+		$scope.levelWidth;
+		
+		//console.log("test hailing");
+		console.log(level);
+		if(!level.id){
+		
+			level=level[0];
+			console.log("level");
+		}
+		$scope.levelLength=900;
+		$scope.levelWidth=parseInt((level.width)*900/(level.length));
+		levelId=level.id;
+		levelIdObj={
+				id:levelId
+		}
+		
+		//retrieve units when page loaded
+		$http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
+			console.log("pure response is "+response.data);
 
+			console.log("test anglar.fromJon"+angular.fromJson(response.data));
+			$scope.units=angular.fromJson(response.data);
+
+		},function(response){
+			console.log("DID NOT view");
+			console.log("response is "+angular.fromJson(response.data).error);
+		})
+		
+	});
 	//$scope.units=[];
 	//var app = angular.module('myApp', ['angularResizable']);
 	//$scope.level = JSON.parse(shareData.getData());//copied from level contorller
 	var levelIdObj;
 	var levelId;
+	//$scope.levelLength=700;
+	//$scope.levelWidth=600;
 	$scope.units=[];
 	$scope.viewUnit=function(){
 		$scope.units=[];
 		alert("viewing existing units");
 		var level = JSON.parse(shareData.getData());
 		//console.log("test hailing");
+		console.log("view units hailing");
 		console.log(level.id);
 		levelId=level.id;
+	
+		
 		// levelId=1;//need to pass level id here nedd to delete this part
 
 		//get level id from previous page
@@ -2715,10 +2757,13 @@ app.controller('MyCtrl', function ($scope, $http,shareData) {
 	}
 
 	$scope.addUnit = function () {  
-		alert("Please edit information of the new unit in the table below.");
-		console.log(this);
-		console.log($scope);
-		$scope.units.push({"id": 0,"unitNumber": "#unit","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "rect"}});
+		$scope.units.push({"id": 0,"unitNumber": "#unit","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "./svg/rect.svg"}});
+		console.log("test "+JSON.stringify($scope.units));
+
+	} 
+	$scope.specialType;
+	$scope.addSpecialUnit = function (type) {  	
+		$scope.units.push({"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "transparent","type": type}});
 		console.log("test "+JSON.stringify($scope.units));
 
 	} 
@@ -2777,7 +2822,7 @@ app.controller('MyCtrl', function ($scope, $http,shareData) {
 			//var temp=JSON.stringify(buildingJson)
 			buildingId=buildingJson.buildingId;
 
-			console.log("ID IS " + buildingId);
+			console.log("Building ID IS " + buildingId);
 
 		},function(response){
 			console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
