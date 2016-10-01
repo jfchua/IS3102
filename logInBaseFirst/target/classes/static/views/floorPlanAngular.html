@@ -23,13 +23,14 @@
        
        <div ng-controller="MyCtrl as myCtrl">    
     <div id="respond"></div>
+  
     <div id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
         <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
-            id="{{unit.square.id}}" ng-mouseover=showDetails(unit)  draggable resizable  on-resize="resize(unit,$evt, $ui)"
+            id="{{unit.square.id}}"  draggable resizable  on-resize="resize(unit,$evt, $ui)" ng-mouseover=$parent.showDetails(unit) 
               ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 
-              'background-color':'{{unit.square.color}}' }" ><p>{{unit.unitNumber}}<img  class="svgtest" src="{{unit.square.type}}" alt="{{unit.square.type}}"></p> </div>
+              'background-color':'{{unit.square.color}}' ,'maxHeight':{{levelWidth}}+'px','maxWidth':{{levelLength}}+'px'}" ><p>{{unit.unitNumber}}<img  class="svgtest" src="{{unit.square.type}}" alt="{{unit.square.type}}"></p> </div>
         </div>
-     
+       <div><p> {{showDetail}}</p></div>
   <button ng-click="viewUnit()">Start</button>
   <button ng-click="addUnit()">Add a Unit</button>
   <select ng-model="specialType">
@@ -44,8 +45,9 @@
    <button ng-click="addSpecialUnit(specialType)">Add a Unit</button>
   <button ng-click="saveUnits()">Save Units</button>
  <a href="/#/viewLevels" ng-click="viewLevelsByBuildingId()"><button>Back to View Levels</button></a>
- <div><p id="display" >{{showDetail}}</p></div>
+ 
   <div><p >Please click on "Start" button before adding or editing units. Please drag before resizing.</p></div>
+  
 <table>
 <th></th>
 <th>id</th>
@@ -56,8 +58,7 @@
        <th>color</th>
         <th>type</th>
        <th>Unit Number</th>
-       <th>Dimension Length (meter)</th>
-       <th>Dimension width (meter)</th>
+     
         <th>Description</th>
          
   <tr ng-repeat="x in units track by $index" >
@@ -70,8 +71,6 @@
         <td> {{x.square.color }} </td>
     <td>{{ x.square.type }} </td>
     <td><input type="text" name="unitNumber" ng-model="x.unitNumber" required> </td>
-    <td><input type="number" name="length" ng-model="x.length" ></td>
-     <td><input type="number" name="width" ng-model="x.width" ></td>
       <td> <input type="text" name="description" ng-model="x.description" > </td>
   </tr>
 </table>
