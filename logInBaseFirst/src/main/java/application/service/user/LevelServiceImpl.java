@@ -28,15 +28,40 @@ public class LevelServiceImpl implements LevelService {
 	}
 	
 	@Override
-	public Level create(int levelNum, int length, int width, String filePath){
+	public boolean create(long buildingId, int levelNum, int length, int width, String filePath){
 		// TODO Auto-generated method stub
+		try{
+		Optional<Building> building1 = Optional.ofNullable(buildingRepository.findOne(buildingId));
+		if(building1.isPresent()){
+		Building building = building1.get();
+		int numFloor = building.getNumFloor();
+		boolean isExist = true;
+		Set<Level> levels = building.getLevels();
+		for(Level l : levels){
+			if(levelNum == l.getLevelNum()){
+				isExist = false;
+				break;
+			}				
+		}
+		if((levelNum>numFloor)||(!isExist)){
+			return false;
+		}
 		Level level = new Level();
 		level.setLevelNum(levelNum);
 		level.setLength(length);
 		level.setWidth(width);
 		level.setFilePath(filePath);
 		levelRepository.save(level);
-		return level;
+		level.setBuilding(building);
+		
+		levels.add(level);
+		building.setLevels(levels);
+		buildingRepository.save(building);
+		}
+		}catch (Exception e){
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -58,13 +83,30 @@ public class LevelServiceImpl implements LevelService {
 	public boolean editLevelInfo(long id, int levelNum, int length, int width, String filePath){
 		// TODO Auto-generated method stub
 		try{
-			Optional<Level> level = getLevelById(id);
-			if (level.isPresent()){
-				level.get().setLevelNum(levelNum);
-				level.get().setLength(length);
-				level.get().setWidth(width);
-				level.get().setFilePath(filePath);				
-				levelRepository.save(level.get());
+			Optional<Level> level1 = getLevelById(id);
+			if (level1.isPresent()){
+				Level level = level1.get();
+				Building building = level.getBuilding();
+				int numFloor = building.getNumFloor();
+				boolean isExist = true;
+				Set<Level> levels = building.getLevels();
+				for(Level l : levels){
+					if(levelNum == l.getLevelNum()&&(id!=l.getId())){
+						isExist = false;
+						break;
+					}				
+				}
+				if((levelNum>numFloor)||(!isExist)){
+					return false;
+				}
+				level.setLevelNum(levelNum);
+				level.setLength(length);
+				level.setWidth(width);
+				level.setFilePath(filePath);				
+				levelRepository.save(level);
+				levels.add(level);
+				building.setLevels(levels);
+				buildingRepository.save(building);
 			}
 			}catch (Exception e){
 				return false;

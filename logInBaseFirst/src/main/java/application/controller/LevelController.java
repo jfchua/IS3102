@@ -167,9 +167,13 @@ public class LevelController {
 					
 					long buildingId = (Long)jsonObject.get("id");
 					
-					Level level = levelService.create(levelNum, length, width, filePath);
-					levelService.updateBuilding(buildingId, level.getId());
+					boolean bl = levelService.create(buildingId, levelNum, length, width, filePath);
+					//levelService.updateBuilding(buildingId, level.getId());
 					System.out.println("adding level " + levelNum);
+					if(!bl){
+						System.out.println("out of range");
+						return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+					}				
 				}
 				catch (Exception e){
 					System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
@@ -219,8 +223,12 @@ public class LevelController {
 					String filePath = (String)jsonObject.get("filePath");		
 					//Principal principal = rq.getUserPrincipal();
 					//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-					levelService.editLevelInfo(levelId,levelNum, length, width, filePath);
-					levelService.updateBuildingWithOnlyLevelId(levelId);
+					boolean bl=levelService.editLevelInfo(levelId,levelNum, length, width, filePath);
+					//levelService.updateBuildingWithOnlyLevelId(levelId);
+					if(!bl){
+						System.out.println("out of range");
+						return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+					}
 				}
 				catch (Exception e){
 					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
