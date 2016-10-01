@@ -115,10 +115,17 @@ private final AuditLogRepository auditLogRepository;
 			@RequestMapping(value = "/getBuilding/{id}", method = RequestMethod.GET)
 			@ResponseBody
 			public String getBuilding(@PathVariable("id") String buildingId, HttpServletRequest rq) {
+				Principal principal = rq.getUserPrincipal();
+				Optional<User> usr = userService.getUserByEmail(principal.getName());
+				if ( !usr.isPresent() ){
+					return null; 
+				}
 				try{
-				
+				    ClientOrganisation client = usr.get().getClientOrganisation();	
 					long id = Long.parseLong(buildingId);
+					boolean bl =buildingService.checkBuilding(client, id);
 					Building build = buildingService.getBuildingById(id).get();
+					if(bl){
 					Gson gson2 = new GsonBuilder()
 							.setExclusionStrategies(new ExclusionStrategy() {
 								public boolean shouldSkipClass(Class<?> clazz) {
@@ -143,6 +150,9 @@ private final AuditLogRepository auditLogRepository;
 					System.out.println("BUILDING IS " + json);
 
 					return json;
+				}
+					else
+						return "cannot fetch";	
 				}
 				catch (Exception e){
 					return "cannot fetch";
@@ -212,8 +222,9 @@ private final AuditLogRepository auditLogRepository;
 				Object obj = parser.parse(buildingId);
 				JSONObject jsonObject = (JSONObject) obj;
 				long id = (Long)jsonObject.get("id");
-				buildingService.deleteBuilding(client,id);
-				System.out.println("delete building " + id);
+				boolean bl = buildingService.deleteBuilding(client,id);			
+				if(bl){
+					System.out.println("delete building " + id);	
 				AuditLog al = new AuditLog();
 				al.setTimeToNow();
 				al.setSystem("Property System");
@@ -222,6 +233,10 @@ private final AuditLogRepository auditLogRepository;
 				al.setUser(usr.get());
 				al.setUserEmail(usr.get().getEmail());
 				auditLogRepository.save(al);
+				}else{
+					System.out.println("cannot delete");
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
+				}
 			}
 			catch (Exception e){
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -237,7 +252,13 @@ private final AuditLogRepository auditLogRepository;
 		@ResponseBody
 		public ResponseEntity<Void> updateBuilding(@RequestBody String buildingId,HttpServletRequest rq) {
 			System.out.println("start1111");
-			try{		
+			Principal principal = rq.getUserPrincipal();
+			Optional<User> usr = userService.getUserByEmail(principal.getName());
+			if ( !usr.isPresent() ){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			}
+			try{
+				ClientOrganisation client = usr.get().getClientOrganisation();		
 				Object obj = parser.parse(buildingId);
 				JSONObject jsonObject = (JSONObject) obj;
 				System.out.println("start");
@@ -254,7 +275,7 @@ private final AuditLogRepository auditLogRepository;
 				String filePath = (String)jsonObject.get("filePath");
 				//Principal principal = rq.getUserPrincipal();
 				//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-				boolean bl = buildingService.editBuildingInfo(id, name, address, postalCode, city, numFloor, filePath);
+				boolean bl = buildingService.editBuildingInfo(client,id, name, address, postalCode, city, numFloor, filePath);
 				if(!bl)
 					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			}

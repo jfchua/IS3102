@@ -69,13 +69,15 @@ public class BuildingServiceImpl implements BuildingService {
 		// TODO Auto-generated method stub
 		try{
 		Optional<Building> building1 = getBuildingById(id);
-		if(building1.isPresent()){
-			Building building = building1.get();
-			Set<Building> buildings = client.getBuildings();
+		Set<Building> buildings = client.getBuildings();
+		if(building1.isPresent()&&buildings.contains(building1.get())){
+			Building building = building1.get();	
 			buildings.remove(building);
 			clientOrganisationRepository.save(client);	
 			buildingRepository.delete(building);
 		}
+		else
+			return false;
 		}catch(Exception e){
 			return false;
 		}
@@ -83,16 +85,17 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 
 	@Override
-	public boolean editBuildingInfo(long id, String name, String address, String postalCode, String city, int numFloor,
+	public boolean editBuildingInfo(ClientOrganisation client, long id, String name, String address, String postalCode, String city, int numFloor,
 			String filePath) {
 		// TODO Auto-generated method stub
 		try{
 		Optional<Building> building1 = getBuildingById(id);
+		Set<Building> buildings = client.getBuildings();
 		CharSequence post =String.valueOf(postalCode);
 		String regex = "^[0-9]{6}$";
 		Pattern pat = Pattern.compile(regex);
 		Matcher get = pat.matcher(post);
-		if (building1.isPresent()&&get.matches()){
+		if (building1.isPresent()&&get.matches()&&buildings.contains(building1.get())){
 		   //uilding building = building1.get();
 			//if(building1.get().getName().)
 		    building1.get().setName(name);
@@ -117,6 +120,21 @@ public class BuildingServiceImpl implements BuildingService {
 		// TODO Auto-generated method stub
 		LOGGER.debug("Getting building={}", id);
 		return Optional.ofNullable(buildingRepository.findOne(id));
+	}
+
+	@Override
+	public boolean checkBuilding(ClientOrganisation client, long id) {
+		try{
+			Optional<Building> building1 = getBuildingById(id);
+			Set<Building> buildings = client.getBuildings();
+			if (buildings.contains(building1.get())){
+				return true;
+			}
+			else
+				return false;
+			}catch (Exception e){
+				return false;
+			}
 	}
 
 }
