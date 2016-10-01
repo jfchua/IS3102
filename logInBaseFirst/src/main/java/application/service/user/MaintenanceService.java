@@ -12,7 +12,7 @@ public interface MaintenanceService {
 	
 	boolean editMaintenance(ClientOrganisation client, long id, String vendorId, Date start, Date end, String description);
 	
-	boolean deleteMaintenance(long id);
+	boolean deleteMaintenance(ClientOrganisation client, long id);
 	
 	Set<Maintenance> getMaintenanceByUnitId(long unitId);
 
@@ -22,5 +22,7 @@ public interface MaintenanceService {
 	
 	String getVendorsId(long id);
 	
-	Set<Maintenance> getAllMaintenance();
+	Set<Maintenance> getAllMaintenance(ClientOrganisation client);
+	
+	boolean checkMaintenance(ClientOrganisation client, long id);
 }

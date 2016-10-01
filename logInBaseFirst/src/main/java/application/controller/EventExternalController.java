@@ -95,7 +95,7 @@ public class EventExternalController {
 					event_approval_status, event_start_date, event_end_date, filePath);
 			System.out.println("adding event " + event_title);
 			if(!bl){
-				System.out.println("cannot add due to wrong service class method");
+				System.out.println("cannot add event");
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			}			
 		}
@@ -343,7 +343,7 @@ public class EventExternalController {
 							//eventExternalService.updateEventOrganizerForDelete(eventId);
 							boolean bl=eventExternalService.deleteEvent(eventId);
 							if(!bl){
-								System.out.println("cannot delete due to wrong service class method");
+								System.out.println("cannot delete event");
 								return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
 							}			
 						}
@@ -386,7 +386,7 @@ public class EventExternalController {
 									 event_start_date, event_end_date, filePath);
 							//levelService.editLevelInfo(levelId,levelNum, length, width, filePath);
 							if(!bl){
-								System.out.println("cannot update due to wrong service class method");
+								System.out.println("cannot update event");
 								return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
 							}			
 							else

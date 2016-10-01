@@ -63,10 +63,18 @@ public class MaintenanceController {
     // Each object (building) will contain... long id, collection of levels.
     @RequestMapping(value = "/getMaintenance/{id}", method = RequestMethod.GET)
 	@ResponseBody
-    public String getMaintenance(@PathVariable("id") String unitId, HttpServletRequest rq) {
+    public String getMaintenance(@PathVariable("id") String maintId, HttpServletRequest rq) {
+    	Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return null; 
+		}
 		try{
-			long id = Long.parseLong(unitId);
+		    ClientOrganisation client = usr.get().getClientOrganisation();
+			long id = Long.parseLong(maintId);
+			boolean bl = maintenanceService.checkMaintenance(client, id);
 			Maintenance maint = maintenanceService.getMaintenanceById(id).get();
+			if(bl){
 			Gson gson2 = new GsonBuilder()
 				.setExclusionStrategies(new ExclusionStrategy() {
 			      public boolean shouldSkipClass(Class<?> clazz) {
@@ -96,6 +104,9 @@ public class MaintenanceController {
 		    //obj.put("event_period", event.getEvent_period());
 		    System.out.println(obj.toString());
 			return obj.toString();
+		}
+			else
+				return "cannot fetch";	
 		}
 			catch (Exception e){
 			return "cannot fetch";
@@ -151,20 +162,21 @@ public class MaintenanceController {
 	@RequestMapping(value = "/deleteMaintenance", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> deleteMaintenance(@RequestBody String maintenanceJSON, HttpServletRequest rq) {
-
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT); 
+		}
 		try{
+		    ClientOrganisation client = usr.get().getClientOrganisation();
 			System.out.println("Start deleting");
-			//Principal principal = rq.getUserPrincipal();
-			//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 			Object obj = parser.parse(maintenanceJSON);
 			JSONObject jsonObject = (JSONObject) obj;
-			//long buildingId = (Long)jsonObject.get("buildingId");
 			long id = (Long)jsonObject.get("id");
 			System.out.println(id);	
-			//eventExternalService.updateEventOrganizerForDelete(eventId);
-			boolean bl = maintenanceService.deleteMaintenance(id);
+			boolean bl = maintenanceService.deleteMaintenance(client, id);
 			if(!bl){
-				System.out.println("cannot delete maintenance due to wrong service class method");
+				System.out.println("cannot delete maintenance");
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
 			}	
 		}
@@ -203,7 +215,7 @@ public class MaintenanceController {
 			boolean bl = maintenanceService.editMaintenance(client, id, vendorsId, start, end, description);
 			//levelService.editLevelInfo(levelId,levelNum, length, width, filePath);
 			if(!bl){
-				System.out.println("cannot update due to wrong service class method");
+				System.out.println("cannot update maintenance");
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
 			}			
 			//else
@@ -244,7 +256,7 @@ public class MaintenanceController {
 				boolean bl = maintenanceService.createMaintenance(client, unitsId, vendorsId, start, end, description);
 				System.out.println("adding maint " + vendorsId);
 				if(!bl){
-					System.out.println("cannot add due to wrong service class method");
+					System.out.println("cannot add maintenance");
 					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 				}			
 			}
@@ -260,10 +272,16 @@ public class MaintenanceController {
 					// Each object (building) will contain... long id, .
 						@RequestMapping(value = "/viewMaintenance",  method = RequestMethod.GET)
 						@ResponseBody
-						public String viewMaintenance(HttpServletRequest rq) {			    
+						public String viewMaintenance(HttpServletRequest rq) {	
+							System.out.println("start viewing all");
+							Principal principal = rq.getUserPrincipal();
+							Optional<User> usr = userService.getUserByEmail(principal.getName());
+							if ( !usr.isPresent() ){
+								return null; 
+							}
 							try{
-							//EventOrganizer eventOrg = eventOrg1.get();	
-								Set<Maintenance> maints = maintenanceService.getAllMaintenance();
+							ClientOrganisation client = usr.get().getClientOrganisation();
+							Set<Maintenance> maints = maintenanceService.getAllMaintenance(client);
 							System.out.println("There are " + maints.size() + " events under this organizer");
 							
 							//Gson gson = new Gson();
