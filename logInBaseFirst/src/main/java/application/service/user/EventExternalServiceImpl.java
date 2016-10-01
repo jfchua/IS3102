@@ -67,6 +67,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 		boolean isAvailable = true;
 		Date d1 = event_start_date;
 		Date d2 = event_end_date;
+		if(d1.compareTo(d2)>0)
+			return false;
 		int diffInDays = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
 		Calendar c = Calendar.getInstance();
 		try{		
@@ -244,6 +246,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 		System.out.println(units[0]);
 		Date d1 = event_start_date;
 		Date d2 = event_end_date;
+		if(d1.compareTo(d2)>0)
+			return false;
 		boolean isAvailable = true;
 		for(int i = 0; i<units.length; i ++){
 			long uId = Long.valueOf(units[i]);
