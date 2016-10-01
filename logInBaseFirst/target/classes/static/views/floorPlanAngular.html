@@ -23,11 +23,11 @@
        
        <div ng-controller="MyCtrl as myCtrl">    
     <div id="respond"></div>
-    <div id="glassbox">
+    <div id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
         <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
             id="{{unit.square.id}}" ng-mouseover=showDetails(unit)  draggable resizable  on-resize="resize(unit,$evt, $ui)"
               ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 
-              'background-color':'{{unit.square.color}}' }" ><p>{{unit.unitNumber}}<img  class="svgtest" src="{{unit.square.type}}" alt="notloaded"></p> </div>
+              'background-color':'{{unit.square.color}}' }" ><p>{{unit.unitNumber}}<img  class="svgtest" src="{{unit.square.type}}" alt="{{unit.square.type}}"></p> </div>
         </div>
      
   <button ng-click="viewUnit()">Start</button>
