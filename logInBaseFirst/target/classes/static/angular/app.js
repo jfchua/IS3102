@@ -2019,7 +2019,7 @@ app.controller('maintenanceController',['$scope', '$http','$location','$routePar
 				end: $scope.maintenance.end,
 				description: $scope.maintenance.description,	
 		};		
-		console.log(dataObj.start);
+		//console.log(dataObj.start);
 		console.log("REACHED HERE FOR SUBMIT maintenance " + JSON.stringify(dataObj));
 
 		var send = $http({
