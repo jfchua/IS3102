@@ -23,19 +23,21 @@ public interface EventService {
 	
 	//Set<EventOrganizer> getAllEventOrganizers();
 
-    Set<Event> getAllEvents();
+    Set<Event> getAllEvents(ClientOrganisation client);
 	
-	Set<Event> getAllApprovedEvents();
+	Set<Event> getAllApprovedEvents(ClientOrganisation client);
 	
-	Set<Event> getAllToBeApprovedEvents();
+	Set<Event> getAllToBeApprovedEvents(ClientOrganisation client);
 	
 
-	boolean updateEventStatusForPayment(long id, String status);
+	boolean updateEventStatusForPayment(ClientOrganisation client, long id, String status);
 	
-	boolean approveEvent(long id);
+	boolean approveEvent(ClientOrganisation client, long id);
 	
-	boolean deleteEvent(long id);
+	boolean deleteEvent(ClientOrganisation client, long id);
 		
 	Optional<Event> getEventById(long id);
+	
+	boolean checkEvent(ClientOrganisation client, long id);
 	
 }
