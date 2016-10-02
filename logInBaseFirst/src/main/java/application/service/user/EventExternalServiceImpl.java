@@ -455,6 +455,30 @@ public class EventExternalServiceImpl implements EventExternalService {
 		return doesHave;
 	}
 
+	@Override
+	public boolean checkEvent(ClientOrganisation client, long eventId) {
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		boolean doesHave = false;
+		try{
+			Optional<Event> event1 = getEventById(eventId);
+			if(event1.isPresent()){
+				Event event = event1.get();
+		     for(User u: eventOrgs){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_EXTEVE") && u.getEvents().contains(event)){
+			    doesHave = true;
+			    break;
+			    }
+			   }
+		    }
+			}
+		}catch(Exception e){
+			return false;
+			}
+		return doesHave;
+	}
+
 	/*
 	@Override
 	public Set<Event> getAllEventsByOrg(EventOrganizer eventOrg) {

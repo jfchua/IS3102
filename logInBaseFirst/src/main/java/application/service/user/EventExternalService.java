@@ -35,5 +35,7 @@ public interface EventExternalService {
 	String getUnitsId(long eventId);
 	
 	boolean checkUnit(ClientOrganisation client, long unitId);
+	
+	boolean checkEvent(ClientOrganisation client, long eventId);
 	//boolean checkAvailability(long unitId, Date event_start_date, Date event_end_date);
 }

@@ -155,11 +155,18 @@ public class EventExternalController {
 			@RequestMapping(value = "/getEvent1/{id}", method = RequestMethod.GET)
 			@ResponseBody
 			public String getEvent1(@PathVariable("id") String eventId, HttpServletRequest rq) {
+				Principal principal = rq.getUserPrincipal();
+				Optional<User> usr = userService.getUserByEmail(principal.getName());
+				if ( !usr.isPresent() ){
+					return null; 
+				}
 				try{
-				
+				    ClientOrganisation client = usr.get().getClientOrganisation();
 					long id = Long.parseLong(eventId);
+					boolean bl = eventExternalService.checkEvent(client, id);
 					Event event= eventExternalService.getEventById(id).get();
 					System.out.println("getting event now");
+					if(bl){
 					Gson gson2 = new GsonBuilder()
 							.setExclusionStrategies(new ExclusionStrategy() {
 								public boolean shouldSkipClass(Class<?> clazz) {
@@ -201,6 +208,8 @@ public class EventExternalController {
 				    System.out.println(obj.toString());
 					return obj.toString();
 					//return json;
+					}else
+						return "cannot fetch";
 				}
 				catch (Exception e){
 					return "cannot fetch";
