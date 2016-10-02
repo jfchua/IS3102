@@ -22,6 +22,7 @@ import application.domain.Event;
 import application.domain.EventCreateForm;
 import application.domain.EventOrganizer;
 import application.domain.Message;
+import application.domain.Role;
 import application.domain.Unit;
 import application.domain.User;
 import application.repository.EventOrganizerRepository;
@@ -65,15 +66,24 @@ public class EventServiceImpl implements EventService {
 
 
 	@Override
-	public Set<Event> getAllEvents() {
+	public Set<Event> getAllEvents(ClientOrganisation client) {
 		// TODO Auto-generated method stub
-		return eventRepository.getAllEvents();
+		Set<Event> allEvents = new HashSet<Event>();
+		Set<User> allUsers = client.getUsers();
+		for(User u: allUsers){
+			Set<Event> events= u.getEvents();
+			if(!events.isEmpty()){
+				for(Event e : events)
+					allEvents.add(e);
+			}
+		}
+		return allEvents;
 	}
 
 
 	@Override
-	public Set<Event> getAllApprovedEvents() {
-		Set<Event> allEvents = getAllEvents();
+	public Set<Event> getAllApprovedEvents(ClientOrganisation client) {
+		Set<Event> allEvents = getAllEvents(client);
 		Set<Event> approvedEvents = new HashSet<Event>();
 		for(Event ev: allEvents){
 				if(ev.getEvent_approval_status().equals("approved"))
@@ -84,8 +94,8 @@ public class EventServiceImpl implements EventService {
 
 
 	@Override
-	public Set<Event> getAllToBeApprovedEvents() {
-		Set<Event> allEvents = getAllEvents();
+	public Set<Event> getAllToBeApprovedEvents(ClientOrganisation client) {
+		Set<Event> allEvents = getAllEvents(client);
 		Set<Event> toBeApprovedEvents = new HashSet<Event>();
 		for(Event ev: allEvents){
 				if(ev.getEvent_approval_status().equals("processing"))
@@ -97,13 +107,17 @@ public class EventServiceImpl implements EventService {
 
 
 	@Override
-	public boolean updateEventStatusForPayment(long id, String status) {
+	public boolean updateEventStatusForPayment(ClientOrganisation client,long id, String status) {
 		try{		
 			Optional<Event> event1 = getEventById(id);
 			if(event1.isPresent()){	
 				Event event = event1.get();
+                if(checkEvent(client, id)){
 				event.setEvent_approval_status(status);
 				eventRepository.save(event);
+                }
+                else
+                	return false;
 			}
 		}
 	catch(Exception e){
@@ -114,13 +128,17 @@ public class EventServiceImpl implements EventService {
 
 
 	@Override
-	public boolean approveEvent(long id) {
+	public boolean approveEvent(ClientOrganisation client, long id) {
 		try{		
 			Optional<Event> event1 = getEventById(id);
 			if(event1.isPresent()){	
 				Event event = event1.get();
+				if(checkEvent(client, id)){
 				event.setEvent_approval_status("approved");
 				eventRepository.save(event);
+				 }
+                else
+                	return false;
 			}
 		}
 	catch(Exception e){
@@ -131,23 +149,18 @@ public class EventServiceImpl implements EventService {
 
 
 	@Override
-	public boolean deleteEvent(long id) {
+	public boolean deleteEvent(ClientOrganisation client, long id) {
 		// TODO Auto-generated method stub
 		try{		
 			Optional<Event> event1 = getEventById(id);
 			if(event1.isPresent()){	
 				Event event = event1.get();
-				/*
-				User org=event.getEventOrg();
-				Set<Event> events=org.getEvents();
-				events.remove(event);
-				org.setEvents(events);
-				//eventOrganizerRepository.saveAndFlush(org); 
-				event.setAreas(new HashSet<Area>());
-				event.setUnits(new HashSet<Unit>());
-				*/
+				if(checkEvent(client, id)){
 				eventRepository.delete(event);
 				eventRepository.flush();
+				 }
+                else
+                	return false;
 			}
 		}
 	catch(Exception e){
@@ -164,6 +177,32 @@ public class EventServiceImpl implements EventService {
 		return Optional.ofNullable(eventRepository.findOne(id));
 	}
 
+	@Override
+	public boolean checkEvent(ClientOrganisation client, long id) {
+		Set<User> users = client.getUsers();
+		boolean doesHave = false;
+		try{
+			Optional<Event> event1 = getEventById(id);
+			if(event1.isPresent()){
+				Event event = event1.get();
+		     for(User u: users){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_EXTEVE") && u.getEvents().contains(event)){
+			    doesHave = true;
+			    break;
+			    }
+			   }
+		    }
+			}
+		}catch(Exception e){
+			return false;
+			}
+		return doesHave;
+	}
+
+	
+	
 	/*
 	@Override
 	public void createEvent(ClientOrganisation client, String unitsId, String event_title, String event_content,
