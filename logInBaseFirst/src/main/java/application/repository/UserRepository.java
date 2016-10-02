@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     public Set<User> getUsersByClientOrgId(@Param("client_organisation") Long id);
     
     @Query(
-            value = "SELECT * FROM User user WHERE user.client_organisation = :client",
+            value = "SELECT * FROM User user WHERE user.client_organisation_id = :client",
             nativeQuery=true
        )
     public Set<User> getAllUsers(@Param("client") ClientOrganisation client);
