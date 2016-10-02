@@ -17,10 +17,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import application.domain.Building;
+import application.domain.ClientOrganisation;
 import application.domain.Event;
 import application.domain.EventCreateForm;
 import application.domain.EventOrganizer;
 import application.domain.Level;
+import application.domain.Role;
 import application.domain.Unit;
 import application.domain.User;
 import application.repository.EventOrganizerRepository;
@@ -46,25 +48,61 @@ public class EventExternalServiceImpl implements EventExternalService {
 	}
 
 	@Override
-	public Set<Event> getAllEventsByOrg(User eventOrg) {
-	    return eventOrg.getEvents();
+	public Set<Event> getAllEventsByOrg(ClientOrganisation client, User eventOrg) {
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		boolean doesHave = false;
+		for(User u: eventOrgs){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
+			    doesHave = true;
+			   }
+		}
+		if(doesHave)
+	        return eventOrg.getEvents();
+		else
+			return new HashSet<Event>();
 	}
 
 	@Override
-	public Set<Event> getAllApprovedEventsByOrg(User eventOrg) {
+	public Set<Event> getAllApprovedEventsByOrg(ClientOrganisation client, User eventOrg) {
 		Set<Event> approvedEvent = new HashSet<Event>();
 	    Set<Event> allEvents = eventOrg.getEvents();
+	    Set<User> eventOrgs = userRepository.getAllUsers(client);
+		boolean doesHave = false;
+		for(User u: eventOrgs){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
+			    doesHave = true;
+			   }
+		}
+		if(doesHave){
 		for(Event ev: allEvents){
 				if(ev.getEvent_approval_status().equals("approved"))
 					approvedEvent.add(ev);
 			}
 	    return approvedEvent;
+		}
+		else
+			return new HashSet<Event>();
 	}
 
 	@Override
-	public boolean editEvent(long id, String unitsId, String event_title, String event_content, String event_description,
+	public boolean editEvent(ClientOrganisation client, User eventOrg, long id, String unitsId, String event_title, String event_content, String event_description,
 			String status, Date event_start_date, Date event_end_date, String filePath) {
 		boolean isAvailable = true;
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		boolean doesHave = false;
+		for(User u: eventOrgs){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
+			    doesHave = true;
+			   }
+		}
+		if(!doesHave)
+			return false;
 		Date d1 = event_start_date;
 		Date d2 = event_end_date;
 		if(d1.compareTo(d2)>0)
@@ -83,6 +121,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 				Set<String> unitsNew = new HashSet<String>();
 				for(int i = 0; i<units.length; i ++){
 				unitsNew.add(units[i]);
+				if(!checkUnit(client, Long.valueOf(units[i])))
+					return false;
 				Optional<Unit> unitNew = unitRepository.getUnitById(Long.valueOf(units[i]));
 				if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){					
 					Unit unit1 = unitNew.get();
@@ -190,14 +230,26 @@ public class EventExternalServiceImpl implements EventExternalService {
 	}
 
 	@Override
-	public boolean deleteEvent(long id) {
+	public boolean deleteEvent(ClientOrganisation client, long id) {
 		System.out.println(id);
-      try{		
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		boolean doesHave = false;
+        try{		
 			Optional<Event> event1 = getEventById(id);
 			Event event = null;
 			if(event1.isPresent()){		
-				System.out.println("inside TRY");
+				System.out.println("inside TRY");				
 				 event = event1.get();
+				 User eventOrg = event.getEventOrg();
+				 for(User u: eventOrgs){
+					 Set<Role> roles = u.getRoles();
+					   for(Role r: roles){
+					    if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
+					    doesHave = true;
+					   }
+				}
+				if(!doesHave)
+					return false;
 				Set<Unit> units = event.getUnits();
 				for(Unit u: units){
 					ArrayList<Date> avail = u.getAvail();
@@ -216,12 +268,12 @@ public class EventExternalServiceImpl implements EventExternalService {
 					u.setEvents(eventFromUnit);
 				}
 				event.setUnits(new HashSet<Unit>());
-			    User eventOrg = event.getEventOrg();
-				Set<Event> events = eventOrg.getEvents();
+			    User eventOrg1 = event.getEventOrg();
+				Set<Event> events = eventOrg1.getEvents();
 				events.remove(event);
-				eventOrg.setEvents(events);
+				eventOrg1.setEvents(events);
 				event.setEvent_approval_status("cancelled");
-				userRepository.save(eventOrg);		   
+				userRepository.save(eventOrg1);		   
 				eventRepository.save(event);
 				eventRepository.flush();
 			    userRepository.flush();
@@ -239,11 +291,22 @@ public class EventExternalServiceImpl implements EventExternalService {
 	}
 
 	@Override
-	public boolean createEvent(User eventOrg, String unitsId, String event_title, String event_content, String event_description, String status,
+	public boolean createEvent(ClientOrganisation client, User eventOrg, String unitsId, String event_title, String event_content, String event_description, String status,
 			Date event_start_date, Date event_end_date, String filePath) {
 		Event event = new Event();
 		String[] units = unitsId.split(" ");
 		System.out.println(units[0]);
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		boolean doesHave = false;
+		for(User u: eventOrgs){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
+			    doesHave = true;
+			   }
+		}
+		if(!doesHave)
+			return false;
 		Date d1 = event_start_date;
 		Date d2 = event_end_date;
 		if(d1.compareTo(d2)>0)
@@ -257,6 +320,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 			if(unit1.isPresent()&&isAvailable){
 				System.out.println("inside if");
 				Unit unit = unit1.get();
+				if(!checkUnit(client, unit.getId()))
+					return false;
 				System.out.println("get unit");
 				event.getUnits().add(unit);
 				System.out.println("add unit lol");
@@ -371,6 +436,23 @@ public class EventExternalServiceImpl implements EventExternalService {
 		
 		}
      return unitsId;
+	}
+
+	@Override
+	public boolean checkUnit(ClientOrganisation client, long unitId) {
+		Set<Building> buildings = client.getBuildings();
+		boolean doesHave = false;
+		for(Building b: buildings){
+			Set<Level> levels = b.getLevels();
+			for(Level l : levels){
+				Optional<Unit> unit1 = unitRepository.getUnitById(unitId);
+				if(unit1.isPresent()&& l.getUnits().contains(unit1.get())){
+					doesHave = true;
+					break;
+				}
+			}
+		}
+		return doesHave;
 	}
 
 	/*

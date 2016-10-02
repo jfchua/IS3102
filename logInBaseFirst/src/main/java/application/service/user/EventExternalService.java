@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
+import application.domain.ClientOrganisation;
 import application.domain.Event;
 import application.domain.EventCreateForm;
 import application.domain.EventOrganizer;
@@ -13,25 +14,26 @@ import application.domain.User;
 
 
 public interface EventExternalService {
-    boolean createEvent(User eventOrg, String unitsId, String event_title, String event_content, String event_descriptions, String status, 
+    boolean createEvent(ClientOrganisation client, User eventOrg, String unitsId, String event_title, String event_content, String event_descriptions, String status, 
 			Date event_start_date, Date event_end_date, String filePath);
 	
-	Set<Event> getAllEventsByOrg(User eventOrg);
+	Set<Event> getAllEventsByOrg(ClientOrganisation client, User eventOrg);
 	
-	Set<Event> getAllApprovedEventsByOrg(User eventOrg);
+	Set<Event> getAllApprovedEventsByOrg(ClientOrganisation client, User eventOrg);
 	
-	boolean editEvent(long id, String unitsId, String event_title, String event_content, String event_description, String status,
+	boolean editEvent(ClientOrganisation client, User eventOrg, long id, String unitsId, String event_title, String event_content, String event_description, String status,
 			Date event_start_date, Date event_end_date, String filePath);
 
 	boolean updateEventOrganizerWithOnlyEventId(long eventId);
 	
 	boolean updateEventOrganizerForDelete(long eventId);
 	
-	boolean deleteEvent(long id);
+	boolean deleteEvent(ClientOrganisation client, long id);
 		
 	Optional<Event> getEventById(long id);
 	
 	String getUnitsId(long eventId);
 	
+	boolean checkUnit(ClientOrganisation client, long unitId);
 	//boolean checkAvailability(long unitId, Date event_start_date, Date event_end_date);
 }
