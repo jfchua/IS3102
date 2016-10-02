@@ -15,10 +15,12 @@ public boolean create(ClientOrganisation client, String name, String address, St
 
 public Set<Building> getAllBuildings(ClientOrganisation client);
 
-boolean editBuildingInfo(long id, String name, String address, String postalCode, String city, int numFloor,
+boolean editBuildingInfo(ClientOrganisation client, long id, String name, String address, String postalCode, String city, int numFloor,
 		String filePath);
 
 boolean deleteBuilding(ClientOrganisation client, long id);
 
 public Optional<Building> getBuildingById(long id);
+
+public boolean checkBuilding(ClientOrganisation client, long id);
 }

@@ -110,43 +110,56 @@ public class BuildingController {
 		}
 	}
 
+
 	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 	// Each object (building) will contain... long id, collection of levels.
 	@RequestMapping(value = "/getBuilding/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public String getBuilding(@PathVariable("id") String buildingId, HttpServletRequest rq) {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return null; 
+		}
 		try{
-
+			ClientOrganisation client = usr.get().getClientOrganisation();	
 			long id = Long.parseLong(buildingId);
+			boolean bl =buildingService.checkBuilding(client, id);
 			Building build = buildingService.getBuildingById(id).get();
-			Gson gson2 = new GsonBuilder()
-					.setExclusionStrategies(new ExclusionStrategy() {
-						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == Level.class);
-						}
+			if(bl){
+				Gson gson2 = new GsonBuilder()
+						.setExclusionStrategies(new ExclusionStrategy() {
+							public boolean shouldSkipClass(Class<?> clazz) {
+								return (clazz == Level.class);
+							}
+							/**
+							 * Custom field exclusion goes here
+							 */
+							@Override
+							public boolean shouldSkipField(FieldAttributes f) {
+								//TODO Auto-generated method stub
+								return false;
+							}
+						})
 						/**
-						 * Custom field exclusion goes here
+						 * Use serializeNulls method if you want To serialize null values 
+						 * By default, Gson does not serialize null values
 						 */
-						@Override
-						public boolean shouldSkipField(FieldAttributes f) {
-							//TODO Auto-generated method stub
-							return false;
-						}
-					})
-					/**
-					 * Use serializeNulls method if you want To serialize null values 
-					 * By default, Gson does not serialize null values
-					 */
-					.serializeNulls()
-					.create();
-			String json = gson2.toJson(build);
-			System.out.println("BUILDING IS " + json);
+						.serializeNulls()
+						.create();
+				String json = gson2.toJson(build);
+				System.out.println("BUILDING IS " + json);
 
-			return json;
+				return json;
+			}
+			else
+				return "cannot fetch";	
 		}
 		catch (Exception e){
 			return "cannot fetch";
 		}
+
+
 	}
 
 	//Security filters for inputs needs to be added
@@ -237,9 +250,13 @@ public class BuildingController {
 	@ResponseBody
 	public ResponseEntity<Void> updateBuilding(@RequestBody String buildingId,HttpServletRequest rq) {
 		System.out.println("start1111");
-		try{	
-			Principal principal = rq.getUserPrincipal();
-			Optional<User> usr = userService.getUserByEmail(principal.getName());
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();		
 			Object obj = parser.parse(buildingId);
 			JSONObject jsonObject = (JSONObject) obj;
 			System.out.println("start");
@@ -256,19 +273,17 @@ public class BuildingController {
 			String filePath = (String)jsonObject.get("filePath");
 			//Principal principal = rq.getUserPrincipal();
 			//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-			boolean bl = buildingService.editBuildingInfo(id, name, address, postalCode, city, numFloor, filePath);
-			if(!bl){
+			boolean bl = buildingService.editBuildingInfo(client,id, name, address, postalCode, city, numFloor, filePath);
+			if(!bl)
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			else{
-				AuditLog al = new AuditLog();
-				al.setTimeToNow();
-				al.setSystem("Property");
-				al.setAction("Update Building: " + buildingService.getBuildingById(id).get().getName());
-				al.setUser(usr.get());
-				al.setUserEmail(usr.get().getEmail());
-				auditLogRepository.save(al);
-			}
+
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Property");
+			al.setAction("Update Building: " + buildingService.getBuildingById(id).get().getName());
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch (Exception e){
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);

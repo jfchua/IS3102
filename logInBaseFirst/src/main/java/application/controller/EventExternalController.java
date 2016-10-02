@@ -76,6 +76,7 @@ public class EventExternalController {
 		try{
 			//EventOrganizer eventOrg = eventOrg1.get();
 			User eventOrg = eventOrg1.get();
+			ClientOrganisation client = eventOrg.getClientOrganisation();
 			System.out.println(eventOrg.getName());
 			Object obj = parser.parse(eventJSON);
 			JSONObject jsonObject = (JSONObject) obj;
@@ -91,7 +92,7 @@ public class EventExternalController {
 			String filePath = (String)jsonObject.get("filePath");
 			//long eventOrgId = (Long)jsonObject.get("id");
 			
-			boolean bl = eventExternalService.createEvent(eventOrg, unitsId, event_title, event_content, event_description, 
+			boolean bl = eventExternalService.createEvent(client, eventOrg, unitsId, event_title, event_content, event_description, 
 					event_approval_status, event_start_date, event_end_date, filePath);
 			System.out.println("adding event " + event_title);
 			if(!bl){
@@ -154,11 +155,18 @@ public class EventExternalController {
 			@RequestMapping(value = "/getEvent1/{id}", method = RequestMethod.GET)
 			@ResponseBody
 			public String getEvent1(@PathVariable("id") String eventId, HttpServletRequest rq) {
+				Principal principal = rq.getUserPrincipal();
+				Optional<User> usr = userService.getUserByEmail(principal.getName());
+				if ( !usr.isPresent() ){
+					return null; 
+				}
 				try{
-				
+				    ClientOrganisation client = usr.get().getClientOrganisation();
 					long id = Long.parseLong(eventId);
+					boolean bl = eventExternalService.checkEvent(client, id);
 					Event event= eventExternalService.getEventById(id).get();
 					System.out.println("getting event now");
+					if(bl){
 					Gson gson2 = new GsonBuilder()
 							.setExclusionStrategies(new ExclusionStrategy() {
 								public boolean shouldSkipClass(Class<?> clazz) {
@@ -200,6 +208,8 @@ public class EventExternalController {
 				    System.out.println(obj.toString());
 					return obj.toString();
 					//return json;
+					}else
+						return "cannot fetch";
 				}
 				catch (Exception e){
 					return "cannot fetch";
@@ -212,11 +222,8 @@ public class EventExternalController {
 				@RequestMapping(value = "/viewAllEvents",  method = RequestMethod.GET)
 				@ResponseBody
 				public String viewAllEvents(HttpServletRequest rq) {
-					//Principal principal = rq.getUserPrincipal();
-					//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 				    System.out.println("start view");
 				    Principal principal = rq.getUserPrincipal();
-					//Optional<EventOrganizer> eventOrg1 = eventOrganizerService.getEventOrganizerByEmail(principal.getName());
 				    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
 					if ( !eventOrg1.isPresent() ){
 						return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
@@ -224,8 +231,9 @@ public class EventExternalController {
 					try{
 					//EventOrganizer eventOrg = eventOrg1.get();	
 					User eventOrg = eventOrg1.get();
+					ClientOrganisation client = eventOrg.getClientOrganisation();
 					System.out.println(eventOrg.getId());
-					Set<Event> events = eventExternalService.getAllEventsByOrg(eventOrg);
+					Set<Event> events = eventExternalService.getAllEventsByOrg(client, eventOrg);
 					System.out.println("There are " + events.size() + " events under this organizer");
 					
 					//Gson gson = new Gson();
@@ -282,8 +290,9 @@ public class EventExternalController {
 							try{
 							//EventOrganizer eventOrg = eventOrg1.get();	
 						    User eventOrg = eventOrg1.get();
+						    ClientOrganisation client = eventOrg.getClientOrganisation();
 							System.out.println(eventOrg.getId());
-							Set<Event> events = eventExternalService.getAllApprovedEventsByOrg(eventOrg);
+							Set<Event> events = eventExternalService.getAllApprovedEventsByOrg(client, eventOrg);
 							System.out.println("There are " + events.size() + " events under this organizer");
 						
 						//Gson gson = new Gson();
@@ -330,18 +339,21 @@ public class EventExternalController {
 					@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
 					@ResponseBody
 					public ResponseEntity<Void> deleteEvent(@RequestBody String eventJSON, HttpServletRequest rq) {
-
-						try{
+						Principal principal = rq.getUserPrincipal();
+					 Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());	
+					   if ( !eventOrg1.isPresent() ){
+							return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+						}
+						try{	
+					    User eventOrg = eventOrg1.get();
+					    ClientOrganisation client = eventOrg.getClientOrganisation();
 							System.out.println("Start deleting");
-							//Principal principal = rq.getUserPrincipal();
-							//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 							Object obj = parser.parse(eventJSON);
 							JSONObject jsonObject = (JSONObject) obj;
 							//long buildingId = (Long)jsonObject.get("buildingId");
 							long eventId = (Long)jsonObject.get("eventId");
 							System.out.println("eventId");	
-							//eventExternalService.updateEventOrganizerForDelete(eventId);
-							boolean bl=eventExternalService.deleteEvent(eventId);
+							boolean bl=eventExternalService.deleteEvent(client, eventId);
 							if(!bl){
 								System.out.println("cannot delete event");
 								return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
@@ -360,8 +372,15 @@ public class EventExternalController {
 					@ResponseBody
 					public ResponseEntity<Void> updateEvent(@RequestBody String eventJSON, HttpServletRequest rq) {
 						System.out.println("start updating not yet");
+						Principal principal = rq.getUserPrincipal();
+						 Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());	
+						   if ( !eventOrg1.isPresent() ){
+								return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+							}
+							try{	
+						    User eventOrg = eventOrg1.get();
+						    ClientOrganisation client = eventOrg.getClientOrganisation();
 						DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-						try{
 							System.out.println("start updating");
 							Object obj = parser.parse(eventJSON);
 							JSONObject jsonObject = (JSONObject) obj;
@@ -382,7 +401,7 @@ public class EventExternalController {
 							System.out.println("end of controller");
 							//Principal principal = rq.getUserPrincipal();
 							//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-							boolean bl = eventExternalService.editEvent(eventId, unitsId, event_title, event_content, event_description, event_approval_status,
+							boolean bl = eventExternalService.editEvent(client, eventOrg, eventId, unitsId, event_title, event_content, event_description, event_approval_status,
 									 event_start_date, event_end_date, filePath);
 							//levelService.editLevelInfo(levelId,levelNum, length, width, filePath);
 							if(!bl){

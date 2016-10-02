@@ -79,10 +79,17 @@ import application.service.user.UserService;
 				@RequestMapping(value = "/getEvent/{id}", method = RequestMethod.GET)
 				@ResponseBody
 				public String getEvent(@PathVariable("id") String eventId, HttpServletRequest rq) {
+					Principal principal = rq.getUserPrincipal();
+					Optional<User> usr = userService.getUserByEmail(principal.getName());
+					if ( !usr.isPresent() ){
+						return null; 
+					}
 					try{
-					
+					    ClientOrganisation client = usr.get().getClientOrganisation();				   
 						long id = Long.parseLong(eventId);
 						Event event= eventService.getEventById(id).get();
+						boolean bl = eventService.checkEvent(client, id);
+						if(bl){
 						Gson gson2 = new GsonBuilder()
 								.setExclusionStrategies(new ExclusionStrategy() {
 									public boolean shouldSkipClass(Class<?> clazz) {
@@ -106,6 +113,8 @@ import application.service.user.UserService;
 						String json = gson2.toJson(event);
 						System.out.println("EVENT IS " + json);
 						return json;
+						}else
+							return "cannot fetch";
 					}
 					catch (Exception e){
 						return "cannot fetch";
@@ -118,11 +127,15 @@ import application.service.user.UserService;
 								@RequestMapping(value = "/viewAllEvents",  method = RequestMethod.GET)
 								@ResponseBody
 								public String viewAllEvents(HttpServletRequest rq) {
-									//Principal principal = rq.getUserPrincipal();
-									//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-								    System.out.println("start view");
+									Principal principal = rq.getUserPrincipal();
+									Optional<User> usr = userService.getUserByEmail(principal.getName());
+									if ( !usr.isPresent() ){
+										return null; 
+									}
 									try{
-									Set<Event> events = eventService.getAllEvents();
+									    ClientOrganisation client = usr.get().getClientOrganisation();
+								    System.out.println("start view");
+									Set<Event> events = eventService.getAllEvents(client);
 									System.err.println("There are " + events.size() + " events");
 									
 									//Gson gson = new Gson();
@@ -168,10 +181,14 @@ import application.service.user.UserService;
 									@RequestMapping(value = "/viewApprovedEvents",  method = RequestMethod.GET)
 									@ResponseBody
 									public String viewApprovedEvents(HttpServletRequest rq) {
-										//Principal principal = rq.getUserPrincipal();
-										//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-									try{
-										Set<Event> events = eventService.getAllApprovedEvents();
+										Principal principal = rq.getUserPrincipal();
+										Optional<User> usr = userService.getUserByEmail(principal.getName());
+										if ( !usr.isPresent() ){
+											return null; 
+										}
+										try{
+										    ClientOrganisation client = usr.get().getClientOrganisation();
+										Set<Event> events = eventService.getAllApprovedEvents(client);
 										System.err.println("There are " + events.size() + " approved events");
 										
 										//Gson gson = new Gson();
@@ -217,10 +234,14 @@ import application.service.user.UserService;
 										@RequestMapping(value = "/viewToBeApprovedEvents",  method = RequestMethod.GET)
 										@ResponseBody
 										public String viewToBeApprovedEvents(HttpServletRequest rq) {
-											//Principal principal = rq.getUserPrincipal();
-											//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-										try{
-											Set<Event> events = eventService.getAllToBeApprovedEvents();
+											Principal principal = rq.getUserPrincipal();
+											Optional<User> usr = userService.getUserByEmail(principal.getName());
+											if ( !usr.isPresent() ){
+												return null; 
+											}
+											try{
+											ClientOrganisation client = usr.get().getClientOrganisation();
+											Set<Event> events = eventService.getAllToBeApprovedEvents(client);
 											System.err.println("There are " + events.size() + " to be approved events");
 											
 											//Gson gson = new Gson();
@@ -266,8 +287,13 @@ import application.service.user.UserService;
 										@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
 										@ResponseBody
 										public ResponseEntity<Void> deleteEvent(@RequestBody String eventJSON, HttpServletRequest rq) {
-	
+											Principal principal = rq.getUserPrincipal();
+											Optional<User> usr = userService.getUserByEmail(principal.getName());
+											if ( !usr.isPresent() ){
+												return null; 
+											}
 											try{
+											    ClientOrganisation client = usr.get().getClientOrganisation();
 												System.out.println("Start deleting");
 												//Principal principal = rq.getUserPrincipal();
 												//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
@@ -277,7 +303,7 @@ import application.service.user.UserService;
 												long eventId = (Long)jsonObject.get("eventId");
 												System.out.println("eventId");	
 												//eventExternalService.updateEventOrganizerForDelete(eventId);
-												boolean bl=eventService.deleteEvent(eventId);
+												boolean bl=eventService.deleteEvent(client, eventId);
 												System.out.println(bl);	
 											}
 											catch (Exception e){
@@ -308,7 +334,7 @@ import application.service.user.UserService;
 												System.out.println("start lala");
 												long eventId = (Long)jsonObject.get("eventId");
 												System.out.println(eventId);
-												boolean bl=eventService.approveEvent(eventId);
+												boolean bl=eventService.approveEvent(client, eventId);
 												System.out.println(bl);										
 												String subject = "Approval of Event";
 												String msg = "Event ID " +eventId +" is approved.";
@@ -336,8 +362,13 @@ import application.service.user.UserService;
 										@ResponseBody
 										public ResponseEntity<Void> updateEventStatus(@RequestBody String eventJSON, HttpServletRequest rq) {
 											System.out.println("start updating not yet");
-											//DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+											Principal principal = rq.getUserPrincipal();
+											Optional<User> usr = userService.getUserByEmail(principal.getName());
+											if ( !usr.isPresent() ){
+												return null; 
+											}
 											try{
+											    ClientOrganisation client = usr.get().getClientOrganisation();
 												System.out.println("start updating");
 												Object obj = parser.parse(eventJSON);
 												JSONObject jsonObject = (JSONObject) obj;
@@ -346,7 +377,7 @@ import application.service.user.UserService;
 												long eventId = (Long)jsonObject.get("id");
 											    String status = (String)jsonObject.get("event_approval_status");
 												System.out.println(eventId);
-												boolean bl=eventService.updateEventStatusForPayment(eventId, status);
+												boolean bl=eventService.updateEventStatusForPayment(client, eventId, status);
 												System.out.println(bl);
 											}
 											catch (Exception e){
