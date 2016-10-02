@@ -48,7 +48,7 @@ public class MessageServiceImpl implements MessageService {
 		//INCOMPLETE LOGGING
 		AuditLog al = new AuditLog();
 		al.setTimeToNow();
-		al.setSystem("Notification System");
+		al.setSystem("Notification");
 		al.setAction("Sending Notification Message");
 		//al.setEmail(currentUsername);
 		auditLogRepository.save(al);
@@ -92,8 +92,8 @@ public class MessageServiceImpl implements MessageService {
 		userRepository.save(recipient);
 		AuditLog al = new AuditLog();
 		al.setTimeToNow();
-		al.setSystem("Notification System");
-		al.setAction("Sending Notification Message");
+		al.setSystem("Notification");
+		al.setAction("Send Notification Message To " + recipient.getEmail() );
 		//al.setEmail(currentUsername);
 		al.setUser(sender);
 		al.setUserEmail(sender.getEmail());

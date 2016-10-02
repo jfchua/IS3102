@@ -557,7 +557,7 @@ app.config(
 
 			/*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
 		})
-app.factory('httpAuthInterceptor', function () {
+app.factory('httpAuthInterceptor', function ($q) {
 		return {
 		'response': function(response) {
 		                    return response;
@@ -1092,6 +1092,7 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 		console.log("GETTING THE USER PROFILE");
 		send.success(function(response){
 			//alert('You have GOTTEN your profile');
+			console.log("GOTTEN THE USER PROFILE AS " + JSON.stringify(response));
 			$scope.dataRoles = response;
 		});
 		send.error(function(response){
@@ -3295,6 +3296,8 @@ app.controller('auditLogController', ['$scope', '$http', function ($scope, $http
 	$scope.submit = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
+		//$scope.audit.startDate.setDate($scope.audit.startDate.getDate() + 1);
+		$scope.audit.endDate.setDate($scope.audit.endDate.getDate() + 1);
 		var dataObj = {
 				username: $scope.selectedUser,
 				system: $scope.selectedSystem,

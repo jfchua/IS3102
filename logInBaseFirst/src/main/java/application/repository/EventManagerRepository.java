@@ -23,7 +23,7 @@ public interface EventManagerRepository extends JpaRepository<Event, Long>{
  public Collection<Event> getAllEventsByTitle(/*@Param("event") String event*/);
 
 	@Query(
-	        value = "SELECT * FROM Event e where e.event_status = :pending", 
+	        value = "SELECT * FROM Event e where e.event_approval_status = :pending", 
 	        nativeQuery=true
 	   )
  public Collection<Event> getAllEventsByPending(@Param("pending") String event);

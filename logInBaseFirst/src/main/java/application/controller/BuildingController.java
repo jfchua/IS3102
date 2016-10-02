@@ -42,54 +42,104 @@ public class BuildingController {
 	private final BuildingService buildingService;
 	private final ClientOrganisationService clientOrganisationService;
 	private final UserService userService;
-private final AuditLogRepository auditLogRepository;
-	
+	private final AuditLogRepository auditLogRepository;
+
 	private JSONParser parser = new JSONParser();
 
 	@Autowired
 	public BuildingController(AuditLogRepository auditLogRepository, BuildingService buildingService, ClientOrganisationService clientOrganisationService,
-			 UserService userService) {
+			UserService userService) {
 		super();
 		this.buildingService = buildingService;
 		this.clientOrganisationService = clientOrganisationService;
 		this.userService = userService;
 		this.auditLogRepository = auditLogRepository;
 	}
-	
+
 	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 	// Each object (building) will contain... long id, collection of levels.
-		@RequestMapping(value = "/viewBuildings", method = RequestMethod.GET)
-		@ResponseBody
-		public String viewBuildings(HttpServletRequest rq) {
-			Principal principal = rq.getUserPrincipal();
-			Optional<User> usr = userService.getUserByEmail(principal.getName());
-			if ( !usr.isPresent() ){
-				return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
-			}
-			try{
-				ClientOrganisation client = usr.get().getClientOrganisation();
-				Set<Building> buildings = client.getBuildings();
-				//Gson gson = new Gson();
-				//String json = gson.toJson(buildings);
-				//System.out.println("Returning buildings with json of : " + json);
-				//return json;	
-				System.out.println(buildings);
+	@RequestMapping(value = "/viewBuildings", method = RequestMethod.GET)
+	@ResponseBody
+	public String viewBuildings(HttpServletRequest rq) {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();
+			Set<Building> buildings = client.getBuildings();
+			//Gson gson = new Gson();
+			//String json = gson.toJson(buildings);
+			//System.out.println("Returning buildings with json of : " + json);
+			//return json;	
+			System.out.println(buildings);
+			Gson gson2 = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == Level.class);
+						}
+
+						/**
+						 * Custom field exclusion goes here
+						 */
+
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+						}
+
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();
+
+
+
+			String json = gson2.toJson(buildings);
+			System.out.println("BUILDING IS " + json);
+
+			return json;
+		}
+		catch (Exception e){
+			return "cannot fetch";
+		}
+	}
+
+
+	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
+	// Each object (building) will contain... long id, collection of levels.
+	@RequestMapping(value = "/getBuilding/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public String getBuilding(@PathVariable("id") String buildingId, HttpServletRequest rq) {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return null; 
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();	
+			long id = Long.parseLong(buildingId);
+			boolean bl =buildingService.checkBuilding(client, id);
+			Building build = buildingService.getBuildingById(id).get();
+			if(bl){
 				Gson gson2 = new GsonBuilder()
 						.setExclusionStrategies(new ExclusionStrategy() {
 							public boolean shouldSkipClass(Class<?> clazz) {
 								return (clazz == Level.class);
 							}
-
 							/**
 							 * Custom field exclusion goes here
 							 */
-
 							@Override
 							public boolean shouldSkipField(FieldAttributes f) {
 								//TODO Auto-generated method stub
 								return false;
 							}
-
 						})
 						/**
 						 * Use serializeNulls method if you want To serialize null values 
@@ -97,193 +147,149 @@ private final AuditLogRepository auditLogRepository;
 						 */
 						.serializeNulls()
 						.create();
-
-
-
-				String json = gson2.toJson(buildings);
+				String json = gson2.toJson(build);
 				System.out.println("BUILDING IS " + json);
 
 				return json;
 			}
-			catch (Exception e){
-				return "cannot fetch";
-			}
+			else
+				return "cannot fetch";	
 		}
-		
-		// Call this method using $http.get and you will get a JSON format containing an array of building objects.
-		// Each object (building) will contain... long id, collection of levels.
-			@RequestMapping(value = "/getBuilding/{id}", method = RequestMethod.GET)
-			@ResponseBody
-			public String getBuilding(@PathVariable("id") String buildingId, HttpServletRequest rq) {
-				Principal principal = rq.getUserPrincipal();
-				Optional<User> usr = userService.getUserByEmail(principal.getName());
-				if ( !usr.isPresent() ){
-					return null; 
-				}
-				try{
-				    ClientOrganisation client = usr.get().getClientOrganisation();	
-					long id = Long.parseLong(buildingId);
-					boolean bl =buildingService.checkBuilding(client, id);
-					Building build = buildingService.getBuildingById(id).get();
-					if(bl){
-					Gson gson2 = new GsonBuilder()
-							.setExclusionStrategies(new ExclusionStrategy() {
-								public boolean shouldSkipClass(Class<?> clazz) {
-									return (clazz == Level.class);
-								}
-								/**
-								 * Custom field exclusion goes here
-								 */
-								@Override
-								public boolean shouldSkipField(FieldAttributes f) {
-									//TODO Auto-generated method stub
-									return false;
-								}
-							})
-							/**
-							 * Use serializeNulls method if you want To serialize null values 
-							 * By default, Gson does not serialize null values
-							 */
-							.serializeNulls()
-							.create();
-					String json = gson2.toJson(build);
-					System.out.println("BUILDING IS " + json);
+		catch (Exception e){
+			return "cannot fetch";
+		}
 
-					return json;
-				}
-					else
-						return "cannot fetch";	
-				}
-				catch (Exception e){
-					return "cannot fetch";
-				}
-			}
 
-		//Security filters for inputs needs to be added
-		//This method takes in a string which contains the attributes of the building to be added.
-		//Call $http.post(URL,stringToAdd);
-		@RequestMapping(value = "/addBuilding", method = RequestMethod.POST)
-		@ResponseBody
-		public ResponseEntity<Void> addBuilding(@RequestBody String buildingJSON,HttpServletRequest rq) {
-			System.out.println("startADD");
-			Principal principal = rq.getUserPrincipal();
-			Optional<User> usr = userService.getUserByEmail(principal.getName());
-			if ( !usr.isPresent() ){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
-			}
-			try{
-				ClientOrganisation client = usr.get().getClientOrganisation();
-				Object obj1 = parser.parse(buildingJSON);
-				JSONObject jsonObject = (JSONObject) obj1;
-				String name = (String)jsonObject.get("name");
-				String address = (String)jsonObject.get("address");
-				String postalCode = (String)jsonObject.get("postalCode");
-				System.out.println(postalCode);
-				String city = (String)jsonObject.get("city");
-				int numFloor = ((Long)jsonObject.get("numFloor")).intValue();
-				String filePath = (String)jsonObject.get("filePath");
-				
-				boolean bl = buildingService.create(client, name, address, postalCode, city, numFloor, filePath);
-				System.out.println("adding building " + name);
-				if(bl){
+	}
+
+	//Security filters for inputs needs to be added
+	//This method takes in a string which contains the attributes of the building to be added.
+	//Call $http.post(URL,stringToAdd);
+	@RequestMapping(value = "/addBuilding", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> addBuilding(@RequestBody String buildingJSON,HttpServletRequest rq) {
+		System.out.println("startADD");
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();
+			Object obj1 = parser.parse(buildingJSON);
+			JSONObject jsonObject = (JSONObject) obj1;
+			String name = (String)jsonObject.get("name");
+			String address = (String)jsonObject.get("address");
+			String postalCode = (String)jsonObject.get("postalCode");
+			System.out.println(postalCode);
+			String city = (String)jsonObject.get("city");
+			int numFloor = ((Long)jsonObject.get("numFloor")).intValue();
+			String filePath = (String)jsonObject.get("filePath");
+
+			boolean bl = buildingService.create(client, name, address, postalCode, city, numFloor, filePath);
+			System.out.println("adding building " + name);
+			if(bl){
 				AuditLog al = new AuditLog();
 				al.setTimeToNow();
-				al.setSystem("Property System");
+				al.setSystem("Property");
 				al.setAction("Add Building: " + name);
-				//al.setEmail(currentUsername);
 				al.setUser(usr.get());
 				al.setUserEmail(usr.get().getEmail());
 				auditLogRepository.save(al);
-				}
-				else
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			}
-			catch (Exception e){
-				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+			else
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			return new ResponseEntity<Void>(HttpStatus.OK);
-		}	
-		
-		//This method takes in a String which is the ID of the building to be deleted
-		// Call $http.post(URL,(String)id);
-		@RequestMapping(value = "/deleteBuilding", method = RequestMethod.POST)
-		@ResponseBody
-		public ResponseEntity<Void> deleteBuilding(@RequestBody String buildingId,HttpServletRequest rq) {
+		}
+		catch (Exception e){
+			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}	
 
-			Principal principal = rq.getUserPrincipal();
-			Optional<User> usr = userService.getUserByEmail(principal.getName());
-			if ( !usr.isPresent() ){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
-			}
-			try{
-				ClientOrganisation client = usr.get().getClientOrganisation();
-				System.out.println(buildingId + " delete!!");
-				Object obj = parser.parse(buildingId);
-				JSONObject jsonObject = (JSONObject) obj;
-				long id = (Long)jsonObject.get("id");
-				boolean bl = buildingService.deleteBuilding(client,id);			
-				if(bl){
-					System.out.println("delete building " + id);	
+	//This method takes in a String which is the ID of the building to be deleted
+	// Call $http.post(URL,(String)id);
+	@RequestMapping(value = "/deleteBuilding", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> deleteBuilding(@RequestBody String buildingId,HttpServletRequest rq) {
+
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();
+			System.out.println(buildingId + " delete!!");
+			Object obj = parser.parse(buildingId);
+			JSONObject jsonObject = (JSONObject) obj;
+			long id = (Long)jsonObject.get("id");
+			boolean bl = buildingService.deleteBuilding(client,id);
+			System.out.println("delete building " + id);
+			if ( bl ){
 				AuditLog al = new AuditLog();
 				al.setTimeToNow();
-				al.setSystem("Property System");
+				al.setSystem("Property");
 				al.setAction("Delete Building: " + buildingService.getBuildingById(id).get().getName());
-				//al.setEmail(currentUsername);
 				al.setUser(usr.get());
 				al.setUserEmail(usr.get().getEmail());
 				auditLogRepository.save(al);
-				}else{
-					System.out.println("cannot delete");
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
-				}
 			}
-			catch (Exception e){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
-		
-		//This method takes in a JSON format which contains an object with 7 attributes
-		//Long/String id, String name, String address, int postalCode, String city, 
-		//int numFloor, String filePath;
-		//Call $httpPost(Url,JSONData);
-		@RequestMapping(value = "/updateBuilding", method = RequestMethod.POST)
-		@ResponseBody
-		public ResponseEntity<Void> updateBuilding(@RequestBody String buildingId,HttpServletRequest rq) {
-			System.out.println("start1111");
-			Principal principal = rq.getUserPrincipal();
-			Optional<User> usr = userService.getUserByEmail(principal.getName());
-			if ( !usr.isPresent() ){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
-			}
-			try{
-				ClientOrganisation client = usr.get().getClientOrganisation();		
-				Object obj = parser.parse(buildingId);
-				JSONObject jsonObject = (JSONObject) obj;
-				System.out.println("start");
-				long id = (Long)jsonObject.get("id");
-				String name = (String)jsonObject.get("name");
-				System.out.println("after name");
-				String address = (String)jsonObject.get("address");
-				System.out.println("after address");
-				String postalCode = (String)jsonObject.get("postalCode");
-				System.out.println("after post");
-				String city = (String)jsonObject.get("city");
-				System.out.println("after city");
-				int numFloor = ((Long)jsonObject.get("numFloor")).intValue();
-				String filePath = (String)jsonObject.get("filePath");
-				//Principal principal = rq.getUserPrincipal();
-				//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-				boolean bl = buildingService.editBuildingInfo(client,id, name, address, postalCode, city, numFloor, filePath);
-				if(!bl)
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			catch (Exception e){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			return new ResponseEntity<Void>(HttpStatus.OK);
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-	
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+	//This method takes in a JSON format which contains an object with 7 attributes
+	//Long/String id, String name, String address, int postalCode, String city, 
+	//int numFloor, String filePath;
+	//Call $httpPost(Url,JSONData);
+	@RequestMapping(value = "/updateBuilding", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> updateBuilding(@RequestBody String buildingId,HttpServletRequest rq) {
+		System.out.println("start1111");
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();		
+			Object obj = parser.parse(buildingId);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println("start");
+			long id = (Long)jsonObject.get("id");
+			String name = (String)jsonObject.get("name");
+			System.out.println("after name");
+			String address = (String)jsonObject.get("address");
+			System.out.println("after address");
+			String postalCode = (String)jsonObject.get("postalCode");
+			System.out.println("after post");
+			String city = (String)jsonObject.get("city");
+			System.out.println("after city");
+			int numFloor = ((Long)jsonObject.get("numFloor")).intValue();
+			String filePath = (String)jsonObject.get("filePath");
+			//Principal principal = rq.getUserPrincipal();
+			//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
+			boolean bl = buildingService.editBuildingInfo(client,id, name, address, postalCode, city, numFloor, filePath);
+			if(!bl)
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Property");
+			al.setAction("Update Building: " + buildingService.getBuildingById(id).get().getName());
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
 
 }
