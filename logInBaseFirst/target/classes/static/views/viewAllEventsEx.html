@@ -95,6 +95,7 @@
            <th><i></i> Start Date </th>
            <th><i></i> End Date </th>
            <th><i></i> Status </th>
+           <th><i></i> View </th>
            <th>Action</th>
            <th></th>
             <th></th>
@@ -107,6 +108,7 @@
          <td>{{ x.event_approval_status }}</td>
          <td><a ng-model="myValue" href="/#/updateEventEx" ng-click="getEvent(x.id)">Update</a></td>
          <td><a ng-model="myValue" href="/#/cancelEventEx" ng-click="getEvent(x.id)">Delete</a></td>
+         <td><a ng-model="myValue" href="/#/viewBookingEx" ng-click="getEvent(x.id)">View Booking</a></td>
          <td><a ng-model="myValue" href="/#/createUnitPlanEx" ng-click="getEvent(x.id)">Unit Plan</a></td>
          </tr>
          </tbody>
