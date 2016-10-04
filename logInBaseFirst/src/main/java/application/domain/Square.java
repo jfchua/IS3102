@@ -33,11 +33,6 @@ public class Square {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
 	public int getLeft() {
 		return left;
 	}
