@@ -107,27 +107,31 @@ public class EventExternalServiceImpl implements EventExternalService {
 		}
 		if(!doesHave)
 			return false;
+		System.out.println("1");
 		Date d1 = event_start_date;
 		Date d2 = event_end_date;
 		if(d1.compareTo(d2)>0)
 			return false;
+		System.out.println("2");
 		try{		
 			Optional<Event> event1 = getEventById(id);
 			if(event1.isPresent()&&isAvailable){			
 				Event event = event1.get();
+				//System.out.println("3");
 				Set<BookingAppl> bookingList = event.getBookings();
 				Set<Unit> unitsOld = new HashSet<Unit>();
 				for(BookingAppl b: bookingList)
 					unitsOld.add(b.getUnit());
-				
+				//System.out.println("4");
 				String[] units = unitsId.split(" ");
 				Set<Unit> unitsNew = new HashSet<Unit>();
 				for(int i = 0; i<units.length; i ++){
-				
+					System.out.println("inside the loop now");
 				if(!checkUnit(client, Long.valueOf(units[i])))
 					return false;
 				Optional<Unit> unitNew = unitRepository.getUnitById(Long.valueOf(units[i]));
-				if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){					
+				if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){	
+					//System.out.println("iffff");
 					Unit unit1 = unitNew.get();		
 					unitsNew.add(unit1);
 					int count = bookingApplRepository.getNumberOfBookings(unit1, d1, d2);
@@ -138,13 +142,22 @@ public class EventExternalServiceImpl implements EventExternalService {
 				}//DONE
 				else if (unitNew.isPresent()&&(unitsOld.contains(unitNew.get()))){
 				Unit unit1 = unitNew.get();
+				//System.out.println("elseeee");
 		            BookingAppl b = bookingApplRepository.getBookingEntity(unit1, d1, d2);
-		            if(!unitsOld.contains(b)){
+		            Unit unitFromB = b.getUnit();
+		            unitsNew.add(unit1);
+		            System.out.println(b.getId());
+		            System.out.println(unitsOld.iterator().next().getId());
+		            if(!unitsOld.contains(unitFromB)){
 		            	isAvailable = false;
 		            	break;
 		            }
 				}
+				
+				
+				System.out.println("5");
 				}//DONE!!! 4/10/2016
+				System.out.println(isAvailable);
 				if(isAvailable){					
 				for(BookingAppl b1: bookingList){
 					Unit unit = b1.getUnit();
@@ -152,10 +165,12 @@ public class EventExternalServiceImpl implements EventExternalService {
 					bookingsFromUnit.remove(b1);
 					bookingList.remove(b1);
 				}
+				System.out.println("6");
 				//need to save the new units?
 				for(Unit i : unitsNew){
 					BookingAppl newBooking = new BookingAppl();
 					newBooking.setEvent_start_date_time(event_start_date);
+					System.out.println(event_start_date);
 					newBooking.setEvent_end_date_time(event_end_date);
 					newBooking.setUnit(i);
 				    newBooking.setEvent(event);
@@ -287,6 +302,9 @@ public class EventExternalServiceImpl implements EventExternalService {
 					Unit unit = unit1.get();	
 					BookingAppl booking = new BookingAppl();
 					booking.setEvent_start_date_time(event_start_date);
+					System.out.println("inside the controller");
+					System.out.println(event_start_date);
+					System.out.println(booking.getEvent_start_date_time());
 					booking.setEvent_end_date_time(event_end_date);
 					booking.setUnit(unit);
 					booking.setEvent(event);

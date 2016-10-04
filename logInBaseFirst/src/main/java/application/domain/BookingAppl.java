@@ -28,11 +28,11 @@ public class BookingAppl {
 	 @Column(name = "id", nullable = false, updatable = false)
 	 private Long id;
 	 
-	 @Temporal(TemporalType.DATE)
+	 @Temporal(TemporalType.TIMESTAMP)
 	 @Column(name = "event_start_date_time", nullable = false)
 	 private Date event_start_date_time;
 	    
-	 @Temporal(TemporalType.DATE)
+	 @Temporal(TemporalType.TIMESTAMP)
 	 @Column(name = "event_end_date_time", nullable = false)
 	 private Date event_end_date_time;
 
