@@ -121,7 +121,7 @@ public class EventExternalController {
 				Gson gson2 = new GsonBuilder()
 						.setExclusionStrategies(new ExclusionStrategy() {
 							public boolean shouldSkipClass(Class<?> clazz) {
-								return (clazz == User.class)||(clazz == Unit.class)||(clazz == Area.class);
+								return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == Area.class);
 							}
 							/**
 							 * Custom field exclusion goes here
@@ -170,7 +170,7 @@ public class EventExternalController {
 					Gson gson2 = new GsonBuilder()
 							.setExclusionStrategies(new ExclusionStrategy() {
 								public boolean shouldSkipClass(Class<?> clazz) {
-									return (clazz == User.class)||(clazz == Unit.class)||(clazz == Area.class);
+									return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == Area.class);
 								}
 								/**
 								 * Custom field exclusion goes here
@@ -197,10 +197,12 @@ public class EventExternalController {
 				    obj.put("event_content", event.getEvent_content());
 				    obj.put("event_description", event.getEvent_description());
 				    obj.put("event_approval_status", event.getEvent_approval_status());
-				    obj.put("event_start_date", String.valueOf(event.getEvent_start_date()));
-				    System.out.println(event.getEvent_start_date());
-				    obj.put("event_end_date", String.valueOf(event.getEvent_end_date()));
-				    System.out.println(event.getEvent_start_date());
+				    Set<BookingAppl> bookings = event.getBookings();
+				    BookingAppl booking = bookings.iterator().next();
+				    obj.put("event_start_date", String.valueOf(booking.getEvent_start_date_time()));
+				    System.out.println(booking.getEvent_start_date_time());
+				    obj.put("event_end_date", String.valueOf(booking.getEvent_end_date_time()));
+				    System.out.println(booking.getEvent_start_date_time());
 				    //obj.put("event_period", event.getEvent_period());
 				    obj.put("filePath", event.getFilePath());
 					//String json = gson2.toJson(event);
@@ -244,7 +246,7 @@ public class EventExternalController {
 					Gson gson2 = new GsonBuilder()
 						    .setExclusionStrategies(new ExclusionStrategy() {
 						        public boolean shouldSkipClass(Class<?> clazz) {
-						            return (clazz == User.class)||(clazz==Unit.class)||(clazz == Area.class);
+						            return (clazz == User.class)||(clazz==BookingAppl.class)||(clazz == Area.class);
 						        }
 
 						        /**
@@ -303,7 +305,7 @@ public class EventExternalController {
 						Gson gson2 = new GsonBuilder()
 							    .setExclusionStrategies(new ExclusionStrategy() {
 							        public boolean shouldSkipClass(Class<?> clazz) {
-							            return (clazz == User.class)||(clazz==Unit.class)||(clazz == Area.class);
+							            return (clazz == User.class)||(clazz==BookingAppl.class)||(clazz == Area.class);
 							        }
 
 							        /**
@@ -380,7 +382,7 @@ public class EventExternalController {
 							try{	
 						    User eventOrg = eventOrg1.get();
 						    ClientOrganisation client = eventOrg.getClientOrganisation();
-						DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+						    DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
 							System.out.println("start updating");
 							Object obj = parser.parse(eventJSON);
 							JSONObject jsonObject = (JSONObject) obj;
@@ -394,8 +396,8 @@ public class EventExternalController {
 							String event_content = (String)jsonObject.get("event_content");
 							String event_description = (String)jsonObject.get("event_description");
 							String event_approval_status = (String)jsonObject.get("event_approval_status");
-							Date event_start_date = format.parse((String)jsonObject.get("event_start_date"));
-							Date event_end_date = format.parse((String)jsonObject.get("event_end_date"));
+							Date event_start_date = sdf.parse((String)jsonObject.get("event_start_date"));
+							Date event_end_date = sdf.parse((String)jsonObject.get("event_end_date"));
 							//String event_period = (String)jsonObject.get("event_period");	
 							String filePath = (String)jsonObject.get("filePath");
 							System.out.println("end of controller");

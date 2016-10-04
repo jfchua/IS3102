@@ -28,18 +28,12 @@ public class Area {
 	    private String description;
 	   
 	   
-	    @ManyToOne//(cascade=CascadeType.ALL)
-	    @JsonIgnore
-	    private Event event;
+	    @OneToOne//(cascade=CascadeType.ALL)
+	    private BookingAppl booking;
 
 
 		public Long getId() {
 			return id;
-		}
-
-
-		public void setId(Long id) {
-			this.id = id;
 		}
 
 
@@ -73,20 +67,20 @@ public class Area {
 		}
 
 
-		public Event getEvent() {
-			return event;
+		public BookingAppl getBooking() {
+			return booking;
 		}
 
 
-		public void setEvent(Event event) {
-			this.event = event;
+		public void setBooking(BookingAppl booking) {
+			this.booking = booking;
 		}
 
 
 		@Override
 		public String toString() {
 			return "Area [id=" + id + ", square=" + square + ", areaName=" + areaName + ", description=" + description
-					+ ", event=" + event + "]";
+					+ ", booking=" + booking + "]";
 		}
 
 	  
