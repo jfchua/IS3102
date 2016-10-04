@@ -2246,8 +2246,8 @@ app.controller('eventExternalController', ['$scope', '$http','$location','$route
 				event_content: $scope.event.event_content,
 				event_description: $scope.event.event_description,
 				event_approval_status: "processing",
-				event_start_date: $scope.event.event_start_date,
-				event_end_date: $scope.event.event_end_date,
+				event_start_date: ($scope.event.event_start_date).toString(),
+				event_end_date: ($scope.event.event_end_date).toString(),
 				//event_period: $scope.event.event_period,
 				filePath: $scope.event.filePath,
 		};		
