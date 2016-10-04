@@ -47,6 +47,7 @@ public class Unit {
 	@Column(name = "description", nullable = false)
 	private String description;
 
+	
 	@Column(name = "availability", nullable = true)
 	@JsonIgnore
 	private ArrayList<Date> avail = new ArrayList<Date>();
@@ -54,10 +55,23 @@ public class Unit {
 	@ManyToOne//(cascade=CascadeType.ALL)
 	@JsonIgnore
 	private Level level;
-
+    /*
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "units")
 	@JsonIgnore
 	private Set<Event> events = new HashSet<Event>();
+*/
+	
+	@OneToMany(mappedBy ="unit", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@JsonIgnore
+	private Set<BookingAppl> bookings = new HashSet<BookingAppl>();
+
+	public Set<BookingAppl> getBookings() {
+		return bookings;
+	}
+	
+	public void setBookings(Set<BookingAppl> bookings) {
+		this.bookings = bookings;
+	}
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "UNITS_MAINTENANCES", joinColumns = {
@@ -67,13 +81,14 @@ public class Unit {
 	@JsonIgnore
 	private Set<Maintenance> maintenances = new HashSet<Maintenance>();
 
-
+/*
 	public Set<Event> getEvents() {
 		return events;
 	}
 	public void setEvents(Set<Event> events) {
 		this.events = events;
-	}
+	}*/
+	
 
 	public void createList(){
 		if(avail == null)
@@ -86,12 +101,6 @@ public class Unit {
 	public Long getId() {
 		return id;
 	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
 
 
 	public Square getSquare() {

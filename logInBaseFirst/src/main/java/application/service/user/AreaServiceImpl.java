@@ -56,15 +56,16 @@ public class AreaServiceImpl implements AreaService {
 		areaRepository.saveAndFlush(area);
 	
 		Event event=eventRepository.findOne(eventId); 
-		
-		Set<Area> areas=event.getAreas();
+		Set<BookingAppl> bookings = event.getBookings();
+		BookingAppl b1 = bookings.iterator().next();
+		Set<Area> areas=b1.getAreas();
 		
 		areas.add(area);
-		event.setAreas(areas);
+		b1.setAreas(areas);
 		
 		eventRepository.saveAndFlush(event);
 		
-		area.setEvent(event);
+		b1.setEvent(event);
 		
 		areaRepository.saveAndFlush(area);
 		
@@ -142,11 +143,11 @@ public class AreaServiceImpl implements AreaService {
 				Area area= areaOpt.get();
 				Square square=area.getSquare();
 				area.setSquare(null);
-				
-				
-				Set<Area> areas=event.getAreas();
+				Set<BookingAppl> bookings = event.getBookings();
+				BookingAppl b1 = bookings.iterator().next();
+				Set<Area> areas=b1.getAreas();
 				areas.remove(area);
-				event.setAreas(areas);
+				b1.setAreas(areas);
 				eventRepository.saveAndFlush(event);
 				
 				areaRepository.delete(area);
@@ -191,7 +192,9 @@ public class AreaServiceImpl implements AreaService {
 		System.out.println("AreaServiceTest: getAreas of event "+eventId);
 		LOGGER.debug("Getting all areas by Id"+eventId);
 		Event event=eventRepository.getOne(eventId);  
-		return  event.getAreas();
+		Set<BookingAppl> bookings = event.getBookings();
+		BookingAppl b1 = bookings.iterator().next();
+		return  b1.getAreas();
 	}
 
 	@Override

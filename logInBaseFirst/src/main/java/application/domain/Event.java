@@ -47,13 +47,7 @@ public class Event {
 	   // @Column(name = "event_organisation", nullable = false)
 	    //private String event_organisation;
 	    
-	    @Temporal(TemporalType.DATE)
-	    @Column(name = "event_start_date", nullable = false)
-	    private Date event_start_date;
-	    
-	    @Temporal(TemporalType.DATE)
-	    @Column(name = "event_end_date", nullable = false)
-	    private Date event_end_date;
+	   
 	    /*
 	    @Column(name = "event_period", nullable = false)
 	    private String event_period;*/
@@ -62,13 +56,13 @@ public class Event {
 	    private String filePath;	
 	    
 	    //@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
-	    @OneToMany(mappedBy ="event", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	    /*@OneToMany(mappedBy ="event", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	    @JsonIgnore
-	    private Set<Area> areas = new HashSet<Area>();
+	    private Set<Area> areas = new HashSet<Area>();*/
 	    
 		@ManyToOne
 		private User eventOrg;
-		
+		/*
 		@ManyToMany(fetch = FetchType.EAGER)
 		@JoinTable( 
 				name = "events_units", 
@@ -76,12 +70,24 @@ public class Event {
 				inverseJoinColumns = @JoinColumn(name = "unit_id", referencedColumnName = "id")) 
 		private Set<Unit> units = new HashSet<Unit>();
 		
+		
 		public Set<Unit> getUnits() {
 			return units;
 		}
 
 		public void setUnits(Set<Unit> units) {
 			this.units = units;
+		}*/
+		@OneToMany(mappedBy ="event", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+		@JsonIgnore
+		private Set<BookingAppl> bookings = new HashSet<BookingAppl>();
+
+		public Set<BookingAppl> getBookings() {
+			return bookings;
+		}
+
+		public void setBookings(Set<BookingAppl> bookings) {
+			this.bookings = bookings;
 		}
 
 		public String getFilePath() {
@@ -141,25 +147,6 @@ public class Event {
 		}*/
 
 		
-		
-		public Date getEvent_start_date() {
-			return event_start_date;
-		}
-
-		public void setEvent_start_date(Date event_start_date) {
-			this.event_start_date = event_start_date;
-		}
-
-		
-		public Date getEvent_end_date() {
-			return event_end_date;
-		}
-
-		public void setEvent_end_date(Date event_end_date) {
-			this.event_end_date = event_end_date;
-		}
-
-		
 		public User getEventOrg() {
 			return eventOrg;
 		}
@@ -176,23 +163,16 @@ public class Event {
 			this.event_period = event_period;
 		}*/
 
-		
-	
-		
-		public void setId(Long id) {
-			this.id = id;
-		}
-
 	    public Long getId() {
 	        return id;
 	    }
-
+       /*
 		public Set<Area> getAreas() {
 			return areas;
 		}
 
 		public void setAreas(Set<Area> areas) {
 			this.areas = areas;
-		}
+		}*/
 
 }
