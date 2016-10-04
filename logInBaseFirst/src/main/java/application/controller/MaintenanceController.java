@@ -193,7 +193,7 @@ public class MaintenanceController {
 	@ResponseBody
 	public ResponseEntity<Void> updateMaintenance(@RequestBody String maintenanceJSON, HttpServletRequest rq) {
 		System.out.println("start updating not yet");
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -201,6 +201,7 @@ public class MaintenanceController {
 		}
 		try{
 		ClientOrganisation client = usr.get().getClientOrganisation();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			System.out.println("start updating");
 			Object obj = parser.parse(maintenanceJSON);
 			JSONObject jsonObject = (JSONObject) obj;
