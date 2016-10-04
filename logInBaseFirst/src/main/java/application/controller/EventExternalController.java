@@ -87,6 +87,7 @@ public class EventExternalController {
 			String event_description = (String)jsonObject.get("event_description");
 			String event_approval_status = (String)jsonObject.get("event_approval_status");
 			Date event_start_date = sdf.parse((String)jsonObject.get("event_start_date"));
+			System.out.println(event_start_date);
 			Date event_end_date = sdf.parse((String)jsonObject.get("event_end_date"));
 			//String event_period = (String)jsonObject.get("event_period");
 			String filePath = (String)jsonObject.get("filePath");
@@ -202,7 +203,7 @@ public class EventExternalController {
 				    obj.put("event_start_date", String.valueOf(booking.getEvent_start_date_time()));
 				    System.out.println(booking.getEvent_start_date_time());
 				    obj.put("event_end_date", String.valueOf(booking.getEvent_end_date_time()));
-				    System.out.println(booking.getEvent_start_date_time());
+				    System.out.println(booking.getEvent_end_date_time());
 				    //obj.put("event_period", event.getEvent_period());
 				    obj.put("filePath", event.getFilePath());
 					//String json = gson2.toJson(event);

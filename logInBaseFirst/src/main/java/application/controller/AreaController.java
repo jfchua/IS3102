@@ -29,6 +29,7 @@ import application.domain.Event;
 import application.domain.Maintenance;
 import application.domain.Square;
 import application.domain.Area;
+import application.domain.BookingAppl;
 import application.service.user.AreaService;
 import application.service.user.EventService;
 
@@ -72,7 +73,7 @@ public class AreaController {
 				Gson gson2 = new GsonBuilder()
 					    .setExclusionStrategies(new ExclusionStrategy() {
 					        public boolean shouldSkipClass(Class<?> clazz) {
-					            return (clazz == Event.class);
+					            return (clazz == BookingAppl.class);
 					        }
 
 					        /**

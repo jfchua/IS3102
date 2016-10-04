@@ -105,7 +105,7 @@ public class UnitController {
 				Gson gson2 = new GsonBuilder()
 					    .setExclusionStrategies(new ExclusionStrategy() {
 					        public boolean shouldSkipClass(Class<?> clazz) {
-					            return (clazz == Level.class) || (clazz == Maintenance.class)||(clazz == Event.class);
+					            return (clazz == Level.class) || (clazz == Maintenance.class)||(clazz == BookingAppl.class);
 					        }
 
 					        /**
