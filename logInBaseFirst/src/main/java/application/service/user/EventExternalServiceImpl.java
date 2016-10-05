@@ -97,6 +97,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 			String status, Date event_start_date, Date event_end_date, String filePath) {
 		boolean isAvailable = true;
 		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		
+		// does the user belong to client organization and does the user have role of "external event organizer"
 		boolean doesHave = false;
 		for(User u: eventOrgs){
 			 Set<Role> roles = u.getRoles();
@@ -107,75 +109,117 @@ public class EventExternalServiceImpl implements EventExternalService {
 		}
 		if(!doesHave)
 			return false;
+		System.out.println("1");
+		
+		//is the ending date after the starting date?
 		Date d1 = event_start_date;
 		Date d2 = event_end_date;
 		if(d1.compareTo(d2)>0)
 			return false;
+		System.out.println("2");
+		
 		try{		
 			Optional<Event> event1 = getEventById(id);
 			if(event1.isPresent()&&isAvailable){			
 				Event event = event1.get();
+				System.out.println("3");
 				Set<BookingAppl> bookingList = event.getBookings();
 				Set<Unit> unitsOld = new HashSet<Unit>();
+				
+				// unitsOld is the set of units booked previously, unitsNew is the set of units booked now
 				for(BookingAppl b: bookingList)
 					unitsOld.add(b.getUnit());
-				
+				System.out.println("4");
 				String[] units = unitsId.split(" ");
 				Set<Unit> unitsNew = new HashSet<Unit>();
-				for(int i = 0; i<units.length; i ++){
+                System.out.println(units.length);
 				
+				//check availability of units
+				for(int i = 0; i<units.length; i ++){
+					System.out.println("inside the loop now");
 				if(!checkUnit(client, Long.valueOf(units[i])))
 					return false;
 				Optional<Unit> unitNew = unitRepository.getUnitById(Long.valueOf(units[i]));
-				if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){					
+				if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){	
+					System.out.println("iffff");
 					Unit unit1 = unitNew.get();		
 					unitsNew.add(unit1);
-					int count = bookingApplRepository.getNumberOfBookings(unit1, d1, d2);
+					int count = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+					System.out.println(count);
 					if(count != 0){
 						isAvailable = false;
 						break;
 					}		
 				}//DONE
 				else if (unitNew.isPresent()&&(unitsOld.contains(unitNew.get()))){
-				Unit unit1 = unitNew.get();
-		            BookingAppl b = bookingApplRepository.getBookingEntity(unit1, d1, d2);
-		            if(!unitsOld.contains(b)){
+				    Unit unit1 = unitNew.get();
+				    unitsNew.add(unit1);
+				    System.out.println("elseeee");
+		            BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
+		            System.out.println(b.getId());
+		            Event eventFromB = b.getEvent();            
+		            if(!(event.getId().equals(eventFromB.getId()))){
 		            	isAvailable = false;
 		            	break;
 		            }
 				}
+				System.out.println("5");
 				}//DONE!!! 4/10/2016
-				if(isAvailable){					
+				
+				System.out.println(isAvailable);
+				if(isAvailable){			
+				//remove all previously done bookings
+				System.out.println(bookingList.size());
 				for(BookingAppl b1: bookingList){
 					Unit unit = b1.getUnit();
 					Set<BookingAppl> bookingsFromUnit = unit.getBookings();
 					bookingsFromUnit.remove(b1);
 					bookingList.remove(b1);
+					bookingApplRepository.delete(b1);
 				}
-				//need to save the new units?
+				System.out.println("6");
+				System.out.println(unitsNew.size());
+				
+				//save the new booking
 				for(Unit i : unitsNew){
+					System.out.println("once");
 					BookingAppl newBooking = new BookingAppl();
 					newBooking.setEvent_start_date_time(event_start_date);
+					System.out.println(event_start_date);
 					newBooking.setEvent_end_date_time(event_end_date);
 					newBooking.setUnit(i);
 				    newBooking.setEvent(event);
 				    Set<BookingAppl> bookingsFromUnit = i.getBookings();
+				    System.out.println("twice");
 				    bookingsFromUnit.add(newBooking);
+				    System.out.println("trice");
 				    bookingList.add(newBooking);	
-				    unitRepository.save(i);
-				    bookingApplRepository.save(newBooking);
+				    //unitRepository.save(i);
+				    //bookingApplRepository.save(newBooking);
 				}
-			
-				System.out.println("end of second for loop");				
+			    
+				System.out.println("end of second for loop");	
+				System.out.println(event.getBookings().size());
 				event.setEvent_title(event_title);
 				System.out.println("after title");
 				event.setEvent_content(event_content);
 				event.setEvent_description(event_description);
 				event.setEvent_approval_status(status);
-		        event.setBookings(bookingList);
+				event.setEvent_start_date(event_start_date);
+				event.setEvent_end_date(event_end_date);
 				event.setFilePath(filePath);
-			    eventRepository.save(event);
-			    System.out.println("saved by repo");			    
+				System.out.println("fourth");
+				event.setBookings(bookingList); 
+				System.out.println("fifth");
+				eventRepository.flush();
+				//eventRepository.saveAndFlush(event);
+			    System.out.println("saved by repo");	
+			    Set<Event> events = eventOrg.getEvents();
+				events.add(event);
+				eventOrg.setEvents(events);
+				event.setEventOrg(eventOrg);
+			//	eventRepository.save(event);
+				userRepository.save(eventOrg);
 				}
 			}
 			}catch(Exception e){
@@ -271,7 +315,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				Unit unit = unit1.get();
 				if(!checkUnit(client, unit.getId()))
 					return false;
-				int count = bookingApplRepository.getNumberOfBookings(unit, d1, d2);
+				int count = bookingApplRepository.getNumberOfBookings(uId, d1, d2);
 				if(count != 0){
 					isAvailable = false;
 					break;
@@ -287,6 +331,9 @@ public class EventExternalServiceImpl implements EventExternalService {
 					Unit unit = unit1.get();	
 					BookingAppl booking = new BookingAppl();
 					booking.setEvent_start_date_time(event_start_date);
+					System.out.println("inside the controller");
+					System.out.println(event_start_date);
+					System.out.println(booking.getEvent_start_date_time());
 					booking.setEvent_end_date_time(event_end_date);
 					booking.setUnit(unit);
 					booking.setEvent(event);
@@ -302,6 +349,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 			event.setEvent_content(event_content);
 			event.setEvent_description(event_description);
 			event.setEvent_approval_status(status);
+			event.setEvent_start_date(event_start_date);
+			event.setEvent_end_date(event_end_date);
 			event.setFilePath(filePath);
 			event.setBookings(bookings);
 			eventRepository.save(event);
