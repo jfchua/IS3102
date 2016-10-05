@@ -52,6 +52,14 @@ public class Event {
 	    @Column(name = "event_period", nullable = false)
 	    private String event_period;*/
 
+	    @Temporal(TemporalType.TIMESTAMP)
+		 @Column(name = "event_start_date", nullable = false)
+		 private Date event_start_date;
+		    
+		 @Temporal(TemporalType.TIMESTAMP)
+		 @Column(name = "event_end_date", nullable = false)
+		 private Date event_end_date;
+	    
 	    @Column(name = "filePath", nullable = true)
 	    private String filePath;	
 	    
@@ -88,6 +96,23 @@ public class Event {
 
 		public void setBookings(Set<BookingAppl> bookings) {
 			this.bookings = bookings;
+		}
+		
+		
+		public Date getEvent_start_date() {
+			return event_start_date;
+		}
+
+		public void setEvent_start_date(Date event_start_date) {
+			this.event_start_date = event_start_date;
+		}
+
+		public Date getEvent_end_date() {
+			return event_end_date;
+		}
+
+		public void setEvent_end_date(Date event_end_date) {
+			this.event_end_date = event_end_date;
 		}
 
 		public String getFilePath() {

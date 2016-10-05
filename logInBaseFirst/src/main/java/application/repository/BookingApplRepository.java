@@ -14,18 +14,22 @@ import application.domain.User;
 public interface BookingApplRepository extends JpaRepository<BookingAppl, Long> {
 	
 	  @Query(
-	            value = "SELECT count(*) FROM booking_appl book WHERE book.unit_id = :unit AND book.event_start_date_time <= :start AND book.event_end_date_time >= :end",
+	            value = "SELECT count(*) FROM booking_appl book WHERE book.unit_id = :unit AND ((book.event_start_date_time <= :start AND book.event_end_date_time >= :end)"
+	            		+ "OR (book.event_start_date_time >= :start AND book.event_end_date_time <= :end) OR (book.event_start_date_time <= :start AND book.event_end_date_time <= :end AND book.event_end_date_time >= :start)"
+	            		+ "OR (book.event_start_date_time >= :start AND book.event_end_date_time >= :end AND book.event_start_date_time <= :end))",
 	            nativeQuery=true
 	       )
-	    public int getNumberOfBookings(@Param("unit") Unit unit, @Param("start") Date start, @Param("end") Date end);
+	    public int getNumberOfBookings(@Param("unit") Long unit, @Param("start") Date start, @Param("end") Date end);
 	  
 	
 	  
 	  @Query(
-	            value = "SELECT * FROM booking_appl book WHERE book.unit_id = :unit AND book.event_start_date_time <= :start AND book.event_end_date_time >= :end",
+	            value = "SELECT * FROM booking_appl book WHERE book.unit_id = :unit AND ((book.event_start_date_time <= :start AND book.event_end_date_time >= :end)"
+	            		+ "OR (book.event_start_date_time >= :start AND book.event_end_date_time <= :end) OR (book.event_start_date_time <= :start AND book.event_end_date_time <= :end AND book.event_end_date_time >= :start)"
+	            		+ "OR (book.event_start_date_time >= :start AND book.event_end_date_time >= :end AND book.event_start_date_time <= :end))",
 	            nativeQuery=true
 	       )
-	    public BookingAppl getBookingEntity(@Param("unit") Unit unit, @Param("start") Date start, @Param("end") Date end);
+	    public BookingAppl getBookingEntity(@Param("unit") Long unit, @Param("start") Date start, @Param("end") Date end);
 	  
 	  
 }
