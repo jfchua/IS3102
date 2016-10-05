@@ -117,12 +117,12 @@ public class EventExternalServiceImpl implements EventExternalService {
 			Optional<Event> event1 = getEventById(id);
 			if(event1.isPresent()&&isAvailable){			
 				Event event = event1.get();
-				//System.out.println("3");
+				System.out.println("3");
 				Set<BookingAppl> bookingList = event.getBookings();
 				Set<Unit> unitsOld = new HashSet<Unit>();
 				for(BookingAppl b: bookingList)
 					unitsOld.add(b.getUnit());
-				//System.out.println("4");
+				System.out.println("4");
 				String[] units = unitsId.split(" ");
 				Set<Unit> unitsNew = new HashSet<Unit>();
 				for(int i = 0; i<units.length; i ++){
@@ -131,7 +131,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 					return false;
 				Optional<Unit> unitNew = unitRepository.getUnitById(Long.valueOf(units[i]));
 				if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){	
-					//System.out.println("iffff");
+					System.out.println("iffff");
 					Unit unit1 = unitNew.get();		
 					unitsNew.add(unit1);
 					int count = bookingApplRepository.getNumberOfBookings(unit1, d1, d2);
@@ -142,7 +142,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				}//DONE
 				else if (unitNew.isPresent()&&(unitsOld.contains(unitNew.get()))){
 				Unit unit1 = unitNew.get();
-				//System.out.println("elseeee");
+				    System.out.println("elseeee");
 		            BookingAppl b = bookingApplRepository.getBookingEntity(unit1, d1, d2);
 		            Unit unitFromB = b.getUnit();
 		            unitsNew.add(unit1);
@@ -164,6 +164,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 					Set<BookingAppl> bookingsFromUnit = unit.getBookings();
 					bookingsFromUnit.remove(b1);
 					bookingList.remove(b1);
+					bookingApplRepository.delete(b1);
 				}
 				System.out.println("6");
 				//need to save the new units?
