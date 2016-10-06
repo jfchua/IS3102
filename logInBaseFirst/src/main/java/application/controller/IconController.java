@@ -60,7 +60,7 @@ public class IconController {
 		this.auditLogRepository = auditLogRepository;
 	}
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
-	
+	/*
 	@RequestMapping(value = "/viewIcons", method = RequestMethod.GET)
 	@ResponseBody
 	public String viewIcons(HttpServletRequest rq) {//need to change String to ResponseEntity<>
@@ -103,7 +103,8 @@ public class IconController {
 			return bd.toString();
 		}
 	}
-	/*
+	*/
+	
 	
 	@RequestMapping(value = "/viewIcons", method = RequestMethod.GET)
 	@ResponseBody
@@ -112,12 +113,13 @@ public class IconController {
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
 			
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<Set<Icon>>(HttpStatus.CONFLICT);
 			//return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
-			Set<Icon> icons = iconService.getAllIconFromClientOrganisation(client);		
+			Set<Icon> icons = iconService.getAllIconFromClientOrganisation(client);	
+			System.out.println(icons);
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
 						public boolean shouldSkipClass(Class<?> clazz) {
@@ -140,10 +142,10 @@ public class IconController {
 		}
 		catch (Exception e){
 			
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<Set<Icon>>(HttpStatus.CONFLICT);
 		}
 	}
-	*/
+	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/uploadIcon")
 	public void uploadIcon(@RequestParam("file") MultipartFile file, HttpServletRequest request ) throws IOException {
@@ -187,7 +189,7 @@ public class IconController {
 			toTrans.setWritable(true);
 			file.transferTo(toTrans);
 			ClientOrganisation client = curUser.getClientOrganisation();
-			boolean bl = iconService.createIconOnClientOrganisation(client, iconType, iconPath);
+			boolean bl = iconService.createIconOnClientOrganisation(client, iconType, file.getOriginalFilename());
 			if(bl){
 				System.out.println("Icon is created");
 			}else{

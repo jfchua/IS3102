@@ -19,12 +19,14 @@ import enumeration.IconType;
 @Service
 public class IconServiceImpl implements IconService {
 	private final IconRepository iconRepository;
+	 private final ClientOrganisationRepository clientOrganisationRepository;
 	private static final Logger LOGGER = LoggerFactory.getLogger(IconServiceImpl.class);
 	
 	@Autowired
-	public IconServiceImpl(IconRepository iconRepository) {
+	public IconServiceImpl(IconRepository iconRepository, ClientOrganisationRepository clientOrganisationRepository) {
 		//super();
 		this.iconRepository = iconRepository;
+		this.clientOrganisationRepository = clientOrganisationRepository;
 		
 	}
 	
@@ -38,6 +40,7 @@ public class IconServiceImpl implements IconService {
 		Set<Icon> icons=client.getIcons();
 		icons.add(icon);
 		client.setIcons(icons);
+		clientOrganisationRepository.saveAndFlush(client);
 		return true;
 	}catch(Exception e){
 		return false;
@@ -65,6 +68,9 @@ public class IconServiceImpl implements IconService {
 			Set<Icon> icons=client.getIcons();
 			icons.remove(icon);
 			client.setIcons(icons);
+			iconRepository.delete(icon);
+			System.out.println("icon deleted");
+			iconRepository.flush();
 			return true;
 		}catch(Exception e){
 			return false;

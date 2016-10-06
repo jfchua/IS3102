@@ -7,9 +7,9 @@ app.controller('iconController', function ($scope, $http,shareData) {
 		
 		//retrieve icons when page loaded
 		$http.get("//localhost:8443/property/viewIcons").then(function(response){
-			$scope.buildings = response;
-			console.log("DISPLAY ALL BUILDINGS");
-			console.log("LEVELS DATA ARE OF THE FOLLOWING: " + $scope.buildings);
+			
+			console.log(angular.fromJson(response.data));
+			$scope.icons = response.data;
 
 		},function(response){
 			alert("did not view");
@@ -18,46 +18,18 @@ app.controller('iconController', function ($scope, $http,shareData) {
 		
 	});
 
-	
-	$scope.addUnit = function () {  
-		$scope.units.push({"id": 0,"unitNumber": "#unit","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "./svg/rect.svg"}});
-		console.log("test "+JSON.stringify($scope.units));
-
-	} 
-	
-	$scope.saveUnits = function () {   
-
-
-		console.log("Test: start saving units");
-		var saveUnits=$scope.units;
-		var unitsString=angular.toJson(saveUnits);
-		console.log(unitsString);
-
-		var dataObj = {
-				id: levelId,
-				Units:{
-					Unit:saveUnits
-				}
-		};
-
-
-
-		console.log(dataObj);
-
-		$http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
-			console.log("pure response is "+JSON.stringify(response.data));
-			alert("Saved. Please click on \"Start\" button to view.");
-		
+	$scope.remove = function(icon) { 
+		if (confirm('Are you sure you want to delete this?')) {
+			var index = $scope.icons.indexOf(icon);
+			$scope.icons.splice(index, 1);  
+			var dataObj={id:icon.id};
+			$http.post('/property/deleteIcon', JSON.stringify(dataObj)).then(function(response){
 		},function(response){//else is not saved successfully
-			console.log("DID NOT SAVE");
-			console.log("response is "+JSON.stringify(response.data));
+			console.log("DID NOT DELETE");
 		})
 
-
-	} 
-	$scope.remove = function(unit) { 
-		var index = $scope.units.indexOf(unit);
-		$scope.units.splice(index, 1);     
+		}
+		   
 	}
 
 })
