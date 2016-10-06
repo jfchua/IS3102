@@ -44,8 +44,10 @@ public class ClientOrganisation {
 	@Column(name = "logoFilePath",nullable = true,unique=true)
 	@JsonIgnore
 	private String logoFilePath;
+	
+	@OneToMany(fetch = FetchType.EAGER)
 
-
+	
 	public ClientOrganisation() {
 		super();
 	}
@@ -130,6 +132,18 @@ public class ClientOrganisation {
 		if ( users.contains(user)){
 			users.remove(user);
 		}
+	}
+
+
+
+	public Set<Icon> getIcons() {
+		return icons;
+	}
+
+
+
+	public void setIcons(Set<Icon> icons) {
+		this.icons = icons;
 	}
 
 
