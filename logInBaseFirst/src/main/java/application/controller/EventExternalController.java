@@ -198,8 +198,13 @@ public class EventExternalController {
 				    obj.put("event_content", event.getEvent_content());
 				    obj.put("event_description", event.getEvent_description());
 				    obj.put("event_approval_status", event.getEvent_approval_status());
-				    obj.put("event_start_date", String.valueOf(event.getEvent_start_date()));
-				    obj.put("event_end_date", String.valueOf(event.getEvent_end_date()));
+				    Set<BookingAppl> bookings = event.getBookings();
+				    BookingAppl booking = bookings.iterator().next();
+				    obj.put("event_start_date", String.valueOf(booking.getEvent_start_date_time()));
+				    System.out.println(booking.getEvent_start_date_time());
+				    obj.put("event_end_date", String.valueOf(booking.getEvent_end_date_time()));
+				    System.out.println(booking.getEvent_end_date_time());
+				    //obj.put("event_period", event.getEvent_period());
 				    obj.put("filePath", event.getFilePath());
 					//String json = gson2.toJson(event);
 					//System.out.println("EVENT IS " + json);

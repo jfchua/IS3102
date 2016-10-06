@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
-import application.domain.BookingAppl;
 import application.domain.ClientOrganisation;
 import application.domain.Event;
 import application.domain.EventCreateForm;
@@ -38,6 +37,5 @@ public interface EventExternalService {
 	boolean checkUnit(ClientOrganisation client, long unitId);
 	
 	boolean checkEvent(ClientOrganisation client, long eventId);
-
-	Set<BookingAppl> getBookings(ClientOrganisation client, long id);
+	//boolean checkAvailability(long unitId, Date event_start_date, Date event_end_date);
 }
