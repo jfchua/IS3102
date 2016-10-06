@@ -219,8 +219,8 @@ public class BookingController {
 						    ClientOrganisation client = usr.get().getClientOrganisation();
 							long id = Long.parseLong(bId);
 							boolean bl = bookingService.deleteBooking(client, id);
-							BookingAppl booking= bookingService.getBookingById(id).get();
-							System.out.println("getting event now");
+							//BookingAppl booking= bookingService.getBookingById(id).get();
+							System.out.println("delete booking" + bl);
 							if(!bl){
 								System.out.println("cannot delete booking");
 								return new ResponseEntity<Void>(HttpStatus.CONFLICT);
