@@ -141,6 +141,22 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
+			.state('/viewIcon',{
+				url: '/viewIcon',
+				templateUrl: '/views/viewIcon.html',
+				controller: 'iconController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('/addIcon',{
+				url: '/addIcon',
+				templateUrl: '/views/addIcon.html',
+				controller: 'addIconController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
 			.state('/addBuilding',{
 				url: '/addBuilding',
 				templateUrl: '/views/addBuilding.html',
