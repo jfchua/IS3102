@@ -101,12 +101,12 @@
            </tr>
          <tr ng-repeat="x in bookings">
          <td>{{ x.id }}</td>
-         <td>{{ x.event.id }}</td>
+         <td>{{ x.owner}}</td>
          <td>{{ x.event_start_date_time }}</td>
          <td>{{ x.event_end_date_time }}</td>
-         <td>{{ x.unit.id }}</td>
-         <td><a ng-model="myValue" href="/#/updateBookingEx" ng-click="deleteBooking(x.id)">Update</a></td>
-         <td><a ng-model="myValue" href="/#/deleteBookingEx" ng-click="getBooking(x.id)">Delete</a></td>
+         <td>{{ x.room }}</td>
+         <td><a ng-model="myValue" href="/#/updateBookingEx" ng-click="updateBooking(x.id)">Update</a></td>
+         <td><a ng-model="myValue" ng-click="deleteBooking(x.id)">Delete</a></td>
          <td><a ng-model="myValue" href="/#/createUnitPlanEx" ng-click="getBooking(x.id)">Unit Plan</a></td>
          </tr>
          </tbody>

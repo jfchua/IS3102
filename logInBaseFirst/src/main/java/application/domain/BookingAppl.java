@@ -30,7 +30,12 @@ public class BookingAppl {
 	 @Column(name = "id", nullable = false, updatable = false)
 	 private Long id;
 	 
-	
+	 @Column(name = "room")
+	 private Long room;
+	 
+	 @Column(name = "owner")
+	 private Long owner;
+
 
 	@Temporal(TemporalType.TIMESTAMP)
 	 @Column(name = "event_start_date_time", nullable = false)
@@ -109,6 +114,25 @@ public class BookingAppl {
 
 	public void setArea(Set<Area> area) {
 			this.area = area;
+	}
+	
+	public Long getRoom() {
+		return room;
+	}
+
+
+	public void setRoom(Long room) {
+		this.room = room;
+	}
+
+
+	public Long getOwner() {
+		return owner;
+	}
+
+
+	public void setOwner(Long owner) {
+		this.owner = owner;
 	}
 
 }

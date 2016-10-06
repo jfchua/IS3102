@@ -275,10 +275,30 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 	};
 
 	$scope.deleteBooking = function(id){
+	    var r = confirm("Confirm cancel? \nEither OK or Cancel.");
+	    if (r == true) {
+	    	var deleteBooking = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/booking/deleteBooking/' + id        
+			});
+	    	console.log("Deleting the event using the url: " + $scope.url);
+			deleteBooking.success(function(response){
+				alert('DELETE BOOKING SUCCESS! ');
+				console.log("ID IS " + id);
+			});
+			deleteBooking.error(function(response){
+				alert('DELETE BOOKING FAIL! ');
+				$location.path("/viewAllEventsEx");
+				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
+			});
+	    } else {
+	        alert("Cancel deleting booking");
+	    }
+	    //document.getElementById("demo").innerHTML = txt;	
+		/*
 		$scope.data = {};
 		console.log("Start deleting event");
 		$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
-		//$scope.dataToShare = [];
 		console.log("GETTING THE EVENT INFO")
 		var deleteBooking = $http({
 			method  : 'POST',
@@ -288,12 +308,11 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 		deleteBooking.success(function(response){
 			console.log('DELETE BOOKING SUCCESS! ' + JSON.stringify(response));
 			console.log("ID IS " + id);
-			//shareData.addData(JSON.stringify(response));
 		});
 		deleteBooking.error(function(response){
 			$location.path("/viewAllEventsEx");
 			console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
-		});
+		});*/
 				
 		/*
 		$scope.event = JSON.parse(shareData.getData());
@@ -309,7 +328,6 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 			
 		}	
 		)*/
-
 	}
 	
 }]);

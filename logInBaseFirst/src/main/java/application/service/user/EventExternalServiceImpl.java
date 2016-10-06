@@ -196,6 +196,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 					newBooking.setEvent_end_date_time(event_end_date);
 					newBooking.setUnit(i);
 				    newBooking.setEvent(event);
+				    newBooking.setOwner(event.getId());
+				    newBooking.setRoom(i.getId());
 				    Set<BookingAppl> bookingsFromUnit = i.getBookings();
 				    System.out.println("twice");
 				    bookingsFromUnit.add(newBooking);
@@ -345,6 +347,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 					booking.setEvent_end_date_time(event_end_date);
 					booking.setUnit(unit);
 					booking.setEvent(event);
+					booking.setOwner(event.getId());
+					booking.setRoom(unit.getId());
 					bookings.add(booking);
 					//bookingApplRepository.save(booking);
 			        Set<BookingAppl> bookingList = unit.getBookings();
