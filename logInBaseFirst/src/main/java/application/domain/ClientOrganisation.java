@@ -46,6 +46,7 @@ public class ClientOrganisation {
 	private String logoFilePath;
 	
 	@OneToMany(fetch = FetchType.EAGER)
+	private Set<Icon> icons=new HashSet<Icon>();
 
 	
 	public ClientOrganisation() {
