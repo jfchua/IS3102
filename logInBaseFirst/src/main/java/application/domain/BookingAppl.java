@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.event.service.spi.EventListenerGroup;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -28,7 +30,9 @@ public class BookingAppl {
 	 @Column(name = "id", nullable = false, updatable = false)
 	 private Long id;
 	 
-	 @Temporal(TemporalType.TIMESTAMP)
+	
+
+	@Temporal(TemporalType.TIMESTAMP)
 	 @Column(name = "event_start_date_time", nullable = false)
 	 private Date event_start_date_time;
 	    
@@ -97,4 +101,14 @@ public class BookingAppl {
 	public Long getId() {
 		return id;
 	}
+	
+	 public Set<Area> getArea() {
+			return area;
+	}
+
+
+	public void setArea(Set<Area> area) {
+			this.area = area;
+	}
+
 }

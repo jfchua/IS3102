@@ -172,17 +172,24 @@ public class EventExternalServiceImpl implements EventExternalService {
 				System.out.println(bookingList.size());
 				for(BookingAppl b1: bookingList){
 					Unit unit = b1.getUnit();
+					if(!unitsOld.contains(unit)){
 					Set<BookingAppl> bookingsFromUnit = unit.getBookings();
 					bookingsFromUnit.remove(b1);
 					bookingList.remove(b1);
 					bookingApplRepository.delete(b1);
+					}
 				}
 				System.out.println("6");
 				System.out.println(unitsNew.size());
 				
 				//save the new booking
+				for(BookingAppl b2: bookingList){
+					b2.setEvent_start_date_time(event_start_date);
+					b2.setEvent_end_date_time(event_end_date);
+				}
 				for(Unit i : unitsNew){
 					System.out.println("once");
+					if(!unitsOld.contains(i)){
 					BookingAppl newBooking = new BookingAppl();
 					newBooking.setEvent_start_date_time(event_start_date);
 					System.out.println(event_start_date);
@@ -194,6 +201,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				    bookingsFromUnit.add(newBooking);
 				    System.out.println("trice");
 				    bookingList.add(newBooking);	
+					}
 				    //unitRepository.save(i);
 				    //bookingApplRepository.save(newBooking);
 				}
@@ -462,5 +470,20 @@ public class EventExternalServiceImpl implements EventExternalService {
 			return false;
 			}
 		return doesHave;
+	}
+
+	@Override
+	public Set<BookingAppl> getBookings(ClientOrganisation client, long id) {
+		Set<BookingAppl> bookings = null;
+		try{
+			Optional<Event> event1 = getEventById(id);
+			if(event1.isPresent()&&checkEvent(client, id)){
+			Event event = event1.get();
+		    bookings = event.getBookings();
+			}
+		}catch(Exception e){
+			
+			}
+		return bookings;
 	}
 }

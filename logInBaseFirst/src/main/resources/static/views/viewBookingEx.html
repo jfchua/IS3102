@@ -18,6 +18,7 @@
 <link href="css/style.css" rel="stylesheet">
 <link href="css/style-responsive.css" rel="stylesheet" />
 <script src="angular/app.js"></script>
+<script src="angular/event.js"></script>
 <script src="angular/controller.js"></script>
 <script src="angular/user_service.js"></script>
 <script src="angular/user_controller.js"></script>
@@ -82,34 +83,31 @@
 	<div ng-cloak ng-controller="eventExternalController as eventExCtrl" >
       <div class="container">
         <div class="content" >
-        <h1>View All Events</h1>
-        <p class="tagline">List of all events</p>
-        <button ng-click="viewEvents()">Display</button>
-        <button><a href="/#/viewBuildingEx">Add a new event</a></button>
-         <button><a href="/#/viewApprovedEventsEx">View Approved Events</a></button>
+        <h1>View All Bookings</h1>
+        <p class="tagline">List of bookings</p>
+        <button ng-click="viewBookings()">Display</button>
+         <button><a href="/#/viewAllEventsEx">View All Events</a></button>
        <table class="table table-striped table-advance table-hover">
         <tbody>
            <tr>
-           <th><i></i> ID </th>
-           <th><i></i> Event Title </th>
+           <th><i></i> Booking ID </th>
+           <th><i></i> Event Id </th>
            <th><i></i> Start Date </th>
            <th><i></i> End Date </th>
-           <th><i></i> Status </th>
-           <th><i></i> View </th>
-           <th>Action</th>
-           <th></th>
-            <th></th>
+           <th><i></i> Unit Booked </th>
+           <th><i></i> Change Unit </th>
+           <th><i></i> Delete Booking </th>
+           <th><i></i> Design Internal Plan </th>
            </tr>
-         <tr ng-repeat="x in events">
+         <tr ng-repeat="x in bookings">
          <td>{{ x.id }}</td>
-         <td>{{ x.event_title }}</td>
-         <td>{{ x.event_start_date }}</td>
-         <td>{{ x.event_end_date }}</td>
-         <td>{{ x.event_approval_status }}</td>
-         <td><a ng-model="myValue" href="/#/updateEventEx" ng-click="getEvent(x.id)">Update</a></td>
-         <td><a ng-model="myValue" href="/#/cancelEventEx" ng-click="getEvent(x.id)">Delete</a></td>
-         <td><a ng-model="myValue" href="/#/viewBookingEx" ng-click="getEvent(x.id)">View Booking</a></td>
-         <td><a ng-model="myValue" href="/#/createUnitPlanEx" ng-click="getEvent(x.id)">Unit Plan</a></td>
+         <td>{{ x.event.id }}</td>
+         <td>{{ x.event_start_date_time }}</td>
+         <td>{{ x.event_end_date_time }}</td>
+         <td>{{ x.unit.id }}</td>
+         <td><a ng-model="myValue" href="/#/updateBookingEx" ng-click="deleteBooking(x.id)">Update</a></td>
+         <td><a ng-model="myValue" href="/#/deleteBookingEx" ng-click="getBooking(x.id)">Delete</a></td>
+         <td><a ng-model="myValue" href="/#/createUnitPlanEx" ng-click="getBooking(x.id)">Unit Plan</a></td>
          </tr>
          </tbody>
       </table>
