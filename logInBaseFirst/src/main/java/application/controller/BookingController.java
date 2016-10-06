@@ -207,7 +207,7 @@ public class BookingController {
 					}		*/
 					
 					
-					@RequestMapping(value = "/deleteBooking/{id}", method = RequestMethod.GET)
+					@RequestMapping(value = "/deleteBooking/{id}", method = RequestMethod.POST)
 					@ResponseBody
 					public ResponseEntity<Void> deleteBooking(@PathVariable("id") String bId, HttpServletRequest rq) {
 						Principal principal = rq.getUserPrincipal();

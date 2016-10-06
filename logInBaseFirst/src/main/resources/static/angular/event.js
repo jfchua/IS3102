@@ -277,6 +277,7 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 	$scope.deleteBooking = function(id){
 	    var r = confirm("Confirm cancel? \nEither OK or Cancel.");
 	    if (r == true) {
+	    	$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
 	    	var deleteBooking = $http({
 				method  : 'POST',
 				url     : 'https://localhost:8443/booking/deleteBooking/' + id        
