@@ -2530,7 +2530,63 @@ app.controller('MyCtrl', function ($scope, $http,shareData) {
 		console.log("test "+JSON.stringify($scope.units));
 
 	} 
+	
+	
+	/*
+	 var downloadPlan=function() {
+		  
+			  // console.log(document.getElementById("1"));//can be used in read dragging
+		 console.log(document.getElementById("glassbox"));	
+		 console.log(html2canvas);
+		 var glassboxEle=document.getElementById("glassbox");
+		 html2canvas(glassboxEle, {
+			            onrendered: function(canvas) {
+			                theCanvas = canvas;
+			                document.body.appendChild(canvas);
 
+			                // Convert and download as image 
+			                Canvas2Image.saveAsPNG(canvas); 
+			                $("#respond").append(canvas);
+			                // Clean up 
+			                //document.body.removeChild(canvas);
+			            }
+			        });
+			
+
+		}*/
+
+	$scope.downloadPlan = html2canvas;
+	/*$scope.downloadPlan=function(){
+	
+	console.log(html2canvas);
+	html2canvas(window, document);
+
+	// expose functionality
+	module.exports = {
+	    html2canvas: function (elements, opts) {
+	        return window.html2canvas(elements, opts);
+	    },
+	    src: html2canvas
+	};
+	}
+	*/
+	/*
+	 
+	 $scope.downloadPlan = function(){
+		   html2canvas($("#glassbox"), {
+	            onrendered: function(canvas) {
+	                theCanvas = canvas;
+	                document.body.appendChild(canvas);
+
+	                // Convert and download as image 
+	                Canvas2Image.saveAsPNG(canvas); 
+	                $("#respond").append(canvas);
+	                // Clean up 
+	                //document.body.removeChild(canvas);
+	            }
+	        });
+	}
+	*/
 	$scope.saveUnits = function () {   
 
 
