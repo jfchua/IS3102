@@ -2552,9 +2552,15 @@ app.controller('MyCtrl', function ($scope, $http,shareData) {
 			            }
 			        });
 			
+<<<<<<< HEAD
 
 		}*/
 
+=======
+
+		}*/
+
+>>>>>>> master
 	$scope.downloadPlan = html2canvas;
 	/*$scope.downloadPlan=function(){
 	
