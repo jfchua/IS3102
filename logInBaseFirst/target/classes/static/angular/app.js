@@ -455,6 +455,14 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
+			.state('/viewBookingEx',{
+ 				url:'/viewBookingEx',
+ 				templateUrl: '/views/viewBookingEx.html',
+ 				controller: 'bookingController',
+ 				data:{
+ 					authorizedRoles:[USER_ROLES.organiser]
+ 				}
+ 			})
 			.state('/viewNotifications',{
 				url:'/viewNotifications',
 				templateUrl: '/views/viewNotifications.html',
@@ -2117,9 +2125,6 @@ app.controller('maintenanceController',['$scope', '$http','$location','$routePar
 //===========================================================================
 //5. Events.
 //===========================================================================
-
-
-
 app.controller('eventExternalController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
 
 
@@ -2313,64 +2318,111 @@ app.controller('eventExternalController', ['$scope', '$http','$location','$route
 		var url = "https://localhost:8443/event/deleteEvent";
 		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event);
 	}
-	/*
-$scope.buildings=[];
-$scope.viewBuilding = function(building){
-			$scope.data = {};
-			$http.get("//localhost:8443/building/viewBuildings").then(function(response){
-				$scope.buildings = response.data;
-				console.log("DISPLAY ALL BUILDINGS");
-				console.log("LEVELS DATA ARE OF THE FOLLOWING: " + $scope.buildings);
-
-			},function(response){
-				alert("did not view");
-			}	
-			)	
+	
+	
+	$scope.getBookings = function(id){		
+		$scope.dataToShare = [];	  
+		$scope.shareMyData = function (myValue) {
+			//$scope.dataToShare = myValue;
+			//shareData.addData($scope.dataToShare);
 		}
-
-
-
-$scope.viewLevelsByBuildingId = function(id){
-		$scope.buildingId=id;
-		console.log($scope.buildingId);
+		$scope.url = "https://localhost:8443/booking/viewAllBookings/"+id;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE EVENT INFO")
+		var getBookings = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/booking/viewAllBookings/' + id        
+		});
+		console.log("Getting the bookings using the url: " + $scope.url);
+		getBookings.success(function(response){
+			//$scope.dataToShare.push(id);
+			//$location.path("/viewLevels/"+id);
+			console.log('GET Booking SUCCESS! ' + JSON.stringify(response));
+			console.log("ID IS " + id);
+			$scope.bookings = response.data;
+			shareData.addData(JSON.stringify(response));
+			//$location.path("/viewLevels");
+		});
+		getBookings.error(function(response){
+			$location.path("/viewAllEventsEx");
+			console.log('GET Booking FAILED! ' + JSON.stringify(response));
+		});
 
 	}
-
-$scope.levels;	
-$scope.viewLevels=function(){
-	//populate levels from a building of the specific ID
-	var id=$scope.buildingId
-	$scope.url = "https://localhost:8443/level/viewLevels/"+id;
-
-	console.log("GETTING THE LEVELS")
-	var getLevels = $http({
-         method  : 'GET',
-         url     : 'https://localhost:8443/level/viewLevels/' + id
-
-       });
-
-	console.log("Getting the levels using the url: " + $scope.url);
-	getLevels.success(function(response){
-
-	console.log('GET LEVELS SUCCESS! ' + angular.fromJson(response));
-	console.log( angular.fromJson(response));
-	console.log("ID IS " + id);
-	// need to check how to pass in 
-	 $scope.levels=angular.fromJson(response);
-	 console.log($scope.levels);
-
-	});
-
-	getLevels.error(function(response){
-		$location.path("/viewBuildingEx");
-		console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
-	});
-			}
-	 */
-
+	
+	
+	
 }]);
 
 
+app.controller('bookingController', ['$scope','$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+	$scope.viewBookings = function(){
+		$scope.data = {};
+		//var tempObj= {id:1};
+		//console.log(tempObj)
+		console.log("DISPLAY ALL BOOKINGS");
+		$scope.bookings = JSON.parse(shareData.getData());
+		var url = "https://localhost:8443/booking/viewAllBookings";	
+	    console.log("BOOKING DATA ARE OF THE FOLLOWING: " + $scope.bookings);	
+	};
+
+	$scope.deleteBooking = function(id){
+	    var r = confirm("Confirm cancel? \nEither OK or Cancel.");
+	    if (r == true) {
+	    	$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
+	    	var deleteBooking = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/booking/deleteBooking/' + id        
+			});
+	    	console.log("Deleting the event using the url: " + $scope.url);
+			deleteBooking.success(function(response){
+				alert('DELETE BOOKING SUCCESS! ');
+				console.log("ID IS " + id);
+			});
+			deleteBooking.error(function(response){
+				alert('DELETE BOOKING FAIL! ');
+				$location.path("/viewAllEventsEx");
+				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
+			});
+	    } else {
+	        alert("Cancel deleting booking");
+	    }
+	    //document.getElementById("demo").innerHTML = txt;	
+		/*
+		$scope.data = {};
+		console.log("Start deleting event");
+		$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
+		console.log("GETTING THE EVENT INFO")
+		var deleteBooking = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/booking/deleteBooking/' + id        
+		});
+		console.log("Deleting the event using the url: " + $scope.url);
+		deleteBooking.success(function(response){
+			console.log('DELETE BOOKING SUCCESS! ' + JSON.stringify(response));
+			console.log("ID IS " + id);
+		});
+		deleteBooking.error(function(response){
+			$location.path("/viewAllEventsEx");
+			console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
+		});*/
+				
+		/*
+		$scope.event = JSON.parse(shareData.getData());
+		console.log($scope.event.id);
+		var tempObj ={eventId:$scope.event.id};
+		console.log("fetch id "+ tempObj);
+		
+		$http.post("//localhost:8443/event/deleteEvent", JSON.stringify(tempObj)).then(function(response){
+			
+			console.log("Cancel the EVENT");
+		},function(response){
+			alert("DID NOT Cancel EVENT");
+			
+		}	
+		)*/
+	}
+}])
 
 
 app.controller('eventController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
