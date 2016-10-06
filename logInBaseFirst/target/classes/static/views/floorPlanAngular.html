@@ -9,7 +9,7 @@
  <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>-->
  <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/themes/smoothness/jquery-ui.css">-->
     <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
-  <!--  <script src="js/html2canvas.js"></script>-->
+
 
 </head>
 
@@ -22,14 +22,10 @@
         
        
        <div ng-controller="MyCtrl as myCtrl">    
-<<<<<<< HEAD
-    
-=======
     <div id="respond"></div>
 <<<<<<< HEAD
     <div><p id="display" >{{showDetail}}</p></div>
 =======
->>>>>>> 73c429b9e74f7aec4b3aa879516d0a3771634dda
   
 >>>>>>> origin/master
     <div id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
@@ -52,7 +48,6 @@
 </select>
    <button ng-click="addSpecialUnit(specialType)">Add a Unit</button>
   <button ng-click="saveUnits()">Save Units</button>
-   <button id="download" ng-click=downloadPlan>Download the Floor Plan</button>
  <a href="/#/viewLevels" ng-click="viewLevelsByBuildingId()"><button>Back to View Levels</button></a>
  
   <div><p >Please click on "Start" button before adding or editing units. Please drag before resizing.</p></div>
@@ -83,7 +78,7 @@
       <td> <input type="text" name="description" ng-model="x.description" > </td>
   </tr>
 </table>
-  <div id="respond"></div>
+  
 </div>
        
    
