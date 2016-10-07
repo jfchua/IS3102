@@ -12,15 +12,20 @@
 <link href="css/bootstrap-theme.css" rel="stylesheet">
 <!--external css-->
 <!-- font icon -->
-
+<!-- <link href="css/elegant-icons-style.css" rel="stylesheet" />-->
 <link href="css/font-awesome.min.css" rel="stylesheet" />
 <!-- Custom styles -->
 <link href="css/style.css" rel="stylesheet">
+
 <link href="css/style-responsive.css" rel="stylesheet" />
 <script src="angular/app.js"></script>
 <script src="angular/controller.js"></script>
 <script src="angular/user_service.js"></script>
 <script src="angular/user_controller.js"></script>
+<script src="angular/icon_controller.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.11/ng-file-upload.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.11/ng-file-upload-shim.min.js"></script>
+
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.js"></script>
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 -->
@@ -79,48 +84,36 @@
 </div>
 <!-- /subnavbar -->
 	<!-- MAIN BODY -->
-	<div ng-cloak ng-controller="buildingController as buildCtrl">
+	<div ng-cloak ng-controller="addIconController as addIconCtrl" ng-submit="saveIcon()">
       <div class="container">
         <div class="content" >
-        <h1>View buildings</h1>
-        <p class="tagline">List of existing buildings</p>
-        <button ng-click="viewBuilding()">Display</button>
-        <button><a href="/#/addBuilding">Add a building</a></button>
-        <button><a href="/#/viewIcon">Customise Icon</a></button>
-        <!-- <div ng-app="myApp" ng-controller="customersCtrl">-->
-       <table class="table table-striped table-advance table-hover">
-        <tbody>
-           <tr>
-           <td><i></i> ID </td>
-           <td><i></i> Building Name </td>
-           <td><i></i> Number of floors </td>
-           <td><i></i> Address </td>
-           <td><i></i> City </td>
-           <td><i></i> Postal Code </td>
-           <td>Actions</td>
-            <td></td>
-             <td></td>
-           </tr>
-         <tr ng-repeat="x in buildings | orderBy:'name'">
-         <td><a ng-model="myValue" href="/#/viewLevels" ng-click="viewLevelsByBuildingId(x.id)">{{ x.id }}</a></td>
-         <!--  <td><button onClick="window.open('http://www.google.com.sg}');">{{ x.id }}</button></td>-->
-         <td>{{ x.name }}</td>
-         <td>{{ x.numFloor }}</td>
-         <td>{{ x.address }}</td>
-         <td>{{ x.city }}</td>
-         <td>{{ x.postalCode }}</td>
-         <td><a ng-model="myValue" href="/#/updateBuilding" ng-click="getBuilding(x.id)">Update</a></td>
-          <td><a ng-model="myValue" href="/#/deleteBuilding" ng-click="getBuilding(x.id)">Delete</a></td>
-          <td><a ng-model="myValue" href="/#/addLevel" ng-click="getBuilding(x.id)">Add Level</a></td>
-         </tr>
-         </tbody>
-      </table>
-   <!--  </div>-->
- </div>
- </div>
- </div>
+        <h1>Add a new icon</h1>
+        <a href="#/viewIcon">Back to view Icons</a>
+        <p class="tagline">Add your icon here</p>
+        <form>
+        <div class="form-group">
+               Select an icon type:
+                <select ng-model="iconType" ng-options="x.iconType as x.name for x in iconTypes">
+    </select>
+        </div>
+         <div>Logo:
+      	<input type="file" ngf-select ng-model="picFile" name="file"    
+             accept="image/*" ngf-max-size="10MB" required
+             ngf-model-invalid="errorFile">
+      		<i ng-show="myForm.file.$error.required">*required</i><br>
+     		 <i ng-show="myForm.file.$error.maxSize">File too large 
+          {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+      <img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb" height="100px" width= "100px"> <button ng-click="picFile = null" ng-show="picFile">Remove</button>
+  		 </div>
+       <button  ng-disabled="!myForm.$valid" 
+              ng-click="saveIcon()"><input type="submit" value="Submit"></button>
+       <br>
+     
+        </form>
+        </div>
+      </div>
+    </div>
 		
 		<!--main content end-->
-
 </body>
 </html>

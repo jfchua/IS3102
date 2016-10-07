@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import application.domain.Building;
 import application.domain.ClientOrganisation;
@@ -15,27 +16,31 @@ import application.repository.BuildingRepository;
 import application.repository.ClientOrganisationRepository;
 import application.repository.IconRepository;
 import enumeration.IconType;
-
+@Service
 public class IconServiceImpl implements IconService {
 	private final IconRepository iconRepository;
+	 private final ClientOrganisationRepository clientOrganisationRepository;
 	private static final Logger LOGGER = LoggerFactory.getLogger(IconServiceImpl.class);
 	
 	@Autowired
-	public IconServiceImpl(IconRepository iconRepository) {
+	public IconServiceImpl(IconRepository iconRepository, ClientOrganisationRepository clientOrganisationRepository) {
 		//super();
 		this.iconRepository = iconRepository;
+		this.clientOrganisationRepository = clientOrganisationRepository;
 		
 	}
 	
 	@Override
-	public boolean createIconOnClientOrganisation(ClientOrganisation client, IconType iconType, String iconPath) {
-		try{
+	public boolean createIconOnClientOrganisation(ClientOrganisation client, String iconType, String iconPath) {
+		try{		
 		Icon icon = new Icon();
-		icon.setIconType(iconType);
+		icon.setIconType(IconType.valueOf(iconType));
 		icon.setIconPath(iconPath);
+		iconRepository.saveAndFlush(icon);
 		Set<Icon> icons=client.getIcons();
 		icons.add(icon);
 		client.setIcons(icons);
+		clientOrganisationRepository.saveAndFlush(client);
 		return true;
 	}catch(Exception e){
 		return false;
@@ -44,11 +49,11 @@ public class IconServiceImpl implements IconService {
 	}
 
 	@Override
-	public boolean editIcon(long iconId, IconType iconType, String iconPath) {
+	public boolean editIcon(long iconId, String iconType, String iconPath) {
 		try{
 			Icon icon=iconRepository.findOne(iconId);
 			icon.setIconPath(iconPath);
-			icon.setIconType(iconType);
+			icon.setIconType(IconType.valueOf(iconType));
 			return true;
 		}catch(Exception e){
 			return false;
@@ -63,6 +68,9 @@ public class IconServiceImpl implements IconService {
 			Set<Icon> icons=client.getIcons();
 			icons.remove(icon);
 			client.setIcons(icons);
+			iconRepository.delete(icon);
+			System.out.println("icon deleted");
+			iconRepository.flush();
 			return true;
 		}catch(Exception e){
 			return false;
