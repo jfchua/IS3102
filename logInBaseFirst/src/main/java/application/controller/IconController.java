@@ -146,33 +146,7 @@ public class IconController {
 		}
 	}
 	
-	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(value = "/uploadIcon")
-	public void uploadIcon(@RequestParam("file") MultipartFile file, HttpServletRequest request ) throws IOException {
-
-		Principal p = request.getUserPrincipal();
-		User curUser = userService.getUserByEmail(p.getName()).get();
-
-		if (!file.isEmpty()) {
-			//GET RELATIVE PATH SINCE EVERYONE COMPUTER DIFFERENT
-			String filePath = request.getSession().getServletContext().getRealPath("/");
-			
-			System.err.println(filePath);
-			File toTrans = new File(filePath,file.getOriginalFilename());
-			toTrans.setExecutable(true);
-			toTrans.setWritable(true);
-			file.transferTo(toTrans);
-			ClientOrganisation client = curUser.getClientOrganisation();
-			client.setLogoFilePath(file.getOriginalFilename());
-			//clientOrganisationRepository.saveAndFlush(client);
-			System.out.println("Saved Logo");
-
-		}
-
-
-		System.err.println(String.format("received %s", file.getOriginalFilename()));
-	}
-
+	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/saveIcon")
 	public void saveIcon(@RequestParam("file") MultipartFile file, String iconType, HttpServletRequest request ) throws IOException {
@@ -204,7 +178,7 @@ public class IconController {
 		System.err.println(String.format("received %s", file.getOriginalFilename()));
 	}
 	
-	
+	/*
 	@RequestMapping(value = "/addIcon", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> addIcon(@RequestBody String iconJSON,HttpServletRequest rq) {
@@ -247,7 +221,7 @@ public class IconController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
 	
-	
+	*/
 	@RequestMapping(value = "/deleteIcon", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> deleteIcon(@RequestBody String iconId,HttpServletRequest rq) {
@@ -282,42 +256,40 @@ public class IconController {
 	}
 	
 	
-	@RequestMapping(value = "/updateIcon", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<Void> updateIcon(@RequestBody String iconId,HttpServletRequest rq) {
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = "/updateIcon")
+	public void updateIcon(@RequestParam("file") MultipartFile file, Long id, HttpServletRequest request ) throws IOException {
+		System.out.println("test");
 		
-		Principal principal = rq.getUserPrincipal();
-		Optional<User> usr = userService.getUserByEmail(principal.getName());
-		if ( !usr.isPresent() ){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
-		}
-		try{
-			ClientOrganisation client = usr.get().getClientOrganisation();		
-			Object obj = parser.parse(iconId);
-			JSONObject jsonObject = (JSONObject) obj;
+		Principal p = request.getUserPrincipal();
+		User curUser = userService.getUserByEmail(p.getName()).get();
+		ClientOrganisation client = curUser.getClientOrganisation();
+		System.out.print("client id "+client.getId());
+		if (!file.isEmpty()) {
+			//GET RELATIVE PATH SINCE EVERYONE COMPUTER DIFFERENT
+			//Long id=Long.valueOf(iconId);
+			String iconPath = request.getSession().getServletContext().getRealPath("/");
+			System.out.println(iconPath);
+			File toTrans = new File(iconPath,file.getOriginalFilename());
+			toTrans.setExecutable(true);
+			toTrans.setWritable(true);
+			file.transferTo(toTrans);
 			
-			long id = (Long)jsonObject.get("id");
-			String iconType = (String)jsonObject.get("iconType");		
-			String iconLabel = (String)jsonObject.get("iconLabel");
-			String iconPath="";//get iconPath from iconLabel
-			//read the file and save to local directory
-			boolean bl = iconService.editIcon(id, iconType, iconPath);
-			if(!bl)
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			boolean bl = iconService.editIcon(client,id, file.getOriginalFilename());
+			if(bl){
+				System.out.println("Icon is updated");
+			}else{
+				System.out.println("Icon is not updated");
+			}
+			//clientOrganisationRepository.saveAndFlush(client);
+			System.out.println("Saved Icon");
 
-			AuditLog al = new AuditLog();
-			al.setTimeToNow();
-			al.setSystem("Property");
-			al.setAction("Update Icon: " + id);
-			al.setUser(usr.get());
-			al.setUserEmail(usr.get().getEmail());
-			auditLogRepository.save(al);
 		}
-		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+
+
+		System.err.println(String.format("received %s", file.getOriginalFilename()));
 	}
+	
 
 
 }

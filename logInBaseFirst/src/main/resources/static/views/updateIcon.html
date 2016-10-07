@@ -1,0 +1,120 @@
+<!DOCTYPE html >
+<html lang="en" ng-app="app">
+<head>
+<meta charset="utf-8">
+
+<title>IFMS</title>
+
+<!-- Bootstrap CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<!-- bootstrap theme -->
+<link href="css/bootstrap-theme.css" rel="stylesheet">
+<!--external css-->
+<!-- font icon -->
+<!-- <link href="css/elegant-icons-style.css" rel="stylesheet" />-->
+<link href="css/font-awesome.min.css" rel="stylesheet" />
+<!-- Custom styles -->
+<link href="css/style.css" rel="stylesheet">
+
+<link href="css/style-responsive.css" rel="stylesheet" />
+<script src="angular/app.js"></script>
+<script src="angular/controller.js"></script>
+<script src="angular/user_service.js"></script>
+<script src="angular/user_controller.js"></script>
+<script src="angular/icon_controller.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.11/ng-file-upload.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.11/ng-file-upload-shim.min.js"></script>
+
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.js"></script>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 -->
+<!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+      <script src="js/lte-ie7.js"></script>
+    <![endif]-->
+</head>
+
+<body >
+<div>
+	<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </a><a class="brand" href="#/workspace">DASHBOARD</a>
+        <ul class="nav pull-right">
+          <li class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown"><i
+                            class="icon-cog"></i> Actions <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="javascript:;">Settings</a></li>
+           
+            </ul>
+          </li>
+          <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                            class="icon-user"></i> LOGOUT <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="javascript:;">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form class="navbar-search pull-right">
+          <input type="text" class="search-query" placeholder="Search">
+        </form>
+      </div>
+      <!--/.nav-collapse --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /navbar-inner --> 
+</div>
+<!-- /navbar -->
+<div class="subnavbar">
+  <div class="subnavbar-inner">
+    <div class="container">
+      <ul class="mainnav">
+        <li class="active"><a href="#/workspace"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
+
+        
+
+      </ul>
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /subnavbar-inner --> 
+</div>
+<!-- /subnavbar -->
+	<!-- MAIN BODY -->
+	<div ng-cloak ng-controller="updateIconController as updateIconCtrl" ng-submit="updateIcon()">
+      <div class="container">
+        <div class="content" >
+        <h1>Edit an icon</h1>
+        <a href="#/viewIcon">View Icons</a>
+
+        <form>
+        <div class="form-group" >
+               Select an icon type:
+                <select ng-model="iconType" ng-options="x.iconType as x.name for x in iconTypes | filter:iconType" ng-readonly="iconType">
+    </select>
+        </div>
+        <div><img  class="svgtest" src="{{icon.iconPath}}" alt="{{icon.iconPath}}" width="50px" height="50px"> </div>
+         <div>Icon:
+      	<input type="file" ngf-select ng-model="picFile" name="file"    
+             accept="image/*" ngf-max-size="10MB" required
+             ngf-model-invalid="errorFile">
+      		<i ng-show="myForm.file.$error.required">*required</i><br>
+     		 <i ng-show="myForm.file.$error.maxSize">File too large 
+          {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+      <img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb" height="100px" width= "100px"> <button ng-click="picFile = null" ng-show="picFile">Remove</button>
+  		 </div>
+       <button  ng-disabled="!myForm.$valid" 
+              ng-click="updateIcon()"><input type="submit" value="Submit"></button>
+       <br>
+     
+        </form>
+        </div>
+      </div>
+    </div>
+		
+		<!--main content end-->
+</body>
+</html>
