@@ -80,20 +80,59 @@
 </div>
 <!-- /subnavbar -->
 	<!-- MAIN BODY -->
-	<div ng-cloak ng-controller="eventExternalController as eventExCtrl">
+	<div ng-cloak ng-controller="updateEController as updateECtrl" data-ng-init="init()">
       <div class="container">
         <div class="content" >
         <h1>Update Event</h1>
         <p class="tagline">Update your event here</p>
-        <button ng-click = "getEventById()"><input type="submit" value="Refresh"></button>
+        <!--  <button ng-click = "getEventById()"><input type="submit" value="Refresh"></button>-->
         <form>
          <div class="form-group">
                <label for="exampleInput">Event Title</label>
                <input type="text" ng-model="event.event_title" class="form-control" placeholder="Enter event title">
         </div>
         <div class="form-group">
-               <label for="exampleInput">Units</label>
+               <label for="exampleInput">Units Selected Previously</label>
                <input type="text" ng-model="event.units" class="form-control" id="eventName" placeholder="Enter units">
+        </div>
+        <p>Want to change unit(s)?: <input type="checkbox" ng-model="myVar"></p>
+        <div ng-show="myVar">
+       	<div class="form-group">
+					<label for="building" class="control-label">Select Building</label> <select
+						name="building" ng-model="currentlySelectedBuilding" ng-options="x.id as x.name for x in buildings"
+						class="form-control">
+					</select>
+					<!-- <p>Building ID <input ng-model="currentlySelectedBuilding"> Selected</p>-->
+					<button ng-click="getLevel(currentlySelectedBuilding)">Apply</button>
+				</div>
+                
+                <div class="form-group">
+					<label for="level" class="control-label">Select Level</label> <select
+						name="level" ng-model="currentlySelectedLevel" ng-options="x.id as x.levelNum for x in levels"
+					  class="form-control">
+					</select>
+					<!--  <p>Level ID <input ng-model="currentlySelectedLevel"> Selected</p>-->
+					<button ng-click="getUnit(currentlySelectedLevel)">Apply</button>
+				</div>
+				<div class="form-group">
+					<ul class="list-group" name="units">
+						<li ng-repeat="unit in selectedUnits" 
+							class="list-group-item">{{unit}}
+							<button ng-click="deleteUnit(unit)">
+								<i class="glyphicon glyphicon-trash"></i>
+							</button>
+						</li>
+					</ul>
+				</div>
+				<div class="form-group">
+					<label for="unit" class="control-label">Select Unit</label> <select
+						name="unit" ng-model="currentlySelectedUnit" ng-options="x.id as x.unitNumber for x in units"
+						ng-change="selectUnit()" class="form-control">
+						<option ng-repeat="unit in units">{{unit}}</option>
+					</select>
+					<p>Units selected: <input ng-model = "currentlySelectedUnit"></p>
+					<button ng-model="myValue" ng-click="getUnitsId()">Apply</button>
+		</div> 
         </div>
         <div class="form-group">
                <label for="exampleInput">Event Content</label>
