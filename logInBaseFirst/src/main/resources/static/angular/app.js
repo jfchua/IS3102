@@ -427,7 +427,8 @@ app.config(
 			.state('/updateEventEx',{
 				url:'/updateEventEx',
 				templateUrl: '/views/updateEventEx.html',
-				controller: 'eventExternalController',
+				//controller: 'eventExternalController',
+				controller: 'updateEController',
 				data:{
 					authorizedRoles:[USER_ROLES.organiser]
 				}
@@ -2279,7 +2280,175 @@ app.controller('addEController', ['$scope', '$http','$location','$routeParams','
 		});
 	};
 	
+	
 }]);
+
+app.controller('updateEController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
+	$scope.init= function(){
+		$scope.event1 = JSON.parse(shareData.getData());
+		$scope.event1.event_start_date = new Date($scope.event1.event_start_date);
+		$scope.event1.event_end_date = new Date($scope.event1.event_end_date);
+		var dataObj = {			
+				units:$scope.event1.units,
+				event_title: $scope.event1.event_title,
+				event_content: $scope.event1.event_content,
+				event_description: $scope.event1.event_description,
+				event_approval_status: $scope.event1.event_approval_status,						
+				event_start_date: $scope.event1.event_start_date,						
+				event_end_date: $scope.event1.event_end_date,
+				filePath: $scope.event1.filePath,
+		};
+		$scope.event = angular.copy($scope.event1)
+
+		var url = "https://localhost:8443/event/updateEvent";
+		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
+	}
+	
+	console.log("start selecting venue");
+	var getBuild = $http({
+		method  : 'GET',
+		url     : 'https://localhost:8443/building/viewBuildings',
+	});
+	console.log("GETTING THE BUILDINGS");
+	getBuild.success(function(response){
+		$scope.buildings = response;
+		$scope.selectedBuilding;
+		console.log("RESPONSE IS" + JSON.stringify(response));
+
+		console.log('Buildings Gotten');
+	});
+	getBuild.error(function(){
+		alert('Get building error!!!!!!!!!!');
+	});
+	$scope.currentlySelectedBuilding;
+	$scope.selectBuild = function(){
+		$scope.selectedBuilding=$scope.currentlySelectedBuilding;
+	}
+	console.log("finish selecting building");
+
+	$scope.getLevel = function(id){
+		$scope.dataToShare = [];
+		//var id = $scope.currentlySelected;
+		$scope.url = "https://localhost:8443/level/viewLevels/"+id;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE ALL LEVELS INFO")
+		var getLevels = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/level/viewLevels/'+id,
+	});
+		console.log("Getting the levels using the url: " + $scope.url);
+		getLevels.success(function(response){
+			$scope.levels = response;
+			$scope.selectedLevel;
+			console.log("RESPONSE IS" + JSON.stringify(response));
+
+			console.log('Levels Gotten');
+		});
+		getLevels.error(function(){
+			alert('Get levels error!!!!!!!!!!');
+		});		
+		$scope.currentlySelectedLevel;
+		$scope.selectLevel = function(){
+			$scope.selectedLevel=$scope.currentlySelectedLevel;
+		}
+		console.log("finish selecting level");		
+	}
+	
+	$scope.selectedUnits=[];
+	$scope.getUnit = function(levelId){
+		//$scope.url = "https://localhost:8443/property/viewUnits/";
+		
+		$scope.levelID = levelId; 
+		var dataObj = {id: $scope.levelID};
+		console.log("GETTING THE ALL UNITS INFO")
+		var getUnits = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/property/viewUnits/',
+			data    : dataObj,
+	});
+		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
+		getUnits.success(function(response){
+			$scope.units = response;
+			console.log("RESPONSE IS" + JSON.stringify(response));
+
+			console.log('Units Gotten');
+		});
+		getUnits.error(function(){
+			alert('Get units error!!!!!!!!!!');
+		});		
+		
+		$scope.currentlySelectedUnit;
+		$scope.selectUnit = function(){
+			$scope.selectedUnits.push($scope.currentlySelectedUnit);
+		}
+
+		$scope.deleteUnit = function(unit){
+			var index = $scope.selectedUnits.indexOf(unit);
+			$scope.selectedUnits.splice(index, 1);  
+		}
+		console.log("finish selecting units");		
+	}
+	
+	$scope.getUnitsId = function(){
+		var dataObj ={id: $scope.selectedUnits};
+		console.log("units to be get are "+JSON.stringify(dataObj));
+		$scope.shareMyData = function (myValue) {
+		}		
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/property/getUnitsId',
+			data    : dataObj,
+		});
+		send.success(function(response){
+			console.log('GET Unit IDS SUCCESS! ' + JSON.stringify(response));
+			shareData.addData(JSON.stringify(response));
+		});
+		send.error(function(response){
+			$location.path("/viewAllEventsEx");
+			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
+		});
+	}
+
+	$scope.updateEvent = function(){
+		console.log("Start updating");
+		var unitIdsString="";
+		var unitIdsObj = JSON.parse(shareData.getData());
+		unitIdsString+=unitIdsObj;
+		console.log("test hailing");
+		console.log(unitIdsString);
+		$scope.data = {};
+		console.log($scope.event.id);
+		var dataObj = {	
+				id: $scope.event.id,
+				units: $scope.event.units,
+				event_title: $scope.event.event_title,
+				event_content: $scope.event.event_content,
+				event_description: $scope.event.event_description,
+				event_approval_status: "processing",
+				event_start_date: ($scope.event.event_start_date).toString(),
+				event_end_date: ($scope.event.event_end_date).toString(),
+				//event_period: $scope.event.event_period,
+				filePath: $scope.event.filePath,
+		};		
+		console.log(dataObj.units);
+		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/event/updateEvent',
+			data    : dataObj //forms user object
+		});
+
+		console.log("UPDATING THE EVENT");
+		send.success(function(){
+			alert('EVENT IS SAVED!');
+		});
+		send.error(function(){
+			alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
+		});
+	};	
+}]);
+
 
 
 app.controller('eventExternalController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
@@ -2367,42 +2536,7 @@ $scope.getEventById= function(){
 	console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
 }
 
-$scope.updateEvent = function(){
-	console.log("Start updating");
-	$scope.data = {};
-	//$scope.building = JSON.parse(shareData.getData());
-	//console.log($scope.building.id);
-	//$scope.level = JSON.parse(shareData.getDataId());
-	console.log($scope.event.id);
-	var dataObj = {	
-			id: $scope.event.id,
-			units:$scope.event.units,
-			event_title: $scope.event.event_title,
-			event_content: $scope.event.event_content,
-			event_description: $scope.event.event_description,
-			event_approval_status: "processing",
-			event_start_date: ($scope.event.event_start_date).toString(),
-			event_end_date: ($scope.event.event_end_date).toString(),
-			//event_period: $scope.event.event_period,
-			filePath: $scope.event.filePath,
-	};		
-	console.log(dataObj.units);
-	console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
 
-	var send = $http({
-		method  : 'POST',
-		url     : 'https://localhost:8443/event/updateEvent',
-		data    : dataObj //forms user object
-	});
-
-	console.log("UPDATING THE EVENT");
-	send.success(function(){
-		alert('EVENT IS SAVED!');
-	});
-	send.error(function(){
-		alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
-	});
-};	
 
 
 $scope.deleteEvent = function(){

@@ -172,7 +172,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				System.out.println(bookingList.size());
 				for(BookingAppl b1: bookingList){
 					Unit unit = b1.getUnit();
-					if(!unitsOld.contains(unit)){
+					if(!unitsNew.contains(unit)){
 					Set<BookingAppl> bookingsFromUnit = unit.getBookings();
 					bookingsFromUnit.remove(b1);
 					bookingList.remove(b1);
