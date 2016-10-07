@@ -10,7 +10,7 @@ public class Building {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
     //must be the same as the one referenced from  the SecurityConfig
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
     
     @Column(name = "address", nullable = false, unique = true)

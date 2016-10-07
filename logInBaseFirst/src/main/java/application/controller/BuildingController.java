@@ -1,6 +1,8 @@
 package application.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 //import java.util.Optional;
@@ -108,9 +110,9 @@ public class BuildingController {
 		catch (Exception e){
 			return "cannot fetch";
 		}
-	}
+	}	
 
-
+	
 	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 	// Each object (building) will contain... long id, collection of levels.
 	@RequestMapping(value = "/getBuilding/{id}", method = RequestMethod.GET)

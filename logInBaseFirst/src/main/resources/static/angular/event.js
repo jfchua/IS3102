@@ -32,6 +32,4 @@ app.service('shareData', function($window) {
 });
 
 
-
-
 	

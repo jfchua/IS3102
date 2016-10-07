@@ -107,7 +107,63 @@ public class LevelController {
 				//return new ResponseEntity<Void>(HttpStatus.OK);
 			}
 		
-			
+			// Call this method using $http.get and you will get a JSON format containing an array of level objects.
+			// Each object (building) will contain... long id, .
+				@RequestMapping(value = "/getAllLevels/{id}",  method = RequestMethod.GET)
+				@ResponseBody
+				public String getAllLevels(@PathVariable("id") String buildingId, HttpServletRequest rq) {
+					Principal principal = rq.getUserPrincipal();
+					Optional<User> usr = userService.getUserByEmail(principal.getName());
+					if ( !usr.isPresent() ){
+						return null; 
+					}
+					try{
+					    ClientOrganisation client = usr.get().getClientOrganisation();				
+					    long buildingIdLong = Long.parseLong(buildingId);
+						Set<Level> levels = levelService.getAllLevels(client, buildingIdLong);
+					System.err.println("There are " + levels.size() + " levels in the building");
+					
+					//Gson gson = new Gson();
+					//String json = gson.toJson(levels);
+				    //System.out.println("Returning levels with json of : " + json);
+					//return json;
+					
+					Gson gson2 = new GsonBuilder()
+						    .setExclusionStrategies(new ExclusionStrategy() {
+						        public boolean shouldSkipClass(Class<?> clazz) {
+						            return (clazz == Building.class)|| (clazz == Unit.class);
+						        }
+
+						        /**
+						          * Custom field exclusion goes here
+						          */
+
+								@Override
+								public boolean shouldSkipField(FieldAttributes f) {
+									//TODO Auto-generated method stub
+									return false;
+											//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+								}
+
+						     })
+						    /**
+						      * Use serializeNulls method if you want To serialize null values 
+						      * By default, Gson does not serialize null values
+						      */
+						    .serializeNulls()
+						    .create();
+						
+				
+				    
+				    String json = gson2.toJson(levels);
+				    System.out.println(json);
+				    return json;
+					}
+					catch (Exception e){
+						return "cannot fetch";
+					}
+					//return new ResponseEntity<Void>(HttpStatus.OK);
+				}
 			
 			
 			// Call this method using $http.get and you will get a JSON format containing an array of building objects.

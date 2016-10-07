@@ -1,5 +1,6 @@
 package application.controller;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -83,6 +84,37 @@ public class UnitController {
 			}
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}	
+		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
+				@RequestMapping(value = "/getUnitsId", method = RequestMethod.POST)
+				@ResponseBody
+				public String getUnitsId( @RequestBody String units, HttpServletRequest rq)  {
+					System.out.println("level json"+units);
+					try{
+						System.out.println("Sending notification...");
+						Object obj = parser.parse(units);
+						JSONObject jsonObject = (JSONObject) obj;
+						JSONArray unitsId = (JSONArray)jsonObject.get("id");
+						//int len = unitId.length();
+						//unitId = unitId.substring(1, len-1);
+						//String[] unitsId = unitId.split(",");
+						System.out.println("before the loop");
+						String toBeReturned = "";
+						System.out.println("before the loop2");
+						System.out.println(unitsId.size());
+						for(int i = 0; i < unitsId.size(); i++){
+							System.out.println((Long)unitsId.get(i));
+							toBeReturned = toBeReturned+(Long)unitsId.get(i) + " ";
+							System.out.println(toBeReturned);
+						}
+						Gson gson = new Gson();
+					    String json = gson.toJson(toBeReturned);
+					    System.out.println(json);
+					    return json;
+						}
+						catch (Exception e){
+							return "cannot fetch units id";
+						}
+				}
 		
 		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
 		@RequestMapping(value = "/viewUnits", method = RequestMethod.POST)
