@@ -157,6 +157,14 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
+			.state('/updateIcon',{
+				url: '/updateIcon',
+				templateUrl: '/views/updateIcon.html',
+				controller: 'updateIconController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
 			.state('/addBuilding',{
 				url: '/addBuilding',
 				templateUrl: '/views/addBuilding.html',

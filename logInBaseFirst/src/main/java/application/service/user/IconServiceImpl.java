@@ -49,13 +49,21 @@ public class IconServiceImpl implements IconService {
 	}
 
 	@Override
-	public boolean editIcon(long iconId, String iconType, String iconPath) {
+	public boolean editIcon(ClientOrganisation client,long iconId, String iconPath) {
 		try{
+			Set<Icon> icons=client.getIcons();
 			Icon icon=iconRepository.findOne(iconId);
-			icon.setIconPath(iconPath);
-			icon.setIconType(IconType.valueOf(iconType));
-			return true;
+			if(icons.contains(icon)){
+				icon.setIconPath(iconPath);
+				iconRepository.saveAndFlush(icon);
+				
+				return true;
+			}else{
+			System.out.println("The icon is not from this client organisation");
+			return false;
+			}
 		}catch(Exception e){
+			System.out.println("IconService: Error at editing Icon"+iconId);
 			return false;
 		}
 		

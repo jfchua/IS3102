@@ -10,7 +10,7 @@ import enumeration.IconType;
 
 public interface IconService {
 	boolean createIconOnClientOrganisation(ClientOrganisation client, String iconType, String iconPath);
-	boolean editIcon(long iconId,String iconType,String iconPath);
+	boolean editIcon(ClientOrganisation client,long iconId,String iconPath);
 	boolean deleteIconFromClientOrganisation(ClientOrganisation client, long iconId);
 	Set<Icon> getAllIconFromClientOrganisation(ClientOrganisation client);
 }

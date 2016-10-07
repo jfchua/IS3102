@@ -31,6 +31,12 @@ app.controller('iconController', function ($scope, $http,shareData) {
 		}
 		   
 	}
+	
+	$scope.updateIcon = function(icon){
+		//push icon to shareData
+		shareData.addData(icon);
+		//console.log(shareData.getData());
+	}
 
 })
 
@@ -53,6 +59,7 @@ app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http', fun
 	});
 
 	$scope.picFile;
+	/*
 	$scope.uploadIcon = function () {   
 		console.log("start saving icon");
 		console.log($scope.iconType);
@@ -76,7 +83,7 @@ app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http', fun
 		})
 	
 	} 
-	
+	*/
 	$scope.saveIcon = function () {   
 		console.log("start saving icon");
 		console.log($scope.iconType);
@@ -89,7 +96,7 @@ app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http', fun
 		$scope.picFile.upload.then(function (response) {
 			$timeout(function () {
 				$scope.picFile.result = response.data;
-				alert("is success " + JSON.stringify(response.data));
+				alert("ICON IS CREATED");
 			});
 		}, function (response) {
 			if (response.status > 0)
@@ -101,6 +108,56 @@ app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http', fun
 	
 	} 
 }])
+
+
+
+//ADD ICON
+app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','shareData', function ($scope, Upload, $timeout,$http ,shareData) {
+	//for selection of icon types in add a icon form
+	//get icon from sharedata
+	
+	angular.element(document).ready(function () {
+		console.log(shareData.getData());
+		$scope.icon = shareData.getData();
+		$scope.iconTypes=[{'name':'Customised','iconType':'CUST'},
+		                  {'name':'Entry','iconType':'ENTRY'},
+		                  {'name':'Escalator','iconType':'ESCALATOR'},
+		                  {'name':'Exit','iconType':'EXIT'},
+		                  {'name':'Lift','iconType':'LIFT'},
+		                  {'name':'Service Lift','iconType':'SERVICELIFT'},
+		                  {'name':'Staircase','iconType':'STAIRCASE'},
+		                  {'name':'Toilet','iconType':'TOILET'} ];
+		$scope.iconType=$scope.icon.iconType;
+	});
+
+	$scope.picFile;
+	
+	$scope.updateIcon = function () {   
+		console.log("start saving icon");
+		console.log($scope.icon.id);
+		console.log($scope.picFile);
+		$scope.picFile.upload = Upload.upload({
+			url: 'https://localhost:8443//property/updateIcon',
+			data: { file: $scope.picFile,id:$scope.icon.id},
+		});
+
+		$scope.picFile.upload.then(function (response) {
+			$timeout(function () {
+				$scope.picFile.result = response.data;
+				alert("Icon update is successful");
+			});
+		}, function (response) {
+			if (response.status > 0)
+				$scope.errorMsg = response.status + ': ' + response.data;
+		}, function (evt) {
+			// Math.min is to fix IE which reports 200% sometimes
+			$scope.picFile.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+		})
+	
+	} 
+}])
+
+
 
 
 
