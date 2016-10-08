@@ -98,7 +98,16 @@ insert into level(file_path,length,level_num, width,building_id) values ("",123,
 insert into level(file_path,length,level_num, width,building_id) values ("",123,4,80,1);
 insert into level(file_path,length,level_num, width,building_id) values ("",123,5,80,1);
 
-
+--INSERT INTO unit(description, length, rent, rentable, unit_number, width)
+--VALUES('111',1,2,true,3,4);
+--INSERT INTO unit(description, length, rent, rentable, unit_number, width)
+--VALUES('123',1,2,true,5,4);
+--INSERT INTO unit(description, length, rent, rentable, unit_number, width)
+--VALUES('1123',1,2,true,6,4);
+--INSERT INTO unit(description, length, rent, rentable, unit_number, width)
+--VALUES('333',1,2,true,7,4);
+--INSERT INTO unit(description, length, rent, rentable, unit_number, width)
+--VALUES('1771',1,2,true,8,4);
 
 INSERT INTO client_organisation_system_subscriptions VALUES ('1', 'Finance System');
 INSERT INTO client_organisation_system_subscriptions VALUES ('1', 'Event Management System');
