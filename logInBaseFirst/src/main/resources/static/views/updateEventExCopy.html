@@ -80,43 +80,51 @@
 </div>
 <!-- /subnavbar -->
 	<!-- MAIN BODY -->
-	<div ng-cloak ng-controller="eventExternalController as eventExCtrl" >
+	<div ng-cloak ng-controller="eventExternalController as eventExCtrl">
       <div class="container">
         <div class="content" >
-        <h1>View All Bookings</h1>
-        <p class="tagline">List of bookings</p>
-        <button ng-click="viewBookings()">Display</button>
-         <button><a href="/#/viewAllEventsEx">View All Events</a></button>
-       <table class="table table-striped table-advance table-hover">
-        <tbody>
-           <tr>
-           <th><i></i> Booking ID </th>
-           <th><i></i> Event Id </th>
-           <th><i></i> Start Date </th>
-           <th><i></i> End Date </th>
-           <th><i></i> Unit Booked </th>
-           <!-- <th><i></i> Change Unit </th>-->
-           <th><i></i> Delete Booking </th>
-           <th><i></i> Design Internal Plan </th>
-           </tr>
-         <tr ng-repeat="x in bookings">
-         <td>{{ x.id }}</td>
-         <td>{{ x.owner}}</td>
-         <td>{{ x.event_start_date_time }}</td>
-         <td>{{ x.event_end_date_time }}</td>
-         <td>{{ x.room }}</td>
-         <!-- <td><a ng-model="myValue" href="/#/updateBookingEx" ng-click="updateBooking(x.id)">Update</a></td>-->
-         <td><a ng-model="myValue" ng-click="deleteBooking(x.id)">Delete</a></td>
-         <td><a ng-model="myValue" href="/#/createUnitPlanEx" ng-click="getBooking(x.id)">Unit Plan</a></td>
-         </tr>
-         </tbody>
-      </table>
-   <!--  </div>-->
- </div>
- </div>
- </div>
+        <h1>Update Event</h1>
+        <p class="tagline">Update your event here</p>
+        <button ng-click = "getEventById()"><input type="submit" value="Refresh"></button>
+        <form>
+         <div class="form-group">
+               <label for="exampleInput">Event Title</label>
+               <input type="text" ng-model="event.event_title" class="form-control" placeholder="Enter event title">
+        </div>
+        <div class="form-group">
+               <label for="exampleInput">Units</label>
+               <input type="text" ng-model="event.units" class="form-control" id="eventName" placeholder="Enter units">
+        </div>
+        <div class="form-group">
+               <label for="exampleInput">Event Content</label>
+               <input type="text" ng-model="event.event_content" class="form-control" placeholder="Enter event content">
+        </div>
+        <div class="form-group">
+               <label for="exampleInput">Event Description</label>
+               <input type="text" ng-model="event.event_description" class="form-control" placeholder="Enter event description">
+        </div>
+       <div class="form-group">
+               <label for="exampleInput">Event Start Date</label>
+               <input type="datetime-local" ng-model="event.event_start_date" class="form-control" placeholder="Enter start date">
+       </div>
+       <div class="form-group">
+               <label for="exampleInput">Event End Date</label>
+               <input type="datetime-local" ng-model="event.event_end_date" class="form-control" placeholder="Enter end date">
+       </div>
+       <div class="form-group">
+               <label for="exampleInputFile">File input</label>
+               <input type="file" ng-model="building.filePath" id="exampleInputFile">
+               <p class="help-block">Please select a file</p>
+      </div>
+      <button ng-click = "updateEvent()"><input type="submit" value="Submit"></button>
+      <a href = "/#/viewAllEventsEx">GO BACK TO VIEW ALL LEVELS</a>
+      </form>      
+        </div>
+      </div>
+    </div>
 		
 		<!--main content end-->
+
 
 
 
