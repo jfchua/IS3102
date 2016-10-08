@@ -121,6 +121,14 @@ public class BuildingServiceImpl implements BuildingService {
 		LOGGER.debug("Getting building={}", id);
 		return Optional.ofNullable(buildingRepository.findOne(id));
 	}
+	
+	@Override
+	public Building getBuilding(long id) {
+		// TODO Auto-generated method stub
+		Optional<Building> buildingOpt=getBuildingById(id);
+		Building building=buildingOpt.get();
+		return building;
+	}
 
 	@Override
 	public boolean checkBuilding(ClientOrganisation client, long id) {

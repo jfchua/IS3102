@@ -184,7 +184,7 @@ app.config(
 			.state('/updateBuilding',{
 				url: '/updateBuilding',		
 				templateUrl: '/views/updateBuilding.html',
-				controller: 'buildingController',
+				controller: 'updateBuildingController',
 				data: {
 					authorizedRoles: [USER_ROLES.property]
 				}
@@ -192,7 +192,7 @@ app.config(
 			.state('/deleteBuilding',{
 				url: '/deleteBuilding',
 				templateUrl: '/views/deleteBuilding.html',
-				controller: 'buildingController',
+				controller: 'deleteBuildingController',
 				data: {
 					authorizedRoles: [USER_ROLES.property]
 				}
@@ -200,7 +200,7 @@ app.config(
 			.state('/viewLevels',{
 				url: '/viewLevels',
 				templateUrl: '/views/viewLevels.html',
-				controller: 'buildingController',
+				controller: 'viewLevelController',
 				data: {
 					authorizedRoles: [USER_ROLES.property]
 				}
@@ -216,7 +216,7 @@ app.config(
 			.state('/updateLevel',{
 				url: '/updateLevel',
 				templateUrl: '/views/updateLevel.html',
-				controller: 'levelController',
+				controller: 'updateLevelController',
 				data: {
 					authorizedRoles: [USER_ROLES.property]
 				}
@@ -224,7 +224,7 @@ app.config(
 			.state('/deleteLevel',{
 				url: '/deleteLevel',
 				templateUrl: '/views/deleteLevel.html',
-				controller: 'levelController',
+				controller: 'deleteLevelController',
 				data: {
 					authorizedRoles: [USER_ROLES.property]
 				}
@@ -1478,188 +1478,7 @@ contacts = [
 
 
 
-/*       4. BUILDING         */
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-app.controller('buildingController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
-	$scope.submit1 = function(){
-		//alert("SUCCESS");
-		$scope.data = {};
-		var dataObj = {
-				name: $scope.building.name,
-				numFloor: $scope.building.numFloor,
-				address: $scope.building.address,
-				city: $scope.building.city,
-				postalCode: $scope.building.postalCode,
-				filePath: $scope.building.filePath
-		};
-
-		console.log("REACHED HERE FOR SUBMIT BUILDING " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/building/addBuilding',
-			data    : dataObj //forms user object
-		});
-
-		console.log("SAVING THE BUILDING");
-		send.success(function(){
-			alert('BUILDING IS SAVED!');
-		});
-		send.error(function(){
-			alert('SAVING BUILDING GOT ERROR!');
-		});
-	};
-
-	//view building
-	$scope.viewBuilding = function(building){
-		$scope.data = {};
-		//var buildings ={name: $scope.name, address: $scope.address};
-		$http.get("//localhost:8443/building/viewBuildings").then(function(response){
-			$scope.buildings = response.data;
-			console.log("DISPLAY ALL BUILDINGS");
-			console.log("LEVELS DATA ARE OF THE FOLLOWING: " + $scope.buildings);
-
-		},function(response){
-			alert("did not view");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)	
-	}
-	$scope.viewLevelsByBuildingId = function(id){
-
-		$scope.dataToShare = [];
-
-		$scope.shareMyData = function (myValue) {
-			//$scope.dataToShare = myValue;
-			//shareData.addData($scope.dataToShare);
-		}
-		//populate levels from a building of the specific ID
-		$scope.url = "https://localhost:8443/level/viewLevels/"+id;
-		//$scope.dataToShare = [];
-		console.log("GETTING THE LEVELS")
-		var getLevels = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/level/viewLevels/' + id
-
-		});
-
-		console.log("Getting the levels using the url: " + $scope.url);
-		getLevels.success(function(response){
-			//$scope.dataToShare.push(id);
-			//$location.path("/viewLevels/"+id);
-			console.log('GET LEVELS SUCCESS! ' + JSON.stringify(response));
-			console.log("ID IS " + id);
-			shareData.addData(JSON.stringify(response));
-			//shareData.addDataId(JSON.stringify(id));
-			//$location.path("/viewLevels");
-		});
-		getLevels.error(function(response){
-			$location.path("/viewBuilding");
-			console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
-		});
-	};	
-
-	$scope.getBuilding = function(id){		
-		$scope.dataToShare = [];	  
-		$scope.shareMyData = function (myValue) {
-			//$scope.dataToShare = myValue;
-			//shareData.addData($scope.dataToShare);
-		}
-		$scope.url = "https://localhost:8443/building/getBuilding/"+id;
-		//$scope.dataToShare = [];
-		console.log("GETTING THE BUILDING INFO")
-		var getBuilding = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/building/getBuilding/' + id        
-		});
-		console.log("Getting the building using the url: " + $scope.url);
-		getBuilding.success(function(response){
-			//$scope.dataToShare.push(id);
-			//$location.path("/viewLevels/"+id);
-			console.log('GET Building SUCCESS! ' + JSON.stringify(response));
-			console.log("ID IS " + id);
-			shareData.addData(JSON.stringify(response));
-			//$location.path("/viewLevels");
-		});
-		getBuilding.error(function(response){
-			$location.path("/viewBuilding");
-			console.log('GET BUILDING FAILED! ' + JSON.stringify(response));
-		});
-
-	}
-
-
-	$scope.getBuildingById= function(){
-
-		//var buildings ={name: $scope.name, address: $scope.address};
-		//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
-		$scope.building1 = JSON.parse(shareData.getData());
-		var dataObj = {
-				name: $scope.building1.name,
-				numFloor: $scope.building1.numFloor,
-				address: $scope.building1.address,
-				city: $scope.building1.city,
-				postalCode: $scope.building1.postalCode,
-				filePath: $scope.building1.filePath
-		};
-		$scope.building = angular.copy($scope.building1)
-		var url = "https://localhost:8443/building/updateBuilding";
-		console.log("BUILDING DATA ARE OF THE FOLLOWING: " + $scope.building);
-	}
-
-	$scope.updateBuilding = function(){
-		$scope.data = {};
-		//$scope.building = JSON.parse(shareData.getData());
-		var dataObj = {					
-				id: $scope.building.id,
-				name: $scope.building.name,
-				numFloor: parseInt($scope.building.numFloor),
-				address: $scope.building.address,
-				city: $scope.building.city,
-				postalCode: $scope.building.postalCode,
-				filePath: $scope.building.filePath
-		};		
-		console.log("REACHED HERE FOR SUBMIT BUILDING " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/building/updateBuilding',
-			data    : dataObj //forms user object
-		});
-
-		console.log("UPDATING THE BUILDING");
-		send.success(function(){
-			alert('BUILDING IS SAVED!');
-		});
-		send.error(function(){
-			alert('UPDATING BUILDING GOT ERROR!');
-		});
-	};	
-
-	$scope.deleteBuilding = function(){
-		$scope.data = {};
-		console.log("Start deleting");
-		$scope.building = JSON.parse(shareData.getData());
-		var tempObj ={id:$scope.building.id};
-		console.log("fetch id "+ tempObj);
-		//var buildings ={name: $scope.name, address: $scope.address};
-		$http.post("//localhost:8443/building/deleteBuilding", JSON.stringify(tempObj)).then(function(response){
-			//$scope.buildings = response.data;
-			console.log("Delete the BUILDING");
-		},function(response){
-			alert("DID NOT DELETE");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)
-
-	}
-
-
-}]);
-
 //service class to connect
-
 app.service('shareData', function($window) {
 	var KEY = 'App.SelectedValue';
 	var data = {};
@@ -1692,301 +1511,6 @@ app.service('shareData', function($window) {
 		getData: getData
 	};
 });
-
-
-
-//CONNECT BUILDING TO LEVELS
-app.controller('levelController', ['$scope', '$http','shareData', function ($scope, $http, shareData) {
-	$scope.viewLevels = function(){
-		console.log("VIEWING LEVELS BY BUILDING ID :" + JSON.stringify(shareData.getData()));
-
-		$scope.levels = JSON.parse(shareData.getData()); //gets the response data from building controller 
-		//console.log($scope.levels.length);
-
-		var url = "https://localhost:8443/level/viewLevels";
-		console.log("LEVELS DATA ARE OF THE FOLLOWING: " + $scope.levels);
-	};
-
-	$scope.addLevel = function(){
-		//alert("SUCCESS");
-		console.log("start adding");
-		$scope.data = {};
-		$scope.building = JSON.parse(shareData.getData());
-		console.log($scope.building);
-		console.log($scope.building.id);
-		var dataObj = {
-				id: $scope.building.id,
-				levelNum: $scope.level.levelNum,
-				length: $scope.level.length,
-				width: $scope.level.width,
-				filePath: $scope.level.filePath
-		};
-
-		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/level/addLevel',
-			data    : dataObj //forms user object
-		});
-
-		console.log("SAVING THE LEVEL");
-		send.success(function(){
-			alert('LEVEL IS SAVED!');
-		});
-		send.error(function(){
-			alert('SAVING LEVEL GOT ERROR!');
-		});
-	};
-
-	$scope.updateLevel = function(){
-		console.log("Start updating");
-		$scope.data = {};
-		//$scope.building = JSON.parse(shareData.getData());
-		//console.log($scope.building.id);
-		//$scope.level = JSON.parse(shareData.getDataId());
-		console.log($scope.level.id);
-		var dataObj = {					
-				levelId: $scope.level.id,
-				//buildingId:$scope.building.id,
-				levelNum: $scope.level.levelNum,
-				length: $scope.level.length,
-				width: $scope.level.width,
-				filePath: $scope.level.filePath
-		};		
-		//console.log("level: "+$scope.level.id+" building: "+$scope.building.id);
-		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/level/updateLevel',
-			data    : dataObj //forms user object
-		});
-
-		console.log("UPDATING THE LEVEL");
-		send.success(function(){
-			alert('LEVEL IS SAVED!');
-		});
-		send.error(function(){
-			alert('UPDATING LEVEL GOT ERROR!');
-		});
-	};	
-
-	$scope.getLevel = function(id){		
-		$scope.dataToShare = [];	  
-		$scope.shareMyData = function (myValue) {
-			//$scope.dataToShare = myValue;
-			//shareData.addData($scope.dataToShare);
-		}
-		$scope.url = "https://localhost:8443/level/getLevel/"+id;
-		//$scope.dataToShare = [];
-		console.log("GETTING THE Level INFO")
-		var getLevel = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/level/getLevel/' + id        
-		});
-		console.log("Getting the levelusing the url: " + $scope.url);
-		getLevel.success(function(response){
-			//$scope.dataToShare.push(id);
-			//$location.path("/viewLevels/"+id);
-			console.log('GET LEVEL SUCCESS! ' + JSON.stringify(response));
-			console.log("ID IS " + id);
-			shareData.addData(JSON.stringify(response));
-			//$location.path("/viewLevels");
-		});
-		getLevel.error(function(response){
-			$location.path("/viewLevels");
-			console.log('GET LEVEL FAILED! ' + JSON.stringify(response));
-		});
-
-	}
-
-	$scope.getLevelById= function(){
-
-		//var buildings ={name: $scope.name, address: $scope.address};
-		//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
-		$scope.level1 = JSON.parse(shareData.getData());
-		var dataObj = {
-				levelNum: $scope.level1.levelNum,
-				length: $scope.level1.length,
-				width: $scope.level1.width,
-				filePath: $scope.level1.filePath
-		};
-		$scope.level = angular.copy($scope.level1)
-
-		var url = "https://localhost:8443/level/updateLevel";
-		console.log("LEVEL DATA ARE OF THE FOLLOWING: " + $scope.level);
-	}
-
-	$scope.getLevelByIdForDelete= function(){
-
-		//var buildings ={name: $scope.name, address: $scope.address};
-		//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
-		$scope.level = JSON.parse(shareData.getData());
-
-		var url = "https://localhost:8443/level/deleteLevel";
-		console.log("LEVEL DATA ARE OF THE FOLLOWING: " + $scope.level);
-	}
-
-	$scope.deleteLevel = function(){
-		$scope.data = {};
-		console.log("Start deleting");
-		$scope.level = JSON.parse(shareData.getData());
-		console.log($scope.level.id);
-		var tempObj ={levelId:$scope.level.id};
-		console.log("fetch id "+ tempObj);
-		//var buildings ={name: $scope.name, address: $scope.address};
-		$http.post("//localhost:8443/level/deleteLevel", JSON.stringify(tempObj)).then(function(response){
-			//$scope.buildings = response.data;
-			console.log("Delete the LEVEL");
-		},function(response){
-			alert("DID NOT DELETE LEVEL");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)
-
-	}
-
-}]);	
-
-
-app.controller('vendorController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
-	$scope.viewAllVendors = function(){
-		$scope.data = {};	
-		$http.get("//localhost:8443/vendor/viewAllVendors").then(function(response){
-			$scope.vendors = response.data;
-			console.log("DISPLAY ALL vendors");
-		},function(response){
-			alert("did not view vendors");
-		}	
-		)	
-	}
-
-	$scope.getVendor = function(id){		
-		$scope.dataToShare = [];	  
-		$scope.shareMyData = function (myValue) {
-			//$scope.dataToShare = myValue;
-			//shareData.addData($scope.dataToShare);
-		}
-		$scope.url = "https://localhost:8443/vendor/getVendor/"+id;
-		//$scope.dataToShare = [];
-		console.log("GETTING THE Vendor INFO")
-		var getVendor = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/vendor/getVendor/' + id        
-		});
-		console.log("Getting the vendor using the url: " + $scope.url);
-		getVendor.success(function(response){
-			//$scope.dataToShare.push(id);
-			//$location.path("/viewLevels/"+id);
-			console.log('GET EVENT SUCCESS! ' + JSON.stringify(response));
-			console.log("ID IS " + id);
-			shareData.addData(JSON.stringify(response));
-			//$location.path("/viewLevels");
-		});
-		getVendor.error(function(response){
-			$location.path("/viewAllVendors");
-			console.log('GET Vendor FAILED! ' + JSON.stringify(response));
-		});			
-	}
-
-	$scope.getVendorById= function(){			
-		$scope.vendor1 = JSON.parse(shareData.getData());
-		var dataObj = {			
-				email: $scope.vendor1.email,
-				name: $scope.vendor1.name,
-				description: $scope.vendor1.description,
-				contact: $scope.vendor1.contact,						
-		};
-		$scope.vendor = angular.copy($scope.vendor1)
-
-		var url = "https://localhost:8443/vendor/updateVendor";
-		//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
-	}
-
-	$scope.updateVendor = function(){
-		console.log("Start updating");
-		$scope.data = {};
-		//$scope.event = JSON.parse(shareData.getData());
-		console.log($scope.vendor.id);
-		var dataObj = {				
-				id: $scope.vendor.id,
-				email: $scope.vendor.email,
-				name: $scope.vendor.name,
-				description: $scope.vendor.description,
-				contact: $scope.vendor.contact,		};		
-		//console.log(dataObj.event_approval_status);
-		console.log("REACHED HERE FOR SUBMIT VENDOR " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/vendor/updateVendor',
-			data    : dataObj //forms user object
-		});
-
-		console.log("UPDATING THE VENDOR");
-		send.success(function(){
-			alert('VENDOR IS SAVED!');
-		});
-		send.error(function(){
-			alert('UPDATING VENDOR GOT ERROR!');
-		});
-	};	
-
-	$scope.deleteVendor = function(){
-		$scope.data = {};
-		console.log("Start deleting vendor");
-		$scope.vendor = JSON.parse(shareData.getData());
-		console.log($scope.vendor.id);
-		var tempObj ={vendorId:$scope.vendor.id};
-		console.log("fetch id "+ tempObj);
-		$http.post("//localhost:8443/vendor/deleteVendor", JSON.stringify(tempObj)).then(function(response){
-			console.log("Cancel the VENDOR");
-		},function(response){
-			alert("DID NOT Cancel VENDOR");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)
-
-	}
-	$scope.getVendorByIdForDelete= function(){
-
-		//var buildings ={name: $scope.name, address: $scope.address};
-		//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
-		$scope.vendor = JSON.parse(shareData.getData());
-
-		var url = "https://localhost:8443/vendor/deleteVendor";
-		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.vendor);
-	}
-
-	$scope.addVendor = function(){
-		//alert("SUCCESS");
-		$scope.data = {};
-		var dataObj = {			
-				email: $scope.vendor.email,
-				name: $scope.vendor.name,
-				description: $scope.vendor.description,
-				contact: $scope.vendor.contact,						
-		};
-
-		console.log("REACHED HERE FOR SUBMIT Vendor " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/vendor/addVendor',
-			data    : dataObj //forms user object
-		});
-
-		console.log("SAVING THE vendor");
-		send.success(function(){
-			alert('vendor IS SAVED!');
-		});
-		send.error(function(){
-			alert('SAVING vendor GOT ERROR!');
-		});
-	};
-
-}]);	
 
 
 app.controller('maintenanceController',['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
