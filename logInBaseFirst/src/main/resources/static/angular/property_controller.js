@@ -208,23 +208,26 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 	});
 
 	$scope.deleteBuilding = function(){
-		console.log("START DELETE");
-		$scope.data = {};
-		var tempObj ={id:$scope.building.id};
-		console.log("fetch id "+ tempObj);
-		//var buildings ={name: $scope.name, address: $scope.address};
-		$http.post("//localhost:8443/building/deleteBuilding", JSON.stringify(tempObj)).then(function(response){
-			//$scope.buildings = response.data;
-			console.log("Delete the BUILDING");
-			alert('BUILDING IS DELETED! GOING BACK TO VIEW BUILDINGS...');
-			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-			$location.path("/viewBuilding");
-			
-		},function(response){
-			alert("DID NOT DELETE");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)
+		if(confirm('CONFIRM TO DELETE BUILDING '+$scope.building.name+'?')){
+			console.log("START DELETE");
+			$scope.data = {};
+			var tempObj ={id:$scope.building.id};
+			console.log("fetch id "+ tempObj);
+		
+			$http.post("//localhost:8443/building/deleteBuilding", JSON.stringify(tempObj)).then(function(response){
+				//$scope.buildings = response.data;
+				console.log("Delete the BUILDING");
+				alert('BUILDING IS DELETED! GOING BACK TO VIEW BUILDINGS...');
+				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
+				$location.path("/viewBuilding");
+				
+			},function(response){
+				alert("DID NOT DELETE");
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)
+		}
+		
 	};	
 }])
 

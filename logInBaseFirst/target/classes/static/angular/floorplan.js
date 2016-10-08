@@ -283,7 +283,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
     console.log("test "+JSON.stringify($scope.units));
 
   } 
-  $scope.specialType;
+  $scope.specialType='./svg/entry.svg';
   $scope.addSpecialUnit = function (type) {   
     $scope.units.push({"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "transparent","type": $scope.specialType}});
     console.log("test "+JSON.stringify($scope.units));
