@@ -5,46 +5,62 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData) {
   var levelIdObj;
   var levelId;
   var level;
+  var building;
   //$scope.units;
+  
   angular.element(document).ready(function () {
-    level = JSON.parse(shareData.getData());
-      console.log("test, hailing, after ready");
-      console.log(level);
-      $scope.levelLength;
-    $scope.levelWidth;
-    
-    //console.log("test hailing");
-    console.log(level);
-    if(!level.id){
-    
-      level=level[0];
-      console.log("level");
-    }
-    console.log(level);
-    $scope.levelLength=900;
-    $scope.levelWidth=parseInt((level.width)*900/(level.length));
-    levelId=level.id;
-    levelIdObj={
-        id:levelId
-    }
-    console.log(levelIdObj);
-    //retrieve units when page loaded
-    $http.post('/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-      console.log(response.data);
-      console.log(angular.fromJson(response.data));
-      $scope.units=angular.fromJson(response.data);
-
-    },function(response){
-      console.log("DID NOT view");
-      console.log("response is "+angular.fromJson(response.data).error);
-    })
-    
+	  		//GET LEVEL
+	  $scope.units=[];
+		    level = shareData.getData();
+		    	console.log("GET LEVEL: ");
+		      console.log(level);
+		      $scope.levelLength;
+		      $scope.levelWidth;
+		    	   
+		    if(!level.id){
+		    	console.log("LEVEL IS NOT GET");
+		      level=level[0];
+		      
+		    }
+		    console.log("GET LEVEL: ");
+		    console.log(level);
+		    //SET GLASSBOX SIZE ACCORDINGTO LEVEL ATTRIBUTES LENGTH AND WIDTH
+		    $scope.levelLength=900;
+		    $scope.levelWidth=parseInt((level.width)*900/(level.length));
+		    
+		    //GET UNITS FROM levelIdObj
+		    levelId=level.id;
+		    levelIdObj={
+		        id:levelId
+		    }
+		    $http.post('/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
+		      $scope.units=angular.fromJson(response.data);		
+		    },function(response){
+		      console.log("DID NOT view");
+		      console.log("response is "+angular.fromJson(response.data).error);
+		    })
+		    
+		    
+		    //GET BUILDING FROM levelIdObj
+		    var levelIdObj={id:level.id}
+		    $http.post('/level/getBuilding', JSON.stringify(levelIdObj)).then(function(response){
+		      console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
+		     building=response.data;
+		      console.log(building);
+		      console.log("Building ID IS " + building.id);
+		    },function(response){
+		      console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
+		    });	
+		    console.log(building);
   });
-
+  
+  //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
+  $scope.passBuilding = function(){
+	  shareData.addData(building);
+  }
+  
   $scope.editFloorPlan= function(){
-    shareData.addData(JSON.stringify(level));
-    console.log(level);
-    console.log(JSON.stringify(level));
+    shareData.addData(level);
   }
    $scope.showDetails= function (thisUnit) {   
      console.log(thisUnit);
@@ -216,7 +232,7 @@ app.directive('resizable', function () {
 
 
 
-//floorplan
+//UPDATE FLOOR PLAN
 app.controller('floorPlanController', function ($scope, $http,shareData,$location) {
   //jQuery = window.jQuery;
   //console.log(jQuery);
@@ -226,37 +242,40 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
   var level;
   
   angular.element(document).ready(function () {
-    $scope.units=[];
-      level = angular.fromJson(shareData.getData());
-      $scope.levelLength;
-      $scope.levelWidth;
-      
-      console.log("test hailing hahaha");
-      console.log(level);
-      if(!level.id){
-      
-        level=level[0];
-        console.log("level");
-      }
-      $scope.levelLength=900;
-      $scope.levelWidth=parseInt((level.width)*900/(level.length));
-      levelId=level.id;
-      levelIdObj={
-          id:levelId
-      }
-      
-      //retrieve units when page loaded
-      $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-        console.log("pure response is "+response.data);
-
-        console.log("test anglar.fromJon"+angular.fromJson(response.data));
-        $scope.units=angular.fromJson(response.data);
-
-      },function(response){
-        console.log("DID NOT view");
-        console.log("response is "+angular.fromJson(response.data).error);
-      })
-      
+	    $scope.units=[];
+	    	//GET LEVEL
+	      level = shareData.getData();
+	      $scope.levelLength;
+	      $scope.levelWidth;     
+	      console.log("GET LEVEL: ");
+	      console.log(level);
+	      if(!level.id){
+	    	  console.log("FAIL TO GET LEVEL: ");
+	        level=level[0];
+	        console.log("GET LEVEL:");
+	        console.log(level);
+	      }
+	      
+	      //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
+	      $scope.levelLength=900;
+	      $scope.levelWidth=parseInt((level.width)*900/(level.length));
+	      
+	      //GET UNITS
+	      levelId=level.id;
+	      levelIdObj={
+	          id:levelId
+	      }
+	      $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
+	        console.log("pure response is "+response.data);
+	
+	        console.log("test anglar.fromJon"+angular.fromJson(response.data));
+	        $scope.units=angular.fromJson(response.data);
+	
+	      },function(response){
+	        console.log("DID NOT view");
+	        console.log("response is "+angular.fromJson(response.data).error);
+	      })
+	      
     });
 
   $scope.addUnit = function () {  
@@ -264,9 +283,9 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
     console.log("test "+JSON.stringify($scope.units));
 
   } 
-  $scope.specialType;
+  $scope.specialType='./svg/entry.svg';
   $scope.addSpecialUnit = function (type) {   
-    $scope.units.push({"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "transparent","type": type}});
+    $scope.units.push({"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "transparent","type": $scope.specialType}});
     console.log("test "+JSON.stringify($scope.units));
   } 
   
@@ -287,7 +306,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
     $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
       console.log("pure response is "+JSON.stringify(response.data));
       alert("Saved. Please click on \"Start\" button to view.");
-      $scope.viewFloorPlan;
+      shareData.addData(level);
       $location.path("/viewFloorPlan");
     },function(response){//else is not saved successfully
       console.log("DID NOT SAVE");
@@ -297,9 +316,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
 
   } 
   $scope.viewFloorPlan= function(){
-    shareData.addData(JSON.stringify(level));
-    console.log(level);
-    console.log(JSON.stringify(level));
+    shareData.addData(level);
   }
   $scope.viewLevelsByBuildingId = function(){
     var buildingId;
@@ -358,8 +375,8 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
 
     console.log("resize");
 
-    unit.square.width = evt.size.width;//working restrict A
-    unit.square.height = evt.size.height;
+    unit.square.width = parseInt(evt.size.width);//working restrict A
+    unit.square.height = parseInt(evt.size.height);
     unit.square.left = parseInt(evt.position.left);
     unit.square.top = parseInt(evt.position.top);
   

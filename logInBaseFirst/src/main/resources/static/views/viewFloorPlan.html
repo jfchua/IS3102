@@ -93,7 +93,7 @@
         
        
        <div ng-controller="viewFloorPlanController as viewFloorPlanCtrl">    
-    <a href="/#/viewLevels" ng-click="viewLevelsByBuildingId()"><button>Back to View Levels</button></a>
+    <a href="/#/viewLevels" ng-click="passBuilding()"><button>Back to View Levels</button></a>
   
     <div id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
         <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
