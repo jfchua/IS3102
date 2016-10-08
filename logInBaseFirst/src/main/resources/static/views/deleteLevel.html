@@ -79,12 +79,12 @@
 </div>
 <!-- /subnavbar -->
 	<!-- MAIN BODY -->
-	<div ng-cloak ng-controller="deleteLevelController as deleteLevelCtrl" ng-submit="submit()">
+	<div ng-cloak ng-controller="levelController as levelCtrl" ng-submit="submit()">
       <div class="container">
         <div class="content" >
         <h1>Delete building</h1>
         <p class="tagline">Detele your building here</p>
-       
+        <a href="#/viewLevels" ng-click="passBuilding()"><button>Back to view levels</button></a>
        <button ng-click = "deleteLevel()">Delete</button>
         <table class="table table-striped table-advance table-hover">
         <tbody>
