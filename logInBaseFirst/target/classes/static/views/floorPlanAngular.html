@@ -22,16 +22,8 @@
         
        
        <div ng-controller="MyCtrl as myCtrl">    
-<<<<<<< HEAD
     
-=======
-    <div id="respond"></div>
-<<<<<<< HEAD
-    <div><p id="display" >{{showDetail}}</p></div>
-=======
->>>>>>> 73c429b9e74f7aec4b3aa879516d0a3771634dda
   
->>>>>>> origin/master
     <div id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
         <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
             id="{{unit.square.id}}"  draggable resizable  on-resize="resize(unit,$evt, $ui)" ng-mouseover=$parent.showDetails(unit) 
