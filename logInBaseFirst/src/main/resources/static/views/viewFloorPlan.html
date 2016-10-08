@@ -18,14 +18,24 @@
 <link href="css/style.css" rel="stylesheet">
 <link href="css/style-responsive.css" rel="stylesheet" />
  <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
-
+<script src="angular/app.js"></script>
+<script src="angular/controller.js"></script>
+<script src="angular/user_service.js"></script>
+<script src="angular/user_controller.js"></script>
+<script src="angular/floorplan.js"></script>
 <script
-  src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.js"></script>
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.js"></script>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 -->
+<!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+      <script src="js/lte-ie7.js"></script>
+    <![endif]-->
 </head>
 
 <body >
 <div>
-  <div class="navbar navbar-fixed-top">
+	<div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
                     class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </a><a class="brand" href="#/workspace">DASHBOARD</a>
@@ -69,87 +79,36 @@
   </div>
   <!-- /subnavbar-inner --> 
 </div>
-  <!-- MAIN BODY -->
-    <div ng-controller="floorPlanController as floorPlanCtrl">    
+<!-- /subnavbar -->
+	<!-- MAIN BODY -->
+	<!-- MAIN BODY -->
+	<!-- /subnavbar -->
+	<!-- MAIN BODY -->
+	
       <div class="container">
         <div class="content" >
+      
 
         <h1>Floor Plan</h1>
         
        
-<<<<<<< HEAD
-       <div ng-controller="MyCtrl as myCtrl">    
-<<<<<<< HEAD
-    
-=======
-    <div id="respond"></div>
-<<<<<<< HEAD
-    <div><p id="display" >{{showDetail}}</p></div>
-=======
->>>>>>> 73c429b9e74f7aec4b3aa879516d0a3771634dda
-=======
-       
-     <a href="/#/viewFloorPlan" ng-click="viewFloorPlan()"><button>Back to View FloorPlan</button></a>
->>>>>>> ad28bee36dd9b7b319f7bcb96387cdf8d98b1095
+       <div ng-controller="viewFloorPlanController as viewFloorPlanCtrl">    
+    <a href="/#/viewLevels" ng-click="viewLevelsByBuildingId()"><button>Back to View Levels</button></a>
   
->>>>>>> origin/master
     <div id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
         <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
-            id="{{unit.square.id}}"  draggable resizable  on-resize="resize(unit,$evt, $ui)" ng-mouseover=$parent.showDetails(unit) 
+            id="{{unit.square.id}}"   ng-mouseover=$parent.showDetails(unit) 
               ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 
               'background-color':'{{unit.square.color}}' ,'maxHeight':{{levelWidth}}+'px','maxWidth':{{levelLength}}+'px'}" ><p>{{unit.unitNumber}}<img  class="svgtest" src="{{unit.square.type}}" alt="{{unit.square.type}}"></p> </div>
         </div>
        <div><p> {{showDetail}}</p></div>
-  
-  <button ng-click="addUnit()">Add a Unit</button>
-  <select ng-model="specialType">
-    <option value="./svg/entry.svg">Entry
-    <option value="./svg/escalator.svg">Escalator
-    <option value="./svg/exit.svg">Exit
-    <option value="./svg/lift.svg">Lift
-    <option value="./svg/servicelift.svg">Service Lift
-    <option value="./svg/staircase.svg">Staircase
-    <option value="./svg/toilet.svg">Toilet
-</select>
-   <button ng-click="addSpecialUnit(specialType)">Add a Unit</button>
-
-<button ng-click="saveUnits()">Save Units</button>
- 
-  <div><p >Please drag before resizing.</p></div>
-  
-<table>
-<th></th>
-<th>id</th>
-   <th>left</th>
-    <th>top</th>
-     <th>height</th>
-      <th>width</th>
-       <th>color</th>
-        <th>type</th>
-       <th>Unit Number</th>
-     
-        <th>Description</th>
-         
-  <tr ng-repeat="x in units track by $index" >
-  <td><a class="btn" ng-click="remove(x)">Delete</a> </td>
-    <td>{{ x.id }} </td>
-     <td>{{x.square.left}}</td>
-     <td>{{x.square.top}}</td>
-     <td>{{x.square.height}}</td>
-     <td>{{x.square.width}}</td>
-        <td> {{x.square.color }} </td>
-    <td>{{ x.square.type }} </td>
-    <td><input type="text" name="unitNumber" ng-model="x.unitNumber" required> </td>
-      <td> <input type="text" name="description" ng-model="x.description" > </td>
-  </tr>
-</table>
+  <a href="/#/createFloorPlan" ng-click="editFloorPlan()"><button> Edit Floor Plan</button></a>
+   <button id="download" ng-click=downloadPlan>Download Floor Plan</button>
   <div id="respond"></div>
 </div>
-       
-   </div>
-   </div>
+       </div>
+       </div>
    
-    
-    <!--main content end-->
+		<!--main content end-->
 </body>
 </html>
