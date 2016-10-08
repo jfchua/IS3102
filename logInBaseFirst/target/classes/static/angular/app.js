@@ -208,7 +208,7 @@ app.config(
 			.state('/addLevel',{
 				url: '/addLevel',
 				templateUrl: '/views/addLevel.html',
-				controller: 'levelController',
+				controller: 'addLevelController',
 				data: {
 					authorizedRoles: [USER_ROLES.property]
 				}
@@ -216,7 +216,7 @@ app.config(
 			.state('/updateLevel',{
 				url: '/updateLevel',
 				templateUrl: '/views/updateLevel.html',
-				controller: 'updateLevelController',
+				controller: 'levelController',
 				data: {
 					authorizedRoles: [USER_ROLES.property]
 				}
@@ -224,7 +224,7 @@ app.config(
 			.state('/deleteLevel',{
 				url: '/deleteLevel',
 				templateUrl: '/views/deleteLevel.html',
-				controller: 'deleteLevelController',
+				controller: 'levelController',
 				data: {
 					authorizedRoles: [USER_ROLES.property]
 				}

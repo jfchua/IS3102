@@ -78,12 +78,12 @@
 </div>
 <!-- /subnavbar -->
 	<!-- MAIN BODY -->
-	<div ng-cloak ng-controller="updateLevelController as updateLevelCtrl">
+	<div ng-cloak ng-controller="levelController as levelCtrl">
       <div class="container">
         <div class="content" >
         <h1>Update level</h1>
         <p class="tagline">Update your level here</p>
-        
+         <a href="#/viewLevels" ng-click="passBuilding()"><button>Back to view levels</button></a>
         <form>
         <div class="form-group">
                <label for="exampleInput">Level Number </label>
