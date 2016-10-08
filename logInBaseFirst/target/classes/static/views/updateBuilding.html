@@ -79,12 +79,12 @@
 </div>
 <!-- /subnavbar -->
 	<!-- MAIN BODY -->
-	<div ng-cloak ng-controller="buildingController as buildCtrl" >
+	<div ng-cloak ng-controller="updateBuildingController as updateBuildCtrl" >
       <div class="container">
         <div class="content" >
         <h1>Update building</h1>
+        <a href="#/viewBuilding"><button>Back to view buildings</button></a>
         <p class="tagline">Update your building here</p>
-        <button ng-click = "getBuildingById()"><input type="submit" value="Refresh"></button>
         <form>
         <div class="form-group">
                <label for="exampleInput">Building Name </label>
@@ -114,7 +114,7 @@
                <p class="help-block">Please select a file</p>
       </div>
       -->
-      <a href = "/#/viewBuilding"><button ng-click = "updateBuilding()"><input type="submit" value="Submit"></button></a> 
+      <button ng-click = "updateBuilding()"><input type="submit" value="Submit"></button>
       </form>      
         </div>
       </div>

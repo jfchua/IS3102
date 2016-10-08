@@ -21,6 +21,6 @@ boolean editBuildingInfo(ClientOrganisation client, long id, String name, String
 boolean deleteBuilding(ClientOrganisation client, long id);
 
 public Optional<Building> getBuildingById(long id);
-
+public Building getBuilding(long id);
 public boolean checkBuilding(ClientOrganisation client, long id);
 }

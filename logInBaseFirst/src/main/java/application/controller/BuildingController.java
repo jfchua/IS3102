@@ -228,20 +228,22 @@ public class BuildingController {
 			long id = (Long)jsonObject.get("id");
 			boolean bl = buildingService.deleteBuilding(client,id);
 			System.out.println("delete building " + id);
+			System.out.println(bl);
 			if ( bl ){
 				AuditLog al = new AuditLog();
 				al.setTimeToNow();
 				al.setSystem("Property");
-				al.setAction("Delete Building: " + buildingService.getBuildingById(id).get().getName());
+				al.setAction("Delete Building: id" + id);
 				al.setUser(usr.get());
 				al.setUserEmail(usr.get().getEmail());
 				auditLogRepository.save(al);
 			}
+			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
 		catch (Exception e){
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		
 	}
 
 	//This method takes in a JSON format which contains an object with 7 attributes
