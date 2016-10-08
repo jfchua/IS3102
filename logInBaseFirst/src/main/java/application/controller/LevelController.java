@@ -25,6 +25,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.reflect.TypeToken;
 import application.domain.Building;
 import application.domain.ClientOrganisation;
+import application.domain.Icon;
 import application.service.user.BuildingService;
 import application.domain.Level;
 import application.domain.Unit;
@@ -36,15 +37,15 @@ import application.service.user.UserService;
 @RequestMapping("/level")
 public class LevelController {
 	@Autowired
-	//private final BuildingService buildingService;
+	private final BuildingService buildingService;
 	private final LevelService levelService;
 	private final UserService userService;
 	private JSONParser parser = new JSONParser();
 
 	@Autowired
-	public LevelController(LevelService levelService, UserService userService) {
+	public LevelController(LevelService levelService, UserService userService,BuildingService buildingService) {
 		super();
-		//this.buildingService = buildingService;
+		this.buildingService = buildingService;
 		this.levelService = levelService;
 		this.userService = userService;
 	}
@@ -356,6 +357,41 @@ public class LevelController {
 				}
 				catch (Exception e){
 					return "{\"error\":\"cannot fetch}\"";
+				}
+				//return new ResponseEntity<Void>(HttpStatus.OK);
+			}
+			
+			
+			//input level id x as {id:x}; output building y as 
+			@RequestMapping(value = "/getBuilding",  method = RequestMethod.POST)//hailing
+			@ResponseBody
+			public ResponseEntity<Building> getBuilding(@RequestBody String level,HttpServletRequest rq) {
+				Principal principal = rq.getUserPrincipal();
+				Optional<User> usr = userService.getUserByEmail(principal.getName());
+				if ( !usr.isPresent() ){
+					return new ResponseEntity<Building>(HttpStatus.CONFLICT);
+				}
+				try{
+				    ClientOrganisation client = usr.get().getClientOrganisation();
+				System.out.println("test hailing");
+				Object obj = parser.parse(level);
+				JSONObject jsonObject = (JSONObject) obj;
+				
+				long levelId = (Long)jsonObject.get("id");
+				System.out.println("Returning building id : "+levelService.getBuildingByLevelId(client, levelId));
+				long buildingId = levelService.getBuildingByLevelId(client, levelId);
+				if(buildingId==0){
+					return new ResponseEntity<Building>(HttpStatus.CONFLICT);
+				}else{					
+					
+					Building building=buildingService.getBuilding(buildingId);
+					return new ResponseEntity<Building>(building,HttpStatus.OK);
+				}
+				
+				
+				}
+				catch (Exception e){
+					return new ResponseEntity<Building>(HttpStatus.CONFLICT);
 				}
 				//return new ResponseEntity<Void>(HttpStatus.OK);
 			}

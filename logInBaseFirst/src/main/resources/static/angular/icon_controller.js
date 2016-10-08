@@ -42,7 +42,7 @@ app.controller('iconController', function ($scope, $http,shareData) {
 
 
 //ADD ICON
-app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http', function ($scope, Upload, $timeout,$http ) {
+app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http','$location',function ($scope, Upload, $timeout,$http,$location ) {
 	//for selection of icon types in add a icon form
 	
 	
@@ -96,7 +96,9 @@ app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http', fun
 		$scope.picFile.upload.then(function (response) {
 			$timeout(function () {
 				$scope.picFile.result = response.data;
-				alert("ICON IS CREATED");
+				alert('ICON IS CREATED. GOING BACK TO VIEW ICONS...')
+				      $location.path("/viewIcon");
+				
 			});
 		}, function (response) {
 			if (response.status > 0)
@@ -111,8 +113,8 @@ app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http', fun
 
 
 
-//ADD ICON
-app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','shareData', function ($scope, Upload, $timeout,$http ,shareData) {
+//UPDATE ICON
+app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','shareData','$location', function ($scope, Upload, $timeout,$http ,shareData,$location) {
 	//for selection of icon types in add a icon form
 	//get icon from sharedata
 	
@@ -144,7 +146,9 @@ app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','
 		$scope.picFile.upload.then(function (response) {
 			$timeout(function () {
 				$scope.picFile.result = response.data;
-				alert("Icon update is successful");
+				alert('UPDATE IS SUCCESSFUL. GOING BACK TO VIEW ICONS...')
+				      $location.path("/viewIcon");
+				
 			});
 		}, function (response) {
 			if (response.status > 0)

@@ -57,47 +57,24 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData) {
     var buildingId;
     $scope.dataToShare = [];
     //get building id from levelId
-    $http.post('/level/getBuildingId', JSON.stringify(levelIdObj)).then(function(response){
+    $http.post('/level/getBuilding', JSON.stringify(levelIdObj)).then(function(response){
       console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
-      var buildingJson=response.data;
-      console.log(buildingJson);
+      var building=response.data;
+      console.log(building);
       //var temp=JSON.stringify(buildingJson)
-      buildingId=buildingJson.buildingId;
+      shareData.addData(building);
 
-      console.log("Building ID IS " + buildingId);
+      console.log("Building ID IS " + building.id);
 
     },function(response){
       console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
-    }).then(function() {
+    });
+    
+   
 
-      //get levels of building id and then save to share data
-      $scope.url = "https://localhost:8443/level/viewLevels/"+buildingId;
-      //$scope.dataToShare = [];
-      console.log("GETTING THE LEVELS")
-      var getLevels = $http({
-        method  : 'GET',
-        url     : 'https://localhost:8443/level/viewLevels/' + buildingId
+    }
 
-      });
-
-      console.log("Getting the levels using the url: " + $scope.url);
-      getLevels.success(function(response){
-        //$scope.dataToShare.push(id);
-        //$location.path("/viewLevels/"+id);
-        console.log('GET LEVELS SUCCESS! ' + JSON.stringify(response));
-        console.log("ID IS " + buildingId);
-        shareData.addData(JSON.stringify(response));
-        //shareData.addDataId(JSON.stringify(id));
-        //$location.path("/viewLevels");
-      });
-      getLevels.error(function(response){
-        $location.path("/viewBuilding");//not sure
-        console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
-      });
-
-    })
-
-  }
+  
 
   /*
    var downloadPlan=function() {
