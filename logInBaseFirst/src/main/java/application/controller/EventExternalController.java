@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 //import org.hibernate.metamodel.source.annotations.xml.mocker.SchemaAware.SecondaryTableSchemaAware;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -80,8 +81,13 @@ public class EventExternalController {
 			System.out.println(eventOrg.getName());
 			Object obj = parser.parse(eventJSON);
 			JSONObject jsonObject = (JSONObject) obj;
-            String unitsId = (String)jsonObject.get("units");
-            System.out.println(unitsId);
+			JSONArray units = (JSONArray)jsonObject.get("units");
+            String unitsId = "";
+            for(int i = 0; i < units.size(); i++){
+				System.out.println((Long)units.get(i));
+				unitsId = unitsId+(Long)units.get(i) + " ";
+				System.out.println(unitsId);
+			}
 			String event_title = (String)jsonObject.get("event_title");
 			String event_content = (String)jsonObject.get("event_content");
 			String event_description = (String)jsonObject.get("event_description");

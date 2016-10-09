@@ -80,13 +80,13 @@ public class MessageController {
 		binder.addValidators(sendMessageFormValidator);
 	}
 
-	@PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+	/*@PreAuthorize("hasAnyAuthority('USER','ADMIN')")
 	@RequestMapping(value = "/user/send", method = RequestMethod.GET)
 	public ModelAndView sendMessage() {
 		LOGGER.debug("Getting sendMessage page");
 		//return "sendMessage";
 		return new ModelAndView("sendMessage", "users", userService.getAllUsers());
-	}
+	}*/
 
 	/*@RequestMapping("/user/messages")
 	public ModelAndView getViewMessagesPage() {

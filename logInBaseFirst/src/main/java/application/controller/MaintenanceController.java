@@ -33,6 +33,7 @@ import application.domain.ClientOrganisation;
 import application.domain.Event;
 import application.domain.Level;
 import application.domain.Maintenance;
+import application.domain.MaintenanceSchedule;
 import application.domain.Unit;
 import application.domain.User;
 import application.service.user.MaintenanceService;
@@ -78,7 +79,7 @@ public class MaintenanceController {
 			Gson gson2 = new GsonBuilder()
 				.setExclusionStrategies(new ExclusionStrategy() {
 			      public boolean shouldSkipClass(Class<?> clazz) {
-					return (clazz == Unit.class);
+					return (clazz == MaintenanceSchedule.class);
 				  }
 				  @Override
 			      public boolean shouldSkipField(FieldAttributes f) {
@@ -201,7 +202,7 @@ public class MaintenanceController {
 		}
 		try{
 		ClientOrganisation client = usr.get().getClientOrganisation();
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat format = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
 			System.out.println("start updating");
 			Object obj = parser.parse(maintenanceJSON);
 			JSONObject jsonObject = (JSONObject) obj;
@@ -209,11 +210,12 @@ public class MaintenanceController {
 			System.out.println(id);
 			String vendorsId = (String)jsonObject.get("vendors");
 			System.out.println(vendorsId);
+			String unitsId= (String)jsonObject.get("units");
 			Date start = format.parse((String)jsonObject.get("start"));
 			Date end = format.parse((String)jsonObject.get("end"));
 			String description = (String)jsonObject.get("description");
 			System.out.println("end of controller");
-			boolean bl = maintenanceService.editMaintenance(client, id, vendorsId, start, end, description);
+			boolean bl = maintenanceService.editMaintenance(client, id, unitsId, vendorsId, start, end, description);
 			//levelService.editLevelInfo(levelId,levelNum, length, width, filePath);
 			if(!bl){
 				System.out.println("cannot update maintenance");
@@ -247,9 +249,21 @@ public class MaintenanceController {
 			ClientOrganisation client = usr.get().getClientOrganisation();
 				Object obj = parser.parse(maintenanceJSON);
 				JSONObject jsonObject = (JSONObject) obj;
-				String unitsId = (String)jsonObject.get("units");
-	            System.out.println(unitsId);
-	            String vendorsId = (String)jsonObject.get("vendors");
+				
+				JSONArray units = (JSONArray)jsonObject.get("units");
+	            String unitsId = "";
+	            for(int i = 0; i < units.size(); i++){
+					System.out.println((Long)units.get(i));
+					unitsId = unitsId+(Long)units.get(i) + " ";
+					System.out.println(unitsId);
+				}
+	            JSONArray vendors = (JSONArray)jsonObject.get("vendors");
+	            String vendorsId = "";
+	            for(int i = 0; i < vendors.size(); i++){
+					System.out.println((Long)vendors.get(i));
+					vendorsId = vendorsId+(Long)vendors.get(i) + " ";
+					System.out.println(vendorsId);
+				}
 				Date start = sdf.parse((String)jsonObject.get("start"));
 				Date end = sdf.parse((String)jsonObject.get("end"));
 				String description = (String)jsonObject.get("description");
@@ -293,7 +307,7 @@ public class MaintenanceController {
 							Gson gson2 = new GsonBuilder()
 								    .setExclusionStrategies(new ExclusionStrategy() {
 								        public boolean shouldSkipClass(Class<?> clazz) {
-								            return (clazz==Unit.class);
+								            return (clazz==MaintenanceSchedule.class);
 								        }
 
 								        /**

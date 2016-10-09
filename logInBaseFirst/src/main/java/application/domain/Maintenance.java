@@ -35,9 +35,21 @@ public class Maintenance {
 	 @JsonIgnore
 	 private Set<Vendor> vendors = new HashSet<Vendor>();
 	 
+	 @OneToMany(mappedBy ="maintenance", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+		@JsonIgnore
+		private Set<MaintenanceSchedule> schedule = new HashSet<MaintenanceSchedule>();
+
+	    public Set<MaintenanceSchedule> getMaintenanceSchedule() {
+			return schedule;
+		}
+		
+		public void setMaintenanceSchedule(Set<MaintenanceSchedule> schedule) {
+			this.schedule = schedule;
+		}
+		/*
 	 @ManyToMany(fetch = FetchType.LAZY, mappedBy = "maintenances")
 	 @JsonIgnore
-	 private Set<Unit> units = new HashSet<Unit>();
+	 private Set<Unit> units = new HashSet<Unit>();*/
 /*
 	public Boolean getFullday() {
 		return fullday;
@@ -90,14 +102,14 @@ public class Maintenance {
 	public void setEnd(Date end) {
 		this.end = end;
 	}
-
+/*
 	public Set<Unit> getUnits() {
 		return units;
 	}
 
 	public void setUnits(Set<Unit> units) {
 		this.units = units;
-	}
+	}*/
 
 
 	

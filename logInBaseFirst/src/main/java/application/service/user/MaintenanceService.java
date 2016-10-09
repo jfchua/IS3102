@@ -5,12 +5,13 @@ import java.util.Set;
 
 import application.domain.ClientOrganisation;
 import application.domain.Maintenance;
+import application.domain.MaintenanceSchedule;
 import application.domain.Unit;
 
 public interface MaintenanceService {
 	boolean createMaintenance(ClientOrganisation client, String unitId, String vendorId, Date start, Date end, String description);
 	
-	boolean editMaintenance(ClientOrganisation client, long id, String vendorId, Date start, Date end, String description);
+	boolean editMaintenance(ClientOrganisation client, long id, String unitsId, String vendorId, Date start, Date end, String description);
 	
 	boolean deleteMaintenance(ClientOrganisation client, long id);
 	
@@ -25,4 +26,8 @@ public interface MaintenanceService {
 	Set<Maintenance> getAllMaintenance(ClientOrganisation client);
 	
 	boolean checkMaintenance(ClientOrganisation client, long id);
+	
+	boolean checkUnit(ClientOrganisation client, long unitId);
+	
+	Set<MaintenanceSchedule> getMaintenanceSchedule(ClientOrganisation client, long id);
 }

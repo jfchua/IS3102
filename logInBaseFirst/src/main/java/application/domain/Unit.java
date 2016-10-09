@@ -73,13 +73,25 @@ public class Unit {
 		this.bookings = bookings;
 	}
 
+	 @OneToMany(mappedBy ="unit", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+     @JsonIgnore
+	 private Set<MaintenanceSchedule> schedule = new HashSet<MaintenanceSchedule>();
+
+	 public Set<MaintenanceSchedule> getMaintenanceSchedule() {
+			return schedule;
+		}
+		
+     public void setMaintenanceSchedule(Set<MaintenanceSchedule> schedule) {
+			this.schedule = schedule;
+		}
+	/*
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "UNITS_MAINTENANCES", joinColumns = {
 			@JoinColumn(name = "UNIT_ID", nullable = false, updatable = false) },
 	inverseJoinColumns = { @JoinColumn(name = "MAINTENANCE_ID",
 	nullable = false, updatable = false) })
 	@JsonIgnore
-	private Set<Maintenance> maintenances = new HashSet<Maintenance>();
+	private Set<Maintenance> maintenances = new HashSet<Maintenance>();*/
 
 /*
 	public Set<Event> getEvents() {
@@ -176,13 +188,13 @@ public class Unit {
 		this.avail = avail;
 	}
 
-
+/*
 	public Set<Maintenance> getMaintenances() {
 		return maintenances;
 	}
 	public void setMaintenances(Set<Maintenance> maintenances) {
 		this.maintenances = maintenances;
-	}
+	}*/
 
 	@Override
 	public String toString() {
