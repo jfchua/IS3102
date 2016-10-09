@@ -90,14 +90,14 @@ insert into message (message, sender_name,subject,recipient_id)values("This even
 insert into message (message, sender_name,subject,recipient_id)values("The pricing model seems a little off, can we discuss this later?","finance@localhost","Finance matter",6);
 
 
---insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameMS", "MINGSHA", 123456,"SINGAPORE", 6, "");
---insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameHL", "HAILING", 234567,"SINGAPORE", 4, "");
---insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,1);
---insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,2);
---insert into level(file_path,length,level_num, width,building_id) values ("",123,2,80,1);
---insert into level(file_path,length,level_num, width,building_id) values ("",123,4,80,1);
---insert into level(file_path,length,level_num, width,building_id) values ("",123,5,80,1);
-
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameMS", "MINGSHA", 123456,"SINGAPORE", 6, "");
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameHL", "HAILING", 234567,"SINGAPORE", 4, "");
+insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,1);
+insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,2);
+insert into vendor(contact, description, email, name)values("123", "good", "1@gmail.com", "MS");
+insert into vendor(contact, description, email, name)values("456", "good", "2@gmail.com", "HL");
+insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
+insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,2);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)
 --VALUES('111',1,2,true,3,4);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)

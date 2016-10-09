@@ -201,7 +201,7 @@ public class MaintenanceController {
 		}
 		try{
 		ClientOrganisation client = usr.get().getClientOrganisation();
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat format = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
 			System.out.println("start updating");
 			Object obj = parser.parse(maintenanceJSON);
 			JSONObject jsonObject = (JSONObject) obj;
@@ -209,11 +209,12 @@ public class MaintenanceController {
 			System.out.println(id);
 			String vendorsId = (String)jsonObject.get("vendors");
 			System.out.println(vendorsId);
+			String unitsId= (String)jsonObject.get("units");
 			Date start = format.parse((String)jsonObject.get("start"));
 			Date end = format.parse((String)jsonObject.get("end"));
 			String description = (String)jsonObject.get("description");
 			System.out.println("end of controller");
-			boolean bl = maintenanceService.editMaintenance(client, id, vendorsId, start, end, description);
+			boolean bl = maintenanceService.editMaintenance(client, id, unitsId, vendorsId, start, end, description);
 			//levelService.editLevelInfo(levelId,levelNum, length, width, filePath);
 			if(!bl){
 				System.out.println("cannot update maintenance");
