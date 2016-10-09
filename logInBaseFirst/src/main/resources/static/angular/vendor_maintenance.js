@@ -226,7 +226,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 		}
 		console.log("finish selecting units");		
 	}
-	
+	/*
 	$scope.getUnitsId = function(){
 		var dataObj ={id: $scope.selectedUnits};
 		console.log("units to be get are "+JSON.stringify(dataObj));
@@ -245,21 +245,46 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 			$location.path("/viewAllEventsEx");
 			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
 		});
-	}
+	}*/
+	
+	$scope.selectedVendors=[];
+	//$scope.getAllVendors = function(){
+		console.log("GETTING THE ALL UNITS INFO")
+		var getVendors = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/vendor/viewAllVendors/',
+	});
+		getVendors.success(function(response){
+			$scope.vendors = response;
+			console.log("RESPONSE IS" + JSON.stringify(response));
+
+			console.log('Vendors Gotten');
+		});
+		getVendors.error(function(){
+			alert('Get vendors error!!!!!!!!!!');
+		});		
+		
+		$scope.currentlySelectedVendor;
+		$scope.selectVendor = function(){
+			$scope.selectedVendors.push($scope.currentlySelectedVendor);
+		}
+
+		$scope.deleteVendor = function(vendor){
+			var index = $scope.selectedVendors.indexOf(vendor);
+			$scope.selectedVendors.splice(index, 1);  
+		}
+		console.log("finish selecting vendors");		
+//}
 	
 	$scope.addMaintenance = function(){
-		var unitIdsString="";
-		var unitIdsObj = JSON.parse(shareData.getData());
-		unitIdsString+=unitIdsObj;
 		console.log("test hailing");
-		console.log(unitIdsString);
 
 		console.log("start adding");
 		$scope.data = {};
 
 		var dataObj = {
-				units: unitIdsString,
-				vendors: $scope.maintenance.vendorId,
+				units: $scope.selectedUnits,
+				vendors: $scope.selectedVendors,
 				start: ($scope.maintenance.start).toString(),
 				end: ($scope.maintenance.end).toString(),
 				description: $scope.maintenance.description,
@@ -284,7 +309,166 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 	
 }]);
 
+app.controller('updateMaintenanceController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
+	$scope.init= function(){
+		$scope.maintenance1 = JSON.parse(shareData.getData());
+		$scope.maintenance1.start = new Date($scope.maintenance1.start);
+		$scope.maintenance1.end = new Date($scope.maintenance1.end);
+		var dataObj = {			
+				vendors: $scope.maintenance1.vendors,
+				units: $scope.maintenance1.units,
+				start: $scope.maintenance1.start,
+				end: $scope.maintenance1.end,
+				description: $scope.maintenance1.description,
 
+		};
+		$scope.maintenance = angular.copy($scope.maintenance1)
+
+		var url = "https://localhost:8443/maintenance/updateMaintenance";
+	}
+	
+	console.log("start selecting venue");
+	var getBuild = $http({
+		method  : 'GET',
+		url     : 'https://localhost:8443/building/viewBuildings',
+	});
+	console.log("GETTING THE BUILDINGS");
+	getBuild.success(function(response){
+		$scope.buildings = response;
+		$scope.selectedBuilding;
+		console.log("RESPONSE IS" + JSON.stringify(response));
+
+		console.log('Buildings Gotten');
+	});
+	getBuild.error(function(){
+		alert('Get building error!!!!!!!!!!');
+	});
+	$scope.currentlySelectedBuilding;
+	$scope.selectBuild = function(){
+		$scope.selectedBuilding=$scope.currentlySelectedBuilding;
+	}
+	console.log("finish selecting building");
+
+	$scope.getLevel = function(id){
+		$scope.dataToShare = [];
+		//var id = $scope.currentlySelected;
+		$scope.url = "https://localhost:8443/level/viewLevels/"+id;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE ALL LEVELS INFO")
+		var getLevels = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/level/viewLevels/'+id,
+	});
+		console.log("Getting the levels using the url: " + $scope.url);
+		getLevels.success(function(response){
+			$scope.levels = response;
+			$scope.selectedLevel;
+			console.log("RESPONSE IS" + JSON.stringify(response));
+
+			console.log('Levels Gotten');
+		});
+		getLevels.error(function(){
+			alert('Get levels error!!!!!!!!!!');
+		});		
+		$scope.currentlySelectedLevel;
+		$scope.selectLevel = function(){
+			$scope.selectedLevel=$scope.currentlySelectedLevel;
+		}
+		console.log("finish selecting level");		
+	}
+	
+	$scope.selectedUnits=[];
+	$scope.getUnit = function(levelId){
+		//$scope.url = "https://localhost:8443/property/viewUnits/";
+		
+		$scope.levelID = levelId; 
+		var dataObj = {id: $scope.levelID};
+		console.log("GETTING THE ALL UNITS INFO")
+		var getUnits = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/property/viewUnits/',
+			data    : dataObj,
+	});
+		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
+		getUnits.success(function(response){
+			$scope.units = response;
+			console.log("RESPONSE IS" + JSON.stringify(response));
+
+			console.log('Units Gotten');
+		});
+		getUnits.error(function(){
+			alert('Get units error!!!!!!!!!!');
+		});		
+		
+		$scope.currentlySelectedUnit;
+		$scope.selectUnit = function(){
+			$scope.selectedUnits.push($scope.currentlySelectedUnit);
+		}
+
+		$scope.deleteUnit = function(unit){
+			var index = $scope.selectedUnits.indexOf(unit);
+			$scope.selectedUnits.splice(index, 1);  
+		}
+		console.log("finish selecting units");		
+	}
+	
+	$scope.getUnitsId = function(){
+		var dataObj ={id: $scope.selectedUnits};
+		console.log("units to be get are "+JSON.stringify(dataObj));
+		$scope.shareMyData = function (myValue) {
+		}		
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/property/getUnitsId',
+			data    : dataObj,
+		});
+		send.success(function(response){
+			console.log('GET Unit IDS SUCCESS! ' + JSON.stringify(response));
+			shareData.addData(JSON.stringify(response));
+		});
+		send.error(function(response){
+			$location.path("/viewAllEventsEx");
+			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
+		});
+	}	
+	
+	
+	
+	$scope.updateMaintenance = function(){
+		console.log("Start updating");
+		$scope.data = {};
+		//$scope.event = JSON.parse(shareData.getData());
+		console.log($scope.maintenance.id);
+		var dataObj = {				
+				id: $scope.maintenance.id,
+				units: $scope.maintenance.units,
+				vendors: $scope.maintenance.vendors,
+				units: $scope.maintenance.units,
+				start: $scope.maintenance.start,
+				end: $scope.maintenance.end,
+				description: $scope.maintenance.description,	
+		};		
+		//console.log(dataObj.start);
+		console.log("REACHED HERE FOR SUBMIT maintenance " + JSON.stringify(dataObj));
+
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/maintenance/updateMaintenance',
+			data    : dataObj //forms user object
+		});
+
+		console.log("UPDATING THE MAINT");
+		send.success(function(){
+			alert('MAINT IS SAVED!');
+		});
+		send.error(function(){
+			alert('UPDATING MAINT GOT ERROR!');
+		});
+	};	
+	
+	
+	
+}]);
 
 
 

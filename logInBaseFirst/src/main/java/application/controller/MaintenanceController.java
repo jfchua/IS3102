@@ -33,6 +33,7 @@ import application.domain.ClientOrganisation;
 import application.domain.Event;
 import application.domain.Level;
 import application.domain.Maintenance;
+import application.domain.MaintenanceSchedule;
 import application.domain.Unit;
 import application.domain.User;
 import application.service.user.MaintenanceService;
@@ -78,7 +79,7 @@ public class MaintenanceController {
 			Gson gson2 = new GsonBuilder()
 				.setExclusionStrategies(new ExclusionStrategy() {
 			      public boolean shouldSkipClass(Class<?> clazz) {
-					return (clazz == Unit.class);
+					return (clazz == MaintenanceSchedule.class);
 				  }
 				  @Override
 			      public boolean shouldSkipField(FieldAttributes f) {
@@ -248,9 +249,21 @@ public class MaintenanceController {
 			ClientOrganisation client = usr.get().getClientOrganisation();
 				Object obj = parser.parse(maintenanceJSON);
 				JSONObject jsonObject = (JSONObject) obj;
-				String unitsId = (String)jsonObject.get("units");
-	            System.out.println(unitsId);
-	            String vendorsId = (String)jsonObject.get("vendors");
+				
+				JSONArray units = (JSONArray)jsonObject.get("units");
+	            String unitsId = "";
+	            for(int i = 0; i < units.size(); i++){
+					System.out.println((Long)units.get(i));
+					unitsId = unitsId+(Long)units.get(i) + " ";
+					System.out.println(unitsId);
+				}
+	            JSONArray vendors = (JSONArray)jsonObject.get("vendors");
+	            String vendorsId = "";
+	            for(int i = 0; i < vendors.size(); i++){
+					System.out.println((Long)vendors.get(i));
+					vendorsId = vendorsId+(Long)vendors.get(i) + " ";
+					System.out.println(vendorsId);
+				}
 				Date start = sdf.parse((String)jsonObject.get("start"));
 				Date end = sdf.parse((String)jsonObject.get("end"));
 				String description = (String)jsonObject.get("description");
@@ -294,7 +307,7 @@ public class MaintenanceController {
 							Gson gson2 = new GsonBuilder()
 								    .setExclusionStrategies(new ExclusionStrategy() {
 								        public boolean shouldSkipClass(Class<?> clazz) {
-								            return (clazz==Unit.class);
+								            return (clazz==MaintenanceSchedule.class);
 								        }
 
 								        /**
