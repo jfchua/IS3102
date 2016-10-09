@@ -346,7 +346,7 @@ app.config(
 			.state('/updateMaintenance',{
 				url:'/updateMaintenance',
 				templateUrl: '/views/updateMaintenance.html',
-				controller: 'maintenanceController',
+				controller: 'updateMaintenanceController',
 				data: {
 					authorizedRoles: [USER_ROLES.property]
 				}
@@ -1603,7 +1603,7 @@ app.controller('addEController', ['$scope', '$http','$location','$routeParams','
 		}
 		console.log("finish selecting units");		
 	}
-	
+	/*
 	$scope.getUnitsId = function(){
 		var dataObj ={id: $scope.selectedUnits};
 		console.log("units to be get are "+JSON.stringify(dataObj));
@@ -1622,20 +1622,14 @@ app.controller('addEController', ['$scope', '$http','$location','$routeParams','
 			$location.path("/viewAllEventsEx");
 			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
 		});
-	}
+	}*/
 	
 	$scope.addEvent = function(){
-		var unitIdsString="";
-		var unitIdsObj = JSON.parse(shareData.getData());
-		unitIdsString+=unitIdsObj;
-		console.log("test hailing");
-		console.log(unitIdsString);
-
 		console.log("start adding");
 		$scope.data = {};
 
 		var dataObj = {
-				units: unitIdsString,
+				units: $scope.selectedUnits,
 				event_title: $scope.event.event_title,
 				event_content: $scope.event.event_content,
 				event_description: $scope.event.event_description,

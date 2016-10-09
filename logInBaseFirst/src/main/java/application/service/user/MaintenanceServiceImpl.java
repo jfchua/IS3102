@@ -120,6 +120,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 					maintSchedule.setEnd_time(end);
 					maintSchedule.setUnit(unit);
 					maintSchedule.setMaintenance(maint);
+					maintSchedule.setRoom(unit.getId());
 					schedule.add(maintSchedule);
 			        Set<MaintenanceSchedule> maintList = unit.getMaintenanceSchedule();
 			        maintList.add(maintSchedule);
@@ -247,6 +248,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 					maintSchedule.setEnd_time(end);
 					maintSchedule.setUnit(i);
 					maintSchedule.setMaintenance(maint);
+					maintSchedule.setRoom(i.getId());
 					maintenances.add(maintSchedule);
 			        Set<MaintenanceSchedule> maintList = i.getMaintenanceSchedule();
 			        maintList.add(maintSchedule);

@@ -121,14 +121,33 @@
 						ng-change="selectUnit()" class="form-control">
 						<option ng-repeat="unit in units">{{unit}}</option>
 					</select>
-					<p>Units selected: <input ng-model = "currentlySelectedUnit"></p>
-					<button ng-model="myValue" ng-click="getUnitsId()">Apply</button>
 				</div>
         
+        
+       <!--  <button  ng-click="getAllVendors()">Get List of Vendors</button>-->
         <div class="form-group">
+					<ul class="list-group" name="vendors">
+						<li ng-repeat="vendor in selectedVendors" 
+							class="list-group-item">{{vendor}}
+							<button ng-click="deleteVendor(vendor)">
+								<i class="glyphicon glyphicon-trash"></i>
+							</button>
+						</li>
+					</ul>
+				</div>
+				<div class="form-group">
+					<label for="vendor" class="control-label">Select Vendor</label> <select
+						name="vendor" ng-model="currentlySelectedVendor" ng-options="x.id as x.name for x in vendors"
+						ng-change="selectVendor()" class="form-control">
+						<option ng-repeat="vendor in vendors">{{vendor}}</option>
+					</select>				
+				</div>
+        
+        
+        <!--  <div class="form-group">
                <label for="exampleInput">Vendor Id</label>
                <input type="text" ng-model="maintenance.vendorId" class="form-control" placeholder="Enter vendor id">
-        </div>
+        </div>-->
         <div class="form-group">
                <label for="exampleInput">Start Date</label>
                <input type="datetime-local" ng-model="maintenance.start" class="form-control" placeholder="Enter start date">
