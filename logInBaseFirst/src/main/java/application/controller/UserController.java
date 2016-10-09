@@ -398,7 +398,9 @@ public class UserController {
 		} catch ( Exception e){
 			System.out.println("Exception caught at UserController @ viewAllUsers" + e.toString());
 		}
-		return "NOT OK";
+		Gson gson = new Gson();
+	    String json = gson.toJson("NOT OK");
+		return gson.toJson(json);
 	}
 
 
@@ -604,7 +606,9 @@ public class UserController {
 
 		}catch(Exception e){
 			System.out.println("ERROR IN GETTING PROFILE" + e.getMessage());
-			return "ERROR";
+			Gson gson = new Gson();
+		    String json = gson.toJson("ERROR");
+			return gson.toJson(json);
 		}
 
 	}

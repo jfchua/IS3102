@@ -105,6 +105,10 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 		clientOrganisationRepository.delete(id);
 
 	}
+	
+	public ClientOrganisation getClientOrganisationByName(String name){
+		return clientOrganisationRepository.getClientOrgByName(name);		
+	}
 
 
 
