@@ -18,6 +18,7 @@
 <link href="css/style.css" rel="stylesheet">
 <link href="css/style-responsive.css" rel="stylesheet" />
 <script src="angular/app.js"></script>
+<script src="angular/vendor_maintenance.js"></script>
 <script src="angular/controller.js"></script>
 <script src="angular/user_service.js"></script>
 <script src="angular/user_controller.js"></script>
@@ -87,16 +88,20 @@
         <button ng-click = "getMaintenanceById()"><input type="submit" value="Refresh"></button>
         <form>
        <div class="form-group">
-               <label for="exampleInput">Vendor Id</label>
+               <label for="exampleInput">Vendors Id</label>
                <input type="text" ng-model="maintenance.vendors" class="form-control" placeholder="Enter vendor id">
         </div>
         <div class="form-group">
+               <label for="exampleInput">Units Id</label>
+               <input type="text" ng-model="maintenance.units" class="form-control" placeholder="Enter unit id">
+        </div>
+        <div class="form-group">
                <label for="exampleInput">Start Date</label>
-               <input type="date" ng-model="maintenance.start" class="form-control" placeholder="Enter start date">
+               <input type="datetime-local" ng-model="maintenance.start" class="form-control" placeholder="Enter start date">
         </div>
         <div class="form-group">
                <label for="exampleInput">End Date</label>
-               <input type="date" ng-model="maintenance.end" class="form-control" placeholder="Enter end date">
+               <input type="datetime-local" ng-model="maintenance.end" class="form-control" placeholder="Enter end date">
        </div>
        <div class="form-group">
                <label for="exampleInput"> Description </label>
