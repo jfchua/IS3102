@@ -17,13 +17,15 @@ public class UnitServiceImpl implements UnitService {
 	private final UnitRepository unitRepository;
 	private final LevelRepository levelRepository;
 	private final SquareRepository squareRepository;
+	private final IconRepository iconRepository;
 	private static final Logger LOGGER = LoggerFactory.getLogger(LevelServiceImpl.class);
 	
 	@Autowired
-	public UnitServiceImpl(LevelRepository levelRepository,UnitRepository unitRepository, SquareRepository squareRepository) {
+	public UnitServiceImpl(LevelRepository levelRepository,UnitRepository unitRepository, SquareRepository squareRepository,IconRepository iconRepository) {
 		this.levelRepository =levelRepository;
 		this.unitRepository = unitRepository;
 		this.squareRepository=squareRepository;
+		this.iconRepository=iconRepository;
 		
 	}
 	@Override
@@ -78,7 +80,40 @@ public class UnitServiceImpl implements UnitService {
 		System.out.println("UnitService"+9);
 		return unit;
 	}
-	
+	@Override
+	public Unit createUnitOnLevelWithIcon(long levelId,long iconId, int left, int top, int height, int width, String color, String type,
+			String unitNumber, int dimensionLength, int dimensionWidth, Boolean rentable, String description) {
+		Square square=createSquareWithIcon(iconId,left,top,height,width,color,type);
+		Unit unit = new Unit();
+		System.out.println("UnitService"+1);
+		unit.setUnitNumber(unitNumber);
+		unit.setLength(dimensionLength);
+		unit.setWidth(dimensionWidth);
+		unit.setRentable(rentable);
+		unit.setDescription(description);
+		System.out.println("UnitService"+2);
+		unitRepository.saveAndFlush(unit);
+		unit.setSquare(square);
+		unitRepository.saveAndFlush(unit);
+		System.out.println("UnitService"+3);
+		//unit.setSquare(square);
+		//unitRepository.save(unit);
+		Level level=levelRepository.findOne(levelId); 
+		//System.out.println("Test:Get level:"+level);
+		System.out.println("UnitService"+4);
+		Set<Unit> units=level.getUnits();
+		System.out.println("UnitService"+5);
+		units.add(unit);
+		level.setUnits(units);
+		System.out.println("UnitService"+6);
+		levelRepository.saveAndFlush(level);
+		System.out.println("UnitService"+7);
+		unit.setLevel(level);
+		System.out.println("UnitService"+8);
+		unitRepository.saveAndFlush(unit);
+		System.out.println("UnitService"+9);
+		return unit;
+	}
 	@Override
 	public Square createSquare( int left, int top, int height, int width, String color, String type){
 		Square square = new Square();
@@ -91,7 +126,20 @@ public class UnitServiceImpl implements UnitService {
 		squareRepository.saveAndFlush(square);
 		return square;
 	}
-	
+	@Override
+	public Square createSquareWithIcon( long iconId,int left, int top, int height, int width, String color, String type){
+		Icon icon=iconRepository.getOne(iconId);
+		Square square = new Square();
+		square.setLeft(left);
+		square.setTop(top);
+		square.setHeight(height);
+		square.setWidth(width);
+		square.setColor(color);
+		square.setType(type);
+		square.setIcon(icon);
+		squareRepository.saveAndFlush(square);
+		return square;
+	}
 	@Override
 	public boolean editUnitInfo(long id,int left,int top, int height, int width, String color, String type,String unitNumber, int dimensionLength, int dimensionWidth,boolean rentable,String description) {
 		try{
@@ -127,6 +175,7 @@ public class UnitServiceImpl implements UnitService {
 			}
 			return true;
 	}
+
 	@Override
 	public boolean editSquareInfo(long id,int left, int top, int height,int width, String color,String type) {
 		try{

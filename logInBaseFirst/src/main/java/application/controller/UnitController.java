@@ -50,35 +50,59 @@ public class UnitController {
 		//This method takes in a string which contains the attributes of the building to be added.
 		//Call $http.post(URL,stringToAdd);
 	//for create new floor plan, can use both saveUnits or create Units
-		@RequestMapping(value = "/addUnits", method = RequestMethod.POST)
+		@RequestMapping(value = "/addUnit", method = RequestMethod.POST)
 		@ResponseBody
-		public ResponseEntity<Void> addUnits(@RequestBody String unitsJSON,HttpServletRequest rq) {
+		public ResponseEntity<Void> addUnit(@RequestBody String unitJSON,HttpServletRequest rq) {
 
 			try{
 				//Principal principal = rq.getUserPrincipal();
 				//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-				Object obj = parser.parse(unitsJSON);
-				JSONObject text = (JSONObject) obj;
-				long levelId = Long.valueOf((String)text.get("id"));
-				JSONObject array = (JSONObject)text.get("Units");
-				JSONArray units = (JSONArray)array.get("Unit");
-				System.out.println();
-				for(int i = 0; i < units.size(); i++){
-				JSONObject unitObj = (JSONObject)units.get(i);
-				int left = Integer.valueOf((String)unitObj.get("left"));
-				int top = Integer.valueOf((String)unitObj.get("top"));
-				int height = Integer.valueOf((String)unitObj.get("height"));
-				int width = Integer.valueOf((String)unitObj.get("width"));
-				String color = (String)unitObj.get("color");
-				String type = (String)unitObj.get("type");
-			
-				Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,"#01-02",10,10,true,"10");
-				//Unit unit=unitService.createUnit(left, top, height,  width,  color,  type,"#01-02",10,10,true,"10");
-				System.out.println("adding unit " + unit.getId());
-				}
-			
-			}
-			catch (Exception e){
+				Object obj = parser.parse(unitJSON);
+				JSONObject unitObj = (JSONObject) obj;
+				//","type": "./svg/rect.svg","icon": ""}}
+				long levelId = (Long)unitObj.get("levelId");	
+				long unitId = (Long)unitObj.get("id");	
+				String unitNumber =(String)unitObj.get("unitNumber");
+				int dimensionLength = (int) (long) unitObj.get("length");
+				int dimensionWidth = (int) (long) unitObj.get("width");
+				String description =(String)unitObj.get("description");
+				
+				JSONObject squareJson=(JSONObject)unitObj.get("square");			
+				int left = (int) (long) squareJson.get("left");
+				int top = (int) (long) squareJson.get("top");
+				int height = (int) (long) squareJson.get("height");
+				int width = (int) (long) squareJson.get("width");
+				String color = (String)squareJson.get("color");			
+				String type = (String)squareJson.get("type");
+					
+				boolean rentable=false;
+				JSONObject iconJson;
+				Long iconId;				
+				
+				if(type.equals("")){//SQUARE IS WITH ICON OBJECT
+					System.out.println("UNIT IS WITH ICON OBJECT");
+				
+					iconJson=(JSONObject)squareJson.get("icon");
+					iconId = (Long)iconJson.get("id");	
+					String iconType=(String)iconJson.get("iconType");
+					if(iconType.equals("RECT")){
+						rentable=true;
+						System.out.println("Customised shape is rect: rentable" +rentable);
+					}
+					Unit unit=unitService.createUnitOnLevelWithIcon(levelId,iconId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);					
+					System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
+				}else{
+					System.out.println("UNIT IS USING DEFAULT ICON");
+					if(type.equals("./svg/rect.svg")){						
+						rentable=true;
+						System.out.println("Shape is rect: rentable:" +rentable);
+					}
+					Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);
+					System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
+					
+				}		
+
+			}catch (Exception e){
 				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			}
@@ -179,74 +203,98 @@ public class UnitController {
 		public ResponseEntity<Void> saveUnits(@RequestBody String json,HttpServletRequest rq)  {
 			
 			try{
-				System.out.println("Test: 1 "+json);
-				Object obj = parser.parse(json);
-				System.out.println("Test: 1 obj"+obj);
-				JSONObject text = (JSONObject) obj;
-				System.out.println("Test: 1 text"+text);
-				//long levelId = Long.valueOf((String)text.get("id"));
-				long levelId = (Long)text.get("id");
-				System.out.println("Test: 1 levelId"+levelId);
-				JSONObject array = (JSONObject)text.get("Units");
-				System.out.println("Test: 2 array object"+array);
-				JSONArray units = (JSONArray)array.get("Unit");
-				System.out.println("Test: 2 array untis array"+array.size());
+				//GET LEVEL ID AND UNITS
+				Object obj = parser.parse(json);			
+				JSONObject text = (JSONObject) obj;			
+				long levelId = (Long)text.get("id");				
+				JSONObject array = (JSONObject)text.get("Units");				
+				JSONArray units = (JSONArray)array.get("Unit");				
 				Set<Long> unitIds=new HashSet<Long>();//list of ids of units that are still on floor plan
-				System.out.println("Test: 2 size");
 				
-				for(int i = 0; i <units.size(); i++){
-					System.out.println("Test: 3 for loop"+i);
-				JSONObject unitObj = (JSONObject)units.get(i);
-				System.out.println("Test: 3 unitObj "+unitObj);
-				//long unitId = Long.valueOf((String)unitObj.get("id"));
-				long unitId = (Long)unitObj.get("id");
-				System.out.println("Test: 3 unitId "+unitId);
-				JSONObject squareJson=(JSONObject)unitObj.get("square");
-				System.out.println("Test: 3 squareJson"+squareJson);
-			//	System.out.println("Test: 31 left"+Integer.valueOf((String)squareJson.get("left"))+" "+Integer.valueOf(squareJson.get("left"));
-				//int left = Integer.valueOf((String)squareJson.get("left"));
-				System.out.println("Test: 3 squareJson ");
-			int left = (int) (long) squareJson.get("left");
-			System.out.println("Test: 3 squareJson left "+left);
-				//int top = Integer.valueOf((String)squareJson.get("top"));
-			int top = (int) (long) squareJson.get("top");
-				//int height = Integer.valueOf((String)squareJson.get("height"));
-				//int width = Integer.valueOf((String)squareJson.get("width"));
-			int height = (int) (long) squareJson.get("height");
-			int width = (int) (long) squareJson.get("width");
-				System.out.println("Test: 32");
-				String color = (String)squareJson.get("color");
-				String type = (String)squareJson.get("type");
-				System.out.println("Test: 33");
-				String unitNumber =(String)unitObj.get("unitNumber");
-				System.out.println("Test: 33 "+unitNumber);
-				//int dimensionWidth=Integer.valueOf((String)unitObj.get("width"));
-				//int dimensionLength=Integer.valueOf((String)unitObj.get("length"));
-				//System.out.println((int) (long) unitObj.get("dimensionWidth")+" "+Integer.valueOf((String)unitObj.get("dimensionWidth")));
-				System.out.println("test");
-				int dimensionWidth = (int) (long) unitObj.get("width");
-				System.out.println(dimensionWidth+"width dismension");
-				int dimensionLength = (int) (long) unitObj.get("length");
-				boolean rentable=false;
-				if(type.equals("rect")){
-					
-					rentable=true;
-					System.out.println("Shape is rect: " +rentable);
-				}
-				String description =(String)unitObj.get("description");
-				
-				if (unitId==0){
-					System.out.println("Add new unit");
-					Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);
-					unitIds.add(unit.getId());
-					System.out.println("UnitController Test: added new unit, id "+unit.getId());
-				}else if((unitService.editUnitInfo(unitId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description))==true){
-					unitIds.add(unitId);		
-					System.out.println("UnitController Test: existed/edited unit, id "+unitId);
-				}else{
-					
-					System.out.println("Unit Controller: error, id "+unitId);
-				}
+				//LOOP THROUGH EACH UNIT
+				for(int i = 0; i <units.size(); i++){					
+						JSONObject unitObj = (JSONObject)units.get(i);				
+						long unitId = (Long)unitObj.get("id");				
+						JSONObject squareJson=(JSONObject)unitObj.get("square");		
+						int left = (int) (long) squareJson.get("left");
+						int top = (int) (long) squareJson.get("top");
+						int height = (int) (long) squareJson.get("height");
+						int width = (int) (long) squareJson.get("width");
+						String color = (String)squareJson.get("color");
+						String unitNumber =(String)unitObj.get("unitNumber");
+						int dimensionWidth = (int) (long) unitObj.get("width");
+						int dimensionLength = (int) (long) unitObj.get("length");
+						String description =(String)unitObj.get("description");
+						
+						//boolean defaultIcon=true;
+						boolean rentable=false;
+						JSONObject iconJson;
+						Long iconId;
+						String type = (String)squareJson.get("type");
+						System.out.println("TYPE:"+type);
+						if(type.equals("")){//SQUARE IS WITH ICON OBJECT
+							System.out.println("UNIT"+unitId+" IS WITH ICON OBJECT");
+						//	defaultIcon=false;
+							System.out.println("TEST:1");
+							iconJson=(JSONObject)squareJson.get("icon");
+							System.out.println("TEST:2");
+							iconId = (Long)iconJson.get("id");	
+							System.out.println("TEST:3");
+							String iconType=(String)iconJson.get("iconType");
+							System.out.println("TEST:4");
+							if(iconType.equals("RECT")){
+								System.out.println("TEST:5");
+								rentable=true;
+								System.out.println("Customised shape is rect: " +rentable);
+							}
+							if (unitId==0){
+							
+								System.out.println("ADD NEW UNIT WITH ICON");
+								Unit unit=unitService.createUnitOnLevelWithIcon(levelId,iconId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);
+								unitIds.add(unit.getId());
+								System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
+									
+							
+							
+						}else{
+							
+								if(unitService.editUnitInfo(unitId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description)==true){
+									unitIds.add(unitId);		
+									System.out.println("UNITCONTROLLER: UNIT IS EDITED. UNIT ID:"+unitId);
+								}else{
+									System.out.println("UNITCONTROLLER: ERROR. UNIT ID:"+unitId);
+								}
+							
+						}
+						
+						}else{//SQUARE IS WITH DEFAULT ICON
+							System.out.println("UNIT"+unitId+" IS USING DEFAULT ICON");
+						System.out.println("TEST:6");
+						if(type.equals("./svg/rect.svg")){						
+							rentable=true;
+							System.out.println("Shape is rect: " +rentable);
+						}
+						if (unitId==0){
+							
+							System.out.println("ADD NEW UNIT");
+							Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);
+							unitIds.add(unit.getId());
+							System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
+							
+							
+						}else{
+							
+								if(unitService.editUnitInfo(unitId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description)==true){
+									unitIds.add(unitId);		
+									System.out.println("UNITCONTROLLER: UNIT IS EDITED. UNIT ID:"+unitId);
+								}else{
+									System.out.println("UNITCONTROLLER: ERROR. UNIT ID:"+unitId);
+								}
+						
+						}
+						
+						}
+						
 						
 				}//end for 
 				System.out.println("Test: 6");
@@ -267,4 +315,34 @@ public class UnitController {
 		
 }
 
+		@RequestMapping(value = "/deleteUnit", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> deleteUnit(@RequestBody String idObj,HttpServletRequest rq) {
+
+			
+			try{
+				
+				
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("id"));
+				long unitId = (Long)jsonObject.get("id");
+				System.out.println((Long)jsonObject.get("levelId"));
+				long levelId = (Long)jsonObject.get("levelId");
+				
+				if(unitService.deleteUnit(unitId,levelId)){
+					System.out.println("DELETED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			
+		}
+		
+		
+		
 }
