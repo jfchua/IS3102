@@ -1,8 +1,6 @@
-/*       4. BUILDING         */
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//vendor
+//VIEW VENDOR, ADD VENDOR
 app.controller('vendorController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
-	$scope.viewAllVendors = function(){
+	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$http.get("//localhost:8443/vendor/viewAllVendors").then(function(response){
 			$scope.vendors = response.data;
@@ -11,38 +9,46 @@ app.controller('vendorController', ['$scope', '$http','$location','$routeParams'
 			alert("did not view vendors");
 		}	
 		)	
+	});
+	$scope.passVendor = function(vendor){
+		shareData.addData(vendor);
 	}
 
-	$scope.getVendor = function(id){		
-		$scope.dataToShare = [];	  
-		$scope.shareMyData = function (myValue) {
-			//$scope.dataToShare = myValue;
-			//shareData.addData($scope.dataToShare);
-		}
-		$scope.url = "https://localhost:8443/vendor/getVendor/"+id;
-		//$scope.dataToShare = [];
-		console.log("GETTING THE Vendor INFO")
-		var getVendor = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/vendor/getVendor/' + id        
+	$scope.addVendor = function(){
+		//alert("SUCCESS");
+		$scope.data = {};
+		var dataObj = {			
+				email: $scope.vendor.email,
+				name: $scope.vendor.name,
+				description: $scope.vendor.description,
+				contact: $scope.vendor.contact,						
+		};
+
+		console.log("REACHED HERE FOR SUBMIT Vendor " + JSON.stringify(dataObj));
+
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/vendor/addVendor',
+			data    : dataObj //forms user object
 		});
-		console.log("Getting the vendor using the url: " + $scope.url);
-		getVendor.success(function(response){
-			//$scope.dataToShare.push(id);
-			//$location.path("/viewLevels/"+id);
-			console.log('GET EVENT SUCCESS! ' + JSON.stringify(response));
-			console.log("ID IS " + id);
-			shareData.addData(JSON.stringify(response));
-			//$location.path("/viewLevels");
-		});
-		getVendor.error(function(response){
+
+		console.log("SAVING THE vendor");
+		send.success(function(){
+			
+			alert('VENDOR IS SAVED! GOING BACK TO VIEW BUILDINGS');
 			$location.path("/viewAllVendors");
-			console.log('GET Vendor FAILED! ' + JSON.stringify(response));
-		});			
-	}
+		});
+		send.error(function(){
+			alert('SAVING VENDOR GOT ERROR!');
+		});
+	};
 
-	$scope.getVendorById= function(){			
-		$scope.vendor1 = JSON.parse(shareData.getData());
+}]);	
+//UPDATE A VENDOR, DELETE A VENDOR
+//VIEW VENDOR, ADD VENDOR
+app.controller('updateVendorController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.vendor1 = shareData.getData();
 		var dataObj = {			
 				email: $scope.vendor1.email,
 				name: $scope.vendor1.name,
@@ -52,8 +58,9 @@ app.controller('vendorController', ['$scope', '$http','$location','$routeParams'
 		$scope.vendor = angular.copy($scope.vendor1)
 
 		var url = "https://localhost:8443/vendor/updateVendor";
-		//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
-	}
+	});
+
+	
 
 	$scope.updateVendor = function(){
 		console.log("Start updating");
@@ -78,6 +85,7 @@ app.controller('vendorController', ['$scope', '$http','$location','$routeParams'
 		console.log("UPDATING THE VENDOR");
 		send.success(function(){
 			alert('VENDOR IS SAVED!');
+			$location.path("/viewAllVendors");
 		});
 		send.error(function(){
 			alert('UPDATING VENDOR GOT ERROR!');
@@ -85,59 +93,28 @@ app.controller('vendorController', ['$scope', '$http','$location','$routeParams'
 	};	
 
 	$scope.deleteVendor = function(){
+		if(confirm('CONFIRM TO DELETE VENDOR '+$scope.vendor.name+'?')){
 		$scope.data = {};
 		console.log("Start deleting vendor");
-		$scope.vendor = JSON.parse(shareData.getData());
+		//$scope.vendor = shareData.getData();
 		console.log($scope.vendor.id);
 		var tempObj ={vendorId:$scope.vendor.id};
 		console.log("fetch id "+ tempObj);
 		$http.post("//localhost:8443/vendor/deleteVendor", JSON.stringify(tempObj)).then(function(response){
 			console.log("Cancel the VENDOR");
+			alert('VENDOR IS DELETED!GOING BACK TO VIEW VENDORS');
+			$location.path("/viewAllVendors");
 		},function(response){
 			alert("DID NOT Cancel VENDOR");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
-
-	}
-	$scope.getVendorByIdForDelete= function(){
-
-		//var buildings ={name: $scope.name, address: $scope.address};
-		//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
-		$scope.vendor = JSON.parse(shareData.getData());
-
-		var url = "https://localhost:8443/vendor/deleteVendor";
-		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.vendor);
+		}
 	}
 
-	$scope.addVendor = function(){
-		//alert("SUCCESS");
-		$scope.data = {};
-		var dataObj = {			
-				email: $scope.vendor.email,
-				name: $scope.vendor.name,
-				description: $scope.vendor.description,
-				contact: $scope.vendor.contact,						
-		};
-
-		console.log("REACHED HERE FOR SUBMIT Vendor " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/vendor/addVendor',
-			data    : dataObj //forms user object
-		});
-
-		console.log("SAVING THE vendor");
-		send.success(function(){
-			alert('vendor IS SAVED!');
-		});
-		send.error(function(){
-			alert('SAVING vendor GOT ERROR!');
-		});
-	};
 
 }]);	
+
 
 
 

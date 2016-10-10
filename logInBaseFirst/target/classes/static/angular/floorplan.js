@@ -128,7 +128,7 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData) {
 
     }*/
 
-  $scope.downloadPlan = html2canvas;
+  //$scope.downloadPlan = html2canvas;
   /*$scope.downloadPlan=function(){
   
   console.log(html2canvas);
@@ -143,9 +143,24 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData) {
   };
   }
   */
+  
+  function downloadPlan() {
+	  console.log(html2canvas);
+	    var canvasdiv = document.getElementById("glassbox");
+
+	    html2canvas(canvasdiv,{
+
+	        onrendered: function (canvas) {
+	            var a = document.createElement("a");
+	            a.href = canvas.toDataURL("plan/png");
+	            a.download ="plan.png";
+	            a.click();
+	        }
+	    });
+	}
   /*
-   
    $scope.downloadPlan = function(){
+	   console.log(html2canvas);
        html2canvas($("#glassbox"), {
               onrendered: function(canvas) {
                   theCanvas = canvas;

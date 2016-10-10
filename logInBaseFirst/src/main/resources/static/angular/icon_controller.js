@@ -129,7 +129,8 @@ app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','
 		                  {'name':'Lift','iconType':'LIFT'},
 		                  {'name':'Service Lift','iconType':'SERVICELIFT'},
 		                  {'name':'Staircase','iconType':'STAIRCASE'},
-		                  {'name':'Toilet','iconType':'TOILET'} ];
+		                  {'name':'Toilet','iconType':'TOILET'} ,
+		                  {'name':'Unit','iconType':'RECT'}];
 		$scope.iconType=$scope.icon.iconType;
 	});
 

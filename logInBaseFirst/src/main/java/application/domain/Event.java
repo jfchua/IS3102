@@ -5,6 +5,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +21,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import enumeration.IconType;
+import enumeration.PaymentStatus;
 
 
 @Entity
@@ -63,6 +68,8 @@ public class Event {
 	    @Column(name = "filePath", nullable = true)
 	    private String filePath;	
 	    
+	    @Enumerated(EnumType.STRING)
+		 private PaymentStatus paymentStatus;
 	    //@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
 	    /*@OneToMany(mappedBy ="event", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	    @JsonIgnore
@@ -199,5 +206,13 @@ public class Event {
 		public void setAreas(Set<Area> areas) {
 			this.areas = areas;
 		}*/
+
+		public PaymentStatus getPaymentStatus() {
+			return paymentStatus;
+		}
+
+		public void setPaymentStatus(PaymentStatus paymentStatus) {
+			this.paymentStatus = paymentStatus;
+		}
 
 }

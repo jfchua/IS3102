@@ -23,12 +23,14 @@ import application.domain.Event;
 import application.domain.EventCreateForm;
 import application.domain.EventOrganizer;
 import application.domain.Level;
+import application.domain.MaintenanceSchedule;
 import application.domain.Role;
 import application.domain.Unit;
 import application.domain.User;
 import application.repository.BookingApplRepository;
 import application.repository.EventOrganizerRepository;
 import application.repository.EventRepository;
+import application.repository.MaintenanceScheduleRepository;
 import application.repository.UnitRepository;
 import application.repository.UserRepository;
 @Service
@@ -38,17 +40,19 @@ public class EventExternalServiceImpl implements EventExternalService {
 	//private final EventOrganizerRepository eventOrganizerRepository;
 	private final UnitRepository unitRepository;
 	private final BookingApplRepository bookingApplRepository;
+	private final MaintenanceScheduleRepository maintenanceScheduleRepository;
 	private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
 	@Autowired
 	public EventExternalServiceImpl(EventRepository eventRepository, UserRepository userRepository, 
-			UnitRepository unitRepository, BookingApplRepository bookingApplRepository) {
+			UnitRepository unitRepository, BookingApplRepository bookingApplRepository, MaintenanceScheduleRepository maintenanceScheduleRepository) {
 		//super();
 		this.eventRepository = eventRepository;
 		//this.eventOrganizerRepository = eventOrganizerRepository;
 		this.unitRepository = unitRepository;
 		this.userRepository = userRepository;
 		this.bookingApplRepository = bookingApplRepository;
+		this.maintenanceScheduleRepository = maintenanceScheduleRepository;
 	}
 
 	@Override
@@ -145,8 +149,9 @@ public class EventExternalServiceImpl implements EventExternalService {
 					Unit unit1 = unitNew.get();		
 					unitsNew.add(unit1);
 					int count = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+					int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
 					System.out.println(count);
-					if(count != 0){
+					if((count != 0)||(count2!=0)){
 						isAvailable = false;
 						break;
 					}		
@@ -156,9 +161,10 @@ public class EventExternalServiceImpl implements EventExternalService {
 				    unitsNew.add(unit1);
 				    System.out.println("elseeee");
 		            BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
+		            MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
 		            System.out.println(b.getId());
 		            Event eventFromB = b.getEvent();            
-		            if(!(event.getId().equals(eventFromB.getId()))){
+		            if(!(event.getId().equals(eventFromB.getId()))||(m!=null)){
 		            	isAvailable = false;
 		            	break;
 		            }
@@ -326,7 +332,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 				if(!checkUnit(client, unit.getId()))
 					return false;
 				int count = bookingApplRepository.getNumberOfBookings(uId, d1, d2);
-				if(count != 0){
+				int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+				if((count != 0)||(count2 != 0)){
 					isAvailable = false;
 					break;
 				}
