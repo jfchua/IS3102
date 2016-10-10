@@ -57,6 +57,7 @@ public class UnitServiceImpl implements UnitService {
 		unit.setWidth(dimensionWidth);
 		unit.setRentable(rentable);
 		unit.setDescription(description);
+		unit.setRent(100);//hard coded rent =100, need to chagne later
 		System.out.println("UnitService"+2);
 		unitRepository.saveAndFlush(unit);
 		unit.setSquare(square);
@@ -91,6 +92,7 @@ public class UnitServiceImpl implements UnitService {
 		unit.setWidth(dimensionWidth);
 		unit.setRentable(rentable);
 		unit.setDescription(description);
+		unit.setRent(100);//hard coded rent =100, need to chagne later
 		System.out.println("UnitService"+2);
 		unitRepository.saveAndFlush(unit);
 		unit.setSquare(square);
