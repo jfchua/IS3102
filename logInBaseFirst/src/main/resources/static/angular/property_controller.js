@@ -499,3 +499,192 @@ app.controller('levelController', ['$scope', '$http','shareData','$location', fu
 	}
 
 }]);	
+
+
+app.controller('rateController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
+	$scope.myDropDown = 'period';
+	//$scope.months = {month:'JAN',month:'FEB',month:'MAR',month:'APR',month:'MAY',month:'JUN',month:'JUL',month:'AUG',month:'SEPT',month:'OCT', month:'NOV', month:'DEC'};
+	$scope.months = [{month:'JAN'},{month:'FEB'},{month:'MAR'},{month:'APR'},{month:'MAY'},{month:'JUN'},{month:'JUL'},{month:'AUG'},{month:'SEPT'},{month:'OCT'}, {month:'NOV'}, {month:'DEC'}];
+	$scope.currentlySelectedMonth;
+	$scope.selectMonth = function(){
+		$scope.selectedMonth=$scope.currentlySelectedMonth;
+	}
+	/*
+	$scope.$watch('myDropDown', function () {
+        if ($scope.inputty == "month") {
+            $scope.special.period = $scope.selectedMonth;
+        }
+    });*/
+	$scope.addRate = function(){
+		//alert("SUCCESS");
+		$scope.data = {};
+		var dataObj = {
+				rate: $scope.special.rate,
+				description: $scope.special.description,
+				period: ($scope.special.period).toString(),
+		};
+        console.log("period is" + $scope.special.period);
+		console.log("REACHED HERE FOR SUBMIT RATE " + JSON.stringify(dataObj));
+		
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/rate/addSpecialRate',
+			data    : dataObj //forms user object
+		});
+
+		console.log("SAVING THE RATE");
+		send.success(function(){
+			alert('RATE IS SAVED! GOING BACK TO VIEW RATES');
+			$location.path("/viewAllRates");
+			
+		});
+		send.error(function(){
+			alert('SAVING RATE GOT ERROR!');
+		});
+	};
+	
+	angular.element(document).ready(function () {
+		//retrieve buildings when page loaded
+		$scope.data = {};
+		//var buildings ={name: $scope.name, address: $scope.address};
+		$http.get("//localhost:8443/rate/viewAllRates").then(function(response){
+			$scope.rates = response.data;
+			console.log("READY TO DISPLAY ALL RATES");
+			console.log("DISPLAY ALL RATES: "+ $scope.rates);
+		},function(response){
+			alert("did not view");
+			//console.log("response is : ")+JSON.stringify(response);
+		}	
+		)
+	});
+$scope.updateSpecialRate = function(rate){
+		
+		shareData.addData(rate);
+	}
+	
+	$scope.deleteSpecialRate = function(rate) { 
+		shareData.addData(rate);		   
+	}
+	
+	$scope.passRate = function(rate){
+		shareData.addData(rate);	
+	}
+	
+	$scope.getRate = function(id){		
+		$scope.dataToShare = [];	  
+		$scope.url = "https://localhost:8443/rate/getRate/"+id;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE RATE INFO")
+		var getRate = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/rate/getRate/' + id        
+		});
+		console.log("Getting the rate using the url: " + $scope.url);
+		getRate.success(function(response){
+			console.log('GET RATE SUCCESS! ' + JSON.stringify(response));
+			shareData.addData(JSON.stringify(response));
+		});
+		getRate.error(function(response){
+			$location.path("/viewAllRates");
+			console.log('GET RATE FAILED! ' + JSON.stringify(response));
+		});
+
+	}
+
+	$scope.getRateById= function(){
+
+		//var buildings ={name: $scope.name, address: $scope.address};
+		//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
+		$scope.special1 = JSON.parse(shareData.getData());
+		var dataObj = {
+				rate: $scope.special1.rate,
+				description: $scope.special1.description,
+				period: $scope.special1.period,
+		};
+		$scope.special = angular.copy($scope.special1)
+		var url = "https://localhost:8443/rate/updateRate";
+		console.log("RATE DATA ARE OF THE FOLLOWING: " + $scope.special);
+	}
+}]);
+
+app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData','$location', function ($scope,  $timeout,$http ,shareData,$location) {
+	
+	angular.element(document).ready(function () {
+
+		$scope.special1 = shareData.getData();
+			
+			var dataObj = {
+					rate: $scope.special1.rate,
+					description: $scope.special1.description,
+					period: $scope.special1.period,
+			};
+			$scope.special = angular.copy($scope.special1)
+			var url = "https://localhost:8443/rate/updateRate";
+			console.log("RATE DATA ARE OF THE FOLLOWING: " + $scope.special);
+
+	
+
+	});
+
+	$scope.updateRate = function(){
+		$scope.data = {};
+		//$scope.building = JSON.parse(shareData.getData());
+		var dataObj = {					
+				id: $scope.special.id,
+				rate: $scope.special.rate,
+				description: $scope.special.description,
+				period: $scope.special.period,
+		};		
+		console.log("REACHED HERE FOR SUBMIT RATE " + JSON.stringify(dataObj));
+
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/rate/updateRate',
+			data    : dataObj //forms user object
+		});
+
+		console.log("UPDATING THE RATE");
+		send.success(function(){
+			alert('RATE IS SAVED!');
+			 $location.path("/viewAllRates");
+		});
+		send.error(function(){
+			alert('UPDATING RATE GOT ERROR!');
+		});
+	};	
+}])
+
+//DELETE BUILDING
+app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData','$location', function ($scope,  $timeout,$http ,shareData,$location) {
+	
+	angular.element(document).ready(function () {
+
+		$scope.special = shareData.getData();
+		console.log("DISPLAYING RATE FOR DELETE");
+		console.log($scope.special);
+	});
+
+	$scope.deleteRate = function(){
+		if(confirm('CONFIRM TO DELETE SPECIAL RATE '+$scope.special.description+'?')){
+			console.log("START DELETE");
+			$scope.data = {};
+			var tempObj ={id:$scope.special.id};
+			console.log("fetch id "+ tempObj);
+		
+			$http.post("//localhost:8443/rate/deleteRate", JSON.stringify(tempObj)).then(function(response){
+				//$scope.buildings = response.data;
+				console.log("Delete the RATE");
+				alert('SPECIAL RATE IS DELETED! GOING BACK TO VIEW ALL RATES...');
+				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
+				$location.path("/viewAllRates");
+				
+			},function(response){
+				alert("DID NOT DELETE");
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)
+		}
+		
+	};	
+}])
+
