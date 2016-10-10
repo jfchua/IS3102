@@ -36,7 +36,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 
 
 
-		$http.get('//localhost:8443/user/loginVerify', {headers: headers}).success(function(response) {
+		$http.get('//172.20.10.3:8443/user/loginVerify', {headers: headers}).success(function(response) {
 			console.log("RESPONSE IS" + JSON.stringify(response));
 			console.log("RESPONSE NAME IS " + JSON.stringify(response.name));
 
