@@ -29,6 +29,9 @@ public class Square {
     @Column(name = "type", nullable = false)
     private String type;
     
+    @OneToOne(fetch = FetchType.EAGER)
+	private Icon icon;
+    
     public Long getId() {
 		return id;
 	}
@@ -81,10 +84,18 @@ public class Square {
 		this.type = type;
 	}
 
+	public Icon getIcon() {
+		return icon;
+	}
+
+	public void setIcon(Icon icon) {
+		this.icon = icon;
+	}
+
 	@Override
 	public String toString() {
 		return "Square [id=" + id + ", left=" + left + ", top=" + top + ", height=" + height + ", width=" + width
-				+ ", color=" + color + ", type=" + type + "]";
+				+ ", color=" + color + ", type=" + type + ", icon=" + icon + "]";
 	}
 
 	

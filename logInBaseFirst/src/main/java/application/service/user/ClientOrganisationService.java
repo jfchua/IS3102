@@ -12,6 +12,8 @@ public interface ClientOrganisationService {
 	 
 	 public Collection<ClientOrganisation>  getAllClientOrganisations();
 	 
+	 public ClientOrganisation getClientOrganisationByName(String name);
+	 
 	 public void deleteClientOrg(Long id);
 	
 }

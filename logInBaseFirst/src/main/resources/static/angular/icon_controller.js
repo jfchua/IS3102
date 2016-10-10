@@ -5,15 +5,15 @@ app.controller('iconController', function ($scope, $http,shareData) {
 	angular.element(document).ready(function () {
 		
 		
-		//retrieve icons when page loaded
+		//RETRIEVE ICON WHEN LOADED
 		$http.get("//localhost:8443/property/viewIcons").then(function(response){
 			
 			console.log(angular.fromJson(response.data));
 			$scope.icons = response.data;
 
 		},function(response){
-			alert("did not view");
-			//console.log("response is : ")+JSON.stringify(response);
+			alert("DID NOT VIEW ICONS");
+			
 		})
 		
 	});
@@ -54,7 +54,8 @@ app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http','$lo
 		                  {'name':'Lift','iconType':'LIFT'},
 		                  {'name':'Service Lift','iconType':'SERVICELIFT'},
 		                  {'name':'Staircase','iconType':'STAIRCASE'},
-		                  {'name':'Toilet','iconType':'TOILET'} ];
+		                  {'name':'Toilet','iconType':'TOILET'},
+		                  {'name':'Unit','iconType':'RECT'}];
 		$scope.iconType=$scope.iconTypes[0].iconType;
 	});
 
@@ -128,7 +129,8 @@ app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','
 		                  {'name':'Lift','iconType':'LIFT'},
 		                  {'name':'Service Lift','iconType':'SERVICELIFT'},
 		                  {'name':'Staircase','iconType':'STAIRCASE'},
-		                  {'name':'Toilet','iconType':'TOILET'} ];
+		                  {'name':'Toilet','iconType':'TOILET'} ,
+		                  {'name':'Unit','iconType':'RECT'}];
 		$scope.iconType=$scope.icon.iconType;
 	});
 
