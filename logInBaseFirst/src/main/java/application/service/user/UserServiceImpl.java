@@ -1,32 +1,26 @@
 package application.service.user;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import application.domain.User;
-import application.domain.UserCreateForm;
-import application.domain.ClientOrganisation;
-import application.domain.Message;
-import application.domain.PasswordResetToken;
-import application.domain.Role;
-import application.domain.SendMessageForm;
-import application.repository.ClientOrganisationRepository;
-import application.repository.MessageRepository;
-import application.repository.PasswordResetTokenRepository;
-import application.repository.UserRepository;
-
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import application.domain.ClientOrganisation;
+import application.domain.PasswordResetToken;
+import application.domain.Role;
+import application.domain.User;
+import application.repository.ClientOrganisationRepository;
+import application.repository.PasswordResetTokenRepository;
+import application.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -88,25 +82,33 @@ public class UserServiceImpl implements UserService {
 		prt.setUser(user);
 		prt.setToken(token);
 		prt.setExpiry();
-	    passwordResetTokenRepository.save(prt);			
+		passwordResetTokenRepository.save(prt);			
 	}
-	
+
 	public void changePassword(long id, String password){
-		
+
 		Optional<User> user = getUserById(id);
 		System.out.println("LINE 84 AT USER SERVICE IMPL");
 		if (user.isPresent()){
-			System.out.println("Setting user with ID" + user.get().getId());
-			BCryptPasswordEncoder t = new BCryptPasswordEncoder();
-			String newPassword = t.encode(password);
-			user.get().setPasswordHash(newPassword);	
-			userRepository.save(user.get());
-		
+			try{
+				System.out.println("Setting user with ID" + user.get().getId() + "to password " + password);
+				BCryptPasswordEncoder t = new BCryptPasswordEncoder();
+				String newPassword = t.encode(password);
+				user.get().setPasswordHash(newPassword);	
+				System.out.println("Set user with new password of " + newPassword);
+				userRepository.saveAndFlush(user.get());
+			    System.out.println("Set new password to " + user.get().getPasswordHash());
+				
+			}
+			catch(Exception e){
+				System.err.println("EXCEPTION AT CHANGE PASSWORD" + e.getMessage());
+			}
+
 		}
 		System.out.println("LINE 90 AT USER SERVICE IMPL");
-	
+
 	}
-	
+
 	public boolean createNewUser(ClientOrganisation clientOrg, String name, String userEmail, Set<Role> roles){
 
 		try{
@@ -123,111 +125,114 @@ public class UserServiceImpl implements UserService {
 			String hashedPassword = encoder.encode(password);
 			user.setPasswordHash(hashedPassword); //add salt?
 			user.setClientOrganisation(clientOrg);
-			
+
 			//Send created password to the new user's email
-			
+
 			//CREATE USER END
 			clientOrg.addUser(user);
-		
-			
-			
+
+
+
 			//REPOSITORY SAVING
 
 			userRepository.save(user);
 			clientOrganisationRepository.save(clientOrg);
 			emailService.sendEmail(userEmail, "New IFMS account created", "Please log in using your email and this generated password: " + password);
-			
-			
+
+
 		}
 		catch ( Exception e){
 			System.err.println("Exception at create new user "  + e.toString());
 			return false;
 		}
 		return true;
-		
-		
+
+
 	}
-	
-	
+
+
 
 	@Override
-	public void editUsers(ClientOrganisation clientOrg, String name, String userEmail, Set<Role> roles) {
-		// TODO Auto-generated method stub
-		
+	public void editUser(String name, User user, Set<Role> roles) {
+
 		try{
-			Set<User> allUsers = (Set<User>) userRepository.findAll();
-			//User user = findOneByE}
+			user.setName(name);
+			userRepository.saveAndFlush(user);
+			//System.out.println("GG");
+			user.setRoles(roles);
+			userRepository.saveAndFlush(user);
+
 		}
 		catch(Exception e){
-			
+
 		}
-		
+
 	}
-	
+
 
 	@Override
 	public Collection<User> viewAllUsers(ClientOrganisation clientOrg) {
 		// TODO Auto-generated method stub
 		return userRepository.getUsersByClientOrgId(clientOrg.getId());
 	}
-	
+
 	@Override
 	public void deleteUser(User us){
 		try {
 			userRepository.delete(us.getId());
-		
+
 		}
 		catch ( Exception e){
 			System.err.println("Error at anything"  + e.toString());
 		}
-		
+
 	}
-	
+
 	@Override
-	 public Set<User> getExternalUsers(ClientOrganisation clientOrg) {
-	  // TODO Auto-generated method stub
-	  Set<User> allUsers = userRepository.getAllUsers(clientOrg);
-	  Set<User> externalUsers = new HashSet<User>();
-	  for(User u: allUsers){
-	   Set<Role> roles = u.getRoles();
-	   for(Role r: roles){
-	    if(r.getName().equals("ROLE_EXTEVE"))
-	     externalUsers.add(u);
-	   }
-	  }
-	   
-	  return externalUsers;
-	 }
+	public Set<User> getExternalUsers(ClientOrganisation clientOrg) {
+		// TODO Auto-generated method stub
+		Set<User> allUsers = userRepository.getAllUsers(clientOrg);
+		Set<User> externalUsers = new HashSet<User>();
+		for(User u: allUsers){
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_EXTEVE"))
+					externalUsers.add(u);
+			}
+		}
 
-	 @Override
-	 public Set<User> getFinanceManagers(ClientOrganisation clientOrg) {
-	  // TODO Auto-generated method stub
-	  Set<User> allUsers = userRepository.getAllUsers(clientOrg);
-	  Set<User> financeManagers = new HashSet<User>();
-	  for(User u: allUsers){
-	   Set<Role> roles = u.getRoles();
-	   for(Role r: roles){
-	    if(r.getName().equals("ROLE_FINANCE"))
-	     financeManagers.add(u);
-	   }
-	  }
-	   
-	  return financeManagers;
-	 }
+		return externalUsers;
+	}
 
-	 @Override
-	 public Set<User> getTicketManagers(ClientOrganisation clientOrg) {
-	  // TODO Auto-generated method stub
-	  Set<User> allUsers = userRepository.getAllUsers(clientOrg);
-	  Set<User> ticketManagers = new HashSet<User>();
-	  for(User u: allUsers){
-	   Set<Role> roles = u.getRoles();
-	   for(Role r: roles){
-	    if(r.getName().equals("ROLE_TICKETING"))
-	     ticketManagers.add(u);
-	   }
-	  }  
-	  return ticketManagers;
-	 }
-	 
+	@Override
+	public Set<User> getFinanceManagers(ClientOrganisation clientOrg) {
+		// TODO Auto-generated method stub
+		Set<User> allUsers = userRepository.getAllUsers(clientOrg);
+		Set<User> financeManagers = new HashSet<User>();
+		for(User u: allUsers){
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_FINANCE"))
+					financeManagers.add(u);
+			}
+		}
+
+		return financeManagers;
+	}
+
+	@Override
+	public Set<User> getTicketManagers(ClientOrganisation clientOrg) {
+		// TODO Auto-generated method stub
+		Set<User> allUsers = userRepository.getAllUsers(clientOrg);
+		Set<User> ticketManagers = new HashSet<User>();
+		for(User u: allUsers){
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_TICKETING"))
+					ticketManagers.add(u);
+			}
+		}  
+		return ticketManagers;
+	}
+
 }
