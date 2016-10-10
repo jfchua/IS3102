@@ -109,6 +109,11 @@ insert into client_organisation_vendors(client_organisation_id, vendors_id) valu
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)
 --VALUES('1771',1,2,true,8,4);
 
+INSERT INTO special_rate(rate, description, period) VALUES(1.4, 'weekend premium', 'every weekend');
+INSERT INTO special_rate(rate, description, period) VALUES(0.8, 'Feb discount', 'FEB');
+INSERT INTO client_organisation_special_rates(client_organisation_id, special_rates_id) values(1,1);
+INSERT INTO client_organisation_special_rates(client_organisation_id, special_rates_id) values(1,2);
+
 INSERT INTO client_organisation_system_subscriptions VALUES ('1', 'Finance System');
 INSERT INTO client_organisation_system_subscriptions VALUES ('1', 'Event Management System');
 INSERT INTO client_organisation_system_subscriptions VALUES ('1', 'Property System');
@@ -116,6 +121,8 @@ INSERT INTO client_organisation_system_subscriptions VALUES ('1', 'Property Syst
 INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Finance System');
 INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Event Management System');
 INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Property System');
+
+
 
 
 

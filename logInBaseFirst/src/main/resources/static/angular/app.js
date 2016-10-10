@@ -229,7 +229,38 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-
+            .state('/addSpecialRate',{
+				url: '/addSpecialRate',
+				templateUrl: '/views/addSpecialRate.html',
+				controller: 'rateController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('/viewAllRates',{
+				url: '/viewAllRates',
+				templateUrl: '/views/viewAllRates.html',
+				controller: 'rateController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('/updateSpecialRate',{
+				url: '/updateSpecialRate',		
+				templateUrl: '/views/updateSpecialRate.html',
+				controller: 'updateRateController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('/deleteSpecialRate',{
+				url: '/deleteSpecialRate',
+				templateUrl: '/views/deleteSpecialRate.html',
+				controller: 'deleteRateController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
 			.state('/addEvent',{
 				url:'/addEvent',
 				templateUrl: '/views/addEvent.html',
@@ -1517,7 +1548,7 @@ app.service('shareData', function($window) {
 //===========================================================================
 
 
-//========Test================
+//========Event================
 app.controller('addEController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
 	console.log("start selecting venue");
 	var getBuild = $http({

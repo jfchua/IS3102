@@ -40,6 +40,10 @@ public class ClientOrganisation {
 
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Building> buildings = new HashSet<Building>();
+	
+	@OneToMany(fetch = FetchType.EAGER)
+	private Set<SpecialRate> specialRates = new HashSet<SpecialRate>();
+
 
 	@Column(name = "logoFilePath",nullable = true,unique=true)
 	@JsonIgnore
@@ -75,8 +79,18 @@ public class ClientOrganisation {
 		this.buildings = buildings;
 	}
 
+	public Set<SpecialRate> getSpecialRates() {
+		return specialRates;
+	}
 
 
+
+	public void setSpecialRates(Set<SpecialRate> specialRates) {
+		this.specialRates = specialRates;
+	}
+
+
+	
 	public String getLogoFilePath() {
 		return logoFilePath;
 	}

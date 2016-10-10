@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 
-<title>IFMS</title>
+<title>IFMS-Delete Building</title>
 
 <!-- Bootstrap CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -21,6 +21,7 @@
 <script src="angular/controller.js"></script>
 <script src="angular/user_service.js"></script>
 <script src="angular/user_controller.js"></script>
+<script src="angular/property_controller.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.js"></script>
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 -->
@@ -69,7 +70,6 @@
       <ul class="mainnav">
         <li class="active"><a href="#/workspace"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
 
-        
 
       </ul>
     </div>
@@ -79,49 +79,38 @@
 </div>
 <!-- /subnavbar -->
 	<!-- MAIN BODY -->
-	<div ng-cloak ng-controller="buildingController as buildCtrl">
+	<div ng-cloak ng-controller="deleteRateController as deleteRateCtrl" ng-submit="submit()">
       <div class="container">
         <div class="content" >
-        <h1>View buildings</h1>
-        <p class="tagline">List of existing buildings</p>
-  
-        <button><a href="/#/addBuilding">Add a building</a></button>
-        <button><a href="/#/viewIcon">Customise Icon</a></button>
-        <button><a href="/#/viewAllRates">View Special Rate</a></button>
-        <!-- <div ng-app="myApp" ng-controller="customersCtrl">-->
-       <table class="table table-striped table-advance table-hover">
+        <h1>Delete Special Rate</h1>
+        <a href="#/viewAllRates"><button>Back to view all special rates</button></a>
+        <p class="tagline">Detele your special rate here</p>
+              <button ng-click = "deleteRate()">Delete</button>
+        <table class="table table-striped table-advance table-hover">
         <tbody>
            <tr>
            <td><i></i> ID </td>
-           <td><i></i> Building Name </td>
-           <td><i></i> Number of floors </td>
-           <td><i></i> Address </td>
-           <td><i></i> City </td>
-           <td><i></i> Postal Code </td>
-           <td>Actions</td>
-            <td></td>
-             <td></td>
+           <td><i></i> Rate </td>
+           <td><i></i> Description </td>
+           <td><i></i> Period </td>
            </tr>
-         <tr ng-repeat="x in buildings | orderBy:'name'">
-         <td><a ng-model="myValue" href="/#/viewLevels" ng-click="passBuilding(x)">{{ x.id }}</a></td>
-         <!--  <td><button onClick="window.open('http://www.google.com.sg}');">{{ x.id }}</button></td>-->
-         <td>{{ x.name }}</td>
-         <td>{{ x.numFloor }}</td>
-         <td>{{ x.address }}</td>
-         <td>{{ x.city }}</td>
-         <td>{{ x.postalCode }}</td>
-         <td><a ng-model="myValue" href="/#/updateBuilding" ng-click="updateBuilding(x)">Update</a></td>
-          <td><a ng-model="myValue" href="/#/deleteBuilding" ng-click="deleteBuilding(x)">Delete</a></td>
-          <td><a ng-model="myValue" href="/#/addLevel" ng-click="addLevel(x)">Add Level</a></td>
+         <tr>
+         <td ng-bind="special.id"></td>
+         <td ng-bind="special.rate"></td>
+         <td ng-bind="special.description"></td>
+         <td ng-bind="special.period"></td>
          </tr>
          </tbody>
-      </table>
-   <!--  </div>-->
- </div>
- </div>
- </div>
+      </table>        
+       
+        </div>
+      </div>
+    </div>
 		
 		<!--main content end-->
+
+
+
 
 </body>
 </html>
