@@ -409,7 +409,7 @@ app.config(
 			.state('/updateVendor',{
 				url:'/updateVendor',
 				templateUrl: '/views/updateVendor.html',
-				controller: 'vendorController',
+				controller: 'updateVendorController',
 				data: {
 					authorizedRoles: [USER_ROLES.property]
 				}
@@ -417,7 +417,7 @@ app.config(
 			.state('/deleteVendor',{
 				url:'/deleteVendor',
 				templateUrl: '/views/deleteVendor.html',
-				controller: 'vendorController',
+				controller: 'updateVendorController',
 				data:{
 					authorizedRoles: [USER_ROLES.property]
 				}

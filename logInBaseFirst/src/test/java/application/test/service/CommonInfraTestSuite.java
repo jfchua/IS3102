@@ -11,9 +11,10 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	   RoleRepositoryTest.class,
-	   EmailServiceTest.class,
 	   ClientOrganisationServiceTest.class,
-	   UserServiceTest.class
+	   UserServiceTest.class,
+	   ToDoTaskServiceTest.class,
+	   MessageServiceTest.class
 	})
 public class CommonInfraTestSuite
 {

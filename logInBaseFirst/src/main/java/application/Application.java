@@ -40,7 +40,7 @@ public class Application extends SpringBootServletInitializer {
                
     }
     
-  @Component
+    /*@Component
     public class MyHttpSessionListener implements javax.servlet.http.HttpSessionListener, ApplicationContextAware {
 
         @Override
@@ -68,6 +68,6 @@ public class Application extends SpringBootServletInitializer {
 			System.out.println("HttpSessionListener destroyed");
 			
 		}                
-    }
+    }*/
 
 }

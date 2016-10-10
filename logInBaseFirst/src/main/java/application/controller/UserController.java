@@ -479,16 +479,15 @@ public class UserController {
 			System.out.println("EDITING REACHED HERE");
 
 			System.err.println("Setting name from" + userToEdit.getName() + "to" + name);
-			userToEdit.setName(name);
-			userRepository.saveAndFlush(userToEdit);
-			System.out.println("GG");
-			userToEdit.setRoles(userRolesToAddIn);
-		    userRepository.saveAndFlush(userToEdit);
-			System.err.println("set " + userToEdit.getName());
-			System.err.println(userToEdit.getName());
+			//userToEdit.setName(name);
+			//userRepository.saveAndFlush(userToEdit);
+			//userToEdit.setRoles(userRolesToAddIn);
+		  //  userRepository.saveAndFlush(userToEdit);
+			//System.err.println("set " + userToEdit.getName());
+			//System.err.println(userToEdit.getName());
 
-
-			System.out.println("GG2");
+			userService.editUser(name, userToEdit, userRolesToAddIn);
+			//System.out.println("GG2");
 
 			System.out.println("USER TO BE EDITED: " + userToEdit + "   " +email);
 			//userToEdit.setRoles(roles);
