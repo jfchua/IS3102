@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -77,6 +78,10 @@ public class Event {
 	    
 		@ManyToOne
 		private User eventOrg;
+		
+		@OneToOne
+	    @JsonIgnore
+	    private PaymentPlan paymentPlan;
 		/*
 		@ManyToMany(fetch = FetchType.EAGER)
 		@JoinTable( 
@@ -96,6 +101,14 @@ public class Event {
 		@OneToMany(mappedBy ="event", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 		@JsonIgnore
 		private Set<BookingAppl> bookings = new HashSet<BookingAppl>();
+
+		public PaymentPlan getPaymentPlan() {
+			return paymentPlan;
+		}
+
+		public void setPaymentPlan(PaymentPlan paymentPlan) {
+			this.paymentPlan = paymentPlan;
+		}
 
 		public Set<BookingAppl> getBookings() {
 			return bookings;

@@ -576,6 +576,22 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
+			.state('/viewAllPaymentPlans',{
+				url:'/viewAllPaymentPlans',
+				templateUrl: '/views/viewAllPaymentPlans.html',
+				controller: 'paymentController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('/addPaymentPlan',{
+				url:'/addPaymentPlan',
+				templateUrl: '/views/addPaymentPlan.html',
+				controller: 'paymentController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
 			.state('/401',{
 				url:'/401',
 				templateUrl: '/views/401.html',
