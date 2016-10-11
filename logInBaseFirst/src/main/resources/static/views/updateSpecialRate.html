@@ -12,14 +12,13 @@
 <link href="css/bootstrap-theme.css" rel="stylesheet">
 <!--external css-->
 <!-- font icon -->
-<!-- <link href="css/elegant-icons-style.css" rel="stylesheet" />-->
+
 <link href="css/font-awesome.min.css" rel="stylesheet" />
 <!-- Custom styles -->
 <link href="css/style.css" rel="stylesheet">
 <link href="css/style-responsive.css" rel="stylesheet" />
 <script src="angular/app.js"></script>
 <script src="angular/controller.js"></script>
-<script src="angular/property_controller.js"></script>
 <script src="angular/user_service.js"></script>
 <script src="angular/user_controller.js"></script>
 <script
@@ -80,12 +79,12 @@
 </div>
 <!-- /subnavbar -->
 	<!-- MAIN BODY -->
-	<div ng-cloak ng-controller="rateController as rateCtrl">
+	<div ng-cloak ng-controller="updateRateController as updateRateCtrl" >
       <div class="container">
         <div class="content" >
-        <h1>Add a new special rate</h1>
-        <a href="/#/viewBuilding"><button>Back to view special rates</button></a>
-        <p class="tagline">Add your new special rate here</p>
+        <h1>Update Special Rate</h1>
+        <a href="#/viewAllRates"><button>Back to view all special rates</button></a>
+        <p class="tagline">Update your special rate here</p>
         <form>
         <div class="form-group">
                <label for="exampleInput">Rate</label>
@@ -95,42 +94,48 @@
                <label for="exampleInput">Description</label>
                <input type="text" ng-model="special.description" class="form-control" id="description" placeholder="Enter description">
         </div>
+        <div class="form-group">
+               <label for="exampleInput">Period</label>
+               <input type="text" ng-model="special.period" class="form-control" readonly>
+        </div>
+        <p>Want to changep period?: <input type="checkbox" ng-model="myVar"></p>
+        <div ng-show="myVar">
         <select ng-model="myDropDown">   
           <option value="period">Please Select A Period</option>     
           <option value="month">Any Month?</option>
           <option value="weekend">All Weekends?</option>
           <option value="date">Any Specific Date?</option>
        </select><br>
-     
-    <div ng-show="myDropDown=='month'" >
+       <div ng-show="myDropDown=='month'" >
     <label for="month" class="control-label">Select Month</label> <select
 						name="month" ng-model="special.period" ng-options="x.month as x.name for x in months"
 						class="form-control">
 					</select>
     </div>  
     
-    <div ng-show="myDropDown=='weekend'">   
-     <label for="weekend" class="control-label"></label> <select
+    <div ng-show="myDropDown=='weekend'"> 
+    <label for="weekend" class="control-label"></label> <select
 						name="weekend" ng-model="special.period" ng-options="x.weekend as x.name for x in weekends"
 						class="form-control">
 					</select>  
-    <!--<input type="text" ng-model="special.period" class="form-control"  ng-init="special.period='weekend'" value ="weekend" readonly><br>--> 
     </div>
     
     <div ng-show="myDropDown=='date'">
     <label for="exampleInput">Please Enter a date</label>
                <input type="datetime-local" step="86400" ng-model="special.period" class="form-control" id="period" placeholder="Enter date">
     </div>
-
-       <!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
-       <button ng-click = "addRate()"><input type="submit" value="Submit"></button>
-       <br>
-       <a href="#/viewAllRates">View Special Rates List</a>
-        </form>
+        </div>
+      <button ng-click = "updateRate()"><input type="submit" value="Submit"></button>
+      </form>      
         </div>
       </div>
     </div>
 		
 		<!--main content end-->
+
+
+
+
+
 </body>
 </html>
