@@ -1,6 +1,9 @@
 package application.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,14 +52,14 @@ public class SpecialRate {
 	public Long getId() {
 		return id;
 	}
-	/*
+/*
 	public Date getDate() {
 		return date;
 	}
 	public void setDate(Date date) {
 		this.date = date;
-	}*/
-
+	}
+*/
 	public String getPeriod() {
 		return period;
 	}

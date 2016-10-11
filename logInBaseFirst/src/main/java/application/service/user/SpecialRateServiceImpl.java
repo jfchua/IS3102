@@ -1,5 +1,7 @@
 package application.service.user;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
@@ -32,7 +34,7 @@ public class SpecialRateServiceImpl implements SpecialRateService {
 	}
 	@Override
 	public boolean createSpecialRate(ClientOrganisation client, Double rate, String description, 
-			String period) {
+			String period){
 		if(rate <= 0)
 			return false;
 		else{
@@ -42,6 +44,13 @@ public class SpecialRateServiceImpl implements SpecialRateService {
 		newRate.setDescription(description);
 		//newRate.setDate(date);
 		newRate.setPeriod(period);
+		/*
+		if(period.length()!=3 ||period.length()!=7 ){
+	        newRate.setPeriod("specific");
+			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+			Date applicable_date = sdf.parse(period);
+			newRate.setDate(applicable_date);
+		}*/
 		specialRateRepository.save(newRate);
 		rates.add(newRate);
 		clientOrganisationRepository.save(client);
