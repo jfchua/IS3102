@@ -94,6 +94,9 @@ app.controller('AccountController', function($scope, Auth) {
 	$scope.IsExtEve = function(){
 		return Auth.hasRoles('ROLE_EXTEVE');
 	}
+	$scope.IsFinance = function(){
+		return Auth.hasRoles('ROLE_FINANCE');
+	}
 	$scope.IsUser = function(){
 		return Auth.hasRoles('ROLE_USER');
 	}
