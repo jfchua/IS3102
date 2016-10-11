@@ -503,18 +503,16 @@ app.controller('levelController', ['$scope', '$http','shareData','$location', fu
 
 app.controller('rateController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
 	$scope.myDropDown = 'period';
-	//$scope.months = {month:'JAN',month:'FEB',month:'MAR',month:'APR',month:'MAY',month:'JUN',month:'JUL',month:'AUG',month:'SEPT',month:'OCT', month:'NOV', month:'DEC'};
-	$scope.months = [{month:'JAN'},{month:'FEB'},{month:'MAR'},{month:'APR'},{month:'MAY'},{month:'JUN'},{month:'JUL'},{month:'AUG'},{month:'SEPT'},{month:'OCT'}, {month:'NOV'}, {month:'DEC'}];
-	$scope.currentlySelectedMonth;
-	$scope.selectMonth = function(){
-		$scope.selectedMonth=$scope.currentlySelectedMonth;
-	}
-	/*
-	$scope.$watch('myDropDown', function () {
-        if ($scope.inputty == "month") {
-            $scope.special.period = $scope.selectedMonth;
-        }
-    });*/
+	
+	$scope.months = [{'name':'JANUARY','month':'JAN'},{'name':'FEBRUARY','month':'FEB'},
+	                 {'name':'MARCH', 'month':'MAR'},{'name':'APRIL','month':'APR'},
+	                 {'name':'MAY','month':'MAY'},{'name':'JUNE','month':'JUN'},
+	                 {'name':'JULY','month':'JUL'},{'name':'AUGUST','month':'AUG'},
+	                 {'name':'SEPTEMBER','month':'SEP'},{'name':'OCTOBER','month':'OCT'}, 
+	                 {'name':'NOVEMBER','month':'NOV'}, {'name':'DECEMBER','month':'DEC'}];
+	
+	$scope.weekends = [{'name':'yes', 'weekend':'weekend'}];
+	
 	$scope.addRate = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -626,6 +624,17 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 
 	});
 
+     $scope.myDropDown = 'period';
+	
+	$scope.months = [{'name':'JANUARY','month':'JAN'},{'name':'FEBRUARY','month':'FEB'},
+	                 {'name':'MARCH', 'month':'MAR'},{'name':'APRIL','month':'APR'},
+	                 {'name':'MAY','month':'MAY'},{'name':'JUNE','month':'JUN'},
+	                 {'name':'JULY','month':'JUL'},{'name':'AUGUST','month':'AUG'},
+	                 {'name':'SEPTEMBER','month':'SEP'},{'name':'OCTOBER','month':'OCT'}, 
+	                 {'name':'NOVEMBER','month':'NOV'}, {'name':'DECEMBER','month':'DEC'}];
+	
+	$scope.weekends = [{'name':'yes', 'weekend':'weekend'}];
+	
 	$scope.updateRate = function(){
 		$scope.data = {};
 		//$scope.building = JSON.parse(shareData.getData());
@@ -633,7 +642,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 				id: $scope.special.id,
 				rate: $scope.special.rate,
 				description: $scope.special.description,
-				period: $scope.special.period,
+				period: ($scope.special.period).toString(),
 		};		
 		console.log("REACHED HERE FOR SUBMIT RATE " + JSON.stringify(dataObj));
 
