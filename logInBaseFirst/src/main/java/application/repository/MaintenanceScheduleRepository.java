@@ -25,7 +25,7 @@ public interface MaintenanceScheduleRepository extends JpaRepository<Maintenance
 	
 	  
 	  @Query(
-	            value = "SELECT count(*) FROM schedule book WHERE book.unit_id = :unit AND ((book.start <= :start AND book.end >= :end)"
+	            value = "SELECT * FROM schedule book WHERE book.unit_id = :unit AND ((book.start <= :start AND book.end >= :end)"
 	            		+ "OR (book.start >= :start AND book.end <= :end) OR (book.start <= :start AND book.end <= :end AND book.end >= :start)"
 	            		+ "OR (book.start >= :start AND book.end >= :end AND book.start <= :end))",
 	            nativeQuery=true
