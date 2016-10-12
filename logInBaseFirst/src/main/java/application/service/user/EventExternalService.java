@@ -38,6 +38,10 @@ public interface EventExternalService {
 	boolean checkUnit(ClientOrganisation client, long unitId);
 	
 	boolean checkEvent(ClientOrganisation client, long eventId);
+	
+	boolean checkAvailability(ClientOrganisation client, User user, String unitsId, Date event_start_date, Date event_end_date);
+	
+	boolean checkAvailabilityForUpdate(ClientOrganisation client, User user,long eventId, String unitsId, Date event_start_date, Date event_end_date);
 
 	Set<BookingAppl> getBookings(ClientOrganisation client, long id);
 }

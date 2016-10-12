@@ -38,11 +38,13 @@ import java.util.Set;
 	import com.google.gson.GsonBuilder;
 
 import application.domain.Area;
+import application.domain.BookingAppl;
 import application.domain.ClientOrganisation;
 import application.domain.Event;
 	import application.domain.EventCreateForm;
 	import application.domain.EventOrganizer;
 import application.domain.Message;
+import application.domain.PaymentPlan;
 import application.domain.Role;
 import application.domain.ToDoTask;
 import application.domain.Unit;
@@ -74,6 +76,7 @@ import application.service.user.UserService;
 			this.messageService = messageService;
 		}
 		
+		@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EVENT')")
 		// Call this method using $http.get and you will get a JSON format containing an array of event objects.
 			// Each object (building) will contain... long id, collection of levels.
 				@RequestMapping(value = "/getEvent/{id}", method = RequestMethod.GET)
@@ -93,7 +96,7 @@ import application.service.user.UserService;
 						Gson gson2 = new GsonBuilder()
 								.setExclusionStrategies(new ExclusionStrategy() {
 									public boolean shouldSkipClass(Class<?> clazz) {
-										return (clazz == User.class)||(clazz == Unit.class)||(clazz == Area.class);
+										return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 									}
 									/**
 									 * Custom field exclusion goes here
@@ -121,7 +124,7 @@ import application.service.user.UserService;
 					}
 				}
 				
-				
+		         @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EVENT')")
 				// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 							// Each object (building) will contain... long id, .
 								@RequestMapping(value = "/viewAllEvents",  method = RequestMethod.GET)
@@ -146,7 +149,7 @@ import application.service.user.UserService;
 									Gson gson2 = new GsonBuilder()
 										    .setExclusionStrategies(new ExclusionStrategy() {
 										        public boolean shouldSkipClass(Class<?> clazz) {
-										            return (clazz == User.class)||(clazz==Unit.class)||(clazz==Area.class);
+										            return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 										        }
 	
 										        /**
@@ -175,7 +178,7 @@ import application.service.user.UserService;
 									//return new ResponseEntity<Void>(HttpStatus.OK);
 								}
 								
-								
+		                       @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EVENT')")
 								// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 								// Each object (building) will contain... long id, .
 									@RequestMapping(value = "/viewApprovedEvents",  method = RequestMethod.GET)
@@ -199,7 +202,7 @@ import application.service.user.UserService;
 										Gson gson2 = new GsonBuilder()
 											    .setExclusionStrategies(new ExclusionStrategy() {
 											        public boolean shouldSkipClass(Class<?> clazz) {
-											            return (clazz == User.class)||(clazz==Unit.class)||(clazz==Area.class);
+											            return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 											        }
 	
 											        /**
@@ -229,6 +232,8 @@ import application.service.user.UserService;
 										}
 										//return new ResponseEntity<Void>(HttpStatus.OK);
 									}
+		                             
+		                            @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EVENT')")
 									// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 									// Each object (building) will contain... long id, .
 										@RequestMapping(value = "/viewToBeApprovedEvents",  method = RequestMethod.GET)
@@ -252,7 +257,7 @@ import application.service.user.UserService;
 											Gson gson2 = new GsonBuilder()
 												    .setExclusionStrategies(new ExclusionStrategy() {
 												        public boolean shouldSkipClass(Class<?> clazz) {
-												            return (clazz == User.class)||(clazz==Unit.class)||(clazz==Area.class);
+												            return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 												        }
 	
 												        /**
@@ -282,6 +287,7 @@ import application.service.user.UserService;
 											}
 											//return new ResponseEntity<Void>(HttpStatus.OK);
 										}
+		                                 @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EVENT')")
 										//This method takes in a String which is the ID of the event to be deleted
 										// Call $http.post(URL,(String)id);
 										@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
@@ -312,6 +318,7 @@ import application.service.user.UserService;
 											return new ResponseEntity<Void>(HttpStatus.OK);
 										}						
 				
+		                                 @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EVENT')")
 										//This method takes in a JSON format which contains an object with 5 attributes
 										//Long/String id, int levelNum, int length, int width, String filePath
 										//Call $httpPost(Url,JSONData);
@@ -355,6 +362,7 @@ import application.service.user.UserService;
 											return new ResponseEntity<Void>(HttpStatus.OK);
 										}	
 										
+		                                 @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EVENT')")
 										//This method takes in a JSON format which contains an object with 5 attributes
 										//Long/String id, int levelNum, int length, int width, String filePath
 										//Call $httpPost(Url,JSONData);
@@ -386,6 +394,7 @@ import application.service.user.UserService;
 											return new ResponseEntity<Void>(HttpStatus.OK);
 										}		
 			
+		                                 @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EVENT')")
 										// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 										// Each object (building) will contain... long id, .
 											@RequestMapping(value = "/viewEventOrganizers",  method = RequestMethod.GET)

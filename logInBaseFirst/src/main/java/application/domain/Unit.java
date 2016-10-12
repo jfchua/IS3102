@@ -42,7 +42,7 @@ public class Unit {
 	private Boolean rentable;
 
 	@Column(name = "rent")
-	private long rent;
+	private Long rent;
 
 	@Column(name = "description", nullable = false)
 	private String description;

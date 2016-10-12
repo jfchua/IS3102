@@ -58,7 +58,8 @@ public class BuildingController {
 		this.userService = userService;
 		this.auditLogRepository = auditLogRepository;
 	}
-
+ 
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY', 'ROLE_EXTEVE')")
 	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 	// Each object (building) will contain... long id, collection of levels.
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
@@ -114,7 +115,7 @@ public class BuildingController {
 		}
 	}	
 
-	
+	 @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 	// Each object (building) will contain... long id, collection of levels.
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
@@ -166,7 +167,7 @@ public class BuildingController {
 
 
 	}
-
+	 @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 	//Security filters for inputs needs to be added
 	//This method takes in a string which contains the attributes of the building to be added.
 	//Call $http.post(URL,stringToAdd);
@@ -212,7 +213,7 @@ public class BuildingController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
-
+	 @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 	//This method takes in a String which is the ID of the building to be deleted
 	// Call $http.post(URL,(String)id);
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
@@ -250,7 +251,7 @@ public class BuildingController {
 		}
 		
 	}
-
+	 @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 	//This method takes in a JSON format which contains an object with 7 attributes
 	//Long/String id, String name, String address, int postalCode, String city, 
 	//int numFloor, String filePath;
