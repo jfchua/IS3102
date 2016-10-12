@@ -475,7 +475,7 @@ app.config(
 			.state('/cancelEventEx',{
 				url:'/cancelEventEx',
 				templateUrl: '/views/cancelEventEx.html',
-				controller: 'eventExternalController',
+				controller: 'deleteEventExController',
 				data:{
 					authorizedRoles:[USER_ROLES.organiser]
 				}
@@ -491,7 +491,7 @@ app.config(
 			.state('/viewApprovedEventsEx',{
 				url:'/viewApprovedEventsEx',
 				templateUrl: '/views/viewApprovedEventsEx.html',
-				controller: 'eventExternalController',
+				controller: 'viewApprovedEventsController',
 				data:{
 					authorizedRoles:[USER_ROLES.organiser]
 				}
@@ -1564,6 +1564,9 @@ app.service('shareData', function($window) {
 //===========================================================================
 
 
+
+//========Test================
+
 //========Event================
 app.controller('addEController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
 	console.log("start selecting venue");
@@ -2095,6 +2098,7 @@ $scope.deleteBooking = function(id){
 
 
 //=======End of test===========
+
 
 
 

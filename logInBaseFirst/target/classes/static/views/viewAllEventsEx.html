@@ -85,7 +85,7 @@
         <div class="content" >
         <h1>View All Events</h1>
         <p class="tagline">List of all events</p>
-        <button ng-click="viewEvents()">Display</button>
+       
         <button><a href="/#/addEventEx">Add a new event</a></button>
          <button><a href="/#/viewApprovedEventsEx">View Approved Events</a></button>
        <table class="table table-striped table-advance table-hover">
@@ -107,10 +107,10 @@
          <td>{{ x.event_start_date }}</td>
          <td>{{ x.event_end_date }}</td>
          <td>{{ x.event_approval_status }}</td>
-         <td><a ng-model="myValue" href="/#/updateEventEx" ng-click="getEvent(x.id)">Update</a></td>
-         <td><a ng-model="myValue" href="/#/cancelEventEx" ng-click="getEvent(x.id)">Delete</a></td>
-         <td><a ng-model="myValue" href="/#/viewBookingEx" ng-click="getBookings(x.id)">View Booking</a></td>
-         <td><a ng-model="myValue" href="/#/createUnitPlanEx" ng-click="getEvent(x.id)">Unit Plan</a></td>
+         <td><a ng-model="myValue" href="/#/updateEventEx" ng-click="passEvent(x)">Update</a></td>
+         <td><a ng-model="myValue" href="/#/cancelEventEx" ng-click="passEvent(x)">Delete</a></td>
+         <td><a ng-model="myValue" href="/#/viewBookingEx" ng-click="passEvent(x)">View Booking</a></td>
+         
          </tr>
          </tbody>
       </table>

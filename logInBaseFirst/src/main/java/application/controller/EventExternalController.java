@@ -84,8 +84,11 @@ public class EventExternalController {
 			JSONArray units = (JSONArray)jsonObject.get("units");
             String unitsId = "";
             for(int i = 0; i < units.size(); i++){
-				System.out.println((Long)units.get(i));
-				unitsId = unitsId+(Long)units.get(i) + " ";
+            	JSONObject unitObj = (JSONObject)units.get(i);		
+            	System.out.println(unitObj.toString());
+				long unitId = (Long)unitObj.get("id");
+				System.out.println(unitId);
+				unitsId = unitsId+unitId + " ";
 				System.out.println(unitsId);
 			}
 			String event_title = (String)jsonObject.get("event_title");
@@ -392,7 +395,18 @@ public class EventExternalController {
 							//long buildingId = (Long)jsonObject.get("buildingId");
 							long eventId = (Long)jsonObject.get("id");
 							System.out.println(eventId);
-							String unitsId = (String)jsonObject.get("units");
+							
+							JSONArray units = (JSONArray)jsonObject.get("units");
+				            String unitsId = "";
+				            for(int i = 0; i < units.size(); i++){
+				            	System.out.println("test1");
+				            	JSONObject unitObj = (JSONObject)units.get(i);		
+				            	System.out.println("test2");
+								long unitId = (Long)unitObj.get("id");
+								System.out.println("test3");
+								unitsId = unitsId+unitId + " ";
+								System.out.println("test4");
+							}
 							System.out.println(unitsId);
 							String event_title = (String)jsonObject.get("event_title");
 							System.out.println(event_title);
