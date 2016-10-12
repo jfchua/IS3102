@@ -1564,9 +1564,9 @@ app.service('shareData', function($window) {
 //===========================================================================
 
 
-<<<<<<< HEAD
+
 //========Test================
-=======
+
 //========Event================
 app.controller('addEController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
 	console.log("start selecting venue");
@@ -2098,7 +2098,7 @@ $scope.deleteBooking = function(id){
 
 
 //=======End of test===========
->>>>>>> 9959c4a29cfc8516cf8acbaa6e84396143e95571
+
 
 
 
