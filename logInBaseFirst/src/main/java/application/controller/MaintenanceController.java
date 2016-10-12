@@ -61,7 +61,7 @@ public class MaintenanceController {
 		this.vendorService = vendorService;
 		this.userService = userService;
 	}
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	// Call this method using $http.get and you will get a JSON format containing an array of event objects.
     // Each object (building) will contain... long id, collection of levels.
     @RequestMapping(value = "/getMaintenance/{id}", method = RequestMethod.GET)
@@ -159,7 +159,7 @@ public class MaintenanceController {
 			}
 			
 		}*/
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
     //This method takes in a String which is the ID of the event to be deleted
 	// Call $http.post(URL,(String)id);
 	@RequestMapping(value = "/deleteMaintenance", method = RequestMethod.POST)
@@ -188,7 +188,7 @@ public class MaintenanceController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}				
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	//This method takes in a JSON format which contains an object with 5 attributes
 	//Long/String id, int levelNum, int length, int width, String filePath
 	//Call $httpPost(Url,JSONData);
@@ -231,7 +231,7 @@ public class MaintenanceController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	//Security filters for inputs needs to be added
 		//This method takes in a string which contains the attributes of the event to be added.
 		//Call $http.post(URL,stringToAdd);
@@ -284,7 +284,7 @@ public class MaintenanceController {
 			return new ResponseEntity<Void>(HttpStatus.OK);	
 		}		
 		
-	     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
+	     @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 		// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 					// Each object (building) will contain... long id, .
 						@RequestMapping(value = "/viewMaintenance",  method = RequestMethod.GET)

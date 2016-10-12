@@ -46,7 +46,7 @@ public class UnitController {
 		this.levelService=levelService;
 	}
 	
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 		//Security filters for inputs needs to be added
 		//This method takes in a string which contains the attributes of the building to be added.
 		//Call $http.post(URL,stringToAdd);
@@ -109,7 +109,7 @@ public class UnitController {
 			}
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}	
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
 				@RequestMapping(value = "/getUnitsId", method = RequestMethod.POST)
 				@ResponseBody
@@ -141,7 +141,7 @@ public class UnitController {
 							return "cannot fetch units id";
 						}
 				}
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY','ROLE_EXTEVE')")
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY','ROLE_EXTEVE')")
 		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
 		@RequestMapping(value = "/viewUnits", method = RequestMethod.POST)
 		@ResponseBody
@@ -200,7 +200,7 @@ public class UnitController {
 		
 			
 }            //for load and edit, call viewUnits first and then call saves units; for create new floor plan, can use both saveUnits or create Units
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")	
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")	
 	@RequestMapping(value = "/saveUnits", method = RequestMethod.POST)
 		@ResponseBody
 		@ResponseStatus(HttpStatus.OK)
@@ -318,7 +318,7 @@ public class UnitController {
 			return v;
 		
 }
-		@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 		@RequestMapping(value = "/deleteUnit", method = RequestMethod.POST)
 		@ResponseBody
 		public ResponseEntity<Void> deleteUnit(@RequestBody String idObj,HttpServletRequest rq) {
