@@ -1,15 +1,12 @@
 package application.controller;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 //import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +24,13 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import application.domain.Level;
-import application.domain.User;
-import application.repository.VendorRepository;
-import application.repository.AuditLogRepository;
+
 import application.domain.AuditLog;
 import application.domain.Building;
 import application.domain.ClientOrganisation;
+import application.domain.Level;
+import application.domain.User;
+import application.repository.AuditLogRepository;
 import application.service.user.BuildingService;
 import application.service.user.ClientOrganisationService;
 import application.service.user.UserService;
@@ -59,10 +56,10 @@ public class BuildingController {
 		this.auditLogRepository = auditLogRepository;
 	}
  
-	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY', 'ROLE_EXTEVE')")
+
 	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 	// Each object (building) will contain... long id, collection of levels.
-	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY', 'ROLE_EXTEVE')")
 	@RequestMapping(value = "/viewBuildings", method = RequestMethod.GET)
 	@ResponseBody
 	public String viewBuildings(HttpServletRequest rq) {
@@ -115,7 +112,6 @@ public class BuildingController {
 		}
 	}	
 
-	 @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 	// Each object (building) will contain... long id, collection of levels.
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
@@ -167,7 +163,6 @@ public class BuildingController {
 
 
 	}
-	 @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	//Security filters for inputs needs to be added
 	//This method takes in a string which contains the attributes of the building to be added.
 	//Call $http.post(URL,stringToAdd);
@@ -213,9 +208,10 @@ public class BuildingController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
-	 @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+
 	//This method takes in a String which is the ID of the building to be deleted
 	// Call $http.post(URL,(String)id);
+	
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/deleteBuilding", method = RequestMethod.POST)
 	@ResponseBody
@@ -251,7 +247,6 @@ public class BuildingController {
 		}
 		
 	}
-	 @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	//This method takes in a JSON format which contains an object with 7 attributes
 	//Long/String id, String name, String address, int postalCode, String city, 
 	//int numFloor, String filePath;
