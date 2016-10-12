@@ -137,16 +137,16 @@ public class BookingController {
 						long id = Long.parseLong(bId);
 						Set<BookingAppl> bookings = eventExternalService.getBookings(client,id);	
 						System.out.println("There are " + bookings.size() + " events under this organizer");
-						
+						//Set<BookingAppl> bookingsWithUnits=new HashSet<BookingAppl>();
 						//Gson gson = new Gson();
 						//String json = gson.toJson(levels);
 					    //System.out.println("Returning levels with json of : " + json);
 						//return json;
-						
+
 						Gson gson2 = new GsonBuilder()
 							    .setExclusionStrategies(new ExclusionStrategy() {
 							        public boolean shouldSkipClass(Class<?> clazz) {
-							            return (clazz == Event.class)||(clazz==Unit.class)||(clazz == Area.class);
+							            return (clazz == Event.class)||(clazz == Area.class)||(clazz == Unit.class)||(clazz == MaintenanceSchedule.class);
 							        }
 
 							        /**
@@ -175,7 +175,47 @@ public class BookingController {
 							return "cannot fetch";
 						}
 					}
-					
+					// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
+					// Each object (building) will contain... long id, .
+						@RequestMapping(value = "/viewAllSelectedUnits/{id}",  method = RequestMethod.GET)
+						@ResponseBody
+						public String viewAllSelectedUnits(@PathVariable("id") String bId, HttpServletRequest rq) {
+						    System.out.println("start view");
+						    Principal principal = rq.getUserPrincipal();
+						    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+							if ( !eventOrg1.isPresent() ){
+								return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+							}
+							try{
+							//EventOrganizer eventOrg = eventOrg1.get();	
+							User eventOrg = eventOrg1.get();
+							ClientOrganisation client = eventOrg.getClientOrganisation();
+							System.out.println(eventOrg.getId());
+							long id = Long.parseLong(bId);
+							Set<BookingAppl> bookings = eventExternalService.getBookings(client,id);	
+							System.out.println("There are " + bookings.size() + " events under this organizer");
+							//Set<BookingAppl> bookingsWithUnits=new HashSet<BookingAppl>();
+							//Gson gson = new Gson();
+							//String json = gson.toJson(levels);
+						    //System.out.println("Returning levels with json of : " + json);
+							//return json;
+							Set<Unit> units = new HashSet<Unit>();
+							for(BookingAppl booking:bookings){									
+								booking.getUnit().setBookings(null);;
+								booking.getUnit().setMaintenanceSchedule(null);
+								booking.getUnit().setSquare(null);
+								booking.getUnit().setLevel(null);
+								units.add(booking.getUnit());
+								}
+							Gson gson = new Gson();
+							String json = gson.toJson(units);
+						    return json;
+							}
+							catch (Exception e){
+								return "cannot fetch";
+							}
+						}
+						
 					//This method takes in a String which is the ID of the event to be deleted
 					// Call $http.post(URL,(String)id);
 				/*	@RequestMapping(value = "/deleteBooking", method = RequestMethod.POST)

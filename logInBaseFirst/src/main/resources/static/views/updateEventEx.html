@@ -11,6 +11,7 @@
 <!-- bootstrap theme -->
 <link href="css/bootstrap-theme.css" rel="stylesheet">
 <!--external css-->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 <!-- font icon -->
 
 <link href="css/font-awesome.min.css" rel="stylesheet" />
@@ -84,6 +85,7 @@
       <div class="container">
         <div class="content" >
         <h1>Update Event</h1>
+        <a href = "/#/viewAllEventsEx"><button>GO BACK TO VIEW ALL LEVELS</button></a>
         <p class="tagline">Update your event here</p>
         <!--  <button ng-click = "getEventById()"><input type="submit" value="Refresh"></button>-->
         <form>
@@ -93,7 +95,17 @@
         </div>
         <div class="form-group">
                <label for="exampleInput">Units Selected Previously</label>
-               <input type="text" ng-model="event.units" class="form-control" id="eventName" placeholder="Enter units">
+               <button ng-click="resetBookings()">Reset to last booking</button>
+               	<div class="form-group">
+					<ul class="list-group" name="units">
+						<li ng-repeat="selectedBookingsUnit in selectedBookingsUnits" 
+							class="list-group-item">{{selectedBookingsUnit.unitNumber}}
+							<button ng-click="deleteBookingUnit(selectedBookingsUnit)">
+								<i class="glyphicon glyphicon-trash"></i>
+							</button>
+						</li>
+					</ul>
+				</div>
         </div>
         <p>Want to change unit(s)?: <input type="checkbox" ng-model="myVar"></p>
         <div ng-show="myVar">
@@ -114,24 +126,14 @@
 					<!--  <p>Level ID <input ng-model="currentlySelectedLevel"> Selected</p>-->
 					<button ng-click="getUnit(currentlySelectedLevel)">Apply</button>
 				</div>
-				<div class="form-group">
-					<ul class="list-group" name="units">
-						<li ng-repeat="unit in selectedUnits" 
-							class="list-group-item">{{unit}}
-							<button ng-click="deleteUnit(unit)">
-								<i class="glyphicon glyphicon-trash"></i>
-							</button>
-						</li>
-					</ul>
-				</div>
-				<div class="form-group">
+
+			<div class="form-group">
 					<label for="unit" class="control-label">Select Unit</label> <select
-						name="unit" ng-model="currentlySelectedUnit" ng-options="x.id as x.unitNumber for x in units"
+						name="unit" ng-model="currentlySelectedUnit" ng-options="x as x.unitNumber for x in units"
 						ng-change="selectUnit()" class="form-control">
-						<option ng-repeat="unit in units">{{unit}}</option>
+							
 					</select>
-					<p>Units selected: <input ng-model = "currentlySelectedUnit"></p>
-					<button ng-model="myValue" ng-click="getUnitsId()">Apply</button>
+					
 		</div> 
         </div>
         <div class="form-group">
@@ -156,7 +158,7 @@
                <p class="help-block">Please select a file</p>
       </div>
       <button ng-click = "updateEvent()"><input type="submit" value="Submit"></button>
-      <a href = "/#/viewAllEventsEx">GO BACK TO VIEW ALL LEVELS</a>
+      
       </form>      
         </div>
       </div>
