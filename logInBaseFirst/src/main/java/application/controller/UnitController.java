@@ -14,6 +14,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,7 +46,7 @@ public class UnitController {
 		this.levelService=levelService;
 	}
 	
-	
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 		//Security filters for inputs needs to be added
 		//This method takes in a string which contains the attributes of the building to be added.
 		//Call $http.post(URL,stringToAdd);
@@ -108,6 +109,7 @@ public class UnitController {
 			}
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}	
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
 				@RequestMapping(value = "/getUnitsId", method = RequestMethod.POST)
 				@ResponseBody
@@ -139,7 +141,7 @@ public class UnitController {
 							return "cannot fetch units id";
 						}
 				}
-		
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY','ROLE_EXTEVE')")
 		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
 		@RequestMapping(value = "/viewUnits", method = RequestMethod.POST)
 		@ResponseBody
@@ -196,8 +198,10 @@ public class UnitController {
 					return bd.toString();
 				}
 		
+			
 }            //for load and edit, call viewUnits first and then call saves units; for create new floor plan, can use both saveUnits or create Units
-		@RequestMapping(value = "/saveUnits", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")	
+	@RequestMapping(value = "/saveUnits", method = RequestMethod.POST)
 		@ResponseBody
 		@ResponseStatus(HttpStatus.OK)
 		public ResponseEntity<Void> saveUnits(@RequestBody String json,HttpServletRequest rq)  {
@@ -314,7 +318,7 @@ public class UnitController {
 			return v;
 		
 }
-
+		@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 		@RequestMapping(value = "/deleteUnit", method = RequestMethod.POST)
 		@ResponseBody
 		public ResponseEntity<Void> deleteUnit(@RequestBody String idObj,HttpServletRequest rq) {

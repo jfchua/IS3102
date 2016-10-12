@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,7 +60,7 @@ public class BookingController {
 		this.eventCreateFormValidator = eventCreateFormValidator;
 	}
 	
-	
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 	// Call this method using $http.get and you will get a JSON format containing an array of event objects.
 			// Each object (building) will contain... long id, collection of levels.
 				@RequestMapping(value = "/getBooking/{id}", method = RequestMethod.GET)
@@ -117,7 +118,7 @@ public class BookingController {
 					}
 				}	
 			
-		
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 		// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 				// Each object (building) will contain... long id, .
 					@RequestMapping(value = "/viewAllBookings/{id}",  method = RequestMethod.GET)
@@ -175,6 +176,7 @@ public class BookingController {
 							return "cannot fetch";
 						}
 					}
+	               @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 					// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 					// Each object (building) will contain... long id, .
 						@RequestMapping(value = "/viewAllSelectedUnits/{id}",  method = RequestMethod.GET)
@@ -246,7 +248,7 @@ public class BookingController {
 						return new ResponseEntity<Void>(HttpStatus.OK);
 					}		*/
 					
-					
+	              @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 					@RequestMapping(value = "/deleteBooking/{id}", method = RequestMethod.POST)
 					@ResponseBody
 					public ResponseEntity<Void> deleteBooking(@PathVariable("id") String bId, HttpServletRequest rq) {
