@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,6 +51,7 @@ public class LevelController {
 		this.userService = userService;
 	}
 	
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY', 'ROLE_EXTEVE')")
 	// Call this method using $http.get and you will get a JSON format containing an array of level objects.
 		// Each object (building) will contain... long id, .
 			@RequestMapping(value = "/viewLevels/{id}",  method = RequestMethod.GET)
@@ -108,6 +110,7 @@ public class LevelController {
 				//return new ResponseEntity<Void>(HttpStatus.OK);
 			}
 		
+	         @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 			// Call this method using $http.get and you will get a JSON format containing an array of level objects.
 			// Each object (building) will contain... long id, .
 				@RequestMapping(value = "/getAllLevels/{id}",  method = RequestMethod.GET)
@@ -166,7 +169,7 @@ public class LevelController {
 					//return new ResponseEntity<Void>(HttpStatus.OK);
 				}
 			
-			
+	         @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 			// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 			// Each object (building) will contain... long id, collection of levels.
 				@RequestMapping(value = "/getLevel/{id}", method = RequestMethod.GET)
@@ -215,7 +218,7 @@ public class LevelController {
 			
 			
 			
-			
+	         @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 			//Security filters for inputs needs to be added
 			//This method takes in a string which contains the attributes of the level to be added.
 			//Call $http.post(URL,stringToAdd);
@@ -260,6 +263,7 @@ public class LevelController {
 			
 			}	
 			
+	         @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 			//This method takes in a String which is the ID of the level to be deleted
 			// Call $http.post(URL,(String)id);
 			@RequestMapping(value = "/deleteLevel", method = RequestMethod.POST)
@@ -290,6 +294,7 @@ public class LevelController {
 				return new ResponseEntity<Void>(HttpStatus.OK);
 			}
 			
+	         @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 			//This method takes in a JSON format which contains an object with 5 attributes
 			//Long/String id, int levelNum, int length, int width, String filePath
 			//Call $httpPost(Url,JSONData);
@@ -326,6 +331,7 @@ public class LevelController {
 				return new ResponseEntity<Void>(HttpStatus.OK);
 			}
 			
+	         @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 			//input level id x as {id:x}; output building id y as {buildingId:y}
 			@RequestMapping(value = "/getBuildingId",  method = RequestMethod.POST)//hailing
 			@ResponseBody
@@ -361,7 +367,7 @@ public class LevelController {
 				//return new ResponseEntity<Void>(HttpStatus.OK);
 			}
 			
-			
+	         @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 			//input level id x as {id:x}; output building y as 
 			@RequestMapping(value = "/getBuilding",  method = RequestMethod.POST)//hailing
 			@ResponseBody
