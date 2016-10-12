@@ -38,43 +38,40 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	}
 	
 	@Test
-	public void getAllClientOrganisationTest() {
-		Collection<ClientOrganisation> entities = clientOrganisationService.getAllClientOrganisations();
-
-		Assert.assertNotNull("Getting client orgs should not be null as already inserted via sql", entities);
+	public void testGetAllClientOrganisation() {
+		Collection<ClientOrganisation> result = clientOrganisationService.getAllClientOrganisations();
+		//Assert.assertFalse(entities.isEmpty());
+		Assert.assertNotNull("Getting client orgs should not be null as already inserted via sql", result);
 		//Assert.assertEquals("expected no. of client orgs is 2", 2, entities.size());
 	
 	}
 	
 	@Test
-	public void getClientOrganisationByNameTest() {
-		ClientOrganisation org = clientOrganisationService.getClientOrganisationByName("Expo");
-		Assert.assertNotNull("Getting org should not be null as Expo already inserted via sql", org);
-		Assert.assertEquals("expected name is Expo", "Expo", org.getOrganisationName());	
+	public void testGetClientOrganisationByName() {
+		ClientOrganisation result = clientOrganisationService.getClientOrganisationByName("Expo");
+		Assert.assertNotNull("Getting org should not be null as Expo already inserted via sql", result);
+		//Assert.assertEquals("expected name is Expo", "Expo", org.getOrganisationName());	
 	}
 	
 	@Test
-	public void getClientOrganisationByNameNotFoundTest() {
-		ClientOrganisation org = clientOrganisationService.getClientOrganisationByName("w8efh08egy08237408273");
-		Assert.assertNull("Getting org should be null", org);
+	public void testGetClientOrganisationByNameNotFound() {
+		ClientOrganisation result = clientOrganisationService.getClientOrganisationByName("NON-EXISTENT");
+		Assert.assertNull("Getting org should be null", result);
 	}
 	
 	@Test
-	public void createNewClientOrganisationTest(){
+	public void testCreateNewClientOrganisation(){
 		List<String> subs = new ArrayList<String>();
-		subs.add("TESTSUB");
 		System.err.println("before createnewclientorg");
 		clientOrganisationService.createNewClientOrganisation("testname123", "testemail@test", subs, "testadminname");
 		System.err.println("after  createnewclientorg");
-		ClientOrganisation createdEntity = clientOrganisationService.getClientOrganisationByName("testname123");
+		ClientOrganisation result = clientOrganisationService.getClientOrganisationByName("testname123");
 		System.err.println("getting client org");
-		System.err.println("createnewclientorgtest" + createdEntity.getOrganisationName() );
-		Assert.assertNotNull("Expected not null", createdEntity);
-		Assert.assertNotNull("Expected id attribute not null",
-				createdEntity.getId());
-		Assert.assertEquals("Expected email match", "testname123",
-				createdEntity.getOrganisationName());
-		System.err.println("Created new client organisation of name: "  + createdEntity.getOrganisationName());
+		System.err.println("createnewclientorgtest" + result.getOrganisationName() );
+		Assert.assertNotNull("Expected not null", result);
+		Assert.assertEquals("Expected organisation name match", "testname123",
+				result.getOrganisationName());
+		System.err.println("Created new client organisation of name: "  + result.getOrganisationName());
 
 		//Collection<ClientOrganisation> entities = clientOrganisationService.getAllClientOrganisations();
 
@@ -83,12 +80,12 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	}
 	
 	@Test
-	public void deleteClientOrgTest() {
-		ClientOrganisation org = clientOrganisationService.getClientOrganisationByName("deletetestname123");
-		Assert.assertNotNull("Getting org should not be null", org);
-		clientOrganisationService.deleteClientOrg(org.getId());
-		org = clientOrganisationService.getClientOrganisationByName("testname123");
-		Assert.assertNull("Getting org should now be null after deletion", org);
+	public void testDeleteClientOrg() {
+		ClientOrganisation result = clientOrganisationService.getClientOrganisationByName("deletetestname123");
+		Assert.assertNotNull("Getting org should not be null", result);
+		clientOrganisationService.deleteClientOrg(result.getId());
+		result = clientOrganisationService.getClientOrganisationByName("testname123");
+		Assert.assertNull("Getting org should now be null after deletion", result);
 		System.err.println("Size of client orgs is now : " + clientOrganisationService.getAllClientOrganisations().size() );
 	}
 	

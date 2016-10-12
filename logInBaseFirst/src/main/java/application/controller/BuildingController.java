@@ -15,6 +15,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,6 +61,7 @@ public class BuildingController {
 
 	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 	// Each object (building) will contain... long id, collection of levels.
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/viewBuildings", method = RequestMethod.GET)
 	@ResponseBody
 	public String viewBuildings(HttpServletRequest rq) {
@@ -115,6 +117,7 @@ public class BuildingController {
 	
 	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 	// Each object (building) will contain... long id, collection of levels.
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/getBuilding/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public String getBuilding(@PathVariable("id") String buildingId, HttpServletRequest rq) {
@@ -167,6 +170,7 @@ public class BuildingController {
 	//Security filters for inputs needs to be added
 	//This method takes in a string which contains the attributes of the building to be added.
 	//Call $http.post(URL,stringToAdd);
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/addBuilding", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> addBuilding(@RequestBody String buildingJSON,HttpServletRequest rq) {
@@ -211,6 +215,7 @@ public class BuildingController {
 
 	//This method takes in a String which is the ID of the building to be deleted
 	// Call $http.post(URL,(String)id);
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/deleteBuilding", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> deleteBuilding(@RequestBody String buildingId,HttpServletRequest rq) {
@@ -250,6 +255,7 @@ public class BuildingController {
 	//Long/String id, String name, String address, int postalCode, String city, 
 	//int numFloor, String filePath;
 	//Call $httpPost(Url,JSONData);
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/updateBuilding", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> updateBuilding(@RequestBody String buildingId,HttpServletRequest rq) {

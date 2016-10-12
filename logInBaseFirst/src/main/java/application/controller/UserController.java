@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,6 +79,7 @@ public class UserController {
 	// TODO: CHECK ROLE FOR SUPERADMIN
 	// TODO: ADD CLIENT ORGANISATION SUBSCRIPTIONS.
 	// This method adds a client organisation.
+	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/addClientOrganisation", method = RequestMethod.POST)
 	@ResponseBody //RESPONSE ENTITY TO RETURN A USER BUT NO JACKSON
 	public ResponseEntity<Void> addNewClientOrganisation(@RequestBody String clientOrgJSON) {
@@ -119,6 +121,7 @@ public class UserController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/viewClientOrgs", method = RequestMethod.GET)
 	@ResponseBody //RESPONSE ENTITY TO RETURN A USER BUT NO JACKSON
 	public String viewClientOrgs(HttpServletRequest rq) {
@@ -165,6 +168,7 @@ public class UserController {
 	}
 
 	//This method returns details of all client organizations except user and vendor information
+	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/viewAllClientOrganisations", method = RequestMethod.GET)
 	@ResponseBody
 	public String viewAllClientOrganisations(HttpServletRequest rq) {
@@ -211,7 +215,7 @@ public class UserController {
 		}
 	}
 
-
+	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/deleteClientOrg", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> deleteClientOrg(@RequestBody String userJSON, HttpServletRequest rq) {
@@ -234,7 +238,7 @@ public class UserController {
 
 	}
 
-
+	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/updateClientOrg", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> updateClientOrgs(@RequestBody String userJSON, HttpServletRequest rq) {
@@ -289,7 +293,7 @@ public class UserController {
 
 
 	// ---------------------------------- END SUPER ADMIN METHODS ---------------------------------------
-
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERADMIN')")
 	//Takes in userJSON with information in the object {email:"email", roles:[arrayofroles]}
 	@RequestMapping(value = "user/addNewUser", method = RequestMethod.POST)
 	@ResponseBody
@@ -354,7 +358,7 @@ public class UserController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/viewAllUsers", method = RequestMethod.GET)
 	@ResponseBody
 	public String viewAllUsers(HttpServletRequest rq) {
@@ -403,7 +407,7 @@ public class UserController {
 		return gson.toJson(json);
 	}
 
-
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/deleteUser", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> deleteUser(@RequestBody String userJSON, HttpServletRequest rq) {
@@ -439,7 +443,7 @@ public class UserController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 
 	}
-
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/updateUser", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> updateUser(@RequestBody String userJSON, HttpServletRequest rq) {
@@ -510,7 +514,7 @@ public class UserController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 
 	}
-
+	
 	@RequestMapping(value = "user/editUserProfile", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> editUserProfile(@RequestBody String userJSON, HttpServletRequest rq) {
