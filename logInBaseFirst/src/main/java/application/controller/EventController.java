@@ -38,11 +38,13 @@ import java.util.Set;
 	import com.google.gson.GsonBuilder;
 
 import application.domain.Area;
+import application.domain.BookingAppl;
 import application.domain.ClientOrganisation;
 import application.domain.Event;
 	import application.domain.EventCreateForm;
 	import application.domain.EventOrganizer;
 import application.domain.Message;
+import application.domain.PaymentPlan;
 import application.domain.Role;
 import application.domain.ToDoTask;
 import application.domain.Unit;
@@ -93,7 +95,7 @@ import application.service.user.UserService;
 						Gson gson2 = new GsonBuilder()
 								.setExclusionStrategies(new ExclusionStrategy() {
 									public boolean shouldSkipClass(Class<?> clazz) {
-										return (clazz == User.class)||(clazz == Unit.class)||(clazz == Area.class);
+										return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 									}
 									/**
 									 * Custom field exclusion goes here
@@ -146,7 +148,7 @@ import application.service.user.UserService;
 									Gson gson2 = new GsonBuilder()
 										    .setExclusionStrategies(new ExclusionStrategy() {
 										        public boolean shouldSkipClass(Class<?> clazz) {
-										            return (clazz == User.class)||(clazz==Unit.class)||(clazz==Area.class);
+										            return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 										        }
 	
 										        /**
@@ -199,7 +201,7 @@ import application.service.user.UserService;
 										Gson gson2 = new GsonBuilder()
 											    .setExclusionStrategies(new ExclusionStrategy() {
 											        public boolean shouldSkipClass(Class<?> clazz) {
-											            return (clazz == User.class)||(clazz==Unit.class)||(clazz==Area.class);
+											            return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 											        }
 	
 											        /**
@@ -252,7 +254,7 @@ import application.service.user.UserService;
 											Gson gson2 = new GsonBuilder()
 												    .setExclusionStrategies(new ExclusionStrategy() {
 												        public boolean shouldSkipClass(Class<?> clazz) {
-												            return (clazz == User.class)||(clazz==Unit.class)||(clazz==Area.class);
+												            return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 												        }
 	
 												        /**

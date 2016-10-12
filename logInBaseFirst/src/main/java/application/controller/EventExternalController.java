@@ -222,7 +222,7 @@ public class EventExternalController {
 				Gson gson2 = new GsonBuilder()
 						.setExclusionStrategies(new ExclusionStrategy() {
 							public boolean shouldSkipClass(Class<?> clazz) {
-								return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == Area.class);
+								return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 							}
 							/**
 							 * Custom field exclusion goes here
@@ -271,7 +271,7 @@ public class EventExternalController {
 					Gson gson2 = new GsonBuilder()
 							.setExclusionStrategies(new ExclusionStrategy() {
 								public boolean shouldSkipClass(Class<?> clazz) {
-									return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == Area.class);
+									return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 								}
 								/**
 								 * Custom field exclusion goes here
@@ -342,7 +342,7 @@ public class EventExternalController {
 					Gson gson2 = new GsonBuilder()
 						    .setExclusionStrategies(new ExclusionStrategy() {
 						        public boolean shouldSkipClass(Class<?> clazz) {
-						            return (clazz == User.class)||(clazz==BookingAppl.class)||(clazz == Area.class);
+						            return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 						        }
 
 						        /**
@@ -401,7 +401,7 @@ public class EventExternalController {
 						Gson gson2 = new GsonBuilder()
 							    .setExclusionStrategies(new ExclusionStrategy() {
 							        public boolean shouldSkipClass(Class<?> clazz) {
-							            return (clazz == User.class)||(clazz==BookingAppl.class)||(clazz == Area.class);
+							            return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 							        }
 
 							        /**
