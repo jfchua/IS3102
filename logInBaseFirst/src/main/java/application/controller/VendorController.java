@@ -61,7 +61,7 @@ public class VendorController {
 		binder.addValidators(sendMessageFormValidator);
 	}*/
 	
-	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 	// Call this method using $http.get and you will get a JSON format containing an array of event objects.
 				// Each object (building) will contain... long id, collection of levels.
 					@RequestMapping(value = "/getVendor/{id}", method = RequestMethod.GET)
@@ -82,7 +82,7 @@ public class VendorController {
 					}
 	
 					
-	                @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	                @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 					//Security filters for inputs needs to be added
 					//This method takes in a string which contains the attributes of the event to be added.
 					//Call $http.post(URL,stringToAdd);
@@ -123,7 +123,7 @@ public class VendorController {
 						return new ResponseEntity<Void>(HttpStatus.OK);	
 					}	
 	
-	    @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 	// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 	// Each object (building) will contain... long id, .
 		@RequestMapping(value = "/viewAllVendors",  method = RequestMethod.GET)
@@ -150,7 +150,7 @@ public class VendorController {
 			//return new ResponseEntity<Void>(HttpStatus.OK);
 		}
 		
-	    @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 	    //This method takes in a String which is the ID of the event to be deleted
 		// Call $http.post(URL,(String)id);
 		@RequestMapping(value = "/deleteVendor", method = RequestMethod.POST)
@@ -177,7 +177,7 @@ public class VendorController {
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}	
 	     
-	    @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_PROPERTY')")
 		//This method takes in a JSON format which contains an object with 5 attributes
 		//Long/String id, int levelNum, int length, int width, String filePath
 		//Call $httpPost(Url,JSONData);

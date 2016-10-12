@@ -57,7 +57,7 @@ public class EventExternalController {
 		this.eventCreateFormValidator = eventCreateFormValidator;
 	}
 	
-	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 	//Security filters for inputs needs to be added
 	//This method takes in a string which contains the attributes of the event to be added.
 	//Call $http.post(URL,stringToAdd);
@@ -119,7 +119,7 @@ public class EventExternalController {
 		return new ResponseEntity<Void>(HttpStatus.OK);	
 	}	
 	
-	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 	//Security filters for inputs needs to be added
 		//This method takes in a string which contains the attributes of the event to be added.
 		//Call $http.post(URL,stringToAdd);
@@ -167,7 +167,7 @@ public class EventExternalController {
 			return new ResponseEntity<Void>(HttpStatus.OK);	
 		}	
 	
-	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 		@RequestMapping(value = "/checkAvailabilityForUpdate", method = RequestMethod.POST)
 		@ResponseBody
 		public ResponseEntity<Void> checkAvailabilityForUpdate(@RequestBody String eventJSON,
@@ -213,7 +213,7 @@ public class EventExternalController {
 			return new ResponseEntity<Void>(HttpStatus.OK);	
 		}	
 
-	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 	// Call this method using $http.get and you will get a JSON format containing an array of event objects.
 	// Each object (building) will contain... long id, collection of levels.
 		@RequestMapping(value = "/getEvent/{id}", method = RequestMethod.GET)
@@ -254,7 +254,7 @@ public class EventExternalController {
 		}	
 	
 		
-	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 		// Call this method using $http.get and you will get a JSON format containing an array of event objects.
 		// Each object (building) will contain... long id, collection of levels.
 			@RequestMapping(value = "/getEvent1/{id}", method = RequestMethod.GET)
@@ -318,7 +318,7 @@ public class EventExternalController {
 				}
 			}	
 		
-	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 	// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 			// Each object (building) will contain... long id, .
 				@RequestMapping(value = "/viewAllEvents",  method = RequestMethod.GET)
@@ -377,7 +377,7 @@ public class EventExternalController {
 					//return new ResponseEntity<Void>(HttpStatus.OK);
 				}
 				
-	              @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	              @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 				// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 				// Each object (building) will contain... long id, .
 					@RequestMapping(value = "/viewApprovedEvents",  method = RequestMethod.GET)
@@ -436,7 +436,7 @@ public class EventExternalController {
 						//return new ResponseEntity<Void>(HttpStatus.OK);
 					}
 				
-	              @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	              @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 					//This method takes in a String which is the ID of the event to be deleted
 					// Call $http.post(URL,(String)id);
 					@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
@@ -468,7 +468,7 @@ public class EventExternalController {
 						return new ResponseEntity<Void>(HttpStatus.OK);
 					}
 					
-	              @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	              @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_EXTEVE')")
 					//This method takes in a JSON format which contains an object with 5 attributes
 					//Long/String id, int levelNum, int length, int width, String filePath
 					//Call $httpPost(Url,JSONData);
