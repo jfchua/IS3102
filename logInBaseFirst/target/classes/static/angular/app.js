@@ -1653,26 +1653,7 @@ app.controller('addEController', ['$scope', '$http','$location','$routeParams','
 		}
 		console.log("finish selecting units");		
 	}
-	/*
-	$scope.getUnitsId = function(){
-		var dataObj ={id: $scope.selectedUnits};
-		console.log("units to be get are "+JSON.stringify(dataObj));
-		$scope.shareMyData = function (myValue) {
-		}		
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/property/getUnitsId',
-			data    : dataObj,
-		});
-		send.success(function(response){
-			console.log('GET Unit IDS SUCCESS! ' + JSON.stringify(response));
-			shareData.addData(JSON.stringify(response));
-		});
-		send.error(function(response){
-			$location.path("/viewAllEventsEx");
-			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
-		});
-	}*/
+	
 	
 	$scope.addEvent = function(){
 		console.log("start adding");

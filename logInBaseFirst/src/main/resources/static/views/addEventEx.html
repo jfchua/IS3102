@@ -87,7 +87,14 @@
         <h1>Add a new event</h1>
         <p class="tagline">Add your event here</p>
         <form>
-                
+                <div class="form-group">
+               <label for="exampleInput">Event Start Date</label>
+               <input type="datetime-local" ng-model="event.event_start_date" class="form-control" placeholder="Enter start date">
+       </div>
+       <div class="form-group">
+               <label for="exampleInput">Event End Date</label>
+               <input type="datetime-local" ng-model="event.event_end_date" class="form-control" placeholder="Enter end date">
+       </div>
 				<div class="form-group">
 					<label for="building" class="control-label">Select Building</label> <select
 						name="building" ng-model="currentlySelectedBuilding" ng-options="x.id as x.name for x in buildings"
@@ -121,10 +128,15 @@
 						ng-change="selectUnit()" class="form-control">
 						
 					</select>
-					<!-- <p>Units selected: <input ng-model = "currentlySelectedUnit"></p>
-					<button ng-model="myValue" ng-click="getUnitsId()">Apply</button>-->
-				</div>
-				
+					<!-- <p>Units selected: <input ng-model = "currentlySelectedUnit"></p>-->
+				     <!--  <button ng-click = "checkAvail()">Check Availability</button>-->
+				    <div ng-mouseover="checkAvail()" >
+				    <p>Put mouse over to check Availability<br>
+				     Available?  {{avail}}</p>			   
+				    </div>
+				    
+				</div>		  
+      
         <div class="form-group">
                <label for="exampleInput">Event Title</label>
                <input type="text" ng-model="event.event_title" class="form-control" placeholder="Enter event title">
@@ -138,16 +150,7 @@
                <label for="exampleInput">Event Description</label>
                <input type="text" ng-model="event.event_description" class="form-control" placeholder="Enter event description">
         </div>
-       <div class="form-group">
-               <label for="exampleInput">Event Start Date</label>
-               <input type="datetime-local" ng-model="event.event_start_date" class="form-control" placeholder="Enter start date">
-       </div>
-       <div class="form-group">
-               <label for="exampleInput">Event End Date</label>
-               <input type="datetime-local" ng-model="event.event_end_date" class="form-control" placeholder="Enter end date">
-       </div>
-
-       <!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
+       
        <button ng-click = "addEvent()"><input type="submit" value="Submit"></button>
        <a href="/#/viewAllEventsEx"><button>GO BACK TO VIEW ALL EVENTS</button></a>
         </form>

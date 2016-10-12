@@ -384,26 +384,55 @@ app.controller('addEController', ['$scope', '$http','$location','$routeParams','
 			var index = $scope.selectedUnits.indexOf(unit);
 			$scope.selectedUnits.splice(index, 1);  
 		}
-		console.log("finish selecting units");		
+		console.log("finish selecting units");	
+		
+		$scope.checkAvail = function(){
+			console.log("start checking availability");
+			$scope.data = {};
+
+			var dataObj = {
+					units: $scope.selectedUnits,
+					event_start_date: ($scope.event.event_start_date).toString(),
+					event_end_date: ($scope.event.event_end_date).toString(),
+			};
+			console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+			var send = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/event/checkAvailability',
+				data    : dataObj //forms user object
+			});
+			$scope.avail = "";
+			send.success(function(){
+				$scope.avail = "AVAILABLE!";
+				console.log($scope.avail);
+			});
+			send.error(function(){
+				$scope.avail = "NOT AVAILABLE!";
+				console.log($scope.avail);
+			});
+		}
 	}
 	/*
-	$scope.getUnitsId = function(){
-		var dataObj ={id: $scope.selectedUnits};
-		console.log("units to be get are "+JSON.stringify(dataObj));
-		$scope.shareMyData = function (myValue) {
-		}		
+	$scope.checkAvail = function(){
+		console.log("start checking availability");
+		$scope.data = {};
+
+		var dataObj = {
+				units: $scope.selectedUnits,
+				event_start_date: ($scope.event.event_start_date).toString(),
+				event_end_date: ($scope.event.event_end_date).toString(),
+		};
+		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
 		var send = $http({
 			method  : 'POST',
-			url     : 'https://localhost:8443/property/getUnitsId',
-			data    : dataObj,
+			url     : 'https://localhost:8443/event/checkAvailability',
+			data    : dataObj //forms user object
 		});
-		send.success(function(response){
-			console.log('GET Unit IDS SUCCESS! ' + JSON.stringify(response));
-			shareData.addData(JSON.stringify(response));
+		send.success(function(){
+			alert('SELECTED UNITS ARE AVAILABLE!');
 		});
-		send.error(function(response){
-			$location.path("/viewAllEventsEx");
-			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
+		send.error(function(){
+			alert('SELECTED UNITS ARE NOT AVAILABLE!');
 		});
 	}*/
 	
@@ -593,9 +622,62 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 			var index = $scope.selectedBookingsUnits.indexOf(unit);
 			$scope.selectedBookingsUnits.splice(index, 1);  
 		}
-		console.log("finish selecting units");		
+		console.log("finish selecting units");	
+		/*
+		$scope.checkAvail = function(){
+			console.log("start checking availability");
+			$scope.data = {};
+
+			var dataObj = {
+					units: $scope.selectedBookingsUnits,
+					event_start_date: ($scope.event.event_start_date).toString(),
+					event_end_date: ($scope.event.event_end_date).toString(),
+			};
+			console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+			var send = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/event/checkAvailability',
+				data    : dataObj //forms user object
+			});
+			$scope.avail = "";
+			send.success(function(){
+				$scope.avail = "AVAILABLE!";
+				console.log($scope.avail);
+			});
+			send.error(function(){
+				$scope.avail = "NOT AVAILABLE!";
+				console.log($scope.avail);
+			});
+		}	*/
 	}
 	
+	$scope.checkAvail = function(){
+		console.log("start checking availability");
+		$scope.data = {};
+
+		var dataObj = {			
+				id: $scope.event.id,
+				units: $scope.selectedBookingsUnits,
+				event_start_date: ($scope.event.event_start_date).toString(),
+				event_end_date: ($scope.event.event_end_date).toString(),
+		};
+		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/event/checkAvailabilityForUpdate',
+			data    : dataObj //forms user object
+		});
+		$scope.avail = "";
+		send.success(function(){
+			$scope.avail = "AVAILABLE!";
+			console.log($scope.avail);
+		});
+		send.error(function(){
+			$scope.avail = "NOT AVAILABLE!";
+			console.log($scope.avail);
+		});
+	}
+
 
 
 	$scope.updateEvent = function(){
