@@ -79,49 +79,63 @@
 </div>
 <!-- /subnavbar -->
 	<!-- MAIN BODY -->
-	<div ng-cloak ng-controller="buildingController as buildCtrl">
+	<div ng-cloak ng-controller="updateRateController as updateRateCtrl" >
       <div class="container">
         <div class="content" >
-        <h1>View buildings</h1>
-        <p class="tagline">List of existing buildings</p>
-  
-        <button><a href="/#/addBuilding">Add a building</a></button>
-        <button><a href="/#/viewIcon">Customise Icon</a></button>
-        <button><a href="/#/viewAllRates">View Special Rate</a></button>
-        <!-- <div ng-app="myApp" ng-controller="customersCtrl">-->
-       <table class="table table-striped table-advance table-hover">
-        <tbody>
-           <tr>
-           <td><i></i> ID </td>
-           <td><i></i> Building Name </td>
-           <td><i></i> Number of floors </td>
-           <td><i></i> Address </td>
-           <td><i></i> City </td>
-           <td><i></i> Postal Code </td>
-           <td>Actions</td>
-            <td></td>
-             <td></td>
-           </tr>
-         <tr ng-repeat="x in buildings | orderBy:'name'">
-         <td><a ng-model="myValue" href="/#/viewLevels" ng-click="passBuilding(x)">{{ x.id }}</a></td>
-         <!--  <td><button onClick="window.open('http://www.google.com.sg}');">{{ x.id }}</button></td>-->
-         <td>{{ x.name }}</td>
-         <td>{{ x.numFloor }}</td>
-         <td>{{ x.address }}</td>
-         <td>{{ x.city }}</td>
-         <td>{{ x.postalCode }}</td>
-         <td><a ng-model="myValue" href="/#/updateBuilding" ng-click="updateBuilding(x)">Update</a></td>
-          <td><a ng-model="myValue" href="/#/deleteBuilding" ng-click="deleteBuilding(x)">Delete</a></td>
-          <td><a ng-model="myValue" href="/#/addLevel" ng-click="addLevel(x)">Add Level</a></td>
-         </tr>
-         </tbody>
-      </table>
-   <!--  </div>-->
- </div>
- </div>
- </div>
+        <h1>Update Special Rate</h1>
+        <a href="#/viewAllRates"><button>Back to view all special rates</button></a>
+        <p class="tagline">Update your special rate here</p>
+        <form>
+        <div class="form-group">
+               <label for="exampleInput">Rate</label>
+               <input type="number" step="0.01" min="0" ng-model="special.rate" class="form-control" id="specialRate" placeholder="Enter special rate">
+        </div>
+        <div class="form-group">
+               <label for="exampleInput">Description</label>
+               <input type="text" ng-model="special.description" class="form-control" id="description" placeholder="Enter description">
+        </div>
+        <div class="form-group">
+               <label for="exampleInput">Period</label>
+               <input type="text" ng-model="special.period" class="form-control" readonly>
+        </div>
+        <p>Want to changep period?: <input type="checkbox" ng-model="myVar"></p>
+        <div ng-show="myVar">
+        <select ng-model="myDropDown">   
+          <option value="period">Please Select A Period</option>     
+          <option value="month">Any Month?</option>
+          <option value="weekend">All Weekends?</option>
+          <option value="date">Any Specific Date?</option>
+       </select><br>
+       <div ng-show="myDropDown=='month'" >
+    <label for="month" class="control-label">Select Month</label> <select
+						name="month" ng-model="special.period" ng-options="x.month as x.name for x in months"
+						class="form-control">
+					</select>
+    </div>  
+    
+    <div ng-show="myDropDown=='weekend'"> 
+    <label for="weekend" class="control-label"></label> <select
+						name="weekend" ng-model="special.period" ng-options="x.weekend as x.name for x in weekends"
+						class="form-control">
+					</select>  
+    </div>
+    
+    <div ng-show="myDropDown=='date'">
+    <label for="exampleInput">Please Enter a date</label>
+               <input type="datetime-local" step="86400" ng-model="special.period" class="form-control" id="period" placeholder="Enter date">
+    </div>
+        </div>
+      <button ng-click = "updateRate()"><input type="submit" value="Submit"></button>
+      </form>      
+        </div>
+      </div>
+    </div>
 		
 		<!--main content end-->
+
+
+
+
 
 </body>
 </html>

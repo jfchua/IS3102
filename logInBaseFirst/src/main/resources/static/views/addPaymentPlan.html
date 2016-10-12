@@ -12,7 +12,7 @@
 <link href="css/bootstrap-theme.css" rel="stylesheet">
 <!--external css-->
 <!-- font icon -->
-
+<!-- <link href="css/elegant-icons-style.css" rel="stylesheet" />-->
 <link href="css/font-awesome.min.css" rel="stylesheet" />
 <!-- Custom styles -->
 <link href="css/style.css" rel="stylesheet">
@@ -21,6 +21,7 @@
 <script src="angular/controller.js"></script>
 <script src="angular/user_service.js"></script>
 <script src="angular/user_controller.js"></script>
+<script src="angular/payment_plan.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.js"></script>
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 -->
@@ -79,49 +80,42 @@
 </div>
 <!-- /subnavbar -->
 	<!-- MAIN BODY -->
-	<div ng-cloak ng-controller="buildingController as buildCtrl">
+	<div ng-cloak ng-controller="paymentController as paymentCtrl">
       <div class="container">
         <div class="content" >
-        <h1>View buildings</h1>
-        <p class="tagline">List of existing buildings</p>
-  
-        <button><a href="/#/addBuilding">Add a building</a></button>
-        <button><a href="/#/viewIcon">Customise Icon</a></button>
-        <button><a href="/#/viewAllRates">View Special Rate</a></button>
-        <!-- <div ng-app="myApp" ng-controller="customersCtrl">-->
-       <table class="table table-striped table-advance table-hover">
-        <tbody>
-           <tr>
-           <td><i></i> ID </td>
-           <td><i></i> Building Name </td>
-           <td><i></i> Number of floors </td>
-           <td><i></i> Address </td>
-           <td><i></i> City </td>
-           <td><i></i> Postal Code </td>
-           <td>Actions</td>
-            <td></td>
-             <td></td>
-           </tr>
-         <tr ng-repeat="x in buildings | orderBy:'name'">
-         <td><a ng-model="myValue" href="/#/viewLevels" ng-click="passBuilding(x)">{{ x.id }}</a></td>
-         <!--  <td><button onClick="window.open('http://www.google.com.sg}');">{{ x.id }}</button></td>-->
-         <td>{{ x.name }}</td>
-         <td>{{ x.numFloor }}</td>
-         <td>{{ x.address }}</td>
-         <td>{{ x.city }}</td>
-         <td>{{ x.postalCode }}</td>
-         <td><a ng-model="myValue" href="/#/updateBuilding" ng-click="updateBuilding(x)">Update</a></td>
-          <td><a ng-model="myValue" href="/#/deleteBuilding" ng-click="deleteBuilding(x)">Delete</a></td>
-          <td><a ng-model="myValue" href="/#/addLevel" ng-click="addLevel(x)">Add Level</a></td>
-         </tr>
-         </tbody>
-      </table>
-   <!--  </div>-->
- </div>
- </div>
- </div>
+        <h1>Add a payment plan</h1>
+        <a href="/#/viewBuilding"><button>Back to view all payment plans</button></a>
+        <p class="tagline">Add your payment plan here</p>
+        <form>
+        <div class="form-group">
+               <label for="exampleInput">Event Id</label>
+               <input type="number" ng-model="plan.eventId" class="form-control" placeholder="Enter event id">
+        </div>
+        <div class="form-group">
+               <label for="exampleInput">Total Payment</label>
+               <input type="number" ng-model="plan.total" class="form-control" placeholder="Enter total payment">
+        </div>
+        <div class="form-group">
+               <label for="exampleInput">Deposit</label>
+               <input type="number" ng-model="plan.deposit" class="form-control" placeholder="Enter deposit">
+        </div>
+        <div class="form-group">
+               <label for="exampleInput">Number of Subsequent Payment</label>
+               <input type="number" ng-model="plan.subsequent_number" class="form-control"placeholder="Enter number of subsequent payment">
+       </div>
+       <div class="form-group">
+               <label for="exampleInput">Subsequent Payment amount</label>
+               <input type="number" ng-model="plan.subsequent" class="form-control"  placeholder="Enter subsequent payment amount">
+       </div>
+ 
+       <button ng-click = "addPaymentPlan()"><input type="submit" value="Submit"></button>
+       <br>
+       <a href="#/viewAllPaymentPlans">View Payment Plan List</a>
+        </form>
+        </div>
+      </div>
+    </div>
 		
 		<!--main content end-->
-
 </body>
 </html>

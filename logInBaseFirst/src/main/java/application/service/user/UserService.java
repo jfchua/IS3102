@@ -28,7 +28,7 @@ public interface UserService {
 
 	boolean createNewUser(ClientOrganisation clientOrg,String name, String userEmail, Set<Role> roles);
 
-	void editUsers(ClientOrganisation clientOrg, String name, String userEmail, Set<Role> roles);
+	void editUser(String name, User user, Set<Role> roles);
 
 	Collection<User> viewAllUsers(ClientOrganisation clientOrg);
 
