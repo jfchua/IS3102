@@ -89,11 +89,10 @@ insert into message (message, sender_name,subject,recipient_id)values("Hello Wor
 insert into message (message, sender_name,subject,recipient_id)values("This event needs some modification, reply me asap.","event@localhost","Event Message",6);
 insert into message (message, sender_name,subject,recipient_id)values("The pricing model seems a little off, can we discuss this later?","finance@localhost","Finance matter",6);
 
-
---insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameMS", "MINGSHA", 123456,"SINGAPORE", 6, "");
---insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameHL", "HAILING", 234567,"SINGAPORE", 4, "");
---insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,1);
---insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,2);
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameMS", "MINGSHA", 123456,"SINGAPORE", 6, "");
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameHL", "HAILING", 234567,"SINGAPORE", 4, "");
+insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,1);
+insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,2);
 insert into vendor(contact, description, email, name)values("123", "good", "1@gmail.com", "MS");
 insert into vendor(contact, description, email, name)values("456", "good", "2@gmail.com", "HL");
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
@@ -109,7 +108,7 @@ insert into client_organisation_vendors(client_organisation_id, vendors_id) valu
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)
 --VALUES('1771',1,2,true,8,4);
 
-INSERT INTO special_rate(rate, description, period) VALUES(1.4, 'weekend premium', 'every weekend');
+INSERT INTO special_rate(rate, description, period) VALUES(1.4, 'weekend premium', 'weekend');
 INSERT INTO special_rate(rate, description, period) VALUES(0.8, 'Feb discount', 'FEB');
 INSERT INTO client_organisation_special_rates(client_organisation_id, special_rates_id) values(1,1);
 INSERT INTO client_organisation_special_rates(client_organisation_id, special_rates_id) values(1,2);
