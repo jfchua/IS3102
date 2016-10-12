@@ -118,6 +118,97 @@ public class EventExternalController {
 	}	
 	
 	
+	//Security filters for inputs needs to be added
+		//This method takes in a string which contains the attributes of the event to be added.
+		//Call $http.post(URL,stringToAdd);
+		@RequestMapping(value = "/checkAvailability", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> checkAvailability(@RequestBody String eventJSON,
+				HttpServletRequest rq) {
+			System.out.println("start check availability for events");
+			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+			Principal principal = rq.getUserPrincipal();
+			System.out.println(principal.getName());
+			Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+			if ( !eventOrg1.isPresent() ){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			}
+			try{
+				User eventOrg = eventOrg1.get();
+				ClientOrganisation client = eventOrg.getClientOrganisation();
+				System.out.println(eventOrg.getName());
+				Object obj = parser.parse(eventJSON);
+				JSONObject jsonObject = (JSONObject) obj;
+				JSONArray units = (JSONArray)jsonObject.get("units");
+	            String unitsId = "";
+	            for(int i = 0; i < units.size(); i++){
+	            	JSONObject unitObj = (JSONObject)units.get(i);		
+	            	System.out.println(unitObj.toString());
+					long unitId = (Long)unitObj.get("id");
+					System.out.println(unitId);
+					unitsId = unitsId+unitId + " ";
+					System.out.println(unitsId);
+				}
+				Date event_start_date = sdf.parse((String)jsonObject.get("event_start_date"));
+				System.out.println(event_start_date);
+				Date event_end_date = sdf.parse((String)jsonObject.get("event_end_date"));				
+				boolean bl = eventExternalService.checkAvailability(client, eventOrg, unitsId, event_start_date, event_end_date);
+				if(!bl){
+					System.out.println("NOT AVAILABLE");
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}			
+			}
+			catch (Exception e){
+				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			return new ResponseEntity<Void>(HttpStatus.OK);	
+		}	
+	
+		@RequestMapping(value = "/checkAvailabilityForUpdate", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> checkAvailabilityForUpdate(@RequestBody String eventJSON,
+				HttpServletRequest rq) {
+			System.out.println("start check availability for events");
+			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+			Principal principal = rq.getUserPrincipal();
+			System.out.println(principal.getName());
+			Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+			if ( !eventOrg1.isPresent() ){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			}
+			try{
+				User eventOrg = eventOrg1.get();
+				ClientOrganisation client = eventOrg.getClientOrganisation();
+				System.out.println(eventOrg.getName());
+				Object obj = parser.parse(eventJSON);
+				JSONObject jsonObject = (JSONObject) obj;
+				long eventId = (Long)jsonObject.get("id");
+				JSONArray units = (JSONArray)jsonObject.get("units");
+	            String unitsId = "";
+	            for(int i = 0; i < units.size(); i++){
+	            	JSONObject unitObj = (JSONObject)units.get(i);		
+	            	System.out.println(unitObj.toString());
+					long unitId = (Long)unitObj.get("id");
+					System.out.println(unitId);
+					unitsId = unitsId+unitId + " ";
+					System.out.println(unitsId);
+				}
+				Date event_start_date = sdf.parse((String)jsonObject.get("event_start_date"));
+				System.out.println(event_start_date);
+				Date event_end_date = sdf.parse((String)jsonObject.get("event_end_date"));				
+				boolean bl = eventExternalService.checkAvailabilityForUpdate(client, eventOrg, eventId, unitsId, event_start_date, event_end_date);
+				if(!bl){
+					System.out.println("NOT AVAILABLE");
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}			
+			}
+			catch (Exception e){
+				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			return new ResponseEntity<Void>(HttpStatus.OK);	
+		}	
 
 	// Call this method using $http.get and you will get a JSON format containing an array of event objects.
 	// Each object (building) will contain... long id, collection of levels.

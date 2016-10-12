@@ -500,4 +500,125 @@ public class EventExternalServiceImpl implements EventExternalService {
 			}
 		return bookings;
 	}
+
+	@Override
+	public boolean checkAvailability(ClientOrganisation client, User user, String unitsId, Date event_start_date,
+			Date event_end_date) {
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		boolean doesHave = false;
+		String[] units = unitsId.split(" ");
+		System.out.println(units[0]);
+		for(User u: eventOrgs){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(user))
+			    doesHave = true;
+			   }
+		}
+		if(!doesHave)
+			return false;
+		Date d1 = event_start_date;
+		Date d2 = event_end_date;
+		if(d1.compareTo(d2)>0)
+			return false;
+		boolean isAvailable = true;
+		for(int i = 0; i<units.length; i ++){
+			long uId = Long.valueOf(units[i]);
+			Optional<Unit> unit1 = unitRepository.getUnitById(uId);
+			if(unit1.isPresent()&&isAvailable){
+				Unit unit = unit1.get();
+				if(!checkUnit(client, unit.getId()))
+					return false;
+				int count = bookingApplRepository.getNumberOfBookings(uId, d1, d2);
+				int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+               if((count != 0)||(count2 != 0)){
+					isAvailable = false;
+					break;
+				}
+			}
+		}
+		return isAvailable;
+	}
+
+	@Override
+	public boolean checkAvailabilityForUpdate(ClientOrganisation client, User user, long eventId, String unitsId,
+			Date event_start_date, Date event_end_date) {
+		boolean isAvailable = true;
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		
+		// does the user belong to client organization and does the user have role of "external event organizer"
+		boolean doesHave = false;
+		for(User u: eventOrgs){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(user))
+			    doesHave = true;
+			   }
+		}
+		if(!doesHave)
+			return false;
+		System.out.println("1");
+		
+		//is the ending date after the starting date?
+		Date d1 = event_start_date;
+		Date d2 = event_end_date;
+		if(d1.compareTo(d2)>0)
+			return false;
+		System.out.println("2");
+		
+		try{		
+			Optional<Event> event1 = getEventById(eventId);
+			if(event1.isPresent()&&isAvailable){			
+				Event event = event1.get();
+				System.out.println("3");
+				Set<BookingAppl> bookingList = event.getBookings();
+				Set<Unit> unitsOld = new HashSet<Unit>();
+				
+				// unitsOld is the set of units booked previously, unitsNew is the set of units booked now
+				for(BookingAppl b: bookingList)
+					unitsOld.add(b.getUnit());
+				System.out.println("4");
+				String[] units = unitsId.split(" ");
+				Set<Unit> unitsNew = new HashSet<Unit>();
+                System.out.println(units.length);
+				
+				//check availability of units
+				for(int i = 0; i<units.length; i ++){
+					System.out.println("inside the loop now");
+				if(!checkUnit(client, Long.valueOf(units[i])))
+					return false;
+				Optional<Unit> unitNew = unitRepository.getUnitById(Long.valueOf(units[i]));
+				if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){	
+					System.out.println("iffff");
+					Unit unit1 = unitNew.get();		
+					unitsNew.add(unit1);
+					int count = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+					int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+					System.out.println(count);
+					if((count != 0)||(count2!=0)){
+						isAvailable = false;
+						break;
+					}		
+				}//DONE
+				else if (unitNew.isPresent()&&(unitsOld.contains(unitNew.get()))){
+				    Unit unit1 = unitNew.get();
+				    unitsNew.add(unit1);
+				    System.out.println("elseeee");
+		            BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
+		            MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
+		            System.out.println(b.getId());
+		            Event eventFromB = b.getEvent();            
+		            if(!(event.getId().equals(eventFromB.getId()))||(m!=null)){
+		            	isAvailable = false;
+		            	break;
+		            }
+				}
+				System.out.println("5");
+				}
+			}
+		}catch(Exception e){
+			return false;
+			}
+	  return isAvailable;
+	}
 }
