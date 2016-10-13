@@ -387,10 +387,12 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
 			        console.log("test anglar.fromJon"+angular.fromJson(response.data));
 			        $scope.units=angular.fromJson(response.data);
 	      },function(response){
-	        console.log("DID NOT CREATE");
+	        console.log("DID NOT VIEW");
 	      })
 	 
-	  } )
+	  },function(response){
+	        console.log("DID NOT CREATE");
+      })
 }
 
 	  $scope.specialType='./svg/entry.svg';

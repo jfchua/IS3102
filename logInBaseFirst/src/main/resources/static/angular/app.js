@@ -385,7 +385,7 @@ app.config(
 			.state('/deleteMaintenance',{
 				url:'/deleteMaintenance',
 				templateUrl: '/views/deleteMaintenance.html',
-				controller: 'maintenanceController',
+				controller: 'deleteMaintenanceController',
 				data:{
 					authorizedRoles: [USER_ROLES.property]
 				}

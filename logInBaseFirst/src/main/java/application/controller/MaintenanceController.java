@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -30,6 +31,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import application.domain.BookingAppl;
 import application.domain.ClientOrganisation;
 import application.domain.Event;
 import application.domain.Level;
@@ -210,9 +212,33 @@ public class MaintenanceController {
 			JSONObject jsonObject = (JSONObject) obj;
 			long id = (Long)jsonObject.get("id");
 			System.out.println(id);
-			String vendorsId = (String)jsonObject.get("vendors");
-			System.out.println(vendorsId);
-			String unitsId= (String)jsonObject.get("units");
+			
+			
+			JSONArray vendors = (JSONArray)jsonObject.get("vendors");
+			System.out.println("test111");
+            String vendorsId = "";
+            for(int i = 0; i < vendors.size(); i++){
+            	System.out.println("test1");
+            	JSONObject vendorObj = (JSONObject)vendors.get(i);		
+            	System.out.println("test2");
+				long vendorId = (Long)vendorObj.get("id");
+				System.out.println("test3");
+				vendorsId = vendorsId+vendorId + " ";
+				System.out.println(vendorsId);
+			}
+            System.out.println("test222");
+			JSONArray units = (JSONArray)jsonObject.get("units");
+            String unitsId = "";
+            for(int i = 0; i < units.size(); i++){
+            	System.out.println("test1");
+            	JSONObject unitObj = (JSONObject)units.get(i);		
+            	System.out.println("test2");
+				long unitId = (Long)unitObj.get("id");
+				System.out.println("test3");
+				unitsId = unitsId+unitId + " ";
+				System.out.println(unitsId);
+			}
+			
 			Date start = format.parse((String)jsonObject.get("start"));
 			Date end = format.parse((String)jsonObject.get("end"));
 			String description = (String)jsonObject.get("description");
@@ -255,17 +281,19 @@ public class MaintenanceController {
 				JSONArray units = (JSONArray)jsonObject.get("units");
 	            String unitsId = "";
 	            for(int i = 0; i < units.size(); i++){
-					System.out.println((Long)units.get(i));
-					unitsId = unitsId+(Long)units.get(i) + " ";
-					System.out.println(unitsId);
+	            	JSONObject unitObj = (JSONObject)units.get(i);		
+					long unitId = (Long)unitObj.get("id");
+					unitsId = unitsId+unitId + " ";
 				}
 	            JSONArray vendors = (JSONArray)jsonObject.get("vendors");
 	            String vendorsId = "";
 	            for(int i = 0; i < vendors.size(); i++){
-					System.out.println((Long)vendors.get(i));
-					vendorsId = vendorsId+(Long)vendors.get(i) + " ";
-					System.out.println(vendorsId);
+	            	JSONObject vendorObj = (JSONObject)vendors.get(i);		
+					long vendorId = (Long)vendorObj.get("id");
+					vendorsId = vendorsId+vendorId + " ";
+					
 				}
+	            
 				Date start = sdf.parse((String)jsonObject.get("start"));
 				Date end = sdf.parse((String)jsonObject.get("end"));
 				String description = (String)jsonObject.get("description");
@@ -340,6 +368,48 @@ public class MaintenanceController {
 							//return new ResponseEntity<Void>(HttpStatus.OK);
 						}
 
+	     
+	     @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+			// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
+			// Each object (building) will contain... long id, .
+				@RequestMapping(value = "/viewAllSelectedUnits/{id}",  method = RequestMethod.GET)
+				@ResponseBody
+				public String viewAllSelectedUnits(@PathVariable("id") String bId, HttpServletRequest rq) {
+				    System.out.println("start view");
+				    Principal principal = rq.getUserPrincipal();
+				    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+					if ( !eventOrg1.isPresent() ){
+						return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+					}
+					try{
+					//EventOrganizer eventOrg = eventOrg1.get();	
+					User eventOrg = eventOrg1.get();
+					ClientOrganisation client = eventOrg.getClientOrganisation();
+					System.out.println(eventOrg.getId());
+					long id = Long.parseLong(bId);
+					Set<MaintenanceSchedule> schedules=maintenanceService.getMaintenanceSchedule(client,id);
+					System.out.println("There are " + schedules.size() + " schedules under this organizer");
+					//Set<BookingAppl> bookingsWithUnits=new HashSet<BookingAppl>();
+					//Gson gson = new Gson();
+					//String json = gson.toJson(levels);
+				    //System.out.println("Returning levels with json of : " + json);
+					//return json;
+					Set<Unit> units = new HashSet<Unit>();
+					for(MaintenanceSchedule schedule:schedules){									
+						schedule.getUnit().setBookings(null);;
+						schedule.getUnit().setMaintenanceSchedule(null);
+						schedule.getUnit().setSquare(null);
+						schedule.getUnit().setLevel(null);
+						units.add(schedule.getUnit());
+						}
+					Gson gson = new Gson();
+					String json = gson.toJson(units);
+				    return json;
+					}
+					catch (Exception e){
+						return "cannot fetch";
+					}
+				}
 	
 	
 }

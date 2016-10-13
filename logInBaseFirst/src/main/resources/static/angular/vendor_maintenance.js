@@ -115,7 +115,33 @@ app.controller('updateVendorController', ['$scope', '$http','$location','$routeP
 
 }]);	
 
+//DELETE MAINTENANCE
+app.controller('deleteMaintenanceController', ['$scope',  '$timeout','$http','shareData','$location', function ($scope,  $timeout,$http ,shareData,$location) {
+	angular.element(document).ready(function () {
 
+		$scope.maintenance = shareData.getData();
+	});
+	$scope.deleteMaintenance = function(){
+		if(confirm('CONFIRM TO DELETE MAINTENANCE '+$scope.maintenance.id+'?')){
+
+			var tempObj ={id:$scope.maintenance.id};
+			$http.post("//localhost:8443/maintenance/deleteMaintenance", JSON.stringify(tempObj)).then(function(response){
+				console.log("delete the maintenance");
+				alert('MAINTENANCE IS DELETED! GOING BACK TO VIEW MAINTENANCES...');
+				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
+				$location.path("/viewMaintenance");
+			},function(response){
+				alert("DID NOT delete maintenance");
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)
+	
+		}
+		
+
+	}
+
+}])
 
 
 app.controller('addMaintenanceController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
@@ -194,7 +220,19 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 		
 		$scope.currentlySelectedUnit;
 		$scope.selectUnit = function(){
-			$scope.selectedUnits.push($scope.currentlySelectedUnit);
+			var duplicate = false;
+			var index = 0;
+		    angular.forEach($scope.selectedUnits, function() {
+		        if(duplicate==false&&$scope.currentlySelectedUnit.id == $scope.selectedUnits[index].id){
+		        	duplicate = true;
+		        }else
+		        	index = index + 1;
+		    });
+		    console.log(duplicate);
+			if(!duplicate){
+				$scope.selectedUnits.push($scope.currentlySelectedUnit);
+			}
+			
 		}
 
 		$scope.deleteUnit = function(unit){
@@ -243,7 +281,21 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 		
 		$scope.currentlySelectedVendor;
 		$scope.selectVendor = function(){
-			$scope.selectedVendors.push($scope.currentlySelectedVendor);
+			
+			var duplicate = false;
+			var index = 0;
+		    angular.forEach($scope.selectedVendors, function() {
+		        if(duplicate==false&&$scope.currentlySelectedVendor.id == $scope.selectedVendors[index].id)
+		        	duplicate = true;
+		        else
+		        	index = index + 1;
+		    });
+		    console.log(duplicate);
+			if(!duplicate){
+				$scope.selectedVendors.push($scope.currentlySelectedVendor);
+			}
+			
+			
 		}
 
 		$scope.deleteVendor = function(vendor){
@@ -254,8 +306,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 //}
 	
 	$scope.addMaintenance = function(){
-		console.log("test hailing");
-
+		
 		console.log("start adding");
 		$scope.data = {};
 
@@ -275,9 +326,10 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 			data    : dataObj //forms user object
 		});
 
-		console.log("SAVING THE BUILDING");
+		
 		send.success(function(){
-			alert('MAINTENANCE IS SAVED!');
+			alert('MAINTENANCE IS SAVED! GOING BACK TO VIEW ALL MAINTENANCES');
+			$location.path("/viewMaintenance");
 		});
 		send.error(function(){
 			alert('MAINTENANCE IS NOT SAVED BECAUSE IT IS NOT AVAILABLE!');
@@ -287,8 +339,10 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 }]);
 
 app.controller('updateMaintenanceController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
-	$scope.init= function(){
-		$scope.maintenance1 = JSON.parse(shareData.getData());
+	angular.element(document).ready(function () {
+		//VIEW MAINTENANCES
+		$scope.maintenance1 = shareData.getData();
+		console.log($scope.maintenance1);
 		$scope.maintenance1.start = new Date($scope.maintenance1.start);
 		$scope.maintenance1.end = new Date($scope.maintenance1.end);
 		var dataObj = {			
@@ -299,32 +353,76 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 				description: $scope.maintenance1.description,
 
 		};
-		$scope.maintenance = angular.copy($scope.maintenance1)
+		$scope.maintenance = angular.copy($scope.maintenance1);
 
 		var url = "https://localhost:8443/maintenance/updateMaintenance";
+		
+		//GET SELECTED UNITS
+		var id=$scope.maintenance.id;
+
+		$scope.url = "https://localhost:8443/maintenance/viewAllSelectedUnits/"+id;
+		console.log("GETTING THE EVENT INFO")
+		var getBookings = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/maintenance/viewAllSelectedUnits/' + id        
+		});
+		console.log("Getting the maintenance schedule Units using the url: " + $scope.url);
+		getBookings.success(function(response){
+			console.log('GET Selected Units SUCCESS! ' + JSON.stringify(response));
+			console.log("ID IS " + id);
+			console.log("test hailing");
+			console.log(response);
+			$scope.selectedSchedulesUnits1 = response;
+			$scope.selectedSchedulesUnits=angular.copy($scope.selectedSchedulesUnits1);
+			
+		});
+		getBookings.error(function(response){
+			$location.path("/viewMaintenance");
+			console.log('GET Selected Units FAILED! ' + JSON.stringify(response));
+		});		
+	
+	
+	//FOR SELECTING BULDING
+		console.log("start selecting venue");
+		var getBuild = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/building/viewBuildings',
+		});
+		console.log("GETTING THE BUILDINGS");
+		getBuild.success(function(response){
+			$scope.buildings = response;
+			$scope.selectedBuilding;
+			console.log("RESPONSE IS" + JSON.stringify(response));
+
+			console.log('Buildings Gotten');
+		});
+		getBuild.error(function(){
+			alert('Get building error!!!!!!!!!!');
+		});
+		$scope.currentlySelectedBuilding;
+		$scope.selectBuild = function(){
+			$scope.selectedBuilding=$scope.currentlySelectedBuilding;
+		}
+		console.log("finish selecting building");
+		
+	})
+	//DELETE VENDOR
+	$scope.deleteVendor = function(vendor){
+		var index = $scope.maintenance.vendors.indexOf(vendor);
+		$scope.maintenance.vendors.splice(index, 1);  
+	}
+
+	//DELETE SCHEDULE UNIT FROM SELECTED SCHEDULE UNIT
+	$scope.deleteSchedulesUnit = function(unit){
+		var index = $scope.selectedSchedulesUnits.indexOf(unit);
+		$scope.selectedSchedulesUnits.splice(index, 1);  
+	}
+	 //RESET SELECTED SCHEDULES UNITS TO LAST SAVED MAINTENANCE
+	$scope.resetMaintSchedules = function(){
+		$scope.maintenance = angular.copy($scope.maintenance1);
+		$scope.selectedSchedulesUnits=angular.copy($scope.selectedSchedulesUnits1);
 	}
 	
-	console.log("start selecting venue");
-	var getBuild = $http({
-		method  : 'GET',
-		url     : 'https://localhost:8443/building/viewBuildings',
-	});
-	console.log("GETTING THE BUILDINGS");
-	getBuild.success(function(response){
-		$scope.buildings = response;
-		$scope.selectedBuilding;
-		console.log("RESPONSE IS" + JSON.stringify(response));
-
-		console.log('Buildings Gotten');
-	});
-	getBuild.error(function(){
-		alert('Get building error!!!!!!!!!!');
-	});
-	$scope.currentlySelectedBuilding;
-	$scope.selectBuild = function(){
-		$scope.selectedBuilding=$scope.currentlySelectedBuilding;
-	}
-	console.log("finish selecting building");
 
 	$scope.getLevel = function(id){
 		$scope.dataToShare = [];
@@ -416,11 +514,11 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 		$scope.data = {};
 		//$scope.event = JSON.parse(shareData.getData());
 		console.log($scope.maintenance.id);
+		console.log($scope.selectedSchedulesUnits);
 		var dataObj = {				
-				id: $scope.maintenance.id,
-				units: $scope.maintenance.units,
+				id: $scope.maintenance.id,			
 				vendors: $scope.maintenance.vendors,
-				units: $scope.maintenance.units,
+				units: $scope.selectedSchedulesUnits,
 				start: $scope.maintenance.start,
 				end: $scope.maintenance.end,
 				description: $scope.maintenance.description,	
@@ -436,7 +534,8 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 
 		console.log("UPDATING THE MAINT");
 		send.success(function(){
-			alert('MAINT IS SAVED!');
+			alert('MAINT IS SAVED! GOING BACK TO VIEW MAINTNANCES');
+			$location.path("/viewAllVendors");
 		});
 		send.error(function(){
 			alert('UPDATING MAINT GOT ERROR!');
@@ -454,7 +553,8 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 
 
 app.controller('maintenanceController',['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
-	$scope.viewMaintenance = function(){
+	angular.element(document).ready(function () {
+
 		$scope.data = {};	
 		$http.get("//localhost:8443/maintenance/viewMaintenance").then(function(response){
 			$scope.maintenance_requests = response.data;
@@ -462,9 +562,8 @@ app.controller('maintenanceController',['$scope', '$http','$location','$routePar
 		},function(response){
 			alert("did not view maintenance requests");
 		}	
-		)	
-	}
-
+		)
+	});
 	$scope.getMaintenance = function(id){		
 		$scope.dataToShare = [];	  
 		$scope.shareMyData = function (myValue) {
@@ -494,7 +593,9 @@ app.controller('maintenanceController',['$scope', '$http','$location','$routePar
 	}
 
 
-
+	$scope.passMaintenance = function(maint){
+		shareData.addData(maint);
+	}
 
 	$scope.getMaintenanceById= function(){			
 		$scope.maintenance1 = JSON.parse(shareData.getData());
@@ -514,61 +615,7 @@ app.controller('maintenanceController',['$scope', '$http','$location','$routePar
 		//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
 	}
 
-	$scope.updateMaintenance = function(){
-		console.log("Start updating");
-		$scope.data = {};
-		//$scope.event = JSON.parse(shareData.getData());
-		console.log($scope.maintenance.id);
-		var dataObj = {				
-				id: $scope.maintenance.id,
-				vendors: $scope.maintenance.vendors,
-				units: $scope.maintenance.units,
-				start: $scope.maintenance.start,
-				end: $scope.maintenance.end,
-				description: $scope.maintenance.description,	
-		};		
-		//console.log(dataObj.start);
-		console.log("REACHED HERE FOR SUBMIT maintenance " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/maintenance/updateMaintenance',
-			data    : dataObj //forms user object
-		});
-
-		console.log("UPDATING THE MAINT");
-		send.success(function(){
-			alert('MAINT IS SAVED!');
-		});
-		send.error(function(){
-			alert('UPDATING MAINT GOT ERROR!');
-		});
-	};	
-
-	$scope.deleteMaintenance = function(){
-		$scope.data = {};
-		console.log("Start deleting maintenance");
-		$scope.maintenance = JSON.parse(shareData.getData());
-		console.log($scope.maintenance.id);
-		var tempObj ={id:$scope.maintenance.id};
-		$http.post("//localhost:8443/maintenance/deleteMaintenance", JSON.stringify(tempObj)).then(function(response){
-			console.log("delete the maintenance");
-		},function(response){
-			alert("DID NOT delete maintenance");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)
-
-	}
-	$scope.getMaintenanceByIdForDelete= function(){
-
-		//var buildings ={name: $scope.name, address: $scope.address};
-		//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
-		$scope.maintenance = JSON.parse(shareData.getData());
-
-		var url = "https://localhost:8443/maintenance/deleteMaintenance";
-		console.log("Maintenance DATA ARE OF THE FOLLOWING: " + $scope.maintenance);
-	}
+	
 
 
 }]);

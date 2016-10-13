@@ -163,7 +163,7 @@ public class UnitController {
 				Gson gson2 = new GsonBuilder()
 					    .setExclusionStrategies(new ExclusionStrategy() {
 					        public boolean shouldSkipClass(Class<?> clazz) {
-					            return (clazz == Level.class) || (clazz == Maintenance.class)||(clazz == BookingAppl.class);
+					            return (clazz == Level.class) || (clazz == MaintenanceSchedule.class)||(clazz == BookingAppl.class);
 					        }
 
 					        /**
@@ -267,6 +267,8 @@ public class UnitController {
 									System.out.println("UNITCONTROLLER: UNIT IS EDITED. UNIT ID:"+unitId);
 								}else{
 									System.out.println("UNITCONTROLLER: ERROR. UNIT ID:"+unitId);
+									//need to return error response
+									//return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 								}
 							
 						}
@@ -302,6 +304,7 @@ public class UnitController {
 						
 				}//end for 
 				System.out.println("Test: 6");
+				//this part maybe can delete already
 				if(unitService.deleteUnitsFromLevel(unitIds,levelId)==false){
 					System.out.println("Test 61 error: cannot delete units");
 					return new ResponseEntity<Void>(HttpStatus.CONFLICT);

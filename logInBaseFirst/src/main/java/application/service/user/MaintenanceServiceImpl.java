@@ -100,11 +100,13 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 		if(isAvailable){
 			 Set<Vendor> vendorList = new HashSet<Vendor>();
 			for(int i = 0; i<vendors.length; i ++){
-	        Optional<Vendor> ven1 = vendorRepository.getVendorById(Long.valueOf(vendors[i]));
+				long vId=Long.valueOf(vendors[i]);
+	        Optional<Vendor> ven1 = vendorRepository.getVendorById(vId);
 				if(ven1.isPresent()){
-				System.out.println(ven1.get().getName());
-				  if(client.getVendors().contains(ven1.get()))
-	        	  vendorList.add(ven1.get());
+					Vendor vendor=ven1.get();
+				System.out.println(vendor.getName());
+				  if(client.getVendors().contains(vendor))
+	        	  vendorList.add(vendor);
 				  else
 					  return false;
 				}
