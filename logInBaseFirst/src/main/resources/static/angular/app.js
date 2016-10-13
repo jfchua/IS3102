@@ -499,7 +499,7 @@ app.config(
 			.state('/viewToBeApprovedEvents',{
 				url:'/viewToBeApprovedEvents',
 				templateUrl: '/views/viewToBeApprovedEvents.html',
-				controller: 'eventController',
+				controller: 'viewToBeApprovedEventController',
 				data:{
 					authorizedRoles:[USER_ROLES.event]
 				}
@@ -523,7 +523,7 @@ app.config(
 			.state('/updateEventStatus',{
 				url:'/updateEventStatus',
 				templateUrl: '/views/updateEventStatus.html',
-				controller: 'eventController',
+				controller: 'viewEventDetailsController',
 				data:{
 					authorizedRoles:[USER_ROLES.event]
 				}
@@ -531,7 +531,7 @@ app.config(
 			.state('/deleteEvent',{
 				url:'/deleteEvent',
 				templateUrl: '/views/deleteEvent.html',
-				controller: 'eventController',
+				controller: 'deleteEventController',
 				data:{
 					authorizedRoles:[USER_ROLES.event]
 				}
@@ -547,7 +547,7 @@ app.config(
 			.state('/viewApprovedEvents',{
 				url:'/viewApprovedEvents',
 				templateUrl: '/views/viewApprovedEvents.html',
-				controller: 'eventController',
+				controller: 'viewApprovedEventController',
 				data:{
 					authorizedRoles:[USER_ROLES.event]
 				}
@@ -555,7 +555,7 @@ app.config(
 			.state('/viewEventDetails',{
 				url:'/viewEventDetails',
 				templateUrl: '/views/viewEventDetails.html',
-				controller: 'eventController',
+				controller: 'viewEventDetailsController',
 				data:{
 					authorizedRoles:[USER_ROLES.event]
 				}
@@ -563,7 +563,7 @@ app.config(
 			.state('/viewEventDetailsApproved',{
 				url:'/viewEventDetailsApproved',
 				templateUrl: '/views/viewEventDetailsApproved.html',
-				controller: 'eventController',
+				controller: 'viewEventDetailsController',
 				data:{
 					authorizedRoles:[USER_ROLES.event]
 				}
@@ -571,7 +571,7 @@ app.config(
 			.state('/viewEventOrganizers',{
 				url:'/viewEventOrganizers',
 				templateUrl: '/views/viewEventOrganizers.html',
-				controller: 'eventController',
+				controller: 'viewEventOrganiserController',
 				data:{
 					authorizedRoles:[USER_ROLES.event]
 				}
@@ -2079,26 +2079,6 @@ $scope.deleteBooking = function(id){
 
 
 //=======End of test===========
-
-
-
-
-
-
-app.controller('notificationController', ['$scope', '$http','shareData', function ($scope, $http, shareData) {		
-
-	$scope.viewNotifications = function(){
-		$scope.data = {};
-		$scope.notifications = JSON.parse(shareData.getData()); //gets the response data from building controller 
-		//console.log($scope.levels.length);			
-		//var url = "https://localhost:8443/event/viewLevels";
-
-	}
-
-}]);
-
-
-
 
 
 //Unit Plan of Event used by event organiser

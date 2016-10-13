@@ -311,6 +311,9 @@ import application.service.user.UserService;
 												//eventExternalService.updateEventOrganizerForDelete(eventId);
 												boolean bl=eventService.deleteEvent(client, eventId);
 												System.out.println(bl);	
+												if(!bl){
+													return new ResponseEntity<Void>(HttpStatus.CONFLICT);//added by hailing need test
+												}
 											}
 											catch (Exception e){
 												return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -454,6 +457,47 @@ import application.service.user.UserService;
 												}
 												//return new ResponseEntity<Void>(HttpStatus.OK);
 											}
+		                                 
+		                              // Call this method using $http.get and you will get a JSON format containing an array of event objects.
+		                 				// Each object (building) will contain... long id, collection of levels.
+		                                 	@PreAuthorize("hasAnyAuthority('ROLE_EVENT')")	
+		                                 	@RequestMapping(value = "/getNotifications/{id}", method = RequestMethod.GET)
+		                 					@ResponseBody
+		                 					public String getNotifications(@PathVariable("id") String userId, HttpServletRequest rq) {
+		                 						try{
+		                 						
+		                 							long id = Long.parseLong(userId);
+		                 							User eventOrg= userService.getUserById(id).get();
+		                 							Set<Message> msg = eventOrg.getMessagesReceived();
+		                 							System.out.println(msg.size());
+		                 							Gson gson2 = new GsonBuilder()
+		                 									.setExclusionStrategies(new ExclusionStrategy() {
+		                 										public boolean shouldSkipClass(Class<?> clazz) {
+		                 											return (clazz == User.class);
+		                 										}
+		                 										/**
+		                 										 * Custom field exclusion goes here
+		                 										 */
+		                 										@Override
+		                 										public boolean shouldSkipField(FieldAttributes f) {
+		                 											//TODO Auto-generated method stub
+		                 											return false;
+		                 										}
+		                 									})
+		                 									/**
+		                 									 * Use serializeNulls method if you want To serialize null values 
+		                 									 * By default, Gson does not serialize null values
+		                 									 */
+		                 									.serializeNulls()
+		                 									.create();
+		                 							String json = gson2.toJson(msg);
+		                 							System.out.println("NOTIFICATIONS ARE " + json);
+		                 							return json;
+		                 						}
+		                 						catch (Exception e){
+		                 							return "cannot fetch";
+		                 						}
+		                 					}
 									
 				
 	}

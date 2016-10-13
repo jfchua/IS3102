@@ -85,7 +85,7 @@
         <div class="content" >
         <h1>View All Events</h1>
         <p class="tagline">List of all events</p>
-        <button ng-click="viewEvents()">Display</button>
+      
         <button><a href="/#/viewToBeApprovedEvents">View To Be Approved Events</a></button>
          <button><a href="/#/viewApprovedEvents">View Approved Events</a></button>
           <button><a href="/#/viewEventOrganizers">View Event Organizers</a></button>
@@ -104,7 +104,7 @@
          <td>{{ x.event_title }}</td>
          <td>{{ x.event_approval_status }}</td>
          <!--<td><a ng-model="myValue" href="/#/viewEventDetails" ng-click="getEvent(x.id)">View Details</a></td>-->
-         <td><a ng-model="myValue" href="/#/deleteEvent" ng-click="getEvent(x.id)">Cancel Event</a></td>
+         <td><a ng-model="myValue" href="/#/deleteEvent" ng-click="passEvent(x)">Cancel Event</a></td>
          </tr>
          </tbody>
       </table>
