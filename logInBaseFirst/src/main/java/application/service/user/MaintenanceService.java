@@ -30,4 +30,5 @@ public interface MaintenanceService {
 	boolean checkUnit(ClientOrganisation client, long unitId);
 	
 	Set<MaintenanceSchedule> getMaintenanceSchedule(ClientOrganisation client, long id);
+	
 }

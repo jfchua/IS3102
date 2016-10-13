@@ -362,8 +362,8 @@ app.controller('addEController', ['$scope', '$http','$location','$routeParams','
 			
 			var duplicate = false;
 			var index = 0;
-		    angular.forEach($scope.selectedBookingsUnits, function() {
-		        if($scope.currentlySelectedUnit.id == $scope.selectedBookingsUnits[index].id)
+		    angular.forEach($scope.selectedUnits, function() {
+		        if(duplicate==false&&$scope.currentlySelectedUnit.id == $scope.selectedUnits[index].id)
 		        	duplicate = true;
 		        else
 		        	index = index + 1;
@@ -606,7 +606,7 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 			var duplicate = false;
 			var index = 0;
 		    angular.forEach($scope.selectedBookingsUnits, function() {
-		        if($scope.currentlySelectedUnit.id == $scope.selectedBookingsUnits[index].id)
+		        if(duplicate==false&&$scope.currentlySelectedUnit.id == $scope.selectedBookingsUnits[index].id)
 		        	duplicate = true;
 		        else
 		        	index = index + 1;

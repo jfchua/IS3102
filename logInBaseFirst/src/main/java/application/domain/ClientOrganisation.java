@@ -37,10 +37,12 @@ public class ClientOrganisation {
 	@ElementCollection //
 	@JsonIgnore
 	private List<String> systemSubscriptions;
-
+	
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Building> buildings = new HashSet<Building>();
 	
+
+
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<SpecialRate> specialRates = new HashSet<SpecialRate>();
 
@@ -160,6 +162,9 @@ public class ClientOrganisation {
 	public void setIcons(Set<Icon> icons) {
 		this.icons = icons;
 	}
+
+
+
 
 
 

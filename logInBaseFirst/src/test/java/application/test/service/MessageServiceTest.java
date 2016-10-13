@@ -48,7 +48,7 @@ public class MessageServiceTest extends AbstractTest {
 	public void testSendMessage(){
 		User user1 = userService.getUserById((long)2).get();
 		User user2 = userService.getUserById((long)10).get();
-		messageService.sendMessage(user1, user2, "testmsg", "testmsg");
+		messageService.sendMessage(user1, user2, "testmsgsubj", "testmsg");
 		Collection<Message> t = messageService.getMessages(user2);
 		Assert.assertNotNull("Getting messages should not be null as already send via test case", t);		
 	}
@@ -62,6 +62,6 @@ public class MessageServiceTest extends AbstractTest {
 			messageService.deleteMessage(m);
 		}
 		t = messageService.getMessages(user);
-		Assert.assertEquals("Getting messages should not be null as already inserted via sql", 0,t.size());		
+		Assert.assertEquals("Getting messages should be null as already deleted", 0,t.size());		
 	}
 }
