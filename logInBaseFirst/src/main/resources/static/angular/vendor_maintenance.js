@@ -519,8 +519,8 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 				id: $scope.maintenance.id,			
 				vendors: $scope.maintenance.vendors,
 				units: $scope.selectedSchedulesUnits,
-				start: $scope.maintenance.start,
-				end: $scope.maintenance.end,
+				start: ($scope.maintenance.start).toString(),
+				end:( $scope.maintenance.end).toString(),
 				description: $scope.maintenance.description,	
 		};		
 		//console.log(dataObj.start);
@@ -535,7 +535,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 		console.log("UPDATING THE MAINT");
 		send.success(function(){
 			alert('MAINT IS SAVED! GOING BACK TO VIEW MAINTNANCES');
-			$location.path("/viewAllVendors");
+			$location.path("/viewMaintenance");
 		});
 		send.error(function(){
 			alert('UPDATING MAINT GOT ERROR!');

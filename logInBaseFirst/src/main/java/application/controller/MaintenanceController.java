@@ -215,32 +215,23 @@ public class MaintenanceController {
 			
 			
 			JSONArray vendors = (JSONArray)jsonObject.get("vendors");
-			System.out.println("test111");
             String vendorsId = "";
             for(int i = 0; i < vendors.size(); i++){
-            	System.out.println("test1");
             	JSONObject vendorObj = (JSONObject)vendors.get(i);		
-            	System.out.println("test2");
 				long vendorId = (Long)vendorObj.get("id");
-				System.out.println("test3");
 				vendorsId = vendorsId+vendorId + " ";
 				System.out.println(vendorsId);
 			}
-            System.out.println("test222");
 			JSONArray units = (JSONArray)jsonObject.get("units");
             String unitsId = "";
             for(int i = 0; i < units.size(); i++){
-            	System.out.println("test1");
             	JSONObject unitObj = (JSONObject)units.get(i);		
-            	System.out.println("test2");
 				long unitId = (Long)unitObj.get("id");
-				System.out.println("test3");
 				unitsId = unitsId+unitId + " ";
 				System.out.println(unitsId);
 			}
-			
 			Date start = format.parse((String)jsonObject.get("start"));
-			Date end = format.parse((String)jsonObject.get("end"));
+			Date end = format.parse((String)jsonObject.get("end"));			
 			String description = (String)jsonObject.get("description");
 			System.out.println("end of controller");
 			boolean bl = maintenanceService.editMaintenance(client, id, unitsId, vendorsId, start, end, description);
