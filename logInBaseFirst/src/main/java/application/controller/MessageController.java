@@ -52,6 +52,7 @@ import application.domain.PasswordResetToken;
 import application.domain.SendMessageForm;
 import application.domain.User;
 import application.domain.validator.SendMessageFormValidator;
+import application.exception.UserNotFoundException;
 import application.repository.MessageRepository;
 import application.service.user.MessageService;
 import application.service.user.UserService;
@@ -143,7 +144,7 @@ public class MessageController {
 
 	@RequestMapping(value = "/user/notifications/findAllNotifications", method = RequestMethod.GET)
 	@ResponseBody
-	public String getAllMessages(HttpServletRequest rq) {
+	public String getAllMessages(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		System.out.println("THIS PLACE");
 		System.out.println(principal.toString());

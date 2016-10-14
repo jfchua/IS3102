@@ -45,6 +45,8 @@ import com.google.gson.Gson;
 import application.domain.ClientOrganisation;
 import application.domain.PasswordResetToken;
 import application.domain.User;
+import application.exception.PasswordResetTokenNotFoundException;
+import application.exception.UserNotFoundException;
 import application.repository.ClientOrganisationRepository;
 import application.repository.PasswordResetTokenRepository;
 import application.service.user.EmailService;
@@ -130,7 +132,7 @@ public class LoginController {
 	}*/
 
 	@RequestMapping(value = "/user/reset", method = RequestMethod.POST)
-	public ResponseEntity<Void> resetPassword(@RequestBody String userEmail) throws URISyntaxException {
+	public ResponseEntity<Void> resetPassword(@RequestBody String userEmail) throws URISyntaxException, UserNotFoundException {
 		System.out.println("Received Reset Password Request from  " + userEmail);
 
 		if (!userService.getUserByEmail(userEmail).isPresent() ) {
@@ -154,7 +156,7 @@ public class LoginController {
 
 	@RequestMapping(value = "/user/resetChangePassword", method = RequestMethod.POST, headers = {"Content-type=application/json"})
 	@ResponseBody
-	public ResponseEntity<Void> resetChangePassword(@RequestBody String info) throws URISyntaxException, IOException, ParseException {
+	public ResponseEntity<Void> resetChangePassword(@RequestBody String info) throws URISyntaxException, IOException, ParseException, PasswordResetTokenNotFoundException, UserNotFoundException {
 		//	JSONParser parser = new JSONParser();
 		Object obj = parser.parse(info);
 		JSONObject jsonObject = (JSONObject) obj;
@@ -304,7 +306,7 @@ public class LoginController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/receiveLogoFile")
-	public void upload(@RequestParam("file") MultipartFile file, HttpServletRequest request ) throws IOException {
+	public void upload(@RequestParam("file") MultipartFile file, HttpServletRequest request ) throws IOException, UserNotFoundException {
 
 		Principal p = request.getUserPrincipal();
 		User curUser = userService.getUserByEmail(p.getName()).get();
@@ -356,7 +358,7 @@ public class LoginController {
 
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@RequestMapping(value = "/downloadAuditLog", method = RequestMethod.POST, produces = "application/pdf")
-	public void generateAuditReport(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException {
+	public void generateAuditReport(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
 		System.out.println("Enter");
 		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/AuditLog.jasper");
 		response.setContentType("application/pdf");

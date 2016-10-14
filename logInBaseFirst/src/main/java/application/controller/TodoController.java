@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 
 import application.domain.ToDoTask;
 import application.domain.User;
+import application.exception.UserNotFoundException;
 import application.service.user.ToDoTaskService;
 import application.service.user.UserService;
 
@@ -52,7 +53,7 @@ public class TodoController {
 // Each object (toDoTask) will contain... long id, String task.
 	@RequestMapping(value = "/getToDoList", method = RequestMethod.GET)
 	@ResponseBody
-	public String getToDoList(HttpServletRequest rq) {
+	public String getToDoList(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 		Collection<ToDoTask> t = toDoTaskService.getToDoList(currUser);

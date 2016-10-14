@@ -31,6 +31,7 @@ import application.service.user.BuildingService;
 import application.domain.Level;
 import application.domain.Unit;
 import application.domain.User;
+import application.exception.UserNotFoundException;
 import application.service.user.LevelService;
 import application.service.user.UserService;
 
@@ -56,7 +57,7 @@ public class LevelController {
 		// Each object (building) will contain... long id, .
 			@RequestMapping(value = "/viewLevels/{id}",  method = RequestMethod.GET)
 			@ResponseBody
-			public String viewLevels(@PathVariable("id") String buildingId, HttpServletRequest rq) {
+			public String viewLevels(@PathVariable("id") String buildingId, HttpServletRequest rq) throws UserNotFoundException {
 				Principal principal = rq.getUserPrincipal();
 				Optional<User> usr = userService.getUserByEmail(principal.getName());
 				if ( !usr.isPresent() ){
@@ -115,7 +116,7 @@ public class LevelController {
 			// Each object (building) will contain... long id, .
 				@RequestMapping(value = "/getAllLevels/{id}",  method = RequestMethod.GET)
 				@ResponseBody
-				public String getAllLevels(@PathVariable("id") String buildingId, HttpServletRequest rq) {
+				public String getAllLevels(@PathVariable("id") String buildingId, HttpServletRequest rq) throws UserNotFoundException {
 					Principal principal = rq.getUserPrincipal();
 					Optional<User> usr = userService.getUserByEmail(principal.getName());
 					if ( !usr.isPresent() ){
@@ -174,7 +175,7 @@ public class LevelController {
 			// Each object (building) will contain... long id, collection of levels.
 				@RequestMapping(value = "/getLevel/{id}", method = RequestMethod.GET)
 				@ResponseBody
-				public String getLevel(@PathVariable("id") String levelId, HttpServletRequest rq) {
+				public String getLevel(@PathVariable("id") String levelId, HttpServletRequest rq) throws UserNotFoundException {
 					Principal principal = rq.getUserPrincipal();
 					Optional<User> usr = userService.getUserByEmail(principal.getName());
 					if ( !usr.isPresent() ){
@@ -225,7 +226,7 @@ public class LevelController {
 			@RequestMapping(value = "/addLevel", method = RequestMethod.POST)
 			@ResponseBody
 			public ResponseEntity<Void> addLevel(@RequestBody String levelJSON,
-					HttpServletRequest rq) {
+					HttpServletRequest rq) throws UserNotFoundException {
 				Principal principal = rq.getUserPrincipal();
 				Optional<User> usr = userService.getUserByEmail(principal.getName());
 				if ( !usr.isPresent() ){
@@ -268,7 +269,7 @@ public class LevelController {
 			// Call $http.post(URL,(String)id);
 			@RequestMapping(value = "/deleteLevel", method = RequestMethod.POST)
 			@ResponseBody
-			public ResponseEntity<Void> deleteLevel(@RequestBody String levelJSON, HttpServletRequest rq) {
+			public ResponseEntity<Void> deleteLevel(@RequestBody String levelJSON, HttpServletRequest rq) throws UserNotFoundException {
 				Principal principal = rq.getUserPrincipal();
 				Optional<User> usr = userService.getUserByEmail(principal.getName());
 				if ( !usr.isPresent() ){
@@ -300,7 +301,7 @@ public class LevelController {
 			//Call $httpPost(Url,JSONData);
 			@RequestMapping(value = "/updateLevel", method = RequestMethod.POST)
 			@ResponseBody
-			public ResponseEntity<Void> updateLevel(@RequestBody String levelJSON, HttpServletRequest rq) {
+			public ResponseEntity<Void> updateLevel(@RequestBody String levelJSON, HttpServletRequest rq) throws UserNotFoundException {
 				Principal principal = rq.getUserPrincipal();
 				Optional<User> usr = userService.getUserByEmail(principal.getName());
 				if ( !usr.isPresent() ){
@@ -335,7 +336,7 @@ public class LevelController {
 			//input level id x as {id:x}; output building id y as {buildingId:y}
 			@RequestMapping(value = "/getBuildingId",  method = RequestMethod.POST)//hailing
 			@ResponseBody
-			public String getBuildingId(@RequestBody String level,HttpServletRequest rq) {
+			public String getBuildingId(@RequestBody String level,HttpServletRequest rq) throws UserNotFoundException {
 				Principal principal = rq.getUserPrincipal();
 				Optional<User> usr = userService.getUserByEmail(principal.getName());
 				if ( !usr.isPresent() ){
@@ -371,7 +372,7 @@ public class LevelController {
 			//input level id x as {id:x}; output building y as 
 			@RequestMapping(value = "/getBuilding",  method = RequestMethod.POST)//hailing
 			@ResponseBody
-			public ResponseEntity<Building> getBuilding(@RequestBody String level,HttpServletRequest rq) {
+			public ResponseEntity<Building> getBuilding(@RequestBody String level,HttpServletRequest rq) throws UserNotFoundException {
 				Principal principal = rq.getUserPrincipal();
 				Optional<User> usr = userService.getUserByEmail(principal.getName());
 				if ( !usr.isPresent() ){

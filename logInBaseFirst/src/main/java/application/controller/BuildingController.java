@@ -30,6 +30,8 @@ import application.domain.Building;
 import application.domain.ClientOrganisation;
 import application.domain.Level;
 import application.domain.User;
+import application.exception.InvalidPostalCodeException;
+import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
 import application.service.user.BuildingService;
 import application.service.user.ClientOrganisationService;
@@ -62,7 +64,7 @@ public class BuildingController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY', 'ROLE_EXTEVE')")
 	@RequestMapping(value = "/viewBuildings", method = RequestMethod.GET)
 	@ResponseBody
-	public String viewBuildings(HttpServletRequest rq) {
+	public String viewBuildings(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -117,7 +119,7 @@ public class BuildingController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/getBuilding/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getBuilding(@PathVariable("id") String buildingId, HttpServletRequest rq) {
+	public String getBuilding(@PathVariable("id") String buildingId, HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -169,7 +171,7 @@ public class BuildingController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/addBuilding", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> addBuilding(@RequestBody String buildingJSON,HttpServletRequest rq) {
+	public ResponseEntity<Void> addBuilding(@RequestBody String buildingJSON,HttpServletRequest rq) throws UserNotFoundException,InvalidPostalCodeException {
 		System.out.println("startADD");
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
@@ -215,7 +217,7 @@ public class BuildingController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/deleteBuilding", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteBuilding(@RequestBody String buildingId,HttpServletRequest rq) {
+	public ResponseEntity<Void> deleteBuilding(@RequestBody String buildingId,HttpServletRequest rq) throws UserNotFoundException {
 
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
@@ -254,7 +256,7 @@ public class BuildingController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/updateBuilding", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> updateBuilding(@RequestBody String buildingId,HttpServletRequest rq) {
+	public ResponseEntity<Void> updateBuilding(@RequestBody String buildingId,HttpServletRequest rq) throws UserNotFoundException {
 		System.out.println("start1111");
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());

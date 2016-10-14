@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import application.domain.Building;
 import application.domain.ClientOrganisation;
 import application.exception.ClientOrganisationNotFoundException;
+import application.exception.InvalidPostalCodeException;
 import application.repository.UserRepository;
 import application.service.user.BuildingService;
 import application.service.user.ClientOrganisationService;
@@ -36,11 +37,21 @@ public class BuildingServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testCreate() throws ClientOrganisationNotFoundException{
+	public void testCreate() throws ClientOrganisationNotFoundException, InvalidPostalCodeException{
 		ClientOrganisation clientOrg = clientOrgService.getClientOrganisationByName("Suntec");
-		buildingService.create(clientOrg, "name", "address", "999", "city", 2, "filepath");
-
+		boolean result = buildingService.create(clientOrg, "name", "address", "999", "city", 2, "filepath");
+		Assert.assertTrue(result);
 		Assert.assertNotNull("Getting users should not be null as already inserted via sql", buildingService.getAllBuildings(clientOrg));
+		//Assert.assertEquals("expected no. of users is 12", 12, users.size());
+
+	}
+	
+	@Test(expected=InvalidPostalCodeException.class)
+	public void testCreateInvalidPostal() throws ClientOrganisationNotFoundException, InvalidPostalCodeException{
+		ClientOrganisation clientOrg = clientOrgService.getClientOrganisationByName("Suntec");
+		boolean result = buildingService.create(clientOrg, "buildingname", "buildingaddress", "123456789", "buildingcity", 5, "buildingfilepath");
+		Assert.assertFalse(result);
+		//Assert.assertNotNull("Getting users should not be null as already inserted via sql", buildingService.getAllBuildings(clientOrg));
 		//Assert.assertEquals("expected no. of users is 12", 12, users.size());
 
 	}

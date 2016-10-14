@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import application.domain.CurrentUser;
 import application.domain.User;
+import application.exception.UserNotFoundException;
 import application.service.user.UserService;
 
 //Where is the method used?
@@ -31,10 +32,16 @@ public class CurrentUserDetailsService implements UserDetailsService {
     public CurrentUser loadUserByUsername(String email) throws UsernameNotFoundException {
         LOGGER.debug("Authenticating user with email={}", email.replaceFirst("@.*", "@***"));
         System.out.println("Authenticating user with email="+email);
-        User user = userService.getUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with email=%s was not found", email)));
+        Optional<User> user = null;
+		try {
+			user = userService.getUserByEmail(email);
+			        //.orElseThrow(() -> new UserNotFoundException(String.format("User with email=%s was not found", email)));
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			throw new UsernameNotFoundException("User of email " + email + " was not found");
+		}
         System.out.println("Found user with email of : " + email);
-        return new CurrentUser(user);
+        return new CurrentUser(user.get());
     }
 
 }

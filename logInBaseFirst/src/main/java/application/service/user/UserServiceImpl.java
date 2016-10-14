@@ -18,6 +18,9 @@ import application.domain.ClientOrganisation;
 import application.domain.PasswordResetToken;
 import application.domain.Role;
 import application.domain.User;
+import application.exception.EmailAlreadyExistsException;
+import application.exception.PasswordResetTokenNotFoundException;
+import application.exception.UserNotFoundException;
 import application.repository.ClientOrganisationRepository;
 import application.repository.PasswordResetTokenRepository;
 import application.repository.UserRepository;
@@ -45,15 +48,23 @@ public class UserServiceImpl implements UserService {
     }*/
 
 	@Override
-	public Optional<User> getUserById(long id) {
+	public Optional<User> getUserById(long id) throws UserNotFoundException {
 		LOGGER.debug("Getting user={}", id);
-		return Optional.ofNullable(userRepository.findOne(id));
+		Optional<User> us =  Optional.ofNullable(userRepository.findOne(id));
+		if ( !us.isPresent() ){
+			throw new UserNotFoundException("User with email " + id + " was not found" );
+		}
+		return us;
 	}
 
 	@Override
-	public Optional<User> getUserByEmail(String email) {
+	public Optional<User> getUserByEmail(String email)  throws UserNotFoundException {
 		LOGGER.debug("Getting user by email={}", email.replaceFirst("@.*", "@***"));
-		return userRepository.findOneByEmail(email);
+		Optional<User> us = userRepository.findOneByEmail(email);
+		if ( !us.isPresent() ){
+			throw new UserNotFoundException("User with email " + email + " was not found" );
+		}
+		return us;
 	}
 
 	@Override
@@ -71,24 +82,44 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}*/
 
-	public PasswordResetToken getPasswordResetToken(String token){
-
-		return passwordResetTokenRepository.getTokenByString(token); 	
+	public PasswordResetToken getPasswordResetToken(String token) throws PasswordResetTokenNotFoundException{
+		try{
+			PasswordResetToken p = passwordResetTokenRepository.getTokenByString(token); 	
+			if ( p == null ){
+				throw new PasswordResetTokenNotFoundException("Invalid token!");
+			}
+			return p;
+		}
+		catch ( Exception e ){
+			throw e;
+		}
+		
 
 	}
 
-	public void createPasswordResetTokenForUser(User user, String token){
+	public boolean createPasswordResetTokenForUser(User user, String token) throws UserNotFoundException{
+		if ( user == null ){
+			throw new UserNotFoundException("User to create the reset token for was not found");
+		}
+		try{
 		PasswordResetToken prt = new PasswordResetToken();
 		prt.setUser(user);
 		prt.setToken(token);
 		prt.setExpiry();
-		passwordResetTokenRepository.save(prt);			
+		passwordResetTokenRepository.save(prt);		
+		return true;
+		}
+		catch ( Exception e){
+			throw e;
+		}
 	}
 
-	public void changePassword(long id, String password){
+	public boolean changePassword(long id, String password) throws UserNotFoundException{
 
 		Optional<User> user = getUserById(id);
-		System.out.println("LINE 84 AT USER SERVICE IMPL");
+		if ( !user.isPresent() ){
+			throw new UserNotFoundException("User with id " + id + " was not found");
+		}
 		if (user.isPresent()){
 			try{
 				System.out.println("Setting user with ID" + user.get().getId() + "to password " + password);
@@ -106,11 +137,20 @@ public class UserServiceImpl implements UserService {
 
 		}
 		System.out.println("LINE 90 AT USER SERVICE IMPL");
+		return true;
 
 	}
 
-	public boolean createNewUser(ClientOrganisation clientOrg, String name, String userEmail, Set<Role> roles){
-
+	public boolean createNewUser(ClientOrganisation clientOrg, String name, String userEmail, Set<Role> roles) throws EmailAlreadyExistsException, UserNotFoundException{
+		
+		try{
+			if ( this.getUserByEmail(userEmail).isPresent() ){
+				//User already exists
+				throw new EmailAlreadyExistsException("User with email " + userEmail + " already exists");
+			}
+		}
+		catch ( UserNotFoundException e ){			
+		}
 		try{
 			//CREATE USER START
 			User user = new User();
@@ -153,8 +193,10 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public void editUser(String name, User user, Set<Role> roles) {
-
+	public boolean editUser(String name, User user, Set<Role> roles) throws UserNotFoundException {
+		if ( user == null ){
+			throw new UserNotFoundException("No user was found");
+		}
 		try{
 			user.setName(name);
 			userRepository.saveAndFlush(user);
@@ -164,8 +206,9 @@ public class UserServiceImpl implements UserService {
 
 		}
 		catch(Exception e){
-
+			throw e;
 		}
+		return true;
 
 	}
 
@@ -177,14 +220,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteUser(User us){
+	public boolean deleteUser(User us) throws UserNotFoundException{
+		if ( us == null ){
+			throw new UserNotFoundException("User does not exist");
+		}
 		try {
 			userRepository.delete(us.getId());
-
 		}
 		catch ( Exception e){
-			System.err.println("Error at anything"  + e.toString());
+			System.err.println("Error at deleting user"  + e.toString());
 		}
+		return true;
 
 	}
 

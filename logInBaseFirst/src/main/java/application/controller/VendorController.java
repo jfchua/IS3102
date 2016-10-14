@@ -31,6 +31,7 @@ import com.google.gson.GsonBuilder;
 import application.domain.ClientOrganisation;
 import application.domain.User;
 import application.domain.Vendor;
+import application.exception.UserNotFoundException;
 import application.repository.VendorRepository;
 import application.service.user.ClientOrganisationService;
 import application.service.user.UserService;
@@ -89,7 +90,7 @@ public class VendorController {
 					@RequestMapping(value = "/addVendor", method = RequestMethod.POST)
 					@ResponseBody
 					public ResponseEntity<Void> addVendor(@RequestBody String vendorJSON,
-							HttpServletRequest rq) {
+							HttpServletRequest rq) throws UserNotFoundException {
 						System.out.println("start adding");
 						Principal principal = rq.getUserPrincipal();
 						Optional<User> usr = userService.getUserByEmail(principal.getName());
@@ -128,7 +129,7 @@ public class VendorController {
 	// Each object (building) will contain... long id, .
 		@RequestMapping(value = "/viewAllVendors",  method = RequestMethod.GET)
 		@ResponseBody
-		public String viewAllVendors(HttpServletRequest rq) {
+		public String viewAllVendors(HttpServletRequest rq) throws UserNotFoundException {
 			Principal principal = rq.getUserPrincipal();
 			Optional<User> usr = userService.getUserByEmail(principal.getName());
 			if ( !usr.isPresent() ){
@@ -155,7 +156,7 @@ public class VendorController {
 		// Call $http.post(URL,(String)id);
 		@RequestMapping(value = "/deleteVendor", method = RequestMethod.POST)
 		@ResponseBody
-		public ResponseEntity<Void> deleteVendor(@RequestBody String vendorJSON, HttpServletRequest rq) {
+		public ResponseEntity<Void> deleteVendor(@RequestBody String vendorJSON, HttpServletRequest rq) throws UserNotFoundException {
 			Principal principal = rq.getUserPrincipal();
 			Optional<User> usr = userService.getUserByEmail(principal.getName());
 			if ( !usr.isPresent() ){
@@ -183,7 +184,7 @@ public class VendorController {
 		//Call $httpPost(Url,JSONData);
 		@RequestMapping(value = "/updateVendor", method = RequestMethod.POST)
 		@ResponseBody
-		public ResponseEntity<Void> updateVendor(@RequestBody String vendorJSON, HttpServletRequest rq) {
+		public ResponseEntity<Void> updateVendor(@RequestBody String vendorJSON, HttpServletRequest rq) throws UserNotFoundException {
 			Principal principal = rq.getUserPrincipal();
 			Optional<User> usr = userService.getUserByEmail(principal.getName());
 			if ( !usr.isPresent() ){

@@ -17,6 +17,7 @@ import application.domain.User;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.OrganisationNameAlreadyExistsException;
+import application.exception.UserNotFoundException;
 import application.service.user.ClientOrganisationService;
 import application.service.user.EmailService;
 import application.test.AbstractTest;
@@ -35,7 +36,7 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 			clientOrganisationService.createNewClientOrganisation("deletetestname123", "testemail@testemail", subs, "testadminname");
 		}
 		catch (Exception e){
-			System.out.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT" + e.getMessage());
+			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -67,7 +68,7 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	}
 	
 	@Test
-	public void testCreateNewClientOrganisation() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException {
+	public void testCreateNewClientOrganisation() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException {
 		List<String> subs = new ArrayList<String>();
 		System.err.println("before createnewclientorg");
 		boolean result = clientOrganisationService.createNewClientOrganisation("testname123", "testemail@test", subs, "testadminname");
@@ -76,7 +77,7 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	}
 	
 	@Test(expected=EmailAlreadyExistsException.class)
-	public void testCreateNewClientOrganisationUserAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException {
+	public void testCreateNewClientOrganisationUserAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException {
 		List<String> subs = new ArrayList<String>();
 		System.err.println("before createnewclientorg");
 		boolean result = clientOrganisationService.createNewClientOrganisation("testname123", "property@localhost", subs, "testadminname");
@@ -85,7 +86,7 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	}
 	
 	@Test(expected=OrganisationNameAlreadyExistsException.class)
-	public void testCreateNewClientOrganisationOrgNameAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException {
+	public void testCreateNewClientOrganisationOrgNameAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException {
 		List<String> subs = new ArrayList<String>();
 		System.err.println("before createnewclientorg");
 		boolean result = clientOrganisationService.createNewClientOrganisation("Expo", "testy@localhost", subs, "testname");

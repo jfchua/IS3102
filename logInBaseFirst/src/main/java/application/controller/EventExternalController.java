@@ -33,6 +33,7 @@ import com.google.gson.GsonBuilder;
 
 import application.domain.*;
 import application.domain.validator.EventCreateFormValidator;
+import application.exception.UserNotFoundException;
 import application.service.user.EventExternalService;
 import application.service.user.EventOrganizerService;
 import application.service.user.UserService;
@@ -64,7 +65,7 @@ public class EventExternalController {
 	@RequestMapping(value = "/addEvent", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> addEvent(@RequestBody String eventJSON,
-			HttpServletRequest rq) {
+			HttpServletRequest rq) throws UserNotFoundException {
 		System.out.println("start adding");
 		DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
 		//DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -126,7 +127,7 @@ public class EventExternalController {
 		@RequestMapping(value = "/checkAvailability", method = RequestMethod.POST)
 		@ResponseBody
 		public ResponseEntity<Void> checkAvailability(@RequestBody String eventJSON,
-				HttpServletRequest rq) {
+				HttpServletRequest rq) throws UserNotFoundException {
 			System.out.println("start check availability for events");
 			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
 			Principal principal = rq.getUserPrincipal();
@@ -171,7 +172,7 @@ public class EventExternalController {
 		@RequestMapping(value = "/checkAvailabilityForUpdate", method = RequestMethod.POST)
 		@ResponseBody
 		public ResponseEntity<Void> checkAvailabilityForUpdate(@RequestBody String eventJSON,
-				HttpServletRequest rq) {
+				HttpServletRequest rq) throws UserNotFoundException {
 			System.out.println("start check availability for events");
 			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
 			Principal principal = rq.getUserPrincipal();
@@ -259,7 +260,7 @@ public class EventExternalController {
 		// Each object (building) will contain... long id, collection of levels.
 			@RequestMapping(value = "/getEvent1/{id}", method = RequestMethod.GET)
 			@ResponseBody
-			public String getEvent1(@PathVariable("id") String eventId, HttpServletRequest rq) {
+			public String getEvent1(@PathVariable("id") String eventId, HttpServletRequest rq) throws UserNotFoundException {
 				Principal principal = rq.getUserPrincipal();
 				Optional<User> usr = userService.getUserByEmail(principal.getName());
 				if ( !usr.isPresent() ){
@@ -323,7 +324,7 @@ public class EventExternalController {
 			// Each object (building) will contain... long id, .
 				@RequestMapping(value = "/viewAllEvents",  method = RequestMethod.GET)
 				@ResponseBody
-				public String viewAllEvents(HttpServletRequest rq) {
+				public String viewAllEvents(HttpServletRequest rq) throws UserNotFoundException {
 				    System.out.println("start view");
 				    Principal principal = rq.getUserPrincipal();
 				    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
@@ -382,7 +383,7 @@ public class EventExternalController {
 				// Each object (building) will contain... long id, .
 					@RequestMapping(value = "/viewApprovedEvents",  method = RequestMethod.GET)
 					@ResponseBody
-					public String viewApprovedEvents(HttpServletRequest rq) {
+					public String viewApprovedEvents(HttpServletRequest rq) throws UserNotFoundException {
 						 Principal principal = rq.getUserPrincipal();
 							//Optional<EventOrganizer> eventOrg1 = eventOrganizerService.getEventOrganizerByEmail(principal.getName());
 						 Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());	
@@ -441,7 +442,7 @@ public class EventExternalController {
 					// Call $http.post(URL,(String)id);
 					@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
 					@ResponseBody
-					public ResponseEntity<Void> deleteEvent(@RequestBody String eventJSON, HttpServletRequest rq) {
+					public ResponseEntity<Void> deleteEvent(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
 						Principal principal = rq.getUserPrincipal();
 					 Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());	
 					   if ( !eventOrg1.isPresent() ){
@@ -474,7 +475,7 @@ public class EventExternalController {
 					//Call $httpPost(Url,JSONData);
 					@RequestMapping(value = "/updateEvent", method = RequestMethod.POST)
 					@ResponseBody
-					public ResponseEntity<Void> updateEvent(@RequestBody String eventJSON, HttpServletRequest rq) {
+					public ResponseEntity<Void> updateEvent(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
 						System.out.println("start updating not yet");
 						Principal principal = rq.getUserPrincipal();
 						 Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());	

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import application.domain.Building;
 import application.domain.ClientOrganisation;
 import application.domain.Vendor;
+import application.exception.InvalidPostalCodeException;
 import application.repository.BuildingRepository;
 import application.repository.ClientOrganisationRepository;
 
@@ -33,7 +34,7 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 
 	@Override
-	public boolean create(ClientOrganisation client, String name, String address, String postalCode, String city, int numFloor, String filePath) {
+	public boolean create(ClientOrganisation client, String name, String address, String postalCode, String city, int numFloor, String filePath)throws InvalidPostalCodeException {
 		// TODO Auto-generated method stub
 		Building building = new Building();
 		building.setName(name);
@@ -42,8 +43,9 @@ public class BuildingServiceImpl implements BuildingService {
 		String regex = "^[0-9]{6}$";
 		Pattern pat = Pattern.compile(regex);
 		Matcher get = pat.matcher(post);
-		if(!get.matches())
-			return false;
+		if(!get.matches()){
+			throw new InvalidPostalCodeException("Postal code of " + postalCode + " is invalid");
+		}
 		else{
 			building.setPostalCode(postalCode);
 			building.setCity(city);

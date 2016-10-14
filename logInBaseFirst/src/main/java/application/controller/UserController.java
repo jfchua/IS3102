@@ -43,6 +43,7 @@ import application.domain.validator.UserCreateFormValidator;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.OrganisationNameAlreadyExistsException;
+import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
 import application.repository.ClientOrganisationRepository;
 import application.repository.RoleRepository;
@@ -191,7 +192,7 @@ public class UserController {
 	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/viewAllClientOrganisations", method = RequestMethod.GET)
 	@ResponseBody
-	public String viewAllClientOrganisations(HttpServletRequest rq) {
+	public String viewAllClientOrganisations(HttpServletRequest rq) throws UserNotFoundException {
 
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName()); //Extra checkings for role admin could be done

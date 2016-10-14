@@ -9,30 +9,33 @@ import application.domain.ClientOrganisation;
 import application.domain.PasswordResetToken;
 import application.domain.Role;
 import application.domain.User;
+import application.exception.EmailAlreadyExistsException;
+import application.exception.PasswordResetTokenNotFoundException;
+import application.exception.UserNotFoundException;
 
 public interface UserService {
 
-	Optional<User> getUserById(long id);
+	Optional<User> getUserById(long id) throws UserNotFoundException;
 
-	Optional<User> getUserByEmail(String email);
+	Optional<User> getUserByEmail(String email) throws UserNotFoundException;
 
 	Collection<User> getAllUsers();
 
 	// User create(UserCreateForm form);
 
-	PasswordResetToken getPasswordResetToken(String token);
+	PasswordResetToken getPasswordResetToken(String token) throws PasswordResetTokenNotFoundException;
 
-	void createPasswordResetTokenForUser(User user, String token);
+	boolean createPasswordResetTokenForUser(User user, String token) throws UserNotFoundException;
 
-	void changePassword(long id, String password);
+	boolean changePassword(long id, String password) throws UserNotFoundException;
 
-	boolean createNewUser(ClientOrganisation clientOrg,String name, String userEmail, Set<Role> roles);
+	boolean createNewUser(ClientOrganisation clientOrg,String name, String userEmail, Set<Role> roles) throws UserNotFoundException, EmailAlreadyExistsException;
 
-	void editUser(String name, User user, Set<Role> roles);
+	boolean editUser(String name, User user, Set<Role> roles) throws UserNotFoundException;
 
 	Collection<User> viewAllUsers(ClientOrganisation clientOrg);
 
-	public void deleteUser(User us);
+	public boolean deleteUser(User us) throws UserNotFoundException;
 
 	Set<User> getExternalUsers(ClientOrganisation clientOrg);
 

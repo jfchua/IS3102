@@ -33,6 +33,7 @@ import com.google.gson.GsonBuilder;
 
 import application.domain.*;
 import application.domain.validator.EventCreateFormValidator;
+import application.exception.UserNotFoundException;
 import application.service.user.BookingService;
 import application.service.user.EventExternalService;
 import application.service.user.EventOrganizerService;
@@ -65,7 +66,7 @@ public class BookingController {
 			// Each object (building) will contain... long id, collection of levels.
 				@RequestMapping(value = "/getBooking/{id}", method = RequestMethod.GET)
 				@ResponseBody
-				public String getBooking(@PathVariable("id") String bId, HttpServletRequest rq) {
+				public String getBooking(@PathVariable("id") String bId, HttpServletRequest rq) throws UserNotFoundException {
 					Principal principal = rq.getUserPrincipal();
 					Optional<User> usr = userService.getUserByEmail(principal.getName());
 					if ( !usr.isPresent() ){
@@ -123,7 +124,7 @@ public class BookingController {
 				// Each object (building) will contain... long id, .
 					@RequestMapping(value = "/viewAllBookings/{id}",  method = RequestMethod.GET)
 					@ResponseBody
-					public String viewAllBookings(@PathVariable("id") String bId, HttpServletRequest rq) {
+					public String viewAllBookings(@PathVariable("id") String bId, HttpServletRequest rq) throws UserNotFoundException {
 					    System.out.println("start view");
 					    Principal principal = rq.getUserPrincipal();
 					    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
@@ -181,7 +182,7 @@ public class BookingController {
 					// Each object (building) will contain... long id, .
 						@RequestMapping(value = "/viewAllSelectedUnits/{id}",  method = RequestMethod.GET)
 						@ResponseBody
-						public String viewAllSelectedUnits(@PathVariable("id") String bId, HttpServletRequest rq) {
+						public String viewAllSelectedUnits(@PathVariable("id") String bId, HttpServletRequest rq) throws UserNotFoundException {
 						    System.out.println("start view");
 						    Principal principal = rq.getUserPrincipal();
 						    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
@@ -251,7 +252,7 @@ public class BookingController {
 	              @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 					@RequestMapping(value = "/deleteBooking/{id}", method = RequestMethod.POST)
 					@ResponseBody
-					public ResponseEntity<Void> deleteBooking(@PathVariable("id") String bId, HttpServletRequest rq) {
+					public ResponseEntity<Void> deleteBooking(@PathVariable("id") String bId, HttpServletRequest rq) throws UserNotFoundException {
 						Principal principal = rq.getUserPrincipal();
 						Optional<User> usr = userService.getUserByEmail(principal.getName());
 						if ( !usr.isPresent() ){

@@ -6,12 +6,13 @@ import java.util.Set;
 import application.domain.Building;
 import application.domain.ClientOrganisation;
 //import application.domain.BuildingCreateForm;
+import application.exception.InvalidPostalCodeException;
 
 public interface BuildingService {
 //Building create(BuildingCreateForm form);
 
 public boolean create(ClientOrganisation client, String name, String address, String postalCode, String city, int numFloor,
-		String filePath);
+		String filePath) throws InvalidPostalCodeException;
 
 public Set<Building> getAllBuildings(ClientOrganisation client);
 

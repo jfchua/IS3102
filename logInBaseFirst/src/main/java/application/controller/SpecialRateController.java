@@ -27,6 +27,7 @@ import com.google.gson.GsonBuilder;
 import application.domain.SpecialRate;
 import application.domain.User;
 import application.domain.Vendor;
+import application.exception.UserNotFoundException;
 import application.repository.VendorRepository;
 import application.repository.AuditLogRepository;
 import application.domain.AuditLog;
@@ -62,7 +63,7 @@ public class SpecialRateController {
 	// Each object (building) will contain... long id, collection of levels.
 	@RequestMapping(value = "/viewAllRates", method = RequestMethod.GET)
 	@ResponseBody
-	public String viewAllRates(HttpServletRequest rq) {
+	public String viewAllRates(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -109,7 +110,7 @@ public class SpecialRateController {
 		@RequestMapping(value = "/addSpecialRate", method = RequestMethod.POST)
 		@ResponseBody
 		public ResponseEntity<Void> addSpecialRate(@RequestBody String rateJSON,
-				HttpServletRequest rq) {
+				HttpServletRequest rq) throws UserNotFoundException {
 			System.out.println("start adding");
 			Principal principal = rq.getUserPrincipal();
 			Optional<User> usr = userService.getUserByEmail(principal.getName());
@@ -145,7 +146,7 @@ public class SpecialRateController {
 				// Call $http.post(URL,(String)id);
 				@RequestMapping(value = "/deleteRate", method = RequestMethod.POST)
 				@ResponseBody
-				public ResponseEntity<Void> deleteRate(@RequestBody String rateJSON, HttpServletRequest rq) {
+				public ResponseEntity<Void> deleteRate(@RequestBody String rateJSON, HttpServletRequest rq) throws UserNotFoundException {
 					Principal principal = rq.getUserPrincipal();
 					Optional<User> usr = userService.getUserByEmail(principal.getName());
 					if ( !usr.isPresent() ){
@@ -172,7 +173,7 @@ public class SpecialRateController {
 				//Call $httpPost(Url,JSONData);
 				@RequestMapping(value = "/updateRate", method = RequestMethod.POST)
 				@ResponseBody
-				public ResponseEntity<Void> updateRate(@RequestBody String rateJSON, HttpServletRequest rq) {
+				public ResponseEntity<Void> updateRate(@RequestBody String rateJSON, HttpServletRequest rq) throws UserNotFoundException {
 					Principal principal = rq.getUserPrincipal();
 					Optional<User> usr = userService.getUserByEmail(principal.getName());
 					if ( !usr.isPresent() ){
