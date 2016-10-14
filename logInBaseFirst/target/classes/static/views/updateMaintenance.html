@@ -11,6 +11,8 @@
 <!-- bootstrap theme -->
 <link href="css/bootstrap-theme.css" rel="stylesheet">
 <!--external css-->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+
 <!-- font icon -->
 <link href="css/elegant-icons-style.css" rel="stylesheet" />
 <link href="css/font-awesome.min.css" rel="stylesheet" />
@@ -80,24 +82,38 @@
 </div>
 <!-- /subnavbar -->
 	<!-- MAIN BODY -->
-	<div ng-cloak ng-controller="maintenanceController as maintenanceCtrl" >
+	<div ng-cloak ng-controller="updateMaintenanceController as updateMaintenanceCtrl" >
       <div class="container">
         <div class="content" >
         <h1>Update maintenance</h1>
+        <a href="#/viewMaintenance"><button>View Maintenance List</button></a>
         <p class="tagline">Update your  maintenance request here</p>
-        <button ng-click = "getMaintenanceById()"><input type="submit" value="Refresh"></button>
-        <form>
-       <div class="form-group">
-               <label for="exampleInput">Vendors Id</label>
-               <input type="text" ng-model="maintenance.vendors" class="form-control" placeholder="Enter vendor id">
-        </div>
-   
-        
-        
-        <div class="form-group">
-               <label for="exampleInput">Units Id</label>
-               <input type="text" ng-model="maintenance.units" class="form-control" placeholder="Enter unit id">
-        </div>
+         <form>
+   		           <button ng-click="resetMaintSchedules()">Reset to last booking</button>
+          	<div class="form-group">
+					<ul class="list-group" name="vendors">
+						<li ng-repeat="vendor in maintenance.vendors" 
+							class="list-group-item">{{vendor.name}}
+							<button ng-click="deleteVendor(vendor)">
+								<i class="glyphicon glyphicon-trash"></i>
+							</button>
+						</li>
+					</ul>
+				</div>
+          <div class="form-group">
+               <label for="exampleInput">Units Selected Previously</label>
+    
+               	<div class="form-group">
+					<ul class="list-group" name="units">
+						<li ng-repeat="selectedSchedulesUnit in selectedSchedulesUnits" 
+							class="list-group-item">{{selectedSchedulesUnit.unitNumber}}
+							
+							</button>
+						</li>
+					</ul>
+				</div>
+				
+
         <div class="form-group">
                <label for="exampleInput">Start Date</label>
                <input type="datetime-local" ng-model="maintenance.start" class="form-control" placeholder="Enter start date">
@@ -110,7 +126,7 @@
                <label for="exampleInput"> Description </label>
                <input type="text" ng-model="maintenance.description" class="form-control" placeholder="Enter description">
        </div>       
-      <a href = "/#/viewMaintenance"><button ng-click = "updateMaintenance()"><input type="submit" value="Submit"></button></a> 
+      <button ng-click = "updateMaintenance()"><input type="submit" value="Submit"></button>
       </form>      
         </div>
       </div>
@@ -119,18 +135,6 @@
 		<!--main content end-->
 
 
-	<!-- javascripts -->
-	<script src="js/jquery.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<!-- nice scroll -->
-	<script src="js/jquery.scrollTo.min.js"></script>
-	<script src="js/jquery.nicescroll.js" type="text/javascript"></script>
-	<!-- gritter -->
-
-	<!-- custom gritter script for this page only-->
-	<script src="js/gritter.js" type="text/javascript"></script>
-	<!--custome script for all page-->
-	<script src="js/scripts.js"></script>
 
 
 

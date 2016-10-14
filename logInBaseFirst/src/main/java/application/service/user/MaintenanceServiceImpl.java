@@ -100,11 +100,13 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 		if(isAvailable){
 			 Set<Vendor> vendorList = new HashSet<Vendor>();
 			for(int i = 0; i<vendors.length; i ++){
-	        Optional<Vendor> ven1 = vendorRepository.getVendorById(Long.valueOf(vendors[i]));
+				long vId=Long.valueOf(vendors[i]);
+	        Optional<Vendor> ven1 = vendorRepository.getVendorById(vId);
 				if(ven1.isPresent()){
-				System.out.println(ven1.get().getName());
-				  if(client.getVendors().contains(ven1.get()))
-	        	  vendorList.add(ven1.get());
+					Vendor vendor=ven1.get();
+				System.out.println(vendor.getName());
+				  if(client.getVendors().contains(vendor))
+	        	  vendorList.add(vendor);
 				  else
 					  return false;
 				}
@@ -201,7 +203,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 				    System.out.println("elseeee");
 		            BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
 		            MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
-		            System.out.println(b.getId());
+		            //System.out.println(b.getId());
 		            Maintenance maintFromSchedule = m.getMaintenance();
 		            //Event eventFromB = b.getEvent(); 
 		            //b is not null           
@@ -210,7 +212,6 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 		            	break;
 		            }
 				}
-				System.out.println("5");
 				}
 				if(isAvailable){
 			//check vendor 
@@ -225,26 +226,25 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 					  return false;
 				}
 			}
-
 			for(MaintenanceSchedule m1: maintenances){
 					Unit unit = m1.getUnit();
 					if(!unitsNew.contains(unit)){
 					Set<MaintenanceSchedule> maintFromUnit = unit.getMaintenanceSchedule();
 					maintFromUnit.remove(m1);
-					maintenances.remove(m1);
+					//maintenances.remove(m1);
 					maintenanceScheduleRepository.delete(m1);
 					}
 				}
 			for(MaintenanceSchedule m2: maintenances){
 				m2.setStart_time(start);
 				m2.setEnd_time(end);
+				
 			}
 
 			for(Unit i : unitsNew){
 				if(!unitsOld.contains(i)){
 					MaintenanceSchedule maintSchedule = new MaintenanceSchedule();
 					maintSchedule.setStart_time(start);
-					System.out.println("inside the controller");
 					maintSchedule.setEnd_time(end);
 					maintSchedule.setUnit(i);
 					maintSchedule.setMaintenance(maint);
@@ -272,6 +272,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 	@Override
 	public boolean deleteMaintenance(ClientOrganisation client, long id) {
 		try{
+			System.out.println("MAINTENANCESERVICE: START DELETING");
 	        Optional<Maintenance> maintenance1 = Optional.ofNullable(maintenanceRepository.findOne(id));
 	        //boolean doesHave = false;
 			//Set<Building> buildings = client.getBuildings();
@@ -284,16 +285,18 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 	        	  	maintS2.remove(m);
 	        	  	unit.setMaintenanceSchedule(maintS2);
 	        	  	unitRepository.save(unit);
-	        	  	maintS.remove(m);
+	        	  	//maintS.remove(m);
 	        	  	maintenanceScheduleRepository.delete(m);
 	        	  }
 	        	  System.out.println("delete successfully");
 	        	  maintenanceRepository.delete(maint);
-	        	}       	  
+	        		 
+	        	} 
+	        return true;
 	        }catch(Exception e){
 			return false;
 		}
-		return true; 
+	
 	}
 
 	@Override

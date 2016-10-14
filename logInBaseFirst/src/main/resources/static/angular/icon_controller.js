@@ -19,7 +19,7 @@ app.controller('iconController', function ($scope, $http,shareData) {
 	});
 
 	$scope.remove = function(icon) { 
-		if (confirm('Are you sure you want to delete this?')) {
+		if (confirm('CONFIRM TO DELETE ICON'+icon.id+'?')) {
 			var index = $scope.icons.indexOf(icon);
 			$scope.icons.splice(index, 1);  
 			var dataObj={id:icon.id};
