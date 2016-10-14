@@ -40,6 +40,9 @@ import application.domain.ToDoTask;
 import application.domain.User;
 import application.domain.Vendor;
 import application.domain.validator.UserCreateFormValidator;
+import application.exception.ClientOrganisationNotFoundException;
+import application.exception.EmailAlreadyExistsException;
+import application.exception.OrganisationNameAlreadyExistsException;
 import application.repository.AuditLogRepository;
 import application.repository.ClientOrganisationRepository;
 import application.repository.RoleRepository;
@@ -82,7 +85,7 @@ public class UserController {
 	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/addClientOrganisation", method = RequestMethod.POST)
 	@ResponseBody //RESPONSE ENTITY TO RETURN A USER BUT NO JACKSON
-	public ResponseEntity<Void> addNewClientOrganisation(@RequestBody String clientOrgJSON) {
+	public ResponseEntity<String> addNewClientOrganisation(@RequestBody String clientOrgJSON) {
 
 		//Assume client org has ClientOrg name, One admin user which is to be created.
 		try{
@@ -105,22 +108,39 @@ public class UserController {
 			}
 
 			System.out.println("adding new client organisation" + name + " with it admin user: " + email);
-			if ( !clientOrganisationService.createNewClientOrganisation(name, email,subsToAdd,nameAdmin) ) return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			//if ( !clientOrganisationService.createNewClientOrganisation(name, email,subsToAdd,nameAdmin) ) return new ResponseEntity<String>( HttpStatus.CONFLICT);
+			clientOrganisationService.createNewClientOrganisation(name, email,subsToAdd,nameAdmin); 
 			System.out.println( "CREATED CLIENT ORGANISATION : " + userService.getUserByEmail(email).get().getClientOrganisation().getOrganisationName() );
 			//TEST FOR CREATING NEW USER
 			/*Set<Role> userRolesToAddIn2 = new HashSet<Role>();
  			userRolesToAddIn2.add(roleRepository.getRoleByName("ROLE_USER"));
  			userService.createNewUser(userService.getUserByEmail(email).get().getClientOrganisation(), "chuajinfa@gmail.com", userRolesToAddIn2);
  			System.out.println("CREATED USER FOR CHUAJINFA with client org" + userService.getUserByEmail(email).get().getClientOrganisation().getOrganisationName());*/
+			
 
-
+		}
+		catch ( EmailAlreadyExistsException e ){
+			Gson g = new Gson();
+			String json = g.toJson(e.getMessage());
+			System.out.println("EEPTOIN" + json);
+			return new ResponseEntity<String>(json,HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+		catch ( OrganisationNameAlreadyExistsException e){
+			Gson g = new Gson();
+			String json = g.toJson(e.getMessage());
+			System.out.println("EEPTOIN" + json);
+			return new ResponseEntity<String>(json,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (Exception e){
-			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			Gson g = new Gson();
+			String json = g.toJson(e.getMessage());
+			System.out.println("EEPTOIN" + e.toString() + "   " + json);
+			return new ResponseEntity<String>(json,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
+	
 	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/viewClientOrgs", method = RequestMethod.GET)
 	@ResponseBody //RESPONSE ENTITY TO RETURN A USER BUT NO JACKSON
@@ -218,7 +238,7 @@ public class UserController {
 	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/deleteClientOrg", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteClientOrg(@RequestBody String userJSON, HttpServletRequest rq) {
+	public ResponseEntity<String> deleteClientOrg(@RequestBody String userJSON, HttpServletRequest rq) {
 
 		try{
 			Object obj = parser.parse(userJSON);
@@ -230,17 +250,26 @@ public class UserController {
 			clientOrganisationService.deleteClientOrg(id);
 			System.err.println("deledted");
 
-		}catch(Exception e){
-			System.out.println("ERROR IN DELETING USER" + e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		catch ( ClientOrganisationNotFoundException e){
+			Gson g = new Gson();
+			String json = g.toJson(e.getMessage());
+			System.out.println("EEPTOIN" + json);
+			return new ResponseEntity<String>(json,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch(Exception e){
+			System.out.println("ERROR IN DELETING Client Org" + e.getMessage());
+			Gson g = new Gson();
+			String json = g.toJson(e.getMessage());
+			return new ResponseEntity<String>(json,HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 
 	}
 
 	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/updateClientOrg", method = RequestMethod.POST)
-	@ResponseBody
+	@ResponseBody //SERVICE CLASS
 	public ResponseEntity<Void> updateClientOrgs(@RequestBody String userJSON, HttpServletRequest rq) {
 		System.out.println("ERROR here GGGGG");
 		try{

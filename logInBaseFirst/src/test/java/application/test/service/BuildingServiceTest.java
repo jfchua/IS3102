@@ -1,5 +1,6 @@
 package application.test.service;
 
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.junit.After;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import application.domain.Building;
 import application.domain.ClientOrganisation;
+import application.exception.ClientOrganisationNotFoundException;
 import application.repository.UserRepository;
 import application.service.user.BuildingService;
 import application.service.user.ClientOrganisationService;
@@ -34,7 +36,7 @@ public class BuildingServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testCreate(){
+	public void testCreate() throws ClientOrganisationNotFoundException{
 		ClientOrganisation clientOrg = clientOrgService.getClientOrganisationByName("Suntec");
 		buildingService.create(clientOrg, "name", "address", "999", "city", 2, "filepath");
 
@@ -44,7 +46,7 @@ public class BuildingServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testGetAllBuildings(){
+	public void testGetAllBuildings() throws ClientOrganisationNotFoundException{
 		ClientOrganisation clientOrg = clientOrgService.getClientOrganisationByName("Expo");
 		Set<Building> buildings = buildingService.getAllBuildings(clientOrg);
 
@@ -52,13 +54,13 @@ public class BuildingServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testEditBuildingInfo(){
+	public void testEditBuildingInfo() throws ClientOrganisationNotFoundException{
 		ClientOrganisation clientOrg = clientOrgService.getClientOrganisationByName("Expo");
-		buildingService.editBuildingInfo(clientOrg, (long)1, "newname", "newaddess", "999", "newcity", 1, "newfilepath");
+		buildingService.editBuildingInfo(clientOrg, (long)1, "newname", "newaddess", "945699", "newcity", 1, "newfilepath");
 		Building result = buildingService.getBuilding((long)1);
 
 		Assert.assertNotNull("Getting edited should not be null", result);
-		Assert.assertEquals("Should be changed to new name", "newname",result.getName());
+		Assert.assertEquals("Should be changed to new name", "newaddess",result.getAddress());
 
 	}
 
@@ -75,8 +77,8 @@ public class BuildingServiceTest extends AbstractTest {
 
 	}
 
-	@Test
-	public void deleteBuilding(){
+	@Test(expected=NoSuchElementException.class)
+	public void deleteBuilding() throws ClientOrganisationNotFoundException{
 		ClientOrganisation clientOrg = clientOrgService.getClientOrganisationByName("Expo");
 		buildingService.deleteBuilding(clientOrg, (long)2);
 		Building building = buildingService.getBuilding((long)2);
@@ -85,7 +87,7 @@ public class BuildingServiceTest extends AbstractTest {
 
 
 	@Test
-	public void checkBuilding(){
+	public void checkBuilding() throws ClientOrganisationNotFoundException{
 		ClientOrganisation clientOrg = clientOrgService.getClientOrganisationByName("Expo");
 		boolean result = buildingService.checkBuilding(clientOrg, (long)1);
 		Assert.assertTrue(result);	

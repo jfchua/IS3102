@@ -653,7 +653,7 @@ app.factory('httpAuthInterceptor', function ($q) {
 		                 },
 		  'responseError': function (response) {
 		    // NOTE: detect error because of unauthenticated user
-		    if ([401, 403, 500].indexOf(response.status) >= 0) {
+		    if ([401, 403].indexOf(response.status) >= 0) {
 		      // redirecting to login page
 		  	  event.preventDefault();
 		  	  $location.path("/login");
@@ -2265,12 +2265,12 @@ app.controller('clientOrgController', ['$scope', '$http','$location', function (
 		});
 
 		console.log("SAVING THE CLIENT ORG");
-		send.success(function(){
-			alert('CLIENT ORG IS SAVED!');
+		send.success(function(data){
+			alert('Client organisation successfully saved' );
 			$location.path("/workspace");
 		});
-		send.error(function(){
-			alert('SAVING CLIENT ORG GOT ERROR!');
+		send.error(function(data){
+			alert(data);
 		});
 	};
 
@@ -2414,7 +2414,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location',
 		console.log("fetching the user list.......");
 		del.success(function(response){
 			//$scope.Profiles = response;
-			alert('DELETED THE client Org SUCCESS!!! ');
+			alert('Successfully delete ');
 		});
 		del.error(function(response){
 			alert('DELETED THE client Org FAILED!!!');

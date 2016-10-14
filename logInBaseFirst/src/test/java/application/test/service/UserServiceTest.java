@@ -18,6 +18,7 @@ import application.domain.ClientOrganisation;
 import application.domain.PasswordResetToken;
 import application.domain.Role;
 import application.domain.User;
+import application.exception.ClientOrganisationNotFoundException;
 import application.repository.RoleRepository;
 import application.repository.UserRepository;
 import application.service.user.ClientOrganisationService;
@@ -64,7 +65,7 @@ public class UserServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testViewAllUsersFromClientOrg(){
+	public void testViewAllUsersFromClientOrg() throws ClientOrganisationNotFoundException{
 		ClientOrganisation tempOrg = clientOrgService.getClientOrganisationByName("Expo");
 		Collection<User> users = userService.viewAllUsers(tempOrg);
 		Assert.assertNotNull("Getting users should not be null as users belong to expo", users);
@@ -113,7 +114,7 @@ public class UserServiceTest extends AbstractTest {
 
 
 	@Test
-	public void testCreateUser() {
+	public void testCreateUser() throws ClientOrganisationNotFoundException {
 		Set<Role> setOfRoles = new HashSet<Role>();
 		ClientOrganisation tempOrg = clientOrgService.getClientOrganisationByName("Suntec");
 		userService.createNewUser(tempOrg, "test", "test@test.com", setOfRoles);
@@ -160,17 +161,17 @@ public class UserServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testGetExternalUsers(){
+	public void testGetExternalUsers() throws ClientOrganisationNotFoundException{
 		Set<User> s = userService.getExternalUsers(clientOrgService.getClientOrganisationByName("Expo"));	
 		Assert.assertNotNull("Getting users should not be null", s);
 	}
 	@Test
-	public void testGetFinanceManagers(){
+	public void testGetFinanceManagers() throws ClientOrganisationNotFoundException{
 		Set<User> s = userService.getFinanceManagers(clientOrgService.getClientOrganisationByName("Expo"));		
 		Assert.assertNotNull("Getting users should not be null", s);
 	}
 	@Test
-	public void testGetTicketManagers(){
+	public void testGetTicketManagers() throws ClientOrganisationNotFoundException{
 		Set<User> s = userService.getTicketManagers(clientOrgService.getClientOrganisationByName("Expo"));		
 		Assert.assertNotNull("Getting users should not be null", s);
 	}
