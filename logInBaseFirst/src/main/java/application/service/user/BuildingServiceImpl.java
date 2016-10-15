@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import application.domain.Building;
 import application.domain.ClientOrganisation;
 import application.domain.Vendor;
+import application.exception.BuildingNotFoundException;
+import application.exception.InvalidPostalCodeException;
 import application.repository.BuildingRepository;
 import application.repository.ClientOrganisationRepository;
 
@@ -33,7 +35,7 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 
 	@Override
-	public boolean create(ClientOrganisation client, String name, String address, String postalCode, String city, int numFloor, String filePath) {
+	public boolean create(ClientOrganisation client, String name, String address, String postalCode, String city, int numFloor, String filePath)throws InvalidPostalCodeException {
 		// TODO Auto-generated method stub
 		Building building = new Building();
 		building.setName(name);
@@ -42,8 +44,9 @@ public class BuildingServiceImpl implements BuildingService {
 		String regex = "^[0-9]{6}$";
 		Pattern pat = Pattern.compile(regex);
 		Matcher get = pat.matcher(post);
-		if(!get.matches())
-			return false;
+		if(!get.matches()){
+			throw new InvalidPostalCodeException("Postal code of " + postalCode + " is invalid");
+		}
 		else{
 			building.setPostalCode(postalCode);
 			building.setCity(city);
@@ -65,8 +68,11 @@ public class BuildingServiceImpl implements BuildingService {
 
 
 	@Override
-	public boolean deleteBuilding(ClientOrganisation client, long id)  {
+	public boolean deleteBuilding(ClientOrganisation client, long id) throws BuildingNotFoundException  {
 		// TODO Auto-generated method stub
+		if ( !getBuildingById(id).isPresent()){
+			throw new BuildingNotFoundException("Building with id of " + id + " was not found");
+		}
 		try{
 			Optional<Building> building1 = getBuildingById(id);
 			Set<Building> buildings = client.getBuildings();
@@ -86,15 +92,24 @@ public class BuildingServiceImpl implements BuildingService {
 
 	@Override
 	public boolean editBuildingInfo(ClientOrganisation client, long id, String name, String address, String postalCode, String city, int numFloor,
-			String filePath) {
+			String filePath) throws BuildingNotFoundException, InvalidPostalCodeException {
 		// TODO Auto-generated method stub
+		
+		if ( !getBuildingById(id).isPresent()){
+			throw new BuildingNotFoundException("Building of id " + id + " was not found");
+		}
+		CharSequence post =String.valueOf(postalCode);
+		String regex = "^[0-9]{6}$";
+		Pattern pat = Pattern.compile(regex);
+		Matcher get = pat.matcher(post);
+		if (!get.matches() ){
+			throw new InvalidPostalCodeException("Postal code of " + postalCode + " is invalid");
+		}
 		try{
 			Optional<Building> building1 = getBuildingById(id);
 			Set<Building> buildings = client.getBuildings();
-			CharSequence post =String.valueOf(postalCode);
-			String regex = "^[0-9]{6}$";
-			Pattern pat = Pattern.compile(regex);
-			Matcher get = pat.matcher(post);
+
+
 			if (building1.isPresent()&&get.matches()&&buildings.contains(building1.get())){
 				//uilding building = building1.get();
 				//if(building1.get().getName().)
@@ -109,21 +124,29 @@ public class BuildingServiceImpl implements BuildingService {
 			}
 			else
 				return false;
-		}catch (Exception e){
+		}
+		catch ( BuildingNotFoundException e){
+			throw e;
+		}
+		catch (Exception e){
 			return false;
 		}
 		return true;
 	}
 
 	@Override
-	public Optional<Building> getBuildingById(long id) {
+	public Optional<Building> getBuildingById(long id) throws BuildingNotFoundException {
 		// TODO Auto-generated method stub
 		LOGGER.debug("Getting building={}", id);
-		return Optional.ofNullable(buildingRepository.findOne(id));
+		Building building = buildingRepository.findOne(id);
+		if ( building == null ){
+			throw new BuildingNotFoundException("Building of id " + id + " was not found");
+		}
+		return Optional.ofNullable(building);
 	}
 
 	@Override
-	public Building getBuilding(long id) {
+	public Building getBuilding(long id) throws BuildingNotFoundException {
 		// TODO Auto-generated method stub
 		Optional<Building> buildingOpt=getBuildingById(id);
 		Building building=buildingOpt.get();
@@ -131,7 +154,10 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 
 	@Override
-	public boolean checkBuilding(ClientOrganisation client, long id) {
+	public boolean checkBuilding(ClientOrganisation client, long id) throws BuildingNotFoundException {
+		if ( !getBuildingById(id).isPresent()){
+			throw new BuildingNotFoundException("Building of id " + id + " was not found");
+		}
 		try{
 			Optional<Building> building1 = getBuildingById(id);
 			Set<Building> buildings = client.getBuildings();

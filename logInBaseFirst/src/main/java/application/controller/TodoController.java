@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 
 import application.domain.ToDoTask;
 import application.domain.User;
+import application.exception.ToDoTaskNotFoundException;
+import application.exception.UserNotFoundException;
 import application.service.user.ToDoTaskService;
 import application.service.user.UserService;
 
@@ -35,6 +37,7 @@ public class TodoController {
 	@Autowired
 	private final UserService userService;
 	private final ToDoTaskService toDoTaskService;
+	private Gson geeson = new Gson();
 	
 	
 	private JSONParser parser = new JSONParser();
@@ -52,14 +55,22 @@ public class TodoController {
 // Each object (toDoTask) will contain... long id, String task.
 	@RequestMapping(value = "/getToDoList", method = RequestMethod.GET)
 	@ResponseBody
-	public String getToDoList(HttpServletRequest rq) {
+	public ResponseEntity<String> getToDoList(HttpServletRequest rq) throws UserNotFoundException {
+		try{
 		Principal principal = rq.getUserPrincipal();
 		User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 		Collection<ToDoTask> t = toDoTaskService.getToDoList(currUser);
 		Gson gson = new Gson();
 		String json = gson.toJson(t);
 		System.out.println("Returning getTodoList with json of : " + json);
-		return json;	
+		return new ResponseEntity<String>(json,HttpStatus.OK);	
+		}
+		catch ( UserNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting to do list"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	//Security filters for inputs needs to be added
@@ -67,7 +78,7 @@ public class TodoController {
 	//Call $http.post(URL,stringToAdd);
 	@RequestMapping(value = "/addToDoTask", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> addToDoTask(@RequestBody String toDoTaskJSON,HttpServletRequest rq) {
+	public ResponseEntity<String> addToDoTask(@RequestBody String toDoTaskJSON,HttpServletRequest rq) {
 		System.out.println("TYPE STH HERE FOR TODOTASK");
 		try{
 			Principal principal = rq.getUserPrincipal();
@@ -83,28 +94,37 @@ public class TodoController {
 			toDoTaskService.addToDoTask(currUser, task, dateParsed);
 			System.out.println("adding todotask to usrname: " + currUser.getEmail());
 		}
+		catch ( UserNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		catch (Exception e){
 			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(geeson.toJson("Server error in adding to do task"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
 	//This method takes in a String which is the ID of the toDoTask to delete
 	// Call $http.post(URL,(String)id);
 	@RequestMapping(value = "/deleteToDoTask", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteToDoTask(@RequestBody String taskId,HttpServletRequest rq) {
+	public ResponseEntity<String> deleteToDoTask(@RequestBody String taskId,HttpServletRequest rq) {
 
 		try{
 			Principal principal = rq.getUserPrincipal();
 			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 			toDoTaskService.deleteToDoTask(currUser, Long.parseLong(taskId));
 		}
-		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		catch ( UserNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		catch ( ToDoTaskNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in deleting to do task"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
 	//This method takes in a JSON format which contains an object with 2 attributes

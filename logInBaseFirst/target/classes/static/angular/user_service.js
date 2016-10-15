@@ -143,7 +143,7 @@ app.factory('UserService', ['$http', '$q', function($http, $q){
                   
                     }, 
                     function(errResponse){
-                    	console.log("Error while resetting user is: " + errResponse.data);
+                    	console.log("Error, " + errResponse);
                         return $q.reject(errResponse);
                     }
             );
@@ -164,12 +164,12 @@ app.factory('UserService', ['$http', '$q', function($http, $q){
         //	return $http.post(req)
                 .then(
                         function(response){
-                        console.log("Success reset!");
+                        console.log("Password reset successfully");
                         	return response;
                         	
                         }, 
                         function(errResponse){
-                        	console.log("Error while resetting user is: " + errResponse.data);
+                        	console.log("Error, " + errResponse);
                             return $q.reject(errResponse);
                         }
                 );

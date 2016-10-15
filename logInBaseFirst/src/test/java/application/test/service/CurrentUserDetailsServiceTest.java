@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import application.domain.CurrentUser;
+import application.exception.UserNotFoundException;
 import application.service.currentuser.CurrentUserDetailsService;
 import application.test.AbstractTest;
 

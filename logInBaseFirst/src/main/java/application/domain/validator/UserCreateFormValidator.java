@@ -8,6 +8,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import application.domain.UserCreateForm;
+import application.exception.UserNotFoundException;
 import application.service.user.UserService;
 
 @Component
@@ -31,7 +32,12 @@ public class UserCreateFormValidator implements Validator {
         LOGGER.debug("Validating {}", target);
         UserCreateForm form = (UserCreateForm) target;
         validatePasswords(errors, form);
-        validateEmail(errors, form);
+        try {
+			validateEmail(errors, form);
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     private void validatePasswords(Errors errors, UserCreateForm form) {
@@ -40,7 +46,7 @@ public class UserCreateFormValidator implements Validator {
         }
     }
 
-    private void validateEmail(Errors errors, UserCreateForm form) {
+    private void validateEmail(Errors errors, UserCreateForm form) throws UserNotFoundException {
         if (userService.getUserByEmail(form.getEmail()).isPresent()) {
             errors.reject("email.exists", "User with this email already exists");
         }

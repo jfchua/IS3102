@@ -39,6 +39,7 @@ import application.domain.Maintenance;
 import application.domain.MaintenanceSchedule;
 import application.domain.Unit;
 import application.domain.User;
+import application.exception.UserNotFoundException;
 import application.service.user.MaintenanceService;
 import application.service.user.UnitService;
 import application.service.user.UserService;
@@ -68,7 +69,7 @@ public class MaintenanceController {
     // Each object (building) will contain... long id, collection of levels.
     @RequestMapping(value = "/getMaintenance/{id}", method = RequestMethod.GET)
 	@ResponseBody
-    public String getMaintenance(@PathVariable("id") String maintId, HttpServletRequest rq) {
+    public String getMaintenance(@PathVariable("id") String maintId, HttpServletRequest rq) throws UserNotFoundException {
     	Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -166,7 +167,7 @@ public class MaintenanceController {
 	// Call $http.post(URL,(String)id);
 	@RequestMapping(value = "/deleteMaintenance", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteMaintenance(@RequestBody String maintenanceJSON, HttpServletRequest rq) {
+	public ResponseEntity<Void> deleteMaintenance(@RequestBody String maintenanceJSON, HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -196,7 +197,7 @@ public class MaintenanceController {
 	//Call $httpPost(Url,JSONData);
 	@RequestMapping(value = "/updateMaintenance", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> updateMaintenance(@RequestBody String maintenanceJSON, HttpServletRequest rq) {
+	public ResponseEntity<Void> updateMaintenance(@RequestBody String maintenanceJSON, HttpServletRequest rq) throws UserNotFoundException {
 		System.out.println("start updating not yet");
 		
 		Principal principal = rq.getUserPrincipal();
@@ -254,7 +255,7 @@ public class MaintenanceController {
 		//Call $http.post(URL,stringToAdd);
 		@RequestMapping(value = "/addMaintenance", method = RequestMethod.POST)
 		@ResponseBody
-		public ResponseEntity<Void> addMaintenance(@RequestBody String maintenanceJSON, HttpServletRequest rq) {
+		public ResponseEntity<Void> addMaintenance(@RequestBody String maintenanceJSON, HttpServletRequest rq) throws UserNotFoundException {
 			System.out.println("start adding");
 			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
 			//DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -308,7 +309,7 @@ public class MaintenanceController {
 					// Each object (building) will contain... long id, .
 						@RequestMapping(value = "/viewMaintenance",  method = RequestMethod.GET)
 						@ResponseBody
-						public String viewMaintenance(HttpServletRequest rq) {	
+						public String viewMaintenance(HttpServletRequest rq) throws UserNotFoundException {	
 							System.out.println("start viewing all");
 							Principal principal = rq.getUserPrincipal();
 							Optional<User> usr = userService.getUserByEmail(principal.getName());
@@ -365,7 +366,7 @@ public class MaintenanceController {
 			// Each object (building) will contain... long id, .
 				@RequestMapping(value = "/viewAllSelectedUnits/{id}",  method = RequestMethod.GET)
 				@ResponseBody
-				public String viewAllSelectedUnits(@PathVariable("id") String bId, HttpServletRequest rq) {
+				public String viewAllSelectedUnits(@PathVariable("id") String bId, HttpServletRequest rq) throws UserNotFoundException {
 				    System.out.println("start view");
 				    Principal principal = rq.getUserPrincipal();
 				    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());

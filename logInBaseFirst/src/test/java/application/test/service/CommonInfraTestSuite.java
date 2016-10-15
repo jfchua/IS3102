@@ -10,7 +10,6 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	   RoleRepositoryTest.class,
 	   ClientOrganisationServiceTest.class,
 	   UserServiceTest.class,
 	   ToDoTaskServiceTest.class,

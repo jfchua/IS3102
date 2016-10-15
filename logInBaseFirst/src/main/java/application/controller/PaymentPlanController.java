@@ -32,6 +32,7 @@ import com.google.gson.GsonBuilder;
 
 import application.domain.*;
 import application.domain.validator.EventCreateFormValidator;
+import application.exception.UserNotFoundException;
 import application.service.user.BookingService;
 import application.service.user.EventExternalService;
 import application.service.user.EventOrganizerService;
@@ -63,7 +64,7 @@ public class PaymentPlanController {
 				// Each object (building) will contain... long id, .
 					@RequestMapping(value = "/viewAllPaymentPlans",  method = RequestMethod.GET)
 					@ResponseBody
-					public String viewAllPaymentPlans(HttpServletRequest rq) {
+					public String viewAllPaymentPlans(HttpServletRequest rq) throws UserNotFoundException {
 					    System.out.println("start view");
 					    Principal principal = rq.getUserPrincipal();
 					    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
@@ -113,7 +114,7 @@ public class PaymentPlanController {
 					//Call $http.post(URL,stringToAdd);
 					@RequestMapping(value = "/addPaymentPlan", method = RequestMethod.POST)
 					@ResponseBody
-					public ResponseEntity<Void> addPaymentPlan(@RequestBody String paymentJSON,HttpServletRequest rq) {
+					public ResponseEntity<Void> addPaymentPlan(@RequestBody String paymentJSON,HttpServletRequest rq) throws UserNotFoundException {
 						System.out.println("startADD");
 						Principal principal = rq.getUserPrincipal();
 						Optional<User> usr = userService.getUserByEmail(principal.getName());

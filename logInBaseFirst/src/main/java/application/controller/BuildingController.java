@@ -30,6 +30,9 @@ import application.domain.Building;
 import application.domain.ClientOrganisation;
 import application.domain.Level;
 import application.domain.User;
+import application.exception.BuildingNotFoundException;
+import application.exception.InvalidPostalCodeException;
+import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
 import application.service.user.BuildingService;
 import application.service.user.ClientOrganisationService;
@@ -43,6 +46,7 @@ public class BuildingController {
 	private final ClientOrganisationService clientOrganisationService;
 	private final UserService userService;
 	private final AuditLogRepository auditLogRepository;
+	private Gson geeson= new Gson();
 
 	private JSONParser parser = new JSONParser();
 
@@ -62,7 +66,7 @@ public class BuildingController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY', 'ROLE_EXTEVE')")
 	@RequestMapping(value = "/viewBuildings", method = RequestMethod.GET)
 	@ResponseBody
-	public String viewBuildings(HttpServletRequest rq) {
+	public String viewBuildings(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -117,7 +121,7 @@ public class BuildingController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/getBuilding/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getBuilding(@PathVariable("id") String buildingId, HttpServletRequest rq) {
+	public String getBuilding(@PathVariable("id") String buildingId, HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -155,10 +159,13 @@ public class BuildingController {
 				return json;
 			}
 			else
-				return "cannot fetch";	
+				return geeson.toJson("Error in retreiving building of id " + buildingId);
+		}
+		catch ( BuildingNotFoundException e){
+			return geeson.toJson("Error in retreiving building of id " + buildingId);
 		}
 		catch (Exception e){
-			return "cannot fetch";
+			return geeson.toJson("Error in retreiving building of id " + buildingId);
 		}
 
 
@@ -169,12 +176,13 @@ public class BuildingController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/addBuilding", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> addBuilding(@RequestBody String buildingJSON,HttpServletRequest rq) {
+	public ResponseEntity<String> addBuilding(@RequestBody String buildingJSON,HttpServletRequest rq) throws UserNotFoundException,InvalidPostalCodeException {
 		System.out.println("startADD");
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			//throw new UserNotFoundException("User was not found");
+			return new ResponseEntity<String>(geeson.toJson("Current User was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
@@ -200,13 +208,16 @@ public class BuildingController {
 				auditLogRepository.save(al);
 			}
 			else
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				return new ResponseEntity<String>(geeson.toJson("Server error in adding new building"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( InvalidPostalCodeException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (Exception e){
 			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(geeson.toJson("Server error in adding new building"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}	
 
 	//This method takes in a String which is the ID of the building to be deleted
@@ -215,13 +226,14 @@ public class BuildingController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/deleteBuilding", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteBuilding(@RequestBody String buildingId,HttpServletRequest rq) {
+	public ResponseEntity<String> deleteBuilding(@RequestBody String buildingId,HttpServletRequest rq) throws UserNotFoundException {
 
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			return new ResponseEntity<String>(geeson.toJson("User was not found"),HttpStatus.INTERNAL_SERVER_ERROR);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
+		
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
 			System.out.println(buildingId + " delete!!");
@@ -240,10 +252,13 @@ public class BuildingController {
 				al.setUserEmail(usr.get().getEmail());
 				auditLogRepository.save(al);
 			}
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}
+		catch ( BuildingNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(geeson.toJson("Server error deleting building"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 	}
@@ -254,12 +269,12 @@ public class BuildingController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/updateBuilding", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> updateBuilding(@RequestBody String buildingId,HttpServletRequest rq) {
+	public ResponseEntity<String> updateBuilding(@RequestBody String buildingId,HttpServletRequest rq) throws UserNotFoundException {
 		System.out.println("start1111");
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			return new ResponseEntity<String>(geeson.toJson("User was not found"),HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();		
@@ -281,7 +296,7 @@ public class BuildingController {
 			//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 			boolean bl = buildingService.editBuildingInfo(client,id, name, address, postalCode, city, numFloor, filePath);
 			if(!bl)
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 			AuditLog al = new AuditLog();
 			al.setTimeToNow();
@@ -291,10 +306,16 @@ public class BuildingController {
 			al.setUserEmail(usr.get().getEmail());
 			auditLogRepository.save(al);
 		}
-		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		catch ( BuildingNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		catch ( InvalidPostalCodeException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in updating building"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 

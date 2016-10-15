@@ -925,8 +925,8 @@ app.controller('createNewUserController', function($scope, $http){
 		create.success(function(){
 			alert("Create New User SUCCESS   "  + JSON.stringify(dataObj))
 		});
-		create.error(function(){
-			alert("Create New User FAILED" + JSON.stringify(dataObj));
+		create.error(function(data){
+			alert("Error, " + data);
 		});
 	}
 });
@@ -1049,11 +1049,11 @@ app.controller('viewUserList', ['$scope','$http','$location',
 		console.log("fetching the user list......." + JSON.stringify(Edit));
 		toEdit.success(function(response){
 
-			alert('EDITING THE USERS SUCCESS!!! ');
+			alert('Successfully updated the user');
 			$location.path("/workspace");
 		});
 		toEdit.error(function(response){
-			alert('EDITING THE USERS FAILED!!!');
+			alert('Error, ');
 		});
 
 
@@ -1089,10 +1089,10 @@ app.controller('viewUserList', ['$scope','$http','$location',
 		console.log("fetching the user list.......");
 		del.success(function(response){
 			//$scope.Profiles = response;
-			alert('DELETED THE USERS SUCCESS!!! ');
+			alert('Succesfully deleted the user');
 		});
 		del.error(function(response){
-			alert('DELETED THE USERS FAILED!!!');
+			alert('Error deleting user, ' + response);
 		});
 
 
@@ -1137,10 +1137,10 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 
 		console.log("SAVING THE USER PROFILE");
 		send.success(function(){
-			alert('CHANGE USER PROFILE IS SAVED!');
+			alert('User profile successfully changed');
 		});
-		send.error(function(){
-			alert('Changing password GOT ERROR!');
+		send.error(function(data){
+			alert('Error, ' + data);
 		});
 	};
 
@@ -1152,6 +1152,7 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 		}
 		var dataObj = {
 				password: $scope.userProfile.password1,
+				oldpassword: $scope.userProfile.password0,
 		};
 		console.log("** Passing data object of " + dataObj);
 
@@ -1163,10 +1164,10 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 
 		console.log("SAVING THE USER PROFILE");
 		send.success(function(){
-			alert('You have updated your profile');
+			alert('You have successfully changed your password');
 		});
-		send.error(function(){
-			alert('Changing password GOT ERROR!');
+		send.error(function(data){
+			alert('Error, ' + data);
 		});
 	};
 
@@ -1277,7 +1278,7 @@ app.controller('taskController', function($scope, $http, $route) {
 
 
 				}, function myError(response) {
-					console.log(response.statusText);
+					alert(response);
 				});
 				$scope.newTask = '';
 				$scope.newTaskDate = '';
@@ -1291,10 +1292,10 @@ app.controller('taskController', function($scope, $http, $route) {
 					url : "https://localhost:8443/todo/deleteToDoTask",
 					data: id
 				}).then(function mySuccess(response) {
-					console.log("DELETED TASK WITH ID: " + id);
+					console.log("Successfully delete task with Id: " + id);
 					getTdList();
 				}, function myError(response) {
-					console.log(response.statusText);
+					alert(response);
 				});
 				getTdList();
 
@@ -1316,6 +1317,7 @@ app.controller('DemoCtrl', function ($scope, $http) {
 	}).error(function(result){
 		//do something
 		console.log("ERROR");
+		alert(result);
 	})
 });
 
@@ -1368,12 +1370,13 @@ app.controller('AlertDemoCtrl', function ($scope, datfactory, $http){
 			data    :  $scope.getId[index] //forms user object
 		});
 		del.success(function(){
-			alert("DELETE NOTIFICATION SUCCESS")
+			alert("Notification deleted")
+			$scope.alerts.splice(index, 1);
 		});
-		del.error(function(){
-			alert("DELETE NOTIFICATION FAILED");
+		del.error(function(data){
+			alert(data);
 		});
-		$scope.alerts.splice(index, 1);
+
 	};
 });
 
@@ -1432,8 +1435,8 @@ app.controller('NewMailController', function($scope, $location, $http){
 		}*/
 		console.log('Senders Gotten');
 	});
-	getMsg.error(function(){
-		//alert('Get sender error!!!!!!!!!!');
+	getMsg.error(function(data){
+		alert(data);
 	});
 
 	$scope.currentlySelected = null;
@@ -1465,10 +1468,10 @@ app.controller('NewMailController', function($scope, $location, $http){
 
 		console.log("Sending the message");
 		sendMsg.success(function(){
-			alert('MESSAGE IS SENT!');
+			alert('Message sent successfully!');
 		});
-		sendMsg.error(function(){
-			alert('SENT MESSAGE ERROR!');
+		sendMsg.error(function(data){
+			alert(data);
 		});
 
 		//alert('message sent');
@@ -2359,11 +2362,11 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location',
 		console.log("fetching the user list.......");
 		toEdit.success(function(response){
 			$scope.Profiles = response;
-			alert('EDITING THE ORGANIZATIONS SUCCESS');
+			alert('Succesfully updated the client organisation');
 			$location.path("/workspace");
 		});
 		toEdit.error(function(response){
-			alert('EDITING THE ORGANIZATIONS FAILED!!!');
+			alert('Error, ');
 		});
 
 	}
@@ -2508,7 +2511,7 @@ app.controller('UsersIndexController', ['$scope','$http', function($scope,$http)
 	$scope.events = [];
 	$scope.calendarOptions = {
 			defaultDate: new Date(),
-			minDate: new Date(),
+			minDate: new Date([2016, 09, 10]),
 			maxDate: new Date([2020, 12, 31]),
 			dayNamesLength: 1, // How to display weekdays (1 for "M", 2 for "Mo", 3 for "Mon"; 9 will show full day names; default is 1)
 			multiEventDates: true, // Set the calendar to render multiple events in the same day or only one event, default is false

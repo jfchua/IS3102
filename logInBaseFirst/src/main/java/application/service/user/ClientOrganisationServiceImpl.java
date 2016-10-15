@@ -21,6 +21,7 @@ import application.domain.User;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.OrganisationNameAlreadyExistsException;
+import application.exception.UserNotFoundException;
 import application.repository.ClientOrganisationRepository;
 import application.repository.RoleRepository;
 import application.repository.UserRepository;
@@ -47,10 +48,16 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 	}
 
 
-	public boolean createNewClientOrganisation(String orgName, String adminEmail, List<String> subs,String nameAdmin) throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException{
-		if ( userService.getUserByEmail(adminEmail).isPresent()) {
-			System.err.println("EMAIL ALREADY EXISTS");
-			throw new EmailAlreadyExistsException("Email: " + adminEmail + " already exists");				
+	public boolean createNewClientOrganisation(String orgName, String adminEmail, List<String> subs,String nameAdmin) throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException{
+
+		try{
+			if ( userService.getUserByEmail(adminEmail).isPresent()) {
+				System.err.println("EMAIL ALREADY EXISTS");
+				throw new EmailAlreadyExistsException("Email: " + adminEmail + " already exists");				
+			}
+		}
+		catch ( UserNotFoundException e){
+
 		}
 		try{
 			ClientOrganisation cl = this.getClientOrganisationByName(orgName);
@@ -59,9 +66,9 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 			}			
 		}
 		catch (ClientOrganisationNotFoundException e ){
-			
+
 		}
-		
+
 		try{
 			//CREATE USER START
 

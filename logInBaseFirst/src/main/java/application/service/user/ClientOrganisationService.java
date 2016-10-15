@@ -8,10 +8,11 @@ import application.domain.ClientOrganisation;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.OrganisationNameAlreadyExistsException;
+import application.exception.UserNotFoundException;
 
 public interface ClientOrganisationService {
 
-	 public boolean createNewClientOrganisation(String orgName, String adminEmail, List<String> subs,String nameAdmin) throws EmailAlreadyExistsException, OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException;
+	 public boolean createNewClientOrganisation(String orgName, String adminEmail, List<String> subs,String nameAdmin) throws EmailAlreadyExistsException, OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException;
 	 
 	 public Collection<ClientOrganisation>  getAllClientOrganisations();
 	 
