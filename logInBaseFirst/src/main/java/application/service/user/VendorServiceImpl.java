@@ -13,22 +13,23 @@ import org.springframework.stereotype.Service;
 import application.domain.Building;
 import application.domain.ClientOrganisation;
 import application.domain.Vendor;
+import application.exception.VendorNotFoundException;
 import application.repository.ClientOrganisationRepository;
 import application.repository.VendorRepository;
 
 @Service
 public class VendorServiceImpl implements VendorService {
-    private final ClientOrganisationRepository clientOrganisationRepository;
+	private final ClientOrganisationRepository clientOrganisationRepository;
 	private final VendorRepository vendorRepository;
 	private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
-	
+
 	@Autowired
 	public VendorServiceImpl( VendorRepository vendorRepository,ClientOrganisationRepository clientOrganisationRepository) {
 		//super();
 		this.clientOrganisationRepository=clientOrganisationRepository;
 		this.vendorRepository = vendorRepository;
 	}
-	
+
 	@Override
 	public boolean createVendor(ClientOrganisation client, String email, String name, String description, String contact) {
 		// TODO Auto-generated method stub	
@@ -39,17 +40,17 @@ public class VendorServiceImpl implements VendorService {
 			return false;
 		}
 		else{
-		Vendor vendor = new Vendor();
-		vendor.setEmail(email);
-		vendor.setName(name);
-		vendor.setDescription(description);
-		vendor.setContact(contact);
-		System.out.println("finish setting");
-		vendorRepository.save(vendor);	
-		Set<Vendor> vendors = client.getVendors();
-		vendors.add(vendor);
-		clientOrganisationRepository.save(client);
-		return true;
+			Vendor vendor = new Vendor();
+			vendor.setEmail(email);
+			vendor.setName(name);
+			vendor.setDescription(description);
+			vendor.setContact(contact);
+			System.out.println("finish setting");
+			vendorRepository.save(vendor);	
+			Set<Vendor> vendors = client.getVendors();
+			vendors.add(vendor);
+			clientOrganisationRepository.save(client);
+			return true;
 		}
 	}
 
@@ -60,24 +61,28 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	public boolean deleteVendor(ClientOrganisation client, long id) {
+	public boolean deleteVendor(ClientOrganisation client, long id) throws VendorNotFoundException {
 		// TODO Auto-generated method stub
 		try{
 			Optional<Vendor> vendor1 = getVendorById(id);
 			if(vendor1.isPresent()){
 				Vendor vendor = vendor1.get();
-				
+
 				Set<Vendor> vendors = client.getVendors();
 				vendors.remove(vendor);
 				client.setVendors(vendors);
-			    clientOrganisationRepository.save(client);		
-			    vendorRepository.delete(vendor);
+				clientOrganisationRepository.save(client);		
+				vendorRepository.delete(vendor);
 			}
-			}catch(Exception e){
-				return false;
-			}
-			return true;
 		}
+		catch ( VendorNotFoundException e){
+			throw e;
+		}
+		catch(Exception e){
+			return false;
+		}
+		return true;
+	}
 
 	@Override
 	public boolean editVendor(long id, String email, String name, String description, String contact) {
@@ -105,8 +110,11 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	public Optional<Vendor> getVendorById(long id) {
+	public Optional<Vendor> getVendorById(long id) throws VendorNotFoundException {
 		// TODO Auto-generated method stub
+		if ( vendorRepository.findOne(id) == null){
+			throw new VendorNotFoundException("Vendor with id " + id + " was not found");
+		}
 		LOGGER.debug("Getting event={}", id);
 		return Optional.ofNullable(vendorRepository.findOne(id));
 	}

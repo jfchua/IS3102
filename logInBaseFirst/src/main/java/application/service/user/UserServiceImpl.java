@@ -19,6 +19,7 @@ import application.domain.PasswordResetToken;
 import application.domain.Role;
 import application.domain.User;
 import application.exception.EmailAlreadyExistsException;
+import application.exception.OldPasswordInvalidException;
 import application.exception.PasswordResetTokenNotFoundException;
 import application.exception.UserNotFoundException;
 import application.repository.ClientOrganisationRepository;
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
 		catch ( Exception e ){
 			throw e;
 		}
-		
+
 
 	}
 
@@ -102,12 +103,12 @@ public class UserServiceImpl implements UserService {
 			throw new UserNotFoundException("User to create the reset token for was not found");
 		}
 		try{
-		PasswordResetToken prt = new PasswordResetToken();
-		prt.setUser(user);
-		prt.setToken(token);
-		prt.setExpiry();
-		passwordResetTokenRepository.save(prt);		
-		return true;
+			PasswordResetToken prt = new PasswordResetToken();
+			prt.setUser(user);
+			prt.setToken(token);
+			prt.setExpiry();
+			passwordResetTokenRepository.save(prt);		
+			return true;
 		}
 		catch ( Exception e){
 			throw e;
@@ -116,33 +117,33 @@ public class UserServiceImpl implements UserService {
 
 	public boolean changePassword(long id, String password) throws UserNotFoundException{
 
-		Optional<User> user = getUserById(id);
-		if ( !user.isPresent() ){
-			throw new UserNotFoundException("User with id " + id + " was not found");
-		}
-		if (user.isPresent()){
-			try{
-				System.out.println("Setting user with ID" + user.get().getId() + "to password " + password);
-				BCryptPasswordEncoder t = new BCryptPasswordEncoder();
-				String newPassword = t.encode(password);
-				user.get().setPasswordHash(newPassword);	
-				System.out.println("Set user with new password of " + newPassword);
-				userRepository.saveAndFlush(user.get());
-			    System.out.println("Set new password to " + user.get().getPasswordHash());
-				
-			}
-			catch(Exception e){
-				System.err.println("EXCEPTION AT CHANGE PASSWORD" + e.getMessage());
-			}
+
+		try{
+			Optional<User> user = getUserById(id);
+			System.out.println("Setting user with ID" + user.get().getId() + "to password " + password);
+			BCryptPasswordEncoder t = new BCryptPasswordEncoder();
+			String newPassword = t.encode(password);
+			user.get().setPasswordHash(newPassword);	
+			System.out.println("Set user with new password of " + newPassword);
+			userRepository.saveAndFlush(user.get());
+			System.out.println("Set new password to " + user.get().getPasswordHash());
 
 		}
+		catch ( UserNotFoundException e){
+			throw e;
+		}
+		catch(Exception e){
+			System.err.println("EXCEPTION AT CHANGE PASSWORD" + e.getMessage());
+		}
+
+
 		System.out.println("LINE 90 AT USER SERVICE IMPL");
 		return true;
 
 	}
 
 	public boolean createNewUser(ClientOrganisation clientOrg, String name, String userEmail, Set<Role> roles) throws EmailAlreadyExistsException, UserNotFoundException{
-		
+
 		try{
 			if ( this.getUserByEmail(userEmail).isPresent() ){
 				//User already exists
@@ -279,6 +280,21 @@ public class UserServiceImpl implements UserService {
 			}
 		}  
 		return ticketManagers;
+	}
+
+	@Override
+	public void checkOldPassword(Long id, String oldpass) throws OldPasswordInvalidException, UserNotFoundException {
+
+			Optional<User> user = this.getUserById(id);
+			String oldPassUser = user.get().getPasswordHash();
+			BCryptPasswordEncoder t = new BCryptPasswordEncoder();
+			String encryptedOldPassword = t.encode(oldpass);
+			if ( !t.matches(oldPassUser, encryptedOldPassword)){
+				System.err.println("invalid old pass");
+				throw new OldPasswordInvalidException("The old password entered was invalid");
+			}
+
+
 	}
 
 }

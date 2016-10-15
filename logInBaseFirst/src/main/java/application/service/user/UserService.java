@@ -10,6 +10,7 @@ import application.domain.PasswordResetToken;
 import application.domain.Role;
 import application.domain.User;
 import application.exception.EmailAlreadyExistsException;
+import application.exception.OldPasswordInvalidException;
 import application.exception.PasswordResetTokenNotFoundException;
 import application.exception.UserNotFoundException;
 
@@ -42,5 +43,7 @@ public interface UserService {
 	Set<User> getFinanceManagers(ClientOrganisation clientOrg);
 
 	Set<User> getTicketManagers(ClientOrganisation clientOrg);
+
+	void checkOldPassword(Long id, String oldpass) throws OldPasswordInvalidException, UserNotFoundException;
 
 }

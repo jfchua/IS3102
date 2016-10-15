@@ -24,12 +24,12 @@ app.controller('buildingController', ['$scope', '$http','$location','$routeParam
 
 		console.log("SAVING THE BUILDING");
 		send.success(function(){
-			alert('BUILDING IS SAVED! GOING BACK TO VIEW BUILDINGS');
+			alert('Building has been saved successfully');
 			$location.path("/viewBuilding");
 			
 		});
-		send.error(function(){
-			alert('SAVING BUILDING GOT ERROR!');
+		send.error(function(data){
+			alert('Error, ' + data);
 		});
 	};
 	angular.element(document).ready(function () {
@@ -114,7 +114,7 @@ app.controller('buildingController', ['$scope', '$http','$location','$routeParam
 		});
 		getBuilding.error(function(response){
 			$location.path("/viewBuilding");
-			console.log('GET BUILDING FAILED! ' + JSON.stringify(response));
+			alert('Error getting building, ' + JSON.stringify(response));
 		});
 
 	}
@@ -188,11 +188,11 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 
 		console.log("UPDATING THE BUILDING");
 		send.success(function(){
-			alert('BUILDING IS SAVED!');
+			alert('Building successfully updated');
 			 $location.path("/viewBuilding");
 		});
-		send.error(function(){
-			alert('UPDATING BUILDING GOT ERROR!');
+		send.error(function(data){
+			alert('Error, ' + data);
 		});
 	};	
 }])
@@ -217,12 +217,12 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 			$http.post("//localhost:8443/building/deleteBuilding", JSON.stringify(tempObj)).then(function(response){
 				//$scope.buildings = response.data;
 				console.log("Delete the BUILDING");
-				alert('BUILDING IS DELETED! GOING BACK TO VIEW BUILDINGS...');
+				alert('Building successfully delete. Going back to view buildings...');
 				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
 				$location.path("/viewBuilding");
 				
 			},function(response){
-				alert("DID NOT DELETE");
+				alert("Error, " + response);
 				//console.log("response is : ")+JSON.stringify(response);
 			}	
 			)
