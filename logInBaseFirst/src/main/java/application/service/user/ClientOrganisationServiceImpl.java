@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import application.domain.ClientOrganisation;
 import application.domain.Role;
 import application.domain.User;
+import application.exception.ClientOrganisationNotFoundException;
+import application.exception.EmailAlreadyExistsException;
+import application.exception.OrganisationNameAlreadyExistsException;
 import application.repository.ClientOrganisationRepository;
 import application.repository.RoleRepository;
 import application.repository.UserRepository;
@@ -31,20 +34,37 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 	private final ClientOrganisationRepository clientOrganisationRepository;
 	private final RoleRepository roleRepository;
 	private final EmailService emailService;
+	private final UserService userService;
 	// private final MessageRepository messageRepository = null;
 
 	@Autowired
-	public ClientOrganisationServiceImpl(EmailService emailService, UserRepository userRepository,  ClientOrganisationRepository clientOrganisationRepository, RoleRepository roleRepository ) {
+	public ClientOrganisationServiceImpl(UserService userService, EmailService emailService, UserRepository userRepository,  ClientOrganisationRepository clientOrganisationRepository, RoleRepository roleRepository ) {
 		this.userRepository = userRepository;
 		this.emailService = emailService;
-		this.clientOrganisationRepository =   clientOrganisationRepository;
+		this.clientOrganisationRepository = clientOrganisationRepository;
 		this.roleRepository = roleRepository;
+		this.userService = userService;
 	}
 
 
-	public boolean createNewClientOrganisation(String orgName, String adminEmail, List<String> subs,String nameAdmin){
+	public boolean createNewClientOrganisation(String orgName, String adminEmail, List<String> subs,String nameAdmin) throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException{
+		if ( userService.getUserByEmail(adminEmail).isPresent()) {
+			System.err.println("EMAIL ALREADY EXISTS");
+			throw new EmailAlreadyExistsException("Email: " + adminEmail + " already exists");				
+		}
+		try{
+			ClientOrganisation cl = this.getClientOrganisationByName(orgName);
+			if( cl != null ){
+				throw new OrganisationNameAlreadyExistsException("Org name " + orgName + " already exists");
+			}			
+		}
+		catch (ClientOrganisationNotFoundException e ){
+			
+		}
+		
 		try{
 			//CREATE USER START
+
 			User user = new User();
 			Set<Role> temp = new HashSet<Role>();
 			Role r = roleRepository.getRoleByName("ROLE_ADMIN");
@@ -59,7 +79,6 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String hashedPassword = encoder.encode(password);
 			user.setPasswordHash(hashedPassword); //add salt?
-
 
 			//CREATE USER END
 
@@ -100,14 +119,28 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 
 	}
 
-	public void deleteClientOrg(Long id){
-
-		clientOrganisationRepository.delete(id);
+	public boolean deleteClientOrg(Long id) throws ClientOrganisationNotFoundException{
+		ClientOrganisation clientOrg = clientOrganisationRepository.findOne(id);
+		if ( clientOrg == null){
+			throw new ClientOrganisationNotFoundException("Client organisation of id" + id + " was not found");
+		}
+		try{
+			clientOrganisationRepository.delete(id);
+		}
+		catch ( Exception e){
+			return false;
+		}
+		return true;
 
 	}
-	
-	public ClientOrganisation getClientOrganisationByName(String name){
-		return clientOrganisationRepository.getClientOrgByName(name);		
+
+	public ClientOrganisation getClientOrganisationByName(String name) throws ClientOrganisationNotFoundException{
+		ClientOrganisation clientOrg = clientOrganisationRepository.getClientOrgByName(name);	
+		if ( clientOrg == null){
+			throw new ClientOrganisationNotFoundException("Client organisation " + name + " was not found");
+		}
+		return	clientOrg;
+
 	}
 
 
