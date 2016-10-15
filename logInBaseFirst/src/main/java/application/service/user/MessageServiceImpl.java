@@ -16,6 +16,8 @@ import application.domain.AuditLog;
 import application.domain.Message;
 import application.domain.SendMessageForm;
 import application.domain.User;
+import application.exception.MessageNotFoundException;
+import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
 import application.repository.MessageRepository;
 import application.repository.UserRepository;
@@ -76,37 +78,56 @@ public class MessageServiceImpl implements MessageService {
 		System.out.println("GETING MESSAGS FROM " + recipient.getEmail() + " WITH SIZE " + t.size());
 		return t; //Currently unsorted
 	}
-//FOR SYSTEM MSSAGES, THE SENDER OR USER IS "SYSTEM"?
+	//FOR SYSTEM MSSAGES, THE SENDER OR USER IS "SYSTEM"?
 	@Transactional
-	public void sendMessage(User sender,User recipient,String subject, String msg){
-		Message m = new Message();
-		m.setMessage(msg);
-		m.setSubject(subject);
-		m.setRecipient(recipient);
-		//m.setSender(sender);
-		m.setSenderName(sender.getEmail());
-		//sender.addSentMessage(m);
-		recipient.addReceivedMessage(m);
-		messageRepository.save(m);
-		userRepository.save(sender);
-		userRepository.save(recipient);
-		AuditLog al = new AuditLog();
-		al.setTimeToNow();
-		al.setSystem("Notification");
-		al.setAction("Send Notification Message To " + recipient.getEmail() );
-		//al.setEmail(currentUsername);
-		al.setUser(sender);
-		al.setUserEmail(sender.getEmail());
-		auditLogRepository.save(al);
+	public boolean sendMessage(User sender,User recipient,String subject, String msg) throws UserNotFoundException{
+		if ( sender == null || recipient == null ){
+			throw new UserNotFoundException("User not found!");
+		}
+		try{
+			Message m = new Message();
+			m.setMessage(msg);
+			m.setSubject(subject);
+			m.setRecipient(recipient);
+			//m.setSender(sender);
+			m.setSenderName(sender.getEmail());
+			//sender.addSentMessage(m);
+			recipient.addReceivedMessage(m);
+			messageRepository.save(m);
+			userRepository.save(sender);
+			userRepository.save(recipient);
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Notification");
+			al.setAction("Send Notification Message To " + recipient.getEmail() );
+			//al.setEmail(currentUsername);
+			al.setUser(sender);
+			al.setUserEmail(sender.getEmail());
+			auditLogRepository.save(al);
+		}
+		catch ( Exception e){
+			return false;
+		}
+		return true;
 	}
-	
-	public void deleteMessage(Message m){
-		User recipient = m.getRecipient();
-		recipient.deleteReceviedMessage(m);
-		userRepository.save(recipient);
-		messageRepository.delete(m);	
+
+	public boolean deleteMessage(Message m) throws MessageNotFoundException{
+		if ( m == null ){
+			throw new MessageNotFoundException("Message was not found");
+		}
+		try{
+			User recipient = m.getRecipient();
+			recipient.deleteReceviedMessage(m);
+			userRepository.save(recipient);
+			messageRepository.delete(m);	
+		}
+		catch ( Exception e){
+			return false;
+		}
+		return true;
+
 	}
-	
+
 }
 
 //OLD CODE

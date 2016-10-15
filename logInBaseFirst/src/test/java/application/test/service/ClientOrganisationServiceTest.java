@@ -14,6 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import application.domain.ClientOrganisation;
 import application.domain.User;
+import application.exception.ClientOrganisationNotFoundException;
+import application.exception.EmailAlreadyExistsException;
+import application.exception.OrganisationNameAlreadyExistsException;
+import application.exception.UserNotFoundException;
 import application.service.user.ClientOrganisationService;
 import application.service.user.EmailService;
 import application.test.AbstractTest;
@@ -28,8 +32,12 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	public void setUp(){
 		List<String> subs = new ArrayList<String>();
 		subs.add("TESTSUB");
-		clientOrganisationService.createNewClientOrganisation("deletetestname123", "testemail@testemail", subs, "testadminname");
-		
+		try{
+			clientOrganisationService.createNewClientOrganisation("deletetestname123", "testemail@testemail", subs, "testadminname");
+		}
+		catch (Exception e){
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	@After
@@ -47,46 +55,55 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	}
 	
 	@Test
-	public void testGetClientOrganisationByName() {
+	public void testGetClientOrganisationByName() throws ClientOrganisationNotFoundException {
 		ClientOrganisation result = clientOrganisationService.getClientOrganisationByName("Expo");
 		Assert.assertNotNull("Getting org should not be null as Expo already inserted via sql", result);
 		//Assert.assertEquals("expected name is Expo", "Expo", org.getOrganisationName());	
 	}
 	
-	@Test
-	public void testGetClientOrganisationByNameNotFound() {
+	@Test(expected=ClientOrganisationNotFoundException.class)
+	public void testGetClientOrganisationByNameNotFound() throws ClientOrganisationNotFoundException {
 		ClientOrganisation result = clientOrganisationService.getClientOrganisationByName("NON-EXISTENT");
 		Assert.assertNull("Getting org should be null", result);
 	}
 	
 	@Test
-	public void testCreateNewClientOrganisation(){
+	public void testCreateNewClientOrganisation() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException {
 		List<String> subs = new ArrayList<String>();
 		System.err.println("before createnewclientorg");
-		clientOrganisationService.createNewClientOrganisation("testname123", "testemail@test", subs, "testadminname");
+		boolean result = clientOrganisationService.createNewClientOrganisation("testname123", "testemail@test", subs, "testadminname");
 		System.err.println("after  createnewclientorg");
-		ClientOrganisation result = clientOrganisationService.getClientOrganisationByName("testname123");
-		System.err.println("getting client org");
-		System.err.println("createnewclientorgtest" + result.getOrganisationName() );
-		Assert.assertNotNull("Expected not null", result);
-		Assert.assertEquals("Expected organisation name match", "testname123",
-				result.getOrganisationName());
-		System.err.println("Created new client organisation of name: "  + result.getOrganisationName());
-
-		//Collection<ClientOrganisation> entities = clientOrganisationService.getAllClientOrganisations();
-
-		//Assert.assertEquals("Expected size to be 3 after creation", 3, entities.size());
-		
+		Assert.assertTrue(result);	
+	}
+	
+	@Test(expected=EmailAlreadyExistsException.class)
+	public void testCreateNewClientOrganisationUserAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException {
+		List<String> subs = new ArrayList<String>();
+		System.err.println("before createnewclientorg");
+		boolean result = clientOrganisationService.createNewClientOrganisation("testname123", "property@localhost", subs, "testadminname");
+		System.err.println("after  createnewclientorg");
+		Assert.assertFalse(result);	
+	}
+	
+	@Test(expected=OrganisationNameAlreadyExistsException.class)
+	public void testCreateNewClientOrganisationOrgNameAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException {
+		List<String> subs = new ArrayList<String>();
+		System.err.println("before createnewclientorg");
+		boolean result = clientOrganisationService.createNewClientOrganisation("Expo", "testy@localhost", subs, "testname");
+		System.err.println("after  createnewclientorg");
+		Assert.assertFalse(result);	
 	}
 	
 	@Test
-	public void testDeleteClientOrg() {
-		ClientOrganisation result = clientOrganisationService.getClientOrganisationByName("deletetestname123");
-		Assert.assertNotNull("Getting org should not be null", result);
-		clientOrganisationService.deleteClientOrg(result.getId());
-		result = clientOrganisationService.getClientOrganisationByName("testname123");
-		Assert.assertNull("Getting org should now be null after deletion", result);
-		System.err.println("Size of client orgs is now : " + clientOrganisationService.getAllClientOrganisations().size() );
+	public void testDeleteClientOrg() throws ClientOrganisationNotFoundException {
+		boolean result = clientOrganisationService.deleteClientOrg((long)3);
+		Assert.assertTrue("Getting org should now be null after deletion", result);
+	}
+	
+	@Test(expected=ClientOrganisationNotFoundException.class)
+	public void testDeleteClientOrgNotExist() throws ClientOrganisationNotFoundException {
+		boolean result = clientOrganisationService.deleteClientOrg((long)99999);
+		Assert.assertFalse("client org should not be deleted as it does not exist", result);		
 	}
 	
 

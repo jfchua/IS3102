@@ -34,6 +34,7 @@ import application.domain.AuditLog;
 import application.domain.ClientOrganisation;
 import application.domain.Icon;
 import application.domain.User;
+import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
 import application.service.user.IconService;
 import application.service.user.ClientOrganisationService;
@@ -109,7 +110,7 @@ public class IconController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/viewIcons", method = RequestMethod.GET)
 	@ResponseBody
-	public  ResponseEntity<Set<Icon>> viewIcons(HttpServletRequest rq) {
+	public  ResponseEntity<Set<Icon>> viewIcons(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -150,7 +151,7 @@ public class IconController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/saveIcon")
-	public void saveIcon(@RequestParam("file") MultipartFile file, String iconType, HttpServletRequest request ) throws IOException {
+	public void saveIcon(@RequestParam("file") MultipartFile file, String iconType, HttpServletRequest request ) throws IOException, UserNotFoundException {
 
 		Principal p = request.getUserPrincipal();
 		User curUser = userService.getUserByEmail(p.getName()).get();
@@ -226,7 +227,7 @@ public class IconController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/deleteIcon", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteIcon(@RequestBody String iconId,HttpServletRequest rq) {
+	public ResponseEntity<Void> deleteIcon(@RequestBody String iconId,HttpServletRequest rq) throws UserNotFoundException {
 
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
@@ -260,7 +261,7 @@ public class IconController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/updateIcon")
-	public void updateIcon(@RequestParam("file") MultipartFile file, Long id, HttpServletRequest request ) throws IOException {
+	public void updateIcon(@RequestParam("file") MultipartFile file, Long id, HttpServletRequest request ) throws IOException, UserNotFoundException {
 		System.out.println("test");
 		
 		Principal p = request.getUserPrincipal();

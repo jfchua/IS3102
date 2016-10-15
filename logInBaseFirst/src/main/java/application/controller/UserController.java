@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -40,6 +41,11 @@ import application.domain.ToDoTask;
 import application.domain.User;
 import application.domain.Vendor;
 import application.domain.validator.UserCreateFormValidator;
+import application.exception.ClientOrganisationNotFoundException;
+import application.exception.EmailAlreadyExistsException;
+import application.exception.OldPasswordInvalidException;
+import application.exception.OrganisationNameAlreadyExistsException;
+import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
 import application.repository.ClientOrganisationRepository;
 import application.repository.RoleRepository;
@@ -82,7 +88,7 @@ public class UserController {
 	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/addClientOrganisation", method = RequestMethod.POST)
 	@ResponseBody //RESPONSE ENTITY TO RETURN A USER BUT NO JACKSON
-	public ResponseEntity<Void> addNewClientOrganisation(@RequestBody String clientOrgJSON) {
+	public ResponseEntity<String> addNewClientOrganisation(@RequestBody String clientOrgJSON) {
 
 		//Assume client org has ClientOrg name, One admin user which is to be created.
 		try{
@@ -105,22 +111,43 @@ public class UserController {
 			}
 
 			System.out.println("adding new client organisation" + name + " with it admin user: " + email);
-			if ( !clientOrganisationService.createNewClientOrganisation(name, email,subsToAdd,nameAdmin) ) return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			//if ( !clientOrganisationService.createNewClientOrganisation(name, email,subsToAdd,nameAdmin) ) return new ResponseEntity<String>( HttpStatus.CONFLICT);
+			clientOrganisationService.createNewClientOrganisation(name, email,subsToAdd,nameAdmin); 
 			System.out.println( "CREATED CLIENT ORGANISATION : " + userService.getUserByEmail(email).get().getClientOrganisation().getOrganisationName() );
 			//TEST FOR CREATING NEW USER
 			/*Set<Role> userRolesToAddIn2 = new HashSet<Role>();
  			userRolesToAddIn2.add(roleRepository.getRoleByName("ROLE_USER"));
  			userService.createNewUser(userService.getUserByEmail(email).get().getClientOrganisation(), "chuajinfa@gmail.com", userRolesToAddIn2);
  			System.out.println("CREATED USER FOR CHUAJINFA with client org" + userService.getUserByEmail(email).get().getClientOrganisation().getOrganisationName());*/
+			
 
-
+		}
+		catch ( EmailAlreadyExistsException e ){
+			Gson g = new Gson();
+			String json = g.toJson(e.getMessage());
+			System.out.println("EEPTOIN" + json);
+			return new ResponseEntity<String>(json,HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+		catch ( OrganisationNameAlreadyExistsException e){
+			Gson g = new Gson();
+			String json = g.toJson(e.getMessage());
+			System.out.println("EEPTOIN" + json);
+			return new ResponseEntity<String>(json,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( MailException e ){
+			Gson g = new Gson();
+			return new ResponseEntity<String>(g.toJson("Server error in sending email to the new user"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (Exception e){
-			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			Gson g = new Gson();
+			String json = g.toJson(e.getMessage());
+			System.out.println("EEPTOIN" + e.toString() + "   " + json);
+			return new ResponseEntity<String>(json,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
+	
 	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/viewClientOrgs", method = RequestMethod.GET)
 	@ResponseBody //RESPONSE ENTITY TO RETURN A USER BUT NO JACKSON
@@ -171,12 +198,12 @@ public class UserController {
 	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/viewAllClientOrganisations", method = RequestMethod.GET)
 	@ResponseBody
-	public String viewAllClientOrganisations(HttpServletRequest rq) {
-
+	public String viewAllClientOrganisations(HttpServletRequest rq) throws UserNotFoundException {
+		Gson gson2 = new Gson();
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName()); //Extra checkings for role admin could be done
 		if ( !usr.isPresent() ){
-			return "ERROR"; //NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			return gson2.toJson("User does not exist"); //NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 
 		//Assume client org has ClientOrg name, One admin user which is to be created.
@@ -211,14 +238,14 @@ public class UserController {
 		}
 		catch (Exception e){
 			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
-			return "ERROR";
+			return gson2.toJson("Error viewing client organisations");
 		}
 	}
 
 	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/deleteClientOrg", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteClientOrg(@RequestBody String userJSON, HttpServletRequest rq) {
+	public ResponseEntity<String> deleteClientOrg(@RequestBody String userJSON, HttpServletRequest rq) {
 
 		try{
 			Object obj = parser.parse(userJSON);
@@ -230,17 +257,26 @@ public class UserController {
 			clientOrganisationService.deleteClientOrg(id);
 			System.err.println("deledted");
 
-		}catch(Exception e){
-			System.out.println("ERROR IN DELETING USER" + e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		catch ( ClientOrganisationNotFoundException e){
+			Gson g = new Gson();
+			String json = g.toJson(e.getMessage());
+			System.out.println("EEPTOIN" + json);
+			return new ResponseEntity<String>(json,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch(Exception e){
+			System.out.println("ERROR IN DELETING Client Org" + e.getMessage());
+			Gson g = new Gson();
+			String json = g.toJson(e.getMessage());
+			return new ResponseEntity<String>(json,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 
 	}
 
 	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/updateClientOrg", method = RequestMethod.POST)
-	@ResponseBody
+	@ResponseBody //SERVICE CLASS
 	public ResponseEntity<Void> updateClientOrgs(@RequestBody String userJSON, HttpServletRequest rq) {
 		System.out.println("ERROR here GGGGG");
 		try{
@@ -297,8 +333,8 @@ public class UserController {
 	//Takes in userJSON with information in the object {email:"email", roles:[arrayofroles]}
 	@RequestMapping(value = "user/addNewUser", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> addNewUser(@RequestBody String userJSON, HttpServletRequest rq) {
-
+	public ResponseEntity<String> addNewUser(@RequestBody String userJSON, HttpServletRequest rq) {
+		Gson gson = new Gson();
 		//Assume client org has ClientOrg name, One admin user which is to be created.
 		try{
 			
@@ -339,7 +375,7 @@ public class UserController {
 
 
 
-			if ( !userService.createNewUser(currUser.getClientOrganisation(), name,email, userRolesToAddIn) ) return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			if ( !userService.createNewUser(currUser.getClientOrganisation(), name,email, userRolesToAddIn) ) return new ResponseEntity<String>(gson.toJson("Error creating new user"),HttpStatus.INTERNAL_SERVER_ERROR);
 			//if ( !u.createNewClientOrganisation(name, email) ) return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			//System.out.println( "CREATED CLIENT ORGANISATION : " + userService.getUserByEmail(email).get().getClientOrganisation().getOrganisationName() );
 			
@@ -352,11 +388,17 @@ public class UserController {
 			auditLogRepository.save(al);
 
 		}
+		catch ( EmailAlreadyExistsException e){
+			return new ResponseEntity<String>(gson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( MailException e ){
+			return new ResponseEntity<String>(gson.toJson("Server error in sending email to the new user"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		catch (Exception e){
 			System.out.println("ERROR " + e.toString() + "   " + e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(gson.toJson("Server error in adding new user"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/viewAllUsers", method = RequestMethod.GET)
@@ -410,8 +452,8 @@ public class UserController {
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/deleteUser", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteUser(@RequestBody String userJSON, HttpServletRequest rq) {
-
+	public ResponseEntity<String> deleteUser(@RequestBody String userJSON, HttpServletRequest rq) {
+		Gson gson = new Gson();
 		try{
 			Principal principal = rq.getUserPrincipal();
 			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
@@ -436,18 +478,22 @@ public class UserController {
 			al.setUserEmail(currUser.getEmail());
 			auditLogRepository.save(al);
 
-		}catch(Exception e){
-			System.out.println("ERROR IN DELETING USER");
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		catch ( UserNotFoundException e){
+			return new ResponseEntity<String>(gson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch(Exception e){
+			System.out.println("ERROR IN DELETING USER");
+			return new ResponseEntity<String>(gson.toJson("Server error in deleting user"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 
 	}
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/updateUser", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> updateUser(@RequestBody String userJSON, HttpServletRequest rq) {
-
+	public ResponseEntity<String> updateUser(@RequestBody String userJSON, HttpServletRequest rq) {
+		Gson gson = new Gson();
 		try{
 			Principal principal = rq.getUserPrincipal();
 			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
@@ -490,7 +536,9 @@ public class UserController {
 			//System.err.println("set " + userToEdit.getName());
 			//System.err.println(userToEdit.getName());
 
-			userService.editUser(name, userToEdit, userRolesToAddIn);
+			if ( !userService.editUser(name, userToEdit, userRolesToAddIn) ){
+				return new ResponseEntity<String>(gson.toJson("Server error in editing user"),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 			//System.out.println("GG2");
 
 			System.out.println("USER TO BE EDITED: " + userToEdit + "   " +email);
@@ -507,18 +555,22 @@ public class UserController {
 
 
 
-		}catch(Exception e){
-			System.out.println("ERROR IN EDITING USER");
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		catch ( UserNotFoundException e){
+			return new ResponseEntity<String>(gson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch(Exception e){
+			System.out.println("ERROR IN EDITING USER");
+			return new ResponseEntity<String>(gson.toJson("Server error in editing user"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 
 	}
 	
 	@RequestMapping(value = "user/editUserProfile", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> editUserProfile(@RequestBody String userJSON, HttpServletRequest rq) {
-
+	public ResponseEntity<String> editUserProfile(@RequestBody String userJSON, HttpServletRequest rq) {
+		Gson gson = new Gson();
 		try{
 			Object obj = parser.parse(userJSON);
 			JSONObject jsonObject = (JSONObject) obj;
@@ -536,26 +588,31 @@ public class UserController {
 
 		}catch(Exception e){
 			System.out.println("ERROR IN EDITING USER PROFILE" + e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(gson.toJson("Server error in editing user profile"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 
 	}
 
 	@RequestMapping(value = "user/changePassword", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> changPassword(@RequestBody String userJSON, HttpServletRequest rq) {
-
+	public ResponseEntity<String> changePassword(@RequestBody String userJSON, HttpServletRequest rq) {
+		Gson gson = new Gson();
 		try{
 			Object obj = parser.parse(userJSON);
 			JSONObject jsonObject = (JSONObject) obj;
 			String pass = (String)jsonObject.get("password");
+			String oldpass = (String)jsonObject.get("oldpassword");
 			Principal principal = rq.getUserPrincipal();
 			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-			String hashedPassword = encoder.encode(pass);
-			currUser.setPasswordHash(hashedPassword); //add salt?
-			userRepository.saveAndFlush(currUser);
+			userService.checkOldPassword(currUser.getId(),oldpass);
+			if ( !userService.changePassword(currUser.getId(), pass) ){
+				return new ResponseEntity<String>(gson.toJson("Server error in changing password"),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			//BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			//String hashedPassword = encoder.encode(pass);
+			//currUser.setPasswordHash(hashedPassword); //add salt?
+			////userRepository.saveAndFlush(currUser);
 			
 			AuditLog al = new AuditLog();
 			al.setTimeToNow();
@@ -565,11 +622,18 @@ public class UserController {
 			al.setUserEmail(currUser.getEmail());
 			auditLogRepository.save(al);
 
-		}catch(Exception e){
-			System.out.println("ERROR IN CHANGING PASSWORD" + e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		catch ( UserNotFoundException e){
+			return new ResponseEntity<String>(gson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( OldPasswordInvalidException e){
+			return new ResponseEntity<String>(gson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch(Exception e){
+			System.out.println("ERROR IN CHANGING PASSWORD" + e.getMessage());
+			return new ResponseEntity<String>(gson.toJson("Server error in changing password"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 
 	}
 	///////GETTING USER PROFILE START
@@ -701,7 +765,6 @@ public class UserController {
 
 
 	}
-
 
 
 }

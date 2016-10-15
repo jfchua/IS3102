@@ -45,6 +45,8 @@ import com.google.gson.Gson;
 import application.domain.ClientOrganisation;
 import application.domain.PasswordResetToken;
 import application.domain.User;
+import application.exception.PasswordResetTokenNotFoundException;
+import application.exception.UserNotFoundException;
 import application.repository.ClientOrganisationRepository;
 import application.repository.PasswordResetTokenRepository;
 import application.service.user.EmailService;
@@ -61,6 +63,7 @@ public class LoginController {
 	private final EmailService emailService;
 	private final PasswordResetTokenRepository passwordResetTokenRepository;
 	private final ClientOrganisationRepository clientOrganisationRepository;
+	private Gson geeson = new Gson();
 
 	private JSONParser parser = new JSONParser();
 
@@ -130,73 +133,87 @@ public class LoginController {
 	}*/
 
 	@RequestMapping(value = "/user/reset", method = RequestMethod.POST)
-	public ResponseEntity<Void> resetPassword(@RequestBody String userEmail) throws URISyntaxException {
+	public ResponseEntity<String> resetPassword(@RequestBody String userEmail) throws URISyntaxException, UserNotFoundException {
 		System.out.println("Received Reset Password Request from  " + userEmail);
 
-		if (!userService.getUserByEmail(userEmail).isPresent() ) {
+		/*		if (!userService.getUserByEmail(userEmail).isPresent() ) {
 			System.out.println("A User with that email does not exist");
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+
+		}*/
+		try{
+			System.out.println("Resetting password...");
+			User userToReset = userService.getUserByEmail(userEmail).get();
+			Long userId = userToReset.getId();
+			String token = UUID.randomUUID().toString();
+			String link = "The following link will expire in 30 minutes: https://localhost:8443/#/resetPassword/" + userId + "/" +  token;
+			userService.createPasswordResetTokenForUser(userToReset, token);
+			emailService.sendEmail(userEmail, "Reset your password by clicking on the link", link);
+			System.out.println("Reset email has been sent to " + userEmail);
+			HttpHeaders headers = new HttpHeaders();
+			headers.setLocation(new URI("/login"));
+			ResponseEntity<String> v = new ResponseEntity<String>(headers,HttpStatus.OK);	
+			return v;
 		}
-		System.out.println("Resetting password...");
-		User userToReset = userService.getUserByEmail(userEmail).get();
-		Long userId = userToReset.getId();
-		String token = UUID.randomUUID().toString();
-		String link = "The following link will expire in 30 minutes: https://localhost:8443/#/resetPassword/" + userId + "/" +  token;
-		userService.createPasswordResetTokenForUser(userToReset, token);
-		emailService.sendEmail(userEmail, "Reset your password by clicking on the link", link);
-		System.out.println("Reset email has been sent to " + userEmail);
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(new URI("/login"));
-		ResponseEntity<Void> v = new ResponseEntity<Void>(headers,HttpStatus.OK);	
-		return v;
+		catch ( UserNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( Exception e ){
+			return new ResponseEntity<String>(geeson.toJson("Server error in resetting password"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 
 	@RequestMapping(value = "/user/resetChangePassword", method = RequestMethod.POST, headers = {"Content-type=application/json"})
 	@ResponseBody
-	public ResponseEntity<Void> resetChangePassword(@RequestBody String info) throws URISyntaxException, IOException, ParseException {
+	public ResponseEntity<String> resetChangePassword(@RequestBody String info) throws URISyntaxException, IOException, ParseException, PasswordResetTokenNotFoundException, UserNotFoundException {
 		//	JSONParser parser = new JSONParser();
 		Object obj = parser.parse(info);
 		JSONObject jsonObject = (JSONObject) obj;
 		User user = null;
+		try{
+			System.out.println("Received Reset Password Request from  " + jsonObject.get("id"));
 
-		System.out.println("Received Reset Password Request from  " + jsonObject.get("id"));
+			PasswordResetToken passToken = userService.getPasswordResetToken((String)jsonObject.get("token"));
+			if ( passToken != null){
+				user = passToken.getUser();
+			}
 
-		PasswordResetToken passToken = userService.getPasswordResetToken((String)jsonObject.get("token"));
-		if ( passToken != null){
-			user = passToken.getUser();
+			System.out.println(user.getId());
+			System.out.println((long)(jsonObject.get("id")));
+
+			if (passToken == null || user.getId() != (long)(jsonObject.get("id"))) {
+				//  String message = messages.getMessage("auth.message.invalidToken", null, locale);
+				//  model.addAttribute("message", message);
+
+				System.out.println("LINE 163");
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);		
+			}
+			Calendar cal = Calendar.getInstance();
+			if ((passToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+				//model.addAttribute("message", messages.getMessage("auth.message.expired", null, locale));
+				System.out.println("LINE 169");
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+			}
+
+			System.out.println("Before password change");
+			userService.changePassword(user.getId(), (String)(jsonObject.get("password")));
+			passwordResetTokenRepository.delete(passToken);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setLocation(new URI("/login"));
+			ResponseEntity<String> v = new ResponseEntity<String>(headers,HttpStatus.OK);	
+			return v;
 		}
-		else{
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		catch ( PasswordResetTokenNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
-
-
-		System.out.println(user.getId());
-		System.out.println((long)(jsonObject.get("id")));
-
-		if (passToken == null || user.getId() != (long)(jsonObject.get("id"))) {
-			//  String message = messages.getMessage("auth.message.invalidToken", null, locale);
-			//  model.addAttribute("message", message);
-
-			System.out.println("LINE 163");
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		catch ( UserNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
-		Calendar cal = Calendar.getInstance();
-		if ((passToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-			//model.addAttribute("message", messages.getMessage("auth.message.expired", null, locale));
-			System.out.println("LINE 169");
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-
+		catch ( Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in resetting password "),HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
-
-		System.out.println("Before password change");
-		userService.changePassword(user.getId(), (String)(jsonObject.get("password")));
-		passwordResetTokenRepository.delete(passToken);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(new URI("/login"));
-		ResponseEntity<Void> v = new ResponseEntity<Void>(headers,HttpStatus.OK);	
-		return v;
 	}
 
 
@@ -304,7 +321,7 @@ public class LoginController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/receiveLogoFile")
-	public void upload(@RequestParam("file") MultipartFile file, HttpServletRequest request ) throws IOException {
+	public void upload(@RequestParam("file") MultipartFile file, HttpServletRequest request ) throws IOException, UserNotFoundException {
 
 		Principal p = request.getUserPrincipal();
 		User curUser = userService.getUserByEmail(p.getName()).get();
@@ -342,9 +359,9 @@ public class LoginController {
 
 			System.err.println("returning : " + temp);
 			Gson gson = new Gson();
-		    String json = gson.toJson(temp);
-		    System.out.println(json);
-		    return json;	
+			String json = gson.toJson(temp);
+			System.out.println(json);
+			return json;	
 		}
 		catch(Exception e){
 			System.err.println(e.getMessage());
@@ -356,7 +373,7 @@ public class LoginController {
 
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@RequestMapping(value = "/downloadAuditLog", method = RequestMethod.POST, produces = "application/pdf")
-	public void generateAuditReport(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException {
+	public void generateAuditReport(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
 		System.out.println("Enter");
 		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/AuditLog.jasper");
 		response.setContentType("application/pdf");
@@ -379,7 +396,7 @@ public class LoginController {
 
 			startDate = (String)jsonObject.get("startDate");
 			endDate = (String)jsonObject.get("endDate");
-//****************FIX THE DATE TIMEZONE PROBLEM AS CAN'T INCREMENT BY 1 DAY ***************************
+			//****************FIX THE DATE TIMEZONE PROBLEM AS CAN'T INCREMENT BY 1 DAY ***************************
 			sb.append("WHERE (time >= '");
 			sb.append( startDate + " 00:00:00");
 			sb.append("' AND ");
@@ -396,7 +413,7 @@ public class LoginController {
 					sb.append("user_id =" +  us.getId() );
 					sb.append(" OR ");
 				}
-				
+
 				sb.setLength(sb.length() - 4);
 				sb.append(")");
 			}

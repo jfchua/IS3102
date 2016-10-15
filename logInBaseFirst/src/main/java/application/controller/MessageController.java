@@ -52,6 +52,9 @@ import application.domain.PasswordResetToken;
 import application.domain.SendMessageForm;
 import application.domain.User;
 import application.domain.validator.SendMessageFormValidator;
+import application.exception.MessageNotFoundException;
+import application.exception.ToDoTaskNotFoundException;
+import application.exception.UserNotFoundException;
 import application.repository.MessageRepository;
 import application.service.user.MessageService;
 import application.service.user.UserService;
@@ -65,6 +68,7 @@ public class MessageController {
 	private final SendMessageFormValidator sendMessageFormValidator;
 	private MessageRepository messageRepository;
 	private  JSONParser parser = new JSONParser();
+	private Gson geeson = new Gson();
 
 	@Autowired
 	public MessageController(MessageRepository messageRepository,MessageService messageService, UserService userService, SendMessageFormValidator sendMessageFormValidator) {
@@ -143,13 +147,13 @@ public class MessageController {
 
 	@RequestMapping(value = "/user/notifications/findAllNotifications", method = RequestMethod.GET)
 	@ResponseBody
-	public String getAllMessages(HttpServletRequest rq) {
+	public String getAllMessages(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		System.out.println("THIS PLACE");
 		System.out.println(principal.toString());
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return "ERROR"; //NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			return geeson.toJson("User was not found"); //NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 		try{
 			System.out.println("Getting messages sent to " + usr.get().getEmail());
@@ -185,14 +189,14 @@ public class MessageController {
 		}
 		catch ( Exception e){
 			System.out.println("Exception caught at MessagControllerFindAllnotifications" + e.toString());
+			return geeson.toJson("Server error in getting all notifications");
 		}
-		return "NOT OK";
 	}
 
 
 	@RequestMapping(value = "/user/notifications/sendNotification", method = RequestMethod.POST, headers = {"Content-type=application/json"})
 	//@ResponseBody
-	public ResponseEntity<Void> sendNotification(@RequestBody String info, HttpServletRequest rq) throws URISyntaxException, IOException, ParseException {
+	public ResponseEntity<String> sendNotification(@RequestBody String info, HttpServletRequest rq) throws URISyntaxException, IOException, ParseException {
 		//	JSONParser parser = new JSONParser();
 		try{
 			System.out.println("Sending notification...");
@@ -210,37 +214,43 @@ public class MessageController {
 				messageService.sendMessage(usr.get(), usrRecipient.get(),(String)jsonObject.get("subject"), (String)jsonObject.get("message"));
 				System.out.println("***Message Sucessfully sent to " + usrRecipient.get().getEmail());
 			}
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}
+		catch ( UserNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (Exception e){
 			System.err.println("Exception at send Notification" + e.toString());
-			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(geeson.toJson("Server error in sending notification"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 
 	//This method takes in a String which is the ID of the toDoTask to delete
 	// Call $http.post(URL,(String)id);
-	@RequestMapping(value = "/deleteToDoTask", method = RequestMethod.POST)
+/*	@RequestMapping(value = "/deleteToDoTask", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteToDoTask(@RequestBody String taskId,HttpServletRequest rq) {
+	public ResponseEntity<String> deleteToDoTask(@RequestBody String taskId,HttpServletRequest rq) {
 
 		try{
 			Principal principal = rq.getUserPrincipal();
 			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 			currUser.deleteToDoTask(Long.parseLong(taskId));
 		}
-		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		catch ( ToDoTaskNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
-	}
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in deleting to do task"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}*/
 
 	//This method takes in a String which is the ID of the notification to delete
 	// Call $http.post(URL,(String)id);
 	@RequestMapping(value = "/deleteNotification", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteNotification(@RequestBody String notificationId,HttpServletRequest rq) {
+	public ResponseEntity<String> deleteNotification(@RequestBody String notificationId,HttpServletRequest rq) {
 
 		try{
 			Principal principal = rq.getUserPrincipal();
@@ -249,17 +259,20 @@ public class MessageController {
 			System.out.println("MESSAGE TO BE DELETED FOUND!!!");
 			if ( !m.getRecipient().equals(currUser)){ //THE MESSAGE TO BE DELETED IS NOT RECEIVED BY THE CURRENT USER
 				System.err.println("Other things dont have?");
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			messageService.deleteMessage(m);
 
 		}
+		catch ( MessageNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		catch (Exception e){
 			System.out.println(e.toString());
 			System.out.println(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(geeson.toJson("Server error in deleting message"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/getUsersToSendTo", method = RequestMethod.GET)
@@ -284,7 +297,7 @@ public class MessageController {
 
 		}
 		catch (Exception e){
-			return "ERROR";
+			return geeson.toJson("Server error in getting users to send to");
 		}
 	}
 

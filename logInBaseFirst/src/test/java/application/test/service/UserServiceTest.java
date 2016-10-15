@@ -18,6 +18,10 @@ import application.domain.ClientOrganisation;
 import application.domain.PasswordResetToken;
 import application.domain.Role;
 import application.domain.User;
+import application.exception.ClientOrganisationNotFoundException;
+import application.exception.EmailAlreadyExistsException;
+import application.exception.PasswordResetTokenNotFoundException;
+import application.exception.UserNotFoundException;
 import application.repository.RoleRepository;
 import application.repository.UserRepository;
 import application.service.user.ClientOrganisationService;
@@ -38,14 +42,14 @@ public class UserServiceTest extends AbstractTest {
 	private RoleRepository roleRepository;
 
 	@Before
-	public void setUp(){
+	public void setUp() throws UserNotFoundException{
 		User user = userService.getUserByEmail("property@localhost").get();
 		userService.createPasswordResetTokenForUser(user, "tokentest12345");
 		try{
-			userService.createNewUser(clientOrgService.getClientOrganisationByName("Expo"), "testdeleteuser", "testdeleteuser@test.com", new HashSet<Role>());
+			userService.createNewUser(clientOrgService.getClientOrganisationByName("Expo"), "testdeleteuser2", "testdeleteuser2@test.com", new HashSet<Role>());
 		}
 		catch ( Exception e){
-			System.err.println("cannot create user");
+			System.err.println("cannot create user" + e.getMessage());
 		}
 	}
 
@@ -64,14 +68,21 @@ public class UserServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testViewAllUsersFromClientOrg(){
+	public void testViewAllUsersFromClientOrg() throws ClientOrganisationNotFoundException{
 		ClientOrganisation tempOrg = clientOrgService.getClientOrganisationByName("Expo");
 		Collection<User> users = userService.viewAllUsers(tempOrg);
 		Assert.assertNotNull("Getting users should not be null as users belong to expo", users);
 	}
+	
+	@Test(expected=ClientOrganisationNotFoundException.class)
+	public void testViewAllUsersFromNonExistClientOrg() throws ClientOrganisationNotFoundException{
+		ClientOrganisation tempOrg = clientOrgService.getClientOrganisationByName("NON-EXIST");
+		Collection<User> users = userService.viewAllUsers(tempOrg);
+		Assert.assertNull("Getting users should be null", users);
+	}
 
 	@Test
-	public void testFindUserByIdFound() {
+	public void testFindUserByIdFound() throws UserNotFoundException {
 
 		Long id = new Long(1);
 
@@ -82,119 +93,135 @@ public class UserServiceTest extends AbstractTest {
 
 	}
 	
-	@Test(expected=NoSuchElementException.class)
-	public void testFindUserByIdNotFound() {
+	@Test(expected=UserNotFoundException.class)
+	public void testFindUserByIdNotFound() throws UserNotFoundException {
 
 		Long id = Long.MAX_VALUE;
 
 		Optional<User> entity = userService.getUserById(id);
 
-		Assert.assertNull("Expected null user instead", entity.get());
+		Assert.assertNull("Expected null user instead", entity);
 
 	}
 	
 	@Test
-	public void testFindUserByEmailFound() {
+	public void testFindUserByEmailFound() throws UserNotFoundException {
 
 		String email = new String("property@localhost");
 
-		Optional<User> entity = userService.getUserByEmail(email);
+		Optional<User> result = userService.getUserByEmail(email);
 
-		Assert.assertNotNull("Expected not user instead", entity.get());
-		Assert.assertEquals("Expected id attribute to match", email,entity.get().getEmail());
+		Assert.assertNotNull("Expected not user instead", result);
 
 	}
-	@Test(expected=NoSuchElementException.class)
-	public void testFindUserByEmailNotFound() {
+	@Test(expected=UserNotFoundException.class)
+	public void testFindUserByEmailNotFound() throws UserNotFoundException {
 		String email = new String("non-existent@non-existent");
-		Optional<User> entity = userService.getUserByEmail(email);
-		Assert.assertNull("Expected null user", entity.get());
+		Optional<User> result = userService.getUserByEmail(email);
+		Assert.assertNull("Expected null user", result);
 	}
 
 
 	@Test
-	public void testCreateUser() {
+	public void testCreateUser() throws ClientOrganisationNotFoundException, EmailAlreadyExistsException, UserNotFoundException {
 		Set<Role> setOfRoles = new HashSet<Role>();
 		ClientOrganisation tempOrg = clientOrgService.getClientOrganisationByName("Suntec");
-		userService.createNewUser(tempOrg, "test", "test@test.com", setOfRoles);
-		User createdEntity = userService.getUserByEmail("test@test.com").get();
-		Assert.assertNotNull("Expected not null", createdEntity);
-		Assert.assertEquals("Expected email match", "test@test.com",
-				createdEntity.getEmail());
-		Assert.assertEquals("Expected name match", "test",
-				createdEntity.getName());
+		boolean result = userService.createNewUser(tempOrg, "test", "test@test.com", setOfRoles);
+		Assert.assertTrue(result);
+
+	}
+	
+	@Test(expected=EmailAlreadyExistsException.class)
+	public void testCreateUserAlreadyExists() throws ClientOrganisationNotFoundException, UserNotFoundException, EmailAlreadyExistsException {
+		Set<Role> setOfRoles = new HashSet<Role>();
+		ClientOrganisation tempOrg = clientOrgService.getClientOrganisationByName("Suntec");
+		boolean result = userService.createNewUser(tempOrg, "test", "property@localhost", setOfRoles);
+		Assert.assertFalse(result);
 	}
 
 	@Test
-	public void testGetPasswordResetTokenFound(){
+	public void testGetPasswordResetTokenFound() throws PasswordResetTokenNotFoundException{
 		PasswordResetToken prt = userService.getPasswordResetToken("tokentest12345");
 
 		Assert.assertNotNull("Expected a prt instead", prt);
 		//Assert.assertEquals("Expected tken attribute to match", "tokentest12345",prt.getToken());
 
 	}
-	@Test
-	public void testGetPasswordResetTokenNotFound(){
+	@Test(expected=PasswordResetTokenNotFoundException.class)
+	public void testGetPasswordResetTokenNotFound() throws PasswordResetTokenNotFoundException{
 		PasswordResetToken prt = userService.getPasswordResetToken("non-existent");
 		Assert.assertNull("Expected a null prt instead", prt);
 
 	}
 	@Test
-	public void testCreatePasswordResetTokenForUser(){
+	public void testCreatePasswordResetTokenForUser() throws UserNotFoundException, PasswordResetTokenNotFoundException{
 		User user = userService.getUserByEmail("property@localhost").get();
-		userService.createPasswordResetTokenForUser(user, "tokentest123");
-
-		PasswordResetToken prt = userService.getPasswordResetToken("tokentest123");
-		Assert.assertNotNull("Expected not null", prt);
-		Assert.assertEquals("Expected token match", "tokentest123",
-				prt.getToken());
+		boolean result = userService.createPasswordResetTokenForUser(user, "tokentest123");
+		Assert.assertTrue(result);
 	}
-
-	@Test(expected=NoSuchElementException.class)
-	public void testDeleteUser(){
-		User userToDel = userService.getUserByEmail("testdeleteuser@test.com").get();
-		userService.deleteUser(userToDel);
-		User user = userService.getUserByEmail("testdeleteuser@test.com").get();
-
-		Assert.assertNull("Getting user should be null after deleting", user);
+	
+	@Test(expected=UserNotFoundException.class)
+	public void testCreatePasswordResetTokenForNullUser() throws UserNotFoundException{
+		boolean result = userService.createPasswordResetTokenForUser(null, "tokentest321");
+		Assert.assertFalse(result);
 	}
 
 	@Test
-	public void testGetExternalUsers(){
+	public void testDeleteUser() throws UserNotFoundException{
+		User userToDel = userService.getUserByEmail("testdeleteuser2@test.com").get();
+		boolean result = userService.deleteUser(userToDel);
+		Assert.assertTrue(result);
+	}
+	
+	@Test(expected=UserNotFoundException.class)
+	public void testDeleteNullUser() throws UserNotFoundException{
+		boolean result = userService.deleteUser(null);
+		Assert.assertFalse(result);
+	}
+
+	@Test
+	public void testGetExternalUsers() throws ClientOrganisationNotFoundException{
 		Set<User> s = userService.getExternalUsers(clientOrgService.getClientOrganisationByName("Expo"));	
 		Assert.assertNotNull("Getting users should not be null", s);
 	}
 	@Test
-	public void testGetFinanceManagers(){
+	public void testGetFinanceManagers() throws ClientOrganisationNotFoundException{
 		Set<User> s = userService.getFinanceManagers(clientOrgService.getClientOrganisationByName("Expo"));		
 		Assert.assertNotNull("Getting users should not be null", s);
 	}
 	@Test
-	public void testGetTicketManagers(){
+	public void testGetTicketManagers() throws ClientOrganisationNotFoundException{
 		Set<User> s = userService.getTicketManagers(clientOrgService.getClientOrganisationByName("Expo"));		
 		Assert.assertNotNull("Getting users should not be null", s);
 	}
 
 	@Test
-	public void testEditUsers(){
-		userService.editUser("testname", userService.getUserByEmail("property@localhost").get(), new HashSet<Role>());
-		User u = userService.getUserByEmail("property@localhost").get();
-		Assert.assertNotNull("Getting edited should not be null", u);
-		Assert.assertEquals("Should be changed to new name", "testname",u.getName());
-		Assert.assertEquals("Should be changed to new roles", new HashSet<Role>(), u.getRoles());
+	public void testEditUsers() throws UserNotFoundException{
+		boolean result = userService.editUser("testname", userService.getUserByEmail("property@localhost").get(), new HashSet<Role>());
+		Assert.assertTrue(result);
+	}
+	
+	@Test(expected=UserNotFoundException.class)
+	public void testEditNullUsers() throws UserNotFoundException{
+		boolean result = userService.editUser("testname", null, new HashSet<Role>());
+		Assert.assertFalse(result);
 	}
 
 	@Test
-	public void testChangePassword(){
+	public void testChangePassword() throws UserNotFoundException{
 		User u = userService.getUserByEmail("property@localhost").get();
 		String pas = "newpass";
-		userService.changePassword(u.getId(), pas);
-		BCryptPasswordEncoder t = new BCryptPasswordEncoder();
-		String newPassword = t.encode(pas);
-		Assert.assertNotNull("User getting password changed should not be null", u);
-		Assert.assertTrue("New password should match the current changed password" , t.matches(pas, u.getPasswordHash()));
-
-
+		boolean result = userService.changePassword(u.getId(), pas);
+		Assert.assertTrue(result);
 	}
+	
+	@Test(expected=UserNotFoundException.class)
+	public void testChangePasswordNullUser() throws UserNotFoundException{
+		Long id = Long.MAX_VALUE;
+		String pas = "newpass";
+		boolean result = userService.changePassword(id, pas);
+		Assert.assertFalse(result);
+	}
+
 
 }
