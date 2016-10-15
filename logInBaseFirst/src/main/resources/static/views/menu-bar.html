@@ -13,7 +13,7 @@
 			</li>
 			
 			<li  ng-show="IsUser()" ng-controller="AccountController" class="active">
-			<a href="#">
+			<a ui-sref="workspace.new">
 					<span class="glyphicon glyphicon-bell"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
@@ -39,49 +39,49 @@
 			</li>
 			
         <li ng-show="IsProperty()" ng-controller="AccountController" class="active">
-			<a href="#/viewAllVendors">
+			<a ui-sref="workspace.viewAllVendors">
 					<span class="glyphicon glyphicon-pawn"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Vendor' | translate }}</li>
-					<li><a  href="#/viewAllVendors">{{ 'View Vendors' | translate }}</a></li>
-					<li><a  href="#/addVendor">{{ 'Add a Vendor' | translate }}</a></li>
+					<li><a  ui-sref="workspace.viewAllVendors">{{ 'View Vendors' | translate }}</a></li>
+					<li><a  ui-sref="workspace.addVendor">{{ 'Add a Vendor' | translate }}</a></li>
 				</ul>
             </li>
           <li ng-show="IsProperty()" ng-controller="AccountController" class="active">
-			<a href="#/viewMaintenance">
+			<a ui-sref="workspace.viewMaintenance">
 					<span class="glyphicon glyphicon-list-alt"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Maintenance' | translate }}</li>
-					<li><a  href="#/viewMaintenance">{{ 'View Maintenance' | translate }}</a></li>
-					<li><a  href="#/addMaintenance">{{ 'Add a Maintenance' | translate }}</a></li>
+					<li><a  ui-sref="workspace.viewMaintenance">{{ 'View Maintenance' | translate }}</a></li>
+					<li><a  ui-sref="workspace.addMaintenance">{{ 'Add a Maintenance' | translate }}</a></li>
 				</ul>
             </li>
             
 			
 			<li ng-show="IsEvent()" ng-controller="AccountController"
 						class="active">
-				<a href="#/viewAllEvents">
+				<a ui-sref="workspace.viewAllEvents">
 					<span class="glyphicon glyphicon-list-alt"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Manage Event' | translate }}</li>
-					<li><a  href="#/viewAllEvents">{{ 'Event' | translate }}</a></li>
-					<li><a  href="#/viewEventOrganizers">{{ 'Event Organisers' | translate }}</a></li>
+					<li><a  ui-sref="workspace.viewAllEvents">{{ 'Event' | translate }}</a></li>
+					<li><a  ui-sref="workspace.viewEventOrganizers">{{ 'Event Organisers' | translate }}</a></li>
 					</ul>
 			</li>
 			
 			
 			
 			<li  ng-show="IsExtEve()" ng-controller="AccountController" class="active">
-			<a href="#/viewAllEventsEx">
+			<a ui-sref="workspace.viewAllEventsEx">
 					<span class="glyphicon glyphicon-list-alt"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Event' | translate }}</li>
-					<li><a  href="#/viewAllEventsEx">{{ 'View Events' | translate }}</a></li>
-					<li><a  href="#/addEventEx">{{ 'Add a Event' | translate }}</a></li>
+					<li><a  ui-sref="workspace.viewAllEventsEx">{{ 'View Events' | translate }}</a></li>
+					<li><a  ui-sref="workspace.addEventEx">{{ 'Add a Event' | translate }}</a></li>
 				</ul>
             </li>
             
@@ -90,63 +90,63 @@
 					<span class="glyphicon glyphicon-road"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
-					<li class="sidemenu-header">{{ 'Property Details' | translate }}</li>
+					<li class="sidemenu-header">{{ 'Property Details(To Be Added)' | translate }}</li>
 					<li><a  href="#">{{ 'View Property' | translate }}</a></li>
 				</ul>
             </li>
 			
 			<li ng-show="IsAdmin()" ng-controller="AccountController" class="active">
-				<a href="#/createNewUser">
+				<a ui-sref="workspace.createNewUser">
 					<span class="glyphicon glyphicon-king"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Users' | translate }}</li>
-					<li><a href="#/createNewUser">{{ 'Add New User' | translate }}</a></li>
-					<li><a href="#/viewUserList">{{ 'View All Users' | translate }}</a></li>
+					<li><a ui-sref="workspace.createNewUser">{{ 'Add New User' | translate }}</a></li>
+					<li><a ui-sref="workspace.viewUserList">{{ 'View All Users' | translate }}</a></li>
 				</ul>
 			</li>
 			
         	<li ng-show="IsAdmin()" ng-controller="AccountController" class="active">
-				<a href="#/viewAuditLog">
+				<a ui-sref="workspace.viewAuditLog">
 					<span class="glyphicon glyphicon-save-file"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Audit Log' | translate }}</li>
-					<li><a href="#/viewAuditLog">{{ 'View Audit Log' | translate }}</a></li>
+					<li><a ui-sref="workspace.viewAuditLog">{{ 'View Audit Log' | translate }}</a></li>
 				</ul>
 			</li>
 			
 			<li ng-show="IsAdmin()" ng-controller="AccountController" class="active">
-				<a href="#/uploadCompanyLogo">
+				<a ui-sref="workspace.uploadCompanyLogo">
 					<span class="glyphicon glyphicon-picture"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Company Logo' | translate }}</li>
-					<li><a href="#/uploadCompanyLogo">{{ 'Upload' | translate }}</a></li>
+					<li><a ui-sref="workspace.uploadCompanyLogo">{{ 'Upload' | translate }}</a></li>
 				</ul>
 			</li>
 			
 			
 			
 			 <li ng-show="IsSuperAdmin()" ng-controller="AccountController" class="active">
-				<a href="#/viewClientOrgs">
+				<a ui-sref="workspace.viewClientOrgs">
 					<span class="glyphicon glyphicon-queen"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Client Organisation' | translate }}</li>
-					<li><a  href="#/viewClientOrgs">{{ 'View All Client Organisations' | translate }}</a></li>
-                    <li><a  href="#/addClientOrg">{{ 'Add a Client Organisation' | translate }}</a></li>
+					<li><a  ui-sref="workspace.viewClientOrgs">{{ 'View All Client Organisations' | translate }}</a></li>
+                    <li><a  ui-sref="workspace.addClientOrg">{{ 'Add a Client Organisation' | translate }}</a></li>
 				</ul>
             </li>
 			
 			
 		<li  ng-show="IsFinance()" ng-controller="AccountController" class="active">
-			<a href="#/viewAllPaymentPlans">
+			<a ui-sref="workspace.viewAllPaymentPlans">
 					<span class="glyphicon glyphicon-blackboard"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Payment' | translate }}</li>
-					<li><a  href="#/viewAllPaymentPlans">{{ 'View Payment Plans' | translate }}</a></li>
+					<li><a  ui-sref="workspace.viewAllPaymentPlans">{{ 'View Payment Plans' | translate }}</a></li>
 				</ul>
             </li>
 			

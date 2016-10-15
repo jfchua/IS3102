@@ -25,7 +25,7 @@ app.controller('buildingController', ['$scope', '$http','$location','$routeParam
 		console.log("SAVING THE BUILDING");
 		send.success(function(){
 			alert('Building has been saved successfully');
-			$location.path("/viewBuilding");
+			//$location.path("/viewBuilding");
 			
 		});
 		send.error(function(data){
@@ -189,7 +189,10 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 		console.log("UPDATING THE BUILDING");
 		send.success(function(){
 			alert('Building successfully updated');
-			 $location.path("/viewBuilding");
+			//$location.path("#/viewBuilding");
+			 $state.go("workspace.viewBuilding", {});
+			//$state.go('^.viewBuilding');
+			//$state.go('workspace.viewBuilding');
 		});
 		send.error(function(data){
 			alert('Error, ' + data);
@@ -219,7 +222,8 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 				console.log("Delete the BUILDING");
 				alert('Building successfully delete. Going back to view buildings...');
 				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$location.path("/viewBuilding");
+				//$location.path("/viewBuilding");
+				 $state.go("workspace.viewBuilding");
 				
 			},function(response){
 				alert("Error, " + response);
@@ -305,7 +309,7 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$location',
 		send.success(function(){
 			alert('LEVEL IS SAVED!');
 			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-			      $location.path("/viewBuilding");
+			     // $location.path("/viewBuilding");
 			
 		});
 		send.error(function(){

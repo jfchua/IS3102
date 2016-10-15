@@ -1,43 +1,63 @@
+<div class="clearfix">
+                        <ol class="breadcrumb no-bg no-m-t">
+                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                            <li><a href="#/workspace">Workspace</a></li>
+                            <li><a>View Buildings</a></li>
+                        </ol>
+</div>
 
-	<div  ng-controller="buildingController as buildCtrl">
-      <div class="container">
-        <div class="content" >
-        <h1>View buildings</h1>
-        <p class="tagline">List of existing buildings</p>
-  
-        <button><a href="/#/addBuilding">Add a building</a></button>
-        <button><a href="/#/viewIcon">Customise Icon</a></button>
-        <button><a href="/#/viewAllRates">View Special Rate</a></button>
-        <!-- <div ng-app="myApp" ng-controller="customersCtrl">-->
-       <table class="table table-striped table-advance table-hover">
-        <tbody>
-           <tr>
-           <td><i></i> ID </td>
-           <td><i></i> Building Name </td>
-           <td><i></i> Number of floors </td>
-           <td><i></i> Address </td>
-           <td><i></i> City </td>
-           <td><i></i> Postal Code </td>
-           <td>Actions</td>
-            <td></td>
-             <td></td>
-           </tr>
-         <tr ng-repeat="x in buildings | orderBy:'name'">
-         <td><a ng-model="myValue" href="/#/viewLevels" ng-click="passBuilding(x)">{{ x.id }}</a></td>
-         <!--  <td><button onClick="window.open('http://www.google.com.sg}');">{{ x.id }}</button></td>-->
-         <td>{{ x.name }}</td>
-         <td>{{ x.numFloor }}</td>
-         <td>{{ x.address }}</td>
-         <td>{{ x.city }}</td>
-         <td>{{ x.postalCode }}</td>
-         <td><a ng-model="myValue" href="/#/updateBuilding" ng-click="updateBuilding(x)">Update</a></td>
-          <td><a ng-model="myValue" href="/#/deleteBuilding" ng-click="deleteBuilding(x)">Delete</a></td>
-          <td><a ng-model="myValue" href="/#/addLevel" ng-click="addLevel(x)">Add Level</a></td>
-         </tr>
-         </tbody>
-      </table>
-   <!--  </div>-->
- </div>
- </div>
- </div>
-		
+<div class="row" ng-controller="buildingController as buildCtrl">
+<div class="col-md-9">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">Buildings	  
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th><i></i> ID </th>
+                                <th><i></i> Building Name </th>
+                                <th><i></i> Number of floors </th>
+                                <th><i></i> Address </th>
+                                <th><i></i> City </th>
+                                <th><i></i> Postal Code </th>
+                                <th>Actions</th>
+                                <th></th>
+							</tr>
+						</thead>
+						<tbody>
+							 <tr ng-repeat="x in buildings | orderBy:'name'">
+                             <td><a  ui-sref="workspace.viewLevels" ng-click="passBuilding(x)">{{ x.id }}</a></td>
+                             <!--  <td><button onClick="window.open('http://www.google.com.sg}');">{{ x.id }}</button></td>-->
+                             <td>{{ x.name }}</td>
+                             <td>{{ x.numFloor }}</td>
+                             <td>{{ x.address }}</td>
+                             <td>{{ x.city }}</td>
+                             <td>{{ x.postalCode }}</td>
+                             <td>
+                             		<a  ui-sref="workspace.updateBuilding" ng-click="updateBuilding(x)" tooltip-placement="top" tooltip="Update Building"><i class="glyphicon glyphicon-pencil"></i></a>
+                             		<a  ui-sref="workspace.deleteBuilding" ng-click="deleteBuilding(x)" tooltip-placement="top" tooltip="Delete Building!"><i class="glyphicon glyphicon-trash"></i></a>
+                             		<a  ui-sref="workspace.viewLevels" ng-click="passBuilding(x)" tooltip-placement="top" tooltip="View Levels"><i class="glyphicon glyphicon-eye-open"></i></a>
+                             </td>
+                             		<td><a  ui-sref="workspace.addLevel" ng-click="addLevel(x)" tooltip-placement="top" tooltip="Add level"><i class="glyphicon glyphicon-plus-sign"></i></a></td>
+                             </tr>
+							
+							
+						</tbody>
+					</table>			
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<a ui-sref="workspace.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>
+		</div>
+	</div>

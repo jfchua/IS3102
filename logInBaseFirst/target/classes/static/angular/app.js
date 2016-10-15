@@ -182,7 +182,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addBuilding',{
+			.state('workspace.addBuilding',{
 				url: '/addBuilding',
 				templateUrl: '/views/addBuilding.html',
 				controller: 'buildingController',
@@ -198,7 +198,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateBuilding',{
+			.state('workspace.updateBuilding',{
 				url: '/updateBuilding',		
 				templateUrl: '/views/updateBuilding.html',
 				controller: 'updateBuildingController',
@@ -206,7 +206,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/deleteBuilding',{
+			.state('workspace.deleteBuilding',{
 				url: '/deleteBuilding',
 				templateUrl: '/views/deleteBuilding.html',
 				controller: 'deleteBuildingController',
@@ -214,7 +214,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewLevels',{
+			.state('workspace.viewLevels',{
 				url: '/viewLevels',
 				templateUrl: '/views/viewLevels.html',
 				controller: 'viewLevelController',
@@ -222,7 +222,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addLevel',{
+			.state('workspace.addLevel',{
 				url: '/addLevel',
 				templateUrl: '/views/addLevel.html',
 				controller: 'addLevelController',
@@ -286,7 +286,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.event]
 				}
 			})
-			.state('/uploadCompanyLogo',{
+			.state('workspace.uploadCompanyLogo',{
 				url:'/uploadCompanyLogo',
 				templateUrl: '/views/uploadCompanyLogo.html',
 				controller: 'logoController',
@@ -319,15 +319,15 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('/addClientOrg',{
-				url:'/addClientOrg',
+			.state('workspace.addClientOrg',{
+				url:'addClientOrg',
 				templateUrl: '/views/addClientOrg.html',
 				controller: 'clientOrgController',
 				data: {
 					authorizedRoles: [USER_ROLES.superadmin]
 				}
 			})	
-			.state('/viewClientOrgs',{
+			.state('workspace.viewClientOrgs',{
 				url:'/viewClientOrgs',
 				templateUrl: '/views/viewClientOrgs.html',
 				controller: 'viewClientOrgs',
@@ -351,7 +351,7 @@ app.config(
  					authorizedRoles: [USER_ROLES.property]
  				}
  		})
-			.state('/viewMaintenance',{
+			.state('workspace.viewMaintenance',{
 				url:'/viewMaintenance',	
 				templateUrl: '/views/viewMaintenance.html',
 				controller: 'maintenanceController',
@@ -383,7 +383,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.property]
 				}
 			})
-			.state('/addMaintenance',{
+			.state('workspace.addMaintenance',{
 				url:'/addMaintenance',	
 				templateUrl: '/views/addMaintenance.html',
 				controller: 'addMaintenanceController',
@@ -407,7 +407,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewAllVendors',{
+			.state('workspace.viewAllVendors',{
 				url:'/viewAllVendors',
 				templateUrl: '/views/viewAllVendors.html',
 				controller: 'vendorController',
@@ -415,7 +415,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addVendor',{
+			.state('workspace.addVendor',{
 				url:'/addVendor',	
 				templateUrl: '/views/addVendor.html',
 				controller: 'vendorController',
@@ -439,7 +439,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addEventEx',{
+			.state('workspace.addEventEx',{
 				url:'/addEventEx',
 				templateUrl: '/views/addEventEx.html',
 				//controller: 'eventExternalController',
@@ -497,7 +497,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewAllEventsEx',{
+			.state('workspace.viewAllEventsEx',{
 				url:'/viewAllEventsEx',
 				templateUrl: '/views/viewAllEventsEx.html',
 				controller: 'eventExternalController',
@@ -553,7 +553,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewAllEvents',{
+			.state('workspace.viewAllEvents',{
 				url:'/viewAllEvents',
 				templateUrl: '/views/viewAllEvents.html',
 				controller: 'eventController',
@@ -585,7 +585,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewEventOrganizers',{
+			.state('workspace.viewEventOrganizers',{
 				url:'/viewEventOrganizers',
 				templateUrl: '/views/viewEventOrganizers.html',
 				controller: 'viewEventOrganiserController',
@@ -593,7 +593,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewAllPaymentPlans',{
+			.state('workspace.viewAllPaymentPlans',{
 				url:'/viewAllPaymentPlans',
 				templateUrl: '/views/viewAllPaymentPlans.html',
 				controller: 'paymentController',
@@ -617,7 +617,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.all]
 				}
 			})	
-			.state('/createNewUser',{
+			.state('workspace.createNewUser',{
 				url:'/createNewUser',
 				templateUrl: '/views/createUser.html',
 				controller: 'createNewUserController',
@@ -625,7 +625,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})	
-			.state('/viewUserList',{
+			.state('workspace.viewUserList',{
 				url:'/viewUserList',
 				templateUrl: '/views/viewUserList.html',
 				controller: 'viewUserList',
@@ -633,7 +633,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.admin]
 				}
 			})	
-			.state('/viewAuditLog',{
+			.state('workspace.viewAuditLog',{
 				url:'/viewAuditLog',
 				templateUrl: '/views/viewAuditLog.html',
 				controller: 'auditLogController',
@@ -1529,6 +1529,18 @@ app.controller('sidenavCtrl', function($scope, $location){
 			$scope.multiCollapseVar = y;
 	};
 });
+
+app.controller('ButtonsCtrl', function ($scope) {
+	  $scope.singleModel = 1;
+
+	  $scope.radioModel = 'Middle';
+
+	  $scope.checkModel = {
+	    left: false,
+	    middle: true,
+	    right: false
+	  };
+	});
 app.controller('progressCtrl', function($scope) {
 	[].slice.call( document.querySelectorAll( 'button.progress-button' ) ).forEach( function( bttn ) {
 		new ProgressButton( bttn, {
@@ -1854,6 +1866,7 @@ angular.module('ui.calendar', [])
       }
     };
 }]);
+
 //MESSAGE
 
 //Message
