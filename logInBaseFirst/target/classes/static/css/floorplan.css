@@ -42,8 +42,4 @@ img.pictest{
    max-width: 50px;
    max-height: 50px;
 }
-img.svgUpload{
-   object-fit: scale-down;
- 	width: 100px;
-   	height: 100px;
-}
+
