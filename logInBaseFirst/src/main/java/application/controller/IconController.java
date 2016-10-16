@@ -34,33 +34,41 @@ import application.domain.AuditLog;
 import application.domain.ClientOrganisation;
 import application.domain.Icon;
 import application.domain.User;
+import application.exception.IconNotFoundException;
+import application.exception.InvalidFileUploadException;
+import application.exception.InvalidIconException;
 import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
 import application.service.user.IconService;
 import application.service.user.ClientOrganisationService;
+import application.service.user.FileUploadCheckingService;
 import application.service.user.UserService;
 
 @Controller
 @RequestMapping("/property")
 public class IconController {
-	
+
 	@Autowired
 	private final IconService iconService;
 	private final ClientOrganisationService clientOrganisationService;
 	private final UserService userService;
+	private final FileUploadCheckingService fileService;
 	private final AuditLogRepository auditLogRepository;
 	private JSONParser parser = new JSONParser();
-	
+	private Gson geeson = new Gson();
+
 
 	@Autowired
-	public IconController(AuditLogRepository auditLogRepository, IconService iconService, ClientOrganisationService clientOrganisationService,
+	public IconController(FileUploadCheckingService fileService, AuditLogRepository auditLogRepository, IconService iconService, ClientOrganisationService clientOrganisationService,
 			UserService userService) {
 		super();
+		this.fileService = fileService;
 		this.iconService = iconService;
 		this.clientOrganisationService = clientOrganisationService;
 		this.userService = userService;
 		this.auditLogRepository = auditLogRepository;
 	}
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 	/*
 	@RequestMapping(value = "/viewIcons", method = RequestMethod.GET)
@@ -105,8 +113,8 @@ public class IconController {
 			return bd.toString();
 		}
 	}
-	*/
-	
+	 */
+
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/viewIcons", method = RequestMethod.GET)
 	@ResponseBody
@@ -114,7 +122,7 @@ public class IconController {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			
+
 			return new ResponseEntity<Set<Icon>>(HttpStatus.CONFLICT);
 			//return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
@@ -144,20 +152,21 @@ public class IconController {
 			return new ResponseEntity<Set<Icon>>(icons,HttpStatus.OK);
 		}
 		catch (Exception e){
-			
+
 			return new ResponseEntity<Set<Icon>>(HttpStatus.CONFLICT);
 		}
 	}
-	
+
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/saveIcon")
-	public void saveIcon(@RequestParam("file") MultipartFile file, String iconType, HttpServletRequest request ) throws IOException, UserNotFoundException {
+	public ResponseEntity<String> saveIcon(@RequestParam("file") MultipartFile file, String iconType, HttpServletRequest request ) throws IOException, UserNotFoundException, InvalidIconException {
 
 		Principal p = request.getUserPrincipal();
 		User curUser = userService.getUserByEmail(p.getName()).get();
-
-		if (!file.isEmpty()) {
+		//CHECKING FOR FILE VALIDITY
+		try{
+			fileService.checkFile(file);
 			//GET RELATIVE PATH SINCE EVERYONE COMPUTER DIFFERENT
 			String iconPath = request.getSession().getServletContext().getRealPath("/");
 			System.out.println(iconPath);
@@ -174,13 +183,23 @@ public class IconController {
 			}
 			//clientOrganisationRepository.saveAndFlush(client);
 			System.out.println("Saved Logo");
-
 		}
-
-
+		catch ( InvalidFileUploadException e ){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( InvalidIconException e){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		System.err.println(String.format("received %s", file.getOriginalFilename()));
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+
+
+
+
+
 	/*
 	@RequestMapping(value = "/addIcon", method = RequestMethod.POST)
 	@ResponseBody
@@ -191,7 +210,7 @@ public class IconController {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 		try{
-			
+
 			ClientOrganisation client = usr.get().getClientOrganisation();
 			Object obj1 = parser.parse(iconJSON);
 			JSONObject jsonObject = (JSONObject) obj1;
@@ -204,7 +223,7 @@ public class IconController {
 			String iconPath = "";
 
 			boolean bl = iconService.createIconOnClientOrganisation(client, iconType, iconPath);
-		
+
 			if(bl){
 				AuditLog al = new AuditLog();
 				al.setTimeToNow();
@@ -223,21 +242,21 @@ public class IconController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
-	
-	*/
+
+	 */
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/deleteIcon", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteIcon(@RequestBody String iconId,HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> deleteIcon(@RequestBody String iconId,HttpServletRequest rq) throws UserNotFoundException {
 
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			return new ResponseEntity<String>(geeson.toJson("User was not found"),HttpStatus.INTERNAL_SERVER_ERROR);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
-			
+
 			Object obj = parser.parse(iconId);
 			JSONObject jsonObject = (JSONObject) obj;
 			long id = (Long)jsonObject.get("id");
@@ -253,47 +272,71 @@ public class IconController {
 				auditLogRepository.save(al);
 			}
 		}
-		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		catch ( IconNotFoundException e){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		catch (Exception e){
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/updateIcon")
-	public void updateIcon(@RequestParam("file") MultipartFile file, Long id, HttpServletRequest request ) throws IOException, UserNotFoundException {
+	public ResponseEntity<String> updateIcon(@RequestParam("file") MultipartFile file, Long id, HttpServletRequest request ) throws IOException, UserNotFoundException, IconNotFoundException {
 		System.out.println("test");
-		
+
 		Principal p = request.getUserPrincipal();
 		User curUser = userService.getUserByEmail(p.getName()).get();
 		ClientOrganisation client = curUser.getClientOrganisation();
 		System.out.print("client id "+client.getId());
-		if (!file.isEmpty()) {
-			//GET RELATIVE PATH SINCE EVERYONE COMPUTER DIFFERENT
-			//Long id=Long.valueOf(iconId);
-			String iconPath = request.getSession().getServletContext().getRealPath("/");
-			System.out.println(iconPath);
-			File toTrans = new File(iconPath,file.getOriginalFilename());
-			toTrans.setExecutable(true);
-			toTrans.setWritable(true);
-			file.transferTo(toTrans);
-			
-			boolean bl = iconService.editIcon(client,id, file.getOriginalFilename());
-			if(bl){
-				System.out.println("Icon is updated");
-			}else{
-				System.out.println("Icon is not updated");
-			}
-			//clientOrganisationRepository.saveAndFlush(client);
-			System.out.println("Saved Icon");
+		try{
+			fileService.checkFile(file);
+			if (!file.isEmpty()) {
+				//GET RELATIVE PATH SINCE EVERYONE COMPUTER DIFFERENT
+				//Long id=Long.valueOf(iconId);
+				String iconPath = request.getSession().getServletContext().getRealPath("/");
+				System.out.println(iconPath);
+				File toTrans = new File(iconPath,file.getOriginalFilename());
+				toTrans.setExecutable(true);
+				toTrans.setWritable(true);
+				file.transferTo(toTrans);
 
+				boolean bl = iconService.editIcon(client,id, file.getOriginalFilename());
+				if(bl){
+					System.out.println("Icon is updated");
+				}else{
+					System.out.println("Icon is not updated");
+				}
+				//clientOrganisationRepository.saveAndFlush(client);
+				System.out.println("Saved Icon");
+
+			}
+		}
+		catch ( IconNotFoundException e){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( InvalidFileUploadException e ){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( InvalidIconException e){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in updating icon"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 
 		System.err.println(String.format("received %s", file.getOriginalFilename()));
+		return new ResponseEntity<String>(HttpStatus.OK);
+
 	}
-	
+
 
 
 }

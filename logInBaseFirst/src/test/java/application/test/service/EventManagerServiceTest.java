@@ -1,24 +1,15 @@
 package application.test.service;
 
 import java.util.Collection;
-import java.util.Date;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import application.domain.Message;
-import application.domain.ToDoTask;
-import application.domain.User;
-import application.exception.MessageNotFoundException;
-import application.exception.UserNotFoundException;
-import application.service.user.EmailService;
+import application.domain.Event;
 import application.service.user.EventManagerService;
-import application.service.user.MessageService;
-import application.service.user.ToDoTaskService;
 import application.service.user.UserService;
 import application.test.AbstractTest;
 
@@ -37,6 +28,33 @@ public class EventManagerServiceTest extends AbstractTest {
 	@After
 	public void tearDown(){
 
+	}
+	
+	@Test
+	public void testViewSingleEvent(){
+		eventManagerService.viewSingleEvent();
+		
+	}
+	@Test
+	public void testGetAllEvents(){
+		//eventManagerServic
+		
+	}
+	@Test
+	public void testGetAllPendingEvents(){
+		//eventManagerServ
+		
+	}
+	@Test
+	public void testGetAllApprovedEvents(){
+		//eventManagerServic
+		
+	}
+
+	
+	@Test
+	public void testGetAllUsers(){
+		
 	}
 
 	

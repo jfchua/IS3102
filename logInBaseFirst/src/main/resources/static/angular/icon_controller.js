@@ -25,7 +25,7 @@ app.controller('iconController', function ($scope, $http,shareData) {
 			var dataObj={id:icon.id};
 			$http.post('/property/deleteIcon', JSON.stringify(dataObj)).then(function(response){
 		},function(response){//else is not saved successfully
-			console.log("DID NOT DELETE");
+			alert("Error, " + response);
 		})
 
 		}
@@ -102,8 +102,10 @@ app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http','$lo
 				
 			});
 		}, function (response) {
-			if (response.status > 0)
+			if (response.status > 0){
+				alert(response.data);
 				$scope.errorMsg = response.status + ': ' + response.data;
+			}
 		}, function (evt) {
 			// Math.min is to fix IE which reports 200% sometimes
 			$scope.picFile.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
@@ -148,13 +150,16 @@ app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','
 		$scope.picFile.upload.then(function (response) {
 			$timeout(function () {
 				$scope.picFile.result = response.data;
-				alert('UPDATE IS SUCCESSFUL. GOING BACK TO VIEW ICONS...')
+				alert('Icon updated successfully. Going back to viewing icons')
 				      $location.path("/viewIcon");
 				
 			});
 		}, function (response) {
-			if (response.status > 0)
+			if (response.status > 0){
 				$scope.errorMsg = response.status + ': ' + response.data;
+				alert("Error, " + response.data);
+			
+			}
 		}, function (evt) {
 			// Math.min is to fix IE which reports 200% sometimes
 			$scope.picFile.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
