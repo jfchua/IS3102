@@ -1,25 +1,27 @@
-app.controller('viewFloorPlanController', function ($scope, $http,shareData) {
-  //jQuery = window.jQuery;
-  //console.log(jQuery);
-  //console.log(jQuery.ui);
+app.controller('viewFloorPlanController', function ($scope, $http,shareData,$state) {
+
   var levelIdObj;
   var levelId;
   var level;
   var building;
-  //$scope.units;
+  var widthForFloorPlan;
   
   angular.element(document).ready(function () {
-	  		//GET LEVEL
-	  $scope.units=[];
+	  		//GET LEVEL	 
+	  		$scope.units=[];
 		   // level = shareData.getData();
 	  		obj=shareData.getData();
 	  		level=obj.level
-	  		building=obj.buliding;
+	  		building=obj.building;
+	  		console.log("GET Level");
+	  		console.log(level);
+	  		console.log("GET BUILDING");
+	  		console.log(building);
 		    	console.log("GET LEVEL: ");
 		      console.log(level);
 		      $scope.levelLength;
 		      $scope.levelWidth;
-		    	   
+		    //IN CASE OF GETTING AN ARRAY FROM SHAREDATA 
 		    if(!level.id){
 		    	console.log("LEVEL IS NOT GET");
 		      level=level[0];
@@ -28,8 +30,11 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData) {
 		    console.log("GET LEVEL: ");
 		    console.log(level);
 		    //SET GLASSBOX SIZE ACCORDINGTO LEVEL ATTRIBUTES LENGTH AND WIDTH
-		    $scope.levelLength=900;
-		    $scope.levelWidth=parseInt((level.width)*900/(level.length));
+		    widthForFloorPlan= document.getElementById('widthForFloorPlan').clientWidth;
+		    console.log("hailing test: widthForFloorPlan");
+		    console.log(widthForFloorPlan);
+		    $scope.levelLength=800;
+		    $scope.levelWidth=parseInt((level.width)*800/(level.length));
 		    
 		    //GET UNITS FROM levelIdObj
 		    levelId=level.id;
@@ -75,16 +80,21 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData) {
   //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
   $scope.passBuilding = function(){
 	  shareData.addData(building);
+	  $state.go("workspace.viewLevels");
   }
   
   $scope.editFloorPlan= function(){
-    shareData.addData(level);
+    //shareData.addData(level);
+	  var obj={building:building,
+				level:level
+				}
+		shareData.addData(obj);
   }
    $scope.showDetails= function (thisUnit) {   
      console.log(thisUnit);
     // console.log(event);
     // console.log(event.target.classList);
-     $scope.showDetail="unitNumber: "+thisUnit.unitNumber  +  " Unit Width: " + parseInt((thisUnit.square.height)*(level.length)/900) + "meter, Unit Length: " + parseInt((thisUnit.square.width)*(level.length)/900) +"meter";
+     $scope.showDetail="unitNumber: "+thisUnit.unitNumber  +  " Unit Width: " + parseInt((thisUnit.square.height)*(level.length)/800) + "meter, Unit Length: " + parseInt((thisUnit.square.width)*(level.length)/800) +"meter";
      console.log($scope.showDetail);
       } 
   $scope.viewLevelsByBuildingId = function(){
@@ -273,11 +283,17 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
   var levelIdObj;
   var levelId;
   var level;
+  var building;
   $scope.units=[];
+  var widthForFloorPlan;
+  
   angular.element(document).ready(function () {
 	  
 	    	//GET LEVEL
-	      level = shareData.getData();
+	      //level = shareData.getData();
+	  		obj=shareData.getData();
+	  		level=obj.level
+	  		building=obj.building;
 	      $scope.levelLength;
 	      $scope.levelWidth;     
 	      console.log("GET LEVEL: ");
@@ -290,8 +306,9 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
 	      }
 	      
 	      //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
-	      $scope.levelLength=900;
-	      $scope.levelWidth=parseInt((level.width)*900/(level.length));
+	      widthForFloorPlan= document.getElementById('widthForFloorPlan').clientWidth;
+	      $scope.levelLength=800;
+	      $scope.levelWidth=parseInt((level.width)*800/(level.length));
 	     
 	      //GET UNITS
 	      levelId=level.id;
@@ -471,9 +488,21 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
 
 
   } 
+  //FOR GO BACK TO VIEW FLOOR PLAN
   $scope.viewFloorPlan= function(){
-    shareData.addData(level);
+    //shareData.addData(level);
+	  var obj={building:building,
+				level:level
+				}
+		shareData.addData(obj);
   }
+  
+  //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
+  $scope.passBuilding = function(){
+	  shareData.addData(building);
+	 // $state.go("workspace.viewLevels");
+  }
+  
   $scope.viewLevelsByBuildingId = function(){
     var buildingId;
     $scope.dataToShare = [];
@@ -523,7 +552,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
      console.log(thisUnit);
     // console.log(event);
     // console.log(event.target.classList);
-     $scope.showDetail="unitNumber: "+thisUnit.unitNumber  +  " Unit Width: " + parseInt((thisUnit.square.height)*(level.length)/900) + "meter, Unit Length: " + parseInt((thisUnit.square.width)*(level.length)/900) +"meter";
+     $scope.showDetail="unitNumber: "+thisUnit.unitNumber  +  " Unit Width: " + parseInt((thisUnit.square.height)*(level.length)/800) + "meter, Unit Length: " + parseInt((thisUnit.square.width)*(level.length)/800) +"meter";
      console.log($scope.showDetail);
       } 
 

@@ -8,7 +8,7 @@
 
 <div class="row" ng-controller="buildingController as buildCtrl">
 <div class="col-md-9">
-			<div class="panel panel-info">
+			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">Buildings	  
 						<div class="panel-control pull-right">
@@ -45,7 +45,7 @@
                              <td>{{ x.postalCode }}</td>
                              <td>
                              		<a  ui-sref="workspace.updateBuilding" ng-click="updateBuilding(x)" tooltip-placement="top" tooltip="Update Building"><i class="glyphicon glyphicon-pencil"></i></a>
-                             		<a  ui-sref="workspace.deleteBuilding" ng-click="deleteBuilding(x)" tooltip-placement="top" tooltip="Delete Building!"><i class="glyphicon glyphicon-trash"></i></a>
+                             		<a  ui-sref="workspace.deleteBuilding" ng-click="deleteBuilding(x)" tooltip-placement="top" tooltip="Delete Building"><i class="glyphicon glyphicon-trash"></i></a>
                              		<a  ui-sref="workspace.addLevel" ng-click="addLevel(x)" tooltip-placement="top" tooltip="Add level"><i class="glyphicon glyphicon-plus-sign"></i></a>
                              </td>
                              </tr>
@@ -57,6 +57,7 @@
 			</div>
 		</div>
 		<div class="col-md-3">
-			<a ui-sref="workspace.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>
+		 <a ui-sref="workspace.addBuilding" tooltip-placement="right" tooltip="Add a building"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
+		<!--  	<a ui-sref="workspace.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
 		</div>
 	</div>

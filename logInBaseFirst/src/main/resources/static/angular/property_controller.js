@@ -1,7 +1,7 @@
 /*       4. BUILDING         */
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //VIEW BUILDINGS, ADD A BUILDING
-app.controller('buildingController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('buildingController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	$scope.submit1 = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -25,7 +25,7 @@ app.controller('buildingController', ['$scope', '$http','$location','$routeParam
 		console.log("SAVING THE BUILDING");
 		send.success(function(){
 			alert('Building has been saved successfully');
-			//$location.path("/viewBuilding");
+			$state.go("workspace.viewBuilding");
 			
 		});
 		send.error(function(data){
@@ -89,7 +89,7 @@ app.controller('buildingController', ['$scope', '$http','$location','$routeParam
 			//$location.path("/viewLevels");
 		});
 		getLevels.error(function(response){
-			$location.path("/viewBuilding");
+			$state.go("workspace.viewBuilding");
 			console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
 		});
 	};	
@@ -144,7 +144,7 @@ app.controller('buildingController', ['$scope', '$http','$location','$routeParam
 }]);
 
 //UPDATE BUILDING
-app.controller('updateBuildingController', ['$scope',  '$timeout','$http','shareData','$location', function ($scope,  $timeout,$http ,shareData,$location) {
+app.controller('updateBuildingController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
 	
 	angular.element(document).ready(function () {
 
@@ -189,10 +189,10 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 		console.log("UPDATING THE BUILDING");
 		send.success(function(){
 			alert('Building successfully updated');
-			//$location.path("#/viewBuilding");
-			 $state.go("workspace.viewBuilding", {});
+			//$location.path("workspace.viewBuilding");
+			 //$state.go("workspace.viewBuilding", {});
 			//$state.go('^.viewBuilding');
-			//$state.go('workspace.viewBuilding');
+			$state.go('workspace.viewBuilding');
 		});
 		send.error(function(data){
 			alert('Error, ' + data);
@@ -201,7 +201,7 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 }])
 
 //DELETE BUILDING
-app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','shareData','$location', function ($scope,  $timeout,$http ,shareData,$location) {
+app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
 	
 	angular.element(document).ready(function () {
 
@@ -237,12 +237,13 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 
 
 //VIEW LEVELS
-app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$location','shareData',function ($scope, Upload, $timeout,$http,$location ,shareData) {
-	
+app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$state','shareData',function ($scope, Upload, $timeout,$http,$state ,shareData) {
+	var building;
 	//VIEW LEVELS WHEN PAGE LOADED
 	angular.element(document).ready(function () {
 		//console.log("VIEWING LEVELS OF BUILDING :" + shareData.getData());
 		$scope.building = shareData.getData();
+		building=$scope.building;
 		console.log($scope.building);
 		//populate levels from a building of the specific ID
 		$scope.url = "https://localhost:8443/level/viewLevels/"+$scope.building.id;
@@ -267,7 +268,7 @@ app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$
 			//$location.path("/viewLevels");
 		});
 		getLevels.error(function(response){
-			$location.path("/viewBuilding");
+			$state.go("workspace.viewBuilding");
 			console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
 		});
 		var url = "https://localhost:8443/level/viewLevels";
@@ -276,7 +277,7 @@ app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$
 
 	//PASS LEVEL TO SHAREDATA
 	$scope.passLevel = function(level){
-		var obj={building:$scope.building,
+		var obj={building:building,
 				level:level
 				}
 		shareData.addData(obj);
@@ -284,7 +285,7 @@ app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$
 }])
 
 //ADD A LEVEL,UPDATE A LEVEL
-app.controller('addLevelController', ['$scope', '$http','shareData','$location', function ($scope, $http, shareData,$location) {
+app.controller('addLevelController', ['$scope', '$http','shareData','$state', function ($scope, $http, shareData,$state) {
 	$scope.addLevel = function(){
 		//alert("SUCCESS");
 		console.log("start adding");
@@ -312,7 +313,7 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$location',
 		send.success(function(){
 			alert('LEVEL IS SAVED!');
 			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-			     // $location.path("/viewBuilding");
+			      $state.go("workspace.viewBuilding");
 			
 		});
 		send.error(function(){
@@ -325,14 +326,14 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$location',
 }])
 
 //DELETE A LEVEL,UPDATE A LEVEL
-app.controller('levelController', ['$scope', '$http','shareData','$location', function ($scope, $http, shareData,$location) {
+app.controller('levelController', ['$scope', '$http','shareData','$state', function ($scope, $http, shareData,$state) {
 		var building;
 	
 	//VIEW LEVELS WHEN PAGE LOADED
 	angular.element(document).ready(function () {
 		$scope.obj = shareData.getData();
 		obj=shareData.getData();
-  		level=obj.level
+  		$scope.level=obj.level
   		building=obj.buliding;
 		var url = "https://localhost:8443/level/updateLevel";
 		console.log("LEVEL DATA ARE OF THE FOLLOWING: " + $scope.level);
@@ -355,42 +356,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$location', fu
 	  $scope.passBuilding = function(){
 		  shareData.addData(building);
 	  }
-	  /*
-	$scope.addLevel = function(){
-		//alert("SUCCESS");
-		console.log("start adding");
-		$scope.data = {};
-		$scope.building = shareData.getData();
-		console.log($scope.building);
-		console.log($scope.building.id);
-		var dataObj = {
-				id: $scope.building.id,
-				levelNum: $scope.level.levelNum,
-				length: $scope.level.length,
-				width: $scope.level.width,
-				filePath: $scope.level.filePath
-		};
-
-		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/level/addLevel',
-			data    : dataObj //forms user object
-		});
-
-		console.log("SAVING THE LEVEL");
-		send.success(function(){
-			alert('LEVEL IS SAVED!');
-			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-			      $location.path("/viewBuilding");
-			
-		});
-		send.error(function(){
-			alert('SAVING LEVEL GOT ERROR! LEVEL NUMBER IS OUT OF RANGE');
-		});
-	};
-*/
+	 
 	$scope.updateLevel = function(){
 		console.log("Start updating");
 		$scope.data = {};
@@ -416,76 +382,19 @@ app.controller('levelController', ['$scope', '$http','shareData','$location', fu
 		send.success(function(){
 			shareData.addData(building); 
 			alert('LEVEL '+$scope.level.levelNum+' IS UPDATED! GOING BACK TO VIEW LEVELS');
-			$location.path("/viewLevels");
+			$state.go("workspace.viewLevels");
 			//add go back to view levels when ready
 		});
 		send.error(function(){
 			alert('UPDATING LEVEL GOT ERROR!');
 		});
 	}
-/*
-	$scope.getLevel = function(id){		
-		$scope.dataToShare = [];	  
-		$scope.shareMyData = function (myValue) {
-			//$scope.dataToShare = myValue;
-			//shareData.addData($scope.dataToShare);
-		}
-		$scope.url = "https://localhost:8443/level/getLevel/"+id;
-		//$scope.dataToShare = [];
-		console.log("GETTING THE Level INFO")
-		var getLevel = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/level/getLevel/' + id        
-		});
-		console.log("Getting the levelusing the url: " + $scope.url);
-		getLevel.success(function(response){
-			//$scope.dataToShare.push(id);
-			//$location.path("/viewLevels/"+id);
-			console.log('GET LEVEL SUCCESS! ' + JSON.stringify(response));
-			console.log("ID IS " + id);
-			shareData.addData(JSON.stringify(response));
-			//$location.path("/viewLevels");
-		});
-		getLevel.error(function(response){
-			$location.path("/viewLevels");
-			console.log('GET LEVEL FAILED! ' + JSON.stringify(response));
-		});
 
-	}
-	*/
-/*
-	$scope.getLevelById= function(){
-
-		//var buildings ={name: $scope.name, address: $scope.address};
-		//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
-		$scope.level1 = JSON.parse(shareData.getData());
-		var dataObj = {
-				levelNum: $scope.level1.levelNum,
-				length: $scope.level1.length,
-				width: $scope.level1.width,
-				filePath: $scope.level1.filePath
-		};
-		$scope.level = angular.copy($scope.level1)
-
-		var url = "https://localhost:8443/level/updateLevel";
-		console.log("LEVEL DATA ARE OF THE FOLLOWING: " + $scope.level);
-	}
-
-	$scope.getLevelByIdForDelete= function(){
-
-		//var buildings ={name: $scope.name, address: $scope.address};
-		//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
-		$scope.level = JSON.parse(shareData.getData());
-
-		var url = "https://localhost:8443/level/deleteLevel";
-		console.log("LEVEL DATA ARE OF THE FOLLOWING: " + $scope.level);
-	}
-*/
 	$scope.deleteLevel = function(){
 		if(confirm('CONFIRM TO DELETE LEVEL '+$scope.level.levelNum+'?')){
 			$scope.data = {};
 			console.log("Start deleting");
-			$scope.level = shareData.getData();
+			//$scope.level = shareData.getData();
 			console.log($scope.level.id);
 			var tempObj ={levelId:$scope.level.id};
 			console.log("fetch id "+ tempObj);
@@ -496,7 +405,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$location', fu
 				shareData.addData(building); 
 				console.log(building);
 				alert('LEVEL '+$scope.level.levelNum+' IS DELETED! GOING BACK TO VIEW LEVELS');
-				$location.path("/viewLevels");
+				$state.go("workspace.viewLevels");
 			},function(response){
 				alert("DID NOT DELETE LEVEL");
 				//console.log("response is : ")+JSON.stringify(response);
@@ -510,7 +419,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$location', fu
 }]);	
 
 
-app.controller('rateController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
+app.controller('rateController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData){
 	$scope.myDropDown = 'period';
 	
 	$scope.months = [{'name':'JANUARY','month':'JAN'},{'name':'FEBRUARY','month':'FEB'},
@@ -542,7 +451,7 @@ app.controller('rateController', ['$scope', '$http','$location','$routeParams','
 		console.log("SAVING THE RATE");
 		send.success(function(){
 			alert('RATE IS SAVED! GOING BACK TO VIEW RATES');
-			$location.path("/viewAllRates");
+			$state.go("workspace.viewAllRates");
 			
 		});
 		send.error(function(){
@@ -592,7 +501,7 @@ $scope.updateSpecialRate = function(rate){
 			shareData.addData(JSON.stringify(response));
 		});
 		getRate.error(function(response){
-			$location.path("/viewAllRates");
+			$state.go("workspace.viewAllRates");
 			console.log('GET RATE FAILED! ' + JSON.stringify(response));
 		});
 
@@ -614,7 +523,7 @@ $scope.updateSpecialRate = function(rate){
 	}
 }]);
 
-app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData','$location', function ($scope,  $timeout,$http ,shareData,$location) {
+app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
 	
 	angular.element(document).ready(function () {
 
@@ -664,7 +573,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 		console.log("UPDATING THE RATE");
 		send.success(function(){
 			alert('RATE IS SAVED!');
-			 $location.path("/viewAllRates");
+			$state.go("workspace.viewAllRates");
 		});
 		send.error(function(){
 			alert('UPDATING RATE GOT ERROR!');
@@ -673,7 +582,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 }])
 
 //DELETE BUILDING
-app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData','$location', function ($scope,  $timeout,$http ,shareData,$location) {
+app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
 	
 	angular.element(document).ready(function () {
 
@@ -694,7 +603,7 @@ app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData
 				console.log("Delete the RATE");
 				alert('SPECIAL RATE IS DELETED! GOING BACK TO VIEW ALL RATES...');
 				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$location.path("/viewAllRates");
+				$state.go("workspace.viewAllRates");
 				
 			},function(response){
 				alert("DID NOT DELETE");

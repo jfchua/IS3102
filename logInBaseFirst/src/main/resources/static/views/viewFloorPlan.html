@@ -1,27 +1,20 @@
  <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
  
- 
-    
-       <div ng-controller="viewFloorPlanController as viewFloorPlanCtrl">   
-<div class="clearfix">
-                        <ol class="breadcrumb no-bg no-m-t">
-                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                            <li><a href="#/workspace">Workspace</a></li>
-                            <li><a ui-sref="workspace.viewBuilding">View Buildings</a></li>
-                             <li><a>View Levels</a></li>
-                        </ol>
-</div> 
+ <div class="row" ng-controller="viewFloorPlanController as viewFloorPlanCtrl">   
+		<div class="clearfix">
+		                        <ol class="breadcrumb no-bg no-m-t">
+		                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+		                            <li><a href="#/workspace">Workspace</a></li>
+		                            <li><a ui-sref="workspace.viewBuilding">View Buildings</a></li>
+		                             <li><a ng-click="passBuilding()" >View Levels</a></li>
+		                             <li><a>View Floor Plan</a></li>
+		                             
+		                        </ol>
+		</div> 
            
-   
-       
 
-  
-
-
-
-<div class="row" >
-<div class="col-md-9">
-			<div class="panel panel-info">
+	<div class="col-md-9" id="widthForFloorPlan">
+			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">Floor Plan	  
 						<div class="panel-control pull-right">
@@ -32,18 +25,18 @@
 					</h3>
 				</div>
 			</div>
-     <div id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
-        <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
-            id="{{unit.square.id}}"   ng-mouseover=$parent.showDetails(unit) 
-              ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 
-              'background-color':'{{unit.square.color}}' ,'maxHeight':{{levelWidth}}+'px','maxWidth':{{levelLength}}+'px'}" ><p>{{unit.unitNumber}}<img  class="svgtest" ng-src="{{unit.square.icon.iconPath||unit.square.type}}"  alt="{{unit.square.icon.iconPath||unit.square.type}}"></p> </div>
-        </div>
-    <div><p> {{showDetail}}</p></div>
+			     <div id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
+			        <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
+			            id="{{unit.square.id}}"   ng-mouseover=$parent.showDetails(unit) 
+			              ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 
+			              'background-color':'{{unit.square.color}}' ,'maxHeight':{{levelWidth}}+'px','maxWidth':{{levelLength}}+'px'}" ><p>{{unit.unitNumber}}<img  class="svgtest" ng-src="{{unit.square.icon.iconPath||unit.square.type}}"  alt="{{unit.square.icon.iconPath||unit.square.type}}"></p> </div>
+			        </div>
+			    <div><p> {{showDetail}}</p></div>
 		</div>
-    <div class="col-md-3">
-          <a ui-sref="workspace.createFloorPlan" ng-click="editFloorPlan()"><button> Edit Floor Plan</button></a>
-        <button id="download" ng-click="downloadPlan()">Download Floor Plan</button>
-    </div>
-	</div>
-           
+     <div class="col-md-3">
+     <a ui-sref="workspace.createFloorPlan" ng-click="editFloorPlan()" tooltip-placement="right" tooltip="Edit Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-pencil"></i></button></a>
+     <br>
+     <br>
+     <a ng-click="downloadPlan()" tooltip-placement="right" tooltip="Download Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-download-alt"></i></button></a>
+    </div>         
     </div>

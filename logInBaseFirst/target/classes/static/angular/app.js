@@ -230,7 +230,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateLevel',{
+			.state('workspace.updateLevel',{
 				url: '/updateLevel',
 				templateUrl: '/views/updateLevel.html',
 				controller: 'levelController',
@@ -238,7 +238,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/deleteLevel',{
+			.state('workspace.deleteLevel',{
 				url: '/deleteLevel',
 				templateUrl: '/views/deleteLevel.html',
 				controller: 'levelController',
