@@ -199,7 +199,10 @@ public class UnitController {
 				}
 		
 			
-}            //for load and edit, call viewUnits first and then call saves units; for create new floor plan, can use both saveUnits or create Units
+}           
+
+	
+    //for load and edit, call viewUnits first and then call saves units; for create new floor plan, can use both saveUnits or create Units
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")	
 	@RequestMapping(value = "/saveUnits", method = RequestMethod.POST)
 		@ResponseBody
@@ -216,7 +219,10 @@ public class UnitController {
 				Set<Long> unitIds=new HashSet<Long>();//list of ids of units that are still on floor plan
 				
 				//LOOP THROUGH EACH UNIT
-				for(int i = 0; i <units.size(); i++){					
+				for(int i = 0; i <units.size(); i++){	
+                    
+                    
+                    
 						JSONObject unitObj = (JSONObject)units.get(i);				
 						long unitId = (Long)unitObj.get("id");				
 						JSONObject squareJson=(JSONObject)unitObj.get("square");		
@@ -236,31 +242,48 @@ public class UnitController {
 						Long iconId;
 						String type = (String)squareJson.get("type");
 						System.out.println("TYPE:"+type);
-						if(type.equals("")){//SQUARE IS WITH ICON OBJECT
-							System.out.println("UNIT"+unitId+" IS WITH ICON OBJECT");
-						//	defaultIcon=false;
-							System.out.println("TEST:1");
-							iconJson=(JSONObject)squareJson.get("icon");
-							System.out.println("TEST:2");
-							iconId = (Long)iconJson.get("id");	
-							System.out.println("TEST:3");
-							String iconType=(String)iconJson.get("iconType");
-							System.out.println("TEST:4");
-							if(iconType.equals("RECT")){
-								System.out.println("TEST:5");
-								rentable=true;
-								System.out.println("Customised shape is rect: " +rentable);
-							}
-							if (unitId==0){
-							
-								System.out.println("ADD NEW UNIT WITH ICON");
-								Unit unit=unitService.createUnitOnLevelWithIcon(levelId,iconId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);
-								unitIds.add(unit.getId());
-								System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
+                    
+                        if (unitId==0){//CREATE NEW UNIT
+							     if(type.equals("")){//SQUARE IS WITH ICON OBJECT
+                                        System.out.println("UNIT"+unitId+" IS WITH ICON OBJECT");
+                                        //	defaultIcon=false;
+                                        System.out.println("TEST:1");
+                                        iconJson=(JSONObject)squareJson.get("icon");
+                                        System.out.println("TEST:2");
+                                        iconId = (Long)iconJson.get("id");	
+                                        System.out.println("TEST:3");
+                                        String iconType=(String)iconJson.get("iconType");
+                                        System.out.println("TEST:4");
+                                            if(iconType.equals("RECT")){
+                                                System.out.println("TEST:5");
+                                                rentable=true;
+                                                System.out.println("Customised shape is rect: " +rentable);
+                                            }
+						                  System.out.println("ADD NEW UNIT WITH ICON");
+                                        Unit unit=unitService.createUnitOnLevelWithIcon(levelId,iconId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);
+                                        unitIds.add(unit.getId());
+                                        System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
+						
+						}else{//SQUARE IS WITH DEFAULT ICON
+							         System.out.println("UNIT"+unitId+" IS USING DEFAULT ICON");
+						              System.out.println("TEST:6");
+						              if(type.equals("./svg/rect.svg")){						
+							         rentable=true;
+							         System.out.println("Shape is rect: " +rentable);
+                            
+						              }
+                                        System.out.println("ADD NEW UNIT");
+                                        Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);
+                                        unitIds.add(unit.getId());
+                                        System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
+					
+						
+						}
+								
 									
 							
 							
-						}else{
+						}else{//EDIT EXISTING UNIT
 							
 								if(unitService.editUnitInfo(unitId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description)==true){
 									unitIds.add(unitId);		
@@ -272,34 +295,9 @@ public class UnitController {
 								}
 							
 						}
+                    
+                    
 						
-						}else{//SQUARE IS WITH DEFAULT ICON
-							System.out.println("UNIT"+unitId+" IS USING DEFAULT ICON");
-						System.out.println("TEST:6");
-						if(type.equals("./svg/rect.svg")){						
-							rentable=true;
-							System.out.println("Shape is rect: " +rentable);
-						}
-						if (unitId==0){
-							
-							System.out.println("ADD NEW UNIT");
-							Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);
-							unitIds.add(unit.getId());
-							System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
-							
-							
-						}else{
-							
-								if(unitService.editUnitInfo(unitId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description)==true){
-									unitIds.add(unitId);		
-									System.out.println("UNITCONTROLLER: UNIT IS EDITED. UNIT ID:"+unitId);
-								}else{
-									System.out.println("UNITCONTROLLER: ERROR. UNIT ID:"+unitId);
-								}
-						
-						}
-						
-						}
 						
 						
 				}//end for 
@@ -319,8 +317,9 @@ public class UnitController {
 			System.out.println("End Save");
 			ResponseEntity<Void> v = new ResponseEntity<Void>(HttpStatus.OK);
 			return v;
-		
-}
+        }
+	
+	
 		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 		@RequestMapping(value = "/deleteUnit", method = RequestMethod.POST)
 		@ResponseBody

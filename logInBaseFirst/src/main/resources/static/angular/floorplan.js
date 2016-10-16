@@ -11,7 +11,10 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData) {
   angular.element(document).ready(function () {
 	  		//GET LEVEL
 	  $scope.units=[];
-		    level = shareData.getData();
+		   // level = shareData.getData();
+	  		obj=shareData.getData();
+	  		level=obj.level
+	  		building=obj.buliding;
 		    	console.log("GET LEVEL: ");
 		      console.log(level);
 		      $scope.levelLength;
@@ -55,6 +58,7 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData) {
 			})
 			*/
 		    //GET BUILDING FROM levelIdObj
+		    /*
 		    var levelIdObj={id:level.id}
 		    $http.post('/level/getBuilding', JSON.stringify(levelIdObj)).then(function(response){
 		      console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
@@ -64,6 +68,7 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData) {
 		    },function(response){
 		      console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
 		    });	
+		    */
 		    console.log(building);
   });
   

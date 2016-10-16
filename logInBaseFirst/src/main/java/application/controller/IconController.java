@@ -120,7 +120,8 @@ public class IconController {
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
-			Set<Icon> icons = iconService.getAllIconFromClientOrganisation(client);	
+			//Set<Icon> icons = iconService.getAllIconFromClientOrganisation(client);	
+			Set<Icon> icons = client.getIcons();	
 			System.out.println(icons);
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {

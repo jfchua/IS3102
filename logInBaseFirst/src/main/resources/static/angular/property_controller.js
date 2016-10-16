@@ -93,7 +93,7 @@ app.controller('buildingController', ['$scope', '$http','$location','$routeParam
 			console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
 		});
 	};	
-
+/*
 	$scope.getBuilding = function(id){		
 		$scope.dataToShare = [];	  
 		$scope.url = "https://localhost:8443/building/getBuilding/"+id;
@@ -119,7 +119,7 @@ app.controller('buildingController', ['$scope', '$http','$location','$routeParam
 
 	}
 
-
+*/
 	$scope.getBuildingById= function(){
 
 		//var buildings ={name: $scope.name, address: $scope.address};
@@ -276,7 +276,10 @@ app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$
 
 	//PASS LEVEL TO SHAREDATA
 	$scope.passLevel = function(level){
-		shareData.addData(level);
+		var obj={building:$scope.building,
+				level:level
+				}
+		shareData.addData(obj);
 	}
 }])
 
@@ -327,8 +330,10 @@ app.controller('levelController', ['$scope', '$http','shareData','$location', fu
 	
 	//VIEW LEVELS WHEN PAGE LOADED
 	angular.element(document).ready(function () {
-		$scope.level = shareData.getData();
-		
+		$scope.obj = shareData.getData();
+		obj=shareData.getData();
+  		level=obj.level
+  		building=obj.buliding;
 		var url = "https://localhost:8443/level/updateLevel";
 		console.log("LEVEL DATA ARE OF THE FOLLOWING: " + $scope.level);
 		

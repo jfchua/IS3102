@@ -24,20 +24,20 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th><i></i> ID </th>
+								<th><i></i> Levels </th>
                                 <th><i></i> Building Name </th>
                                 <th><i></i> Number of floors </th>
                                 <th><i></i> Address </th>
                                 <th><i></i> City </th>
                                 <th><i></i> Postal Code </th>
                                 <th>Actions</th>
-                                <th></th>
+                                
 							</tr>
 						</thead>
 						<tbody>
 							 <tr ng-repeat="x in buildings | orderBy:'name'">
-                             <td><a  ui-sref="workspace.viewLevels" ng-click="passBuilding(x)">{{ x.id }}</a></td>
-                             <!--  <td><button onClick="window.open('http://www.google.com.sg}');">{{ x.id }}</button></td>-->
+                            <td><a  ui-sref="workspace.viewLevels" ng-click="passBuilding(x)" tooltip-placement="top" tooltip="View Levels"><i class="glyphicon glyphicon-eye-open"></i></a></td>
+                              <!--  <td><button onClick="window.open('http://www.google.com.sg}');">{{ x.id }}</button></td>-->
                              <td>{{ x.name }}</td>
                              <td>{{ x.numFloor }}</td>
                              <td>{{ x.address }}</td>
@@ -46,9 +46,8 @@
                              <td>
                              		<a  ui-sref="workspace.updateBuilding" ng-click="updateBuilding(x)" tooltip-placement="top" tooltip="Update Building"><i class="glyphicon glyphicon-pencil"></i></a>
                              		<a  ui-sref="workspace.deleteBuilding" ng-click="deleteBuilding(x)" tooltip-placement="top" tooltip="Delete Building!"><i class="glyphicon glyphicon-trash"></i></a>
-                             		<a  ui-sref="workspace.viewLevels" ng-click="passBuilding(x)" tooltip-placement="top" tooltip="View Levels"><i class="glyphicon glyphicon-eye-open"></i></a>
+                             		<a  ui-sref="workspace.addLevel" ng-click="addLevel(x)" tooltip-placement="top" tooltip="Add level"><i class="glyphicon glyphicon-plus-sign"></i></a>
                              </td>
-                             		<td><a  ui-sref="workspace.addLevel" ng-click="addLevel(x)" tooltip-placement="top" tooltip="Add level"><i class="glyphicon glyphicon-plus-sign"></i></a></td>
                              </tr>
 							
 							

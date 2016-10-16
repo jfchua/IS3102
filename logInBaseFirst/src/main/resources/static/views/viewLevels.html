@@ -27,8 +27,6 @@
                                <th><i></i> Length </th>
                                <th><i></i> Width </th>
                                <th>Action</th>
-                               <th></th>
-                               <th></th>
                                </tr>
                             </thead>
                             <tbody>  
@@ -38,10 +36,12 @@
                              <td>{{ x.length }}</td>
                              <td>{{ x.width }}</td>
                              <!--<td><a href="/#/updateLevel">Update</a></td>-->
-                             <td><a ng-model="myValue" href="/#/updateLevel" ng-click="passLevel(x)">Update</a></td>
-                             <td><a ng-model="myValue" href="/#/deleteLevel" ng-click="passLevel(x)">Delete</a></td>
-                              <td><a ng-model="myValue" href="/#/viewFloorPlan" ng-click="passLevel(x)">Floor Plan</a></td>
-                             </tr>
+                             <td>
+                             		<a  ui-sref="workspace.updateLevel" ng-click="passLevel(x)" tooltip-placement="top" tooltip="Update Level"><i class="glyphicon glyphicon-pencil"></i></a>
+                             		<a  ui-sref="workspace.deleteLevel" ng-click="passLevel(x)" tooltip-placement="top" tooltip="Delete Level"><i class="glyphicon glyphicon-trash"></i></a>
+                             		<a  ui-sref="workspace.viewFloorPlan" ng-click="passLevel(x)" tooltip-placement="top" tooltip="Floor Plan"><i class="glyphicon glyphicon-eye-open"></i></a>
+                          	</td>
+                            </tr>
                         </tbody>
 					</table>			
 				</div>
