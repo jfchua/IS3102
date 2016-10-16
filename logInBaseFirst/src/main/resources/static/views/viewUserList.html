@@ -1,8 +1,5 @@
-<html ng-app="app">
-<head>
-<title>VIEW ALL USERS</title>
-</head>
-<body ng-controller="viewUserList as ctrl">
+
+<div ng-controller="viewUserList as ctrl">
 	<table>
 		<tr>
 			<td>Name</td>
@@ -41,29 +38,6 @@
 				<span ng-click="delete($index)"> | Delete</span></td>
 		</tr>
 	</table>
-	<a href="#/workspace">Back to dashboard</a>
-	<style>
-/* Styles go here */
-body {
-	margin: 10px;
-	font-size: 14px;
-	font-family: Arial;
-}
 
-table {
-	border: 1px solid #333;
-	border-collapse: collapse;
-	width: 100%;
-}
 
-table tr td {
-	border: 1px solid #333;
-	padding: 10px;
-}
-
-table tr td span {
-	cursor: pointer;
-}
-</style>
-</body>
-</html>
+</div>

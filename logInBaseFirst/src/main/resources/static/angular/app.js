@@ -81,7 +81,24 @@
 	$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 });
  */
-var app = angular.module('app', ['ngStorage', 'ngRoute','ngResource','ui.bootstrap','ngAnimate', 'ngSanitize','ui.router','500tech.simple-calendar','ngFileUpload'])
+var app = angular.module('app', ['ngStorage', 
+                                 'ngRoute',
+                                 'ngResource',
+                                 'ngAnimate', 
+                                 'ui.bootstrap',                          
+                                 'ngSanitize',
+                                 'ui.router',
+                                 '500tech.simple-calendar',
+                                 'ngFileUpload', 
+                                 'ui.calendar', 
+                                 'chart.js',
+                                 'textAngular',
+                                 'gridshore.c3js.chart', 
+                                 'angular-growl',
+                                 'growlNotifications',   
+                                 'angular-loading-bar',
+                                 'angular-progress-button-styles',
+                                 'pascalprecht.translate'])
 //Declaring Constants
 .constant('USER_ROLES', {
 	all: '*',
@@ -133,15 +150,15 @@ app.config(
 					authorizedRoles: [USER_ROLES.all]
 				}
 			})
-			.state('/workspace',{
+			.state('workspace',{
 				url:'/workspace',
-				templateUrl: '/views/index.html',
+				templateUrl: 'views/index.html',
 				controller: 'passController',
 				data: {
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('/viewIcon',{
+			.state('workspace.viewIcon',{
 				url: '/viewIcon',
 				templateUrl: '/views/viewIcon.html',
 				controller: 'iconController',
@@ -165,7 +182,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addBuilding',{
+			.state('workspace.addBuilding',{
 				url: '/addBuilding',
 				templateUrl: '/views/addBuilding.html',
 				controller: 'buildingController',
@@ -173,7 +190,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewBuilding',{
+			.state('workspace.viewBuilding',{
 				url: '/viewBuilding',
 				templateUrl: '/views/viewBuilding.html',
 				controller: 'buildingController',
@@ -181,7 +198,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateBuilding',{
+			.state('workspace.updateBuilding',{
 				url: '/updateBuilding',		
 				templateUrl: '/views/updateBuilding.html',
 				controller: 'updateBuildingController',
@@ -189,7 +206,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/deleteBuilding',{
+			.state('workspace.deleteBuilding',{
 				url: '/deleteBuilding',
 				templateUrl: '/views/deleteBuilding.html',
 				controller: 'deleteBuildingController',
@@ -197,7 +214,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewLevels',{
+			.state('workspace.viewLevels',{
 				url: '/viewLevels',
 				templateUrl: '/views/viewLevels.html',
 				controller: 'viewLevelController',
@@ -205,7 +222,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addLevel',{
+			.state('workspace.addLevel',{
 				url: '/addLevel',
 				templateUrl: '/views/addLevel.html',
 				controller: 'addLevelController',
@@ -237,7 +254,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewAllRates',{
+			.state('workspace.viewAllRates',{
 				url: '/viewAllRates',
 				templateUrl: '/views/viewAllRates.html',
 				controller: 'rateController',
@@ -269,7 +286,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.event]
 				}
 			})
-			.state('/uploadCompanyLogo',{
+			.state('workspace.uploadCompanyLogo',{
 				url:'/uploadCompanyLogo',
 				templateUrl: '/views/uploadCompanyLogo.html',
 				controller: 'logoController',
@@ -294,7 +311,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('/new',{
+			.state('workspace.new',{
 				url:'/new',
 				templateUrl: '/message/new.html',
 				controller: 'NewMailController',
@@ -302,15 +319,15 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('/addClientOrg',{
-				url:'/addClientOrg',
+			.state('workspace.addClientOrg',{
+				url:'addClientOrg',
 				templateUrl: '/views/addClientOrg.html',
 				controller: 'clientOrgController',
 				data: {
 					authorizedRoles: [USER_ROLES.superadmin]
 				}
 			})	
-			.state('/viewClientOrgs',{
+			.state('workspace.viewClientOrgs',{
 				url:'/viewClientOrgs',
 				templateUrl: '/views/viewClientOrgs.html',
 				controller: 'viewClientOrgs',
@@ -334,7 +351,7 @@ app.config(
  					authorizedRoles: [USER_ROLES.property]
  				}
  		})
-			.state('/viewMaintenance',{
+			.state('workspace.viewMaintenance',{
 				url:'/viewMaintenance',	
 				templateUrl: '/views/viewMaintenance.html',
 				controller: 'maintenanceController',
@@ -366,7 +383,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.property]
 				}
 			})
-			.state('/addMaintenance',{
+			.state('workspace.addMaintenance',{
 				url:'/addMaintenance',	
 				templateUrl: '/views/addMaintenance.html',
 				controller: 'addMaintenanceController',
@@ -390,7 +407,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewAllVendors',{
+			.state('workspace.viewAllVendors',{
 				url:'/viewAllVendors',
 				templateUrl: '/views/viewAllVendors.html',
 				controller: 'vendorController',
@@ -398,7 +415,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addVendor',{
+			.state('workspace.addVendor',{
 				url:'/addVendor',	
 				templateUrl: '/views/addVendor.html',
 				controller: 'vendorController',
@@ -422,7 +439,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addEventEx',{
+			.state('workspace.addEventEx',{
 				url:'/addEventEx',
 				templateUrl: '/views/addEventEx.html',
 				//controller: 'eventExternalController',
@@ -480,7 +497,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewAllEventsEx',{
+			.state('workspace.viewAllEventsEx',{
 				url:'/viewAllEventsEx',
 				templateUrl: '/views/viewAllEventsEx.html',
 				controller: 'eventExternalController',
@@ -536,7 +553,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewAllEvents',{
+			.state('workspace.viewAllEvents',{
 				url:'/viewAllEvents',
 				templateUrl: '/views/viewAllEvents.html',
 				controller: 'eventController',
@@ -568,7 +585,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewEventOrganizers',{
+			.state('workspace.viewEventOrganizers',{
 				url:'/viewEventOrganizers',
 				templateUrl: '/views/viewEventOrganizers.html',
 				controller: 'viewEventOrganiserController',
@@ -576,7 +593,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewAllPaymentPlans',{
+			.state('workspace.viewAllPaymentPlans',{
 				url:'/viewAllPaymentPlans',
 				templateUrl: '/views/viewAllPaymentPlans.html',
 				controller: 'paymentController',
@@ -600,7 +617,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.all]
 				}
 			})	
-			.state('/createNewUser',{
+			.state('workspace.createNewUser',{
 				url:'/createNewUser',
 				templateUrl: '/views/createUser.html',
 				controller: 'createNewUserController',
@@ -608,7 +625,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})	
-			.state('/viewUserList',{
+			.state('workspace.viewUserList',{
 				url:'/viewUserList',
 				templateUrl: '/views/viewUserList.html',
 				controller: 'viewUserList',
@@ -616,7 +633,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.admin]
 				}
 			})	
-			.state('/viewAuditLog',{
+			.state('workspace.viewAuditLog',{
 				url:'/viewAuditLog',
 				templateUrl: '/views/viewAuditLog.html',
 				controller: 'auditLogController',
@@ -1340,6 +1357,99 @@ app.factory('datfactory', function ($http, $q){
 	return this;
 });
 
+// DIRECTIVE AND CONTROLLER FOR UI
+app.directive('topnav',function(){
+	return {
+    templateUrl:'views/topnav.html?v='+window.app_version,
+    restrict: 'E',
+    replace: true,
+    controller: function($scope){
+
+    	$scope.showMenu = function(){
+
+	        $('.dashboard-page').toggleClass('push-right');
+
+    	}
+    	$scope.changeTheme = function(setTheme){
+
+			$('<link>')
+			  .appendTo('head')
+			  .attr({type : 'text/css', rel : 'stylesheet'})
+			  .attr('href', 'styles/app-'+setTheme+'.css?v='+window.app_version);
+
+			// $.get('/api/change-theme?setTheme='+setTheme);
+
+		}
+		$scope.rightToLeft = function(){
+			// alert('message');
+			$('body').toggleClass('rtl');
+
+			// var t = $('body').hasClass('rtl');
+			// console.log(t);
+			
+			if($('body').hasClass('rtl')) {
+				$('.stat').removeClass('hvr-wobble-horizontal');
+			}
+			
+
+		}
+
+
+		
+    }
+}
+});
+
+app.directive('sidebar',function(){
+	return {
+    templateUrl:'views/sidebar.html',
+    restrict: 'E',
+    replace: true,
+
+    controller: function($scope){
+
+		setTimeout(function(){
+			$('.sidenav-outer').perfectScrollbar();
+		}, 100);
+		
+	}
+}
+});
+app.directive('menubar',function(){
+		return {
+        templateUrl:'views/menu-bar.html',
+        restrict: 'E',
+        replace: true,
+    }
+})
+app.directive('sidebarwidgets',function(){
+		return {
+        templateUrl:'views/sidebar-widgets.html',
+        restrict: 'E',
+        replace: true,
+	}
+});
+app.directive('sidebarProfile',function(){
+		return {
+        templateUrl:'views/sidebar-profile.html',
+        restrict: 'E',
+        replace: true,
+    	}
+	});
+app	.directive('sidebarCalendar',function(){
+		return {
+        templateUrl:'views/sidebar-calendar.html',
+        restrict: 'E',
+        replace: true,
+    	}
+	});
+app.directive('sidebarNewsfeed',function(){
+		return {
+        templateUrl:'views/sidebar-newsfeed.html',
+        restrict: 'E',
+        replace: true,
+    	}
+	});
 app.controller('AlertDemoCtrl', function ($scope, datfactory, $http){
 	datfactory.getlist()
 	.then(function(arrItems){
@@ -1379,6 +1489,383 @@ app.controller('AlertDemoCtrl', function ($scope, datfactory, $http){
 
 	};
 });
+app.controller('DropdownCtrl', function ($scope, $log) {
+	  $scope.items = [
+	                  'The first choice!',
+	                  'And another choice for you.',
+	                  'but wait! A third!'
+	                ];
+
+	                $scope.status = {
+	                  isopen: false
+	                };
+
+	                $scope.toggled = function(open) {
+	                  $log.log('Dropdown is now: ', open);
+	                };
+
+	                $scope.toggleDropdown = function($event) {
+	                  $event.preventDefault();
+	                  $event.stopPropagation();
+	                  $scope.status.isopen = !$scope.status.isopen;
+	                };
+	              });
+app.controller('sidenavCtrl', function($scope, $location){
+	$scope.selectedMenu = 'dashboard';
+	$scope.collapseVar = 0;
+
+	$scope.check = function(x){
+
+		if(x==$scope.collapseVar)
+			$scope.collapseVar = 0;
+		else
+			$scope.collapseVar = x;
+	};
+	$scope.multiCheck = function(y){
+
+		if(y==$scope.multiCollapseVar)
+			$scope.multiCollapseVar = 0;
+		else
+			$scope.multiCollapseVar = y;
+	};
+});
+
+app.controller('ButtonsCtrl', function ($scope) {
+	  $scope.singleModel = 1;
+
+	  $scope.radioModel = 'Middle';
+
+	  $scope.checkModel = {
+	    left: false,
+	    middle: true,
+	    right: false
+	  };
+	});
+app.controller('progressCtrl', function($scope) {
+	[].slice.call( document.querySelectorAll( 'button.progress-button' ) ).forEach( function( bttn ) {
+		new ProgressButton( bttn, {
+			callback : function( instance ) {
+				var progress = 0,
+				interval = setInterval( function() {
+					progress = Math.min( progress + Math.random() * 0.1, 1 );
+					instance._setProgress( progress );
+					if( progress === 1 ) {
+						instance._stop(1);
+						clearInterval( interval );
+					}
+				}, 80 );
+			}
+		});
+	});
+});	
+app.controller('ProgressDemoCtrl', function ($scope) {
+	  $scope.max = 200;
+
+	  $scope.random = function() {
+	    var value = Math.floor((Math.random() * 100) + 1);
+	    var type;
+
+	    if (value < 25) {
+	      type = 'success';
+	    } else if (value < 50) {
+	      type = 'info';
+	    } else if (value < 75) {
+	      type = 'warning';
+	    } else {
+	      type = 'danger';
+	    }
+
+	    $scope.showWarning = (type === 'danger' || type === 'warning');
+
+	    $scope.dynamic = value;
+	    $scope.type = type;
+	  };
+	  $scope.random();
+
+	  $scope.randomStacked = function() {
+	    $scope.stacked = [];
+	    var types = ['success', 'info', 'warning', 'danger'];
+
+	    for (var i = 0, n = Math.floor((Math.random() * 4) + 1); i < n; i++) {
+	        var index = Math.floor((Math.random() * 4));
+	        $scope.stacked.push({
+	          value: Math.floor((Math.random() * 30) + 1),
+	          type: types[index]
+	        });
+	    }
+	  };
+	  $scope.randomStacked();
+	});
+app.controller('CollapseDemoCtrl', function ($scope) {
+  $scope.isCollapsed = false;
+});
+
+/*
+*  AngularJs Fullcalendar Wrapper for the JQuery FullCalendar
+*  API @ http://arshaw.com/fullcalendar/
+*
+*  Angular Calendar Directive that takes in the [eventSources] nested array object as the ng-model and watches it deeply changes.
+*       Can also take in multiple event urls as a source object(s) and feed the events per view.
+*       The calendar will watch any eventSource array and update itself when a change is made.
+*
+*/
+
+angular.module('ui.calendar', [])
+  .constant('uiCalendarConfig', {})
+  .controller('uiCalendarCtrl', ['$scope', '$timeout', function($scope, $timeout){
+
+      var sourceSerialId = 1,
+          eventSerialId = 1,
+          sources = $scope.eventSources,
+          extraEventSignature = $scope.calendarWatchEvent ? $scope.calendarWatchEvent : angular.noop,
+
+          wrapFunctionWithScopeApply = function(functionToWrap){
+              var wrapper;
+
+              if (functionToWrap){
+                  wrapper = function(){
+                      // This happens outside of angular context so we need to wrap it in a timeout which has an implied apply.
+                      // In this way the function will be safely executed on the next digest.
+
+                      var args = arguments;
+                      $timeout(function(){
+                          functionToWrap.apply(this, args);
+                      });
+                  };
+              }
+
+              return wrapper;
+          };
+
+      this.eventsFingerprint = function(e) {
+        if (!e.__uiCalId) {
+          e.__uiCalId = eventSerialId++;
+        }
+        // This extracts all the information we need from the event. http://jsperf.com/angular-calendar-events-fingerprint/3
+        return "" + e.__uiCalId + (e.id || '') + (e.title || '') + (e.url || '') + (+e.start || '') + (+e.end || '') +
+          (e.allDay || '') + (e.className || '') + extraEventSignature(e) || '';
+      };
+
+      this.sourcesFingerprint = function(source) {
+          return source.__id || (source.__id = sourceSerialId++);
+      };
+
+      this.allEvents = function() {
+        // return sources.flatten(); but we don't have flatten
+        var arraySources = [];
+        for (var i = 0, srcLen = sources.length; i < srcLen; i++) {
+          var source = sources[i];
+          if (angular.isArray(source)) {
+            // event source as array
+            arraySources.push(source);
+          } else if(angular.isObject(source) && angular.isArray(source.events)){
+            // event source as object, ie extended form
+            var extEvent = {};
+            for(var key in source){
+              if(key !== '_uiCalId' && key !== 'events'){
+                 extEvent[key] = source[key];
+              }
+            }
+            for(var eI = 0;eI < source.events.length;eI++){
+              angular.extend(source.events[eI],extEvent);
+            }
+            arraySources.push(source.events);
+          }
+        }
+
+        return Array.prototype.concat.apply([], arraySources);
+      };
+
+      // Track changes in array by assigning id tokens to each element and watching the scope for changes in those tokens
+      // arguments:
+      //  arraySource array of function that returns array of objects to watch
+      //  tokenFn function(object) that returns the token for a given object
+      this.changeWatcher = function(arraySource, tokenFn) {
+        var self;
+        var getTokens = function() {
+          var array = angular.isFunction(arraySource) ? arraySource() : arraySource;
+          var result = [], token, el;
+          for (var i = 0, n = array.length; i < n; i++) {
+            el = array[i];
+            token = tokenFn(el);
+            map[token] = el;
+            result.push(token);
+          }
+          return result;
+        };
+        // returns elements in that are in a but not in b
+        // subtractAsSets([4, 5, 6], [4, 5, 7]) => [6]
+        var subtractAsSets = function(a, b) {
+          var result = [], inB = {}, i, n;
+          for (i = 0, n = b.length; i < n; i++) {
+            inB[b[i]] = true;
+          }
+          for (i = 0, n = a.length; i < n; i++) {
+            if (!inB[a[i]]) {
+              result.push(a[i]);
+            }
+          }
+          return result;
+        };
+
+        // Map objects to tokens and vice-versa
+        var map = {};
+
+        var applyChanges = function(newTokens, oldTokens) {
+          var i, n, el, token;
+          var replacedTokens = {};
+          var removedTokens = subtractAsSets(oldTokens, newTokens);
+          for (i = 0, n = removedTokens.length; i < n; i++) {
+            var removedToken = removedTokens[i];
+            el = map[removedToken];
+            delete map[removedToken];
+            var newToken = tokenFn(el);
+            // if the element wasn't removed but simply got a new token, its old token will be different from the current one
+            if (newToken === removedToken) {
+              self.onRemoved(el);
+            } else {
+              replacedTokens[newToken] = removedToken;
+              self.onChanged(el);
+            }
+          }
+
+          var addedTokens = subtractAsSets(newTokens, oldTokens);
+          for (i = 0, n = addedTokens.length; i < n; i++) {
+            token = addedTokens[i];
+            el = map[token];
+            if (!replacedTokens[token]) {
+              self.onAdded(el);
+            }
+          }
+        };
+        return self = {
+          subscribe: function(scope, onChanged) {
+            scope.$watch(getTokens, function(newTokens, oldTokens) {
+              if (!onChanged || onChanged(newTokens, oldTokens) !== false) {
+                applyChanges(newTokens, oldTokens);
+              }
+            }, true);
+          },
+          onAdded: angular.noop,
+          onChanged: angular.noop,
+          onRemoved: angular.noop
+        };
+      };
+
+      this.getFullCalendarConfig = function(calendarSettings, uiCalendarConfig){
+          var config = {};
+
+          angular.extend(config, uiCalendarConfig);
+          angular.extend(config, calendarSettings);
+         
+          angular.forEach(config, function(value,key){
+            if (typeof value === 'function'){
+              config[key] = wrapFunctionWithScopeApply(config[key]);
+            }
+          });
+
+          return config;
+      };
+  }])
+  .directive('uiCalendar', ['uiCalendarConfig', '$locale', function(uiCalendarConfig, $locale) {
+    // Configure to use locale names by default
+    var tValues = function(data) {
+      // convert {0: "Jan", 1: "Feb", ...} to ["Jan", "Feb", ...]
+      var r, k;
+      r = [];
+      for (k in data) {
+        r[k] = data[k];
+      }
+      return r;
+    };
+    var dtf = $locale.DATETIME_FORMATS;
+    uiCalendarConfig = angular.extend({
+      monthNames: tValues(dtf.MONTH),
+      monthNamesShort: tValues(dtf.SHORTMONTH),
+      dayNames: tValues(dtf.DAY),
+      dayNamesShort: tValues(dtf.SHORTDAY)
+    }, uiCalendarConfig || {});
+
+    return {
+      restrict: 'A',
+      scope: {eventSources:'=ngModel',calendarWatchEvent: '&'},
+      controller: 'uiCalendarCtrl',
+      link: function(scope, elm, attrs, controller) {
+
+        var sources = scope.eventSources,
+            sourcesChanged = false,
+            eventSourcesWatcher = controller.changeWatcher(sources, controller.sourcesFingerprint),
+            eventsWatcher = controller.changeWatcher(controller.allEvents, controller.eventsFingerprint),
+            options = null;
+
+        function getOptions(){
+          var calendarSettings = attrs.uiCalendar ? scope.$parent.$eval(attrs.uiCalendar) : {},
+              fullCalendarConfig;
+
+          fullCalendarConfig = controller.getFullCalendarConfig(calendarSettings, uiCalendarConfig);
+
+          options = { eventSources: sources };
+          angular.extend(options, fullCalendarConfig);
+
+          var options2 = {};
+          for(var o in options){
+            if(o !== 'eventSources'){
+              options2[o] = options[o];
+            }
+          }
+          return JSON.stringify(options2);
+        }
+
+        scope.destroy = function(){
+          if(attrs.calendar) {
+            scope.calendar = scope.$parent[attrs.calendar] =  elm.html('');
+          } else {
+            scope.calendar = elm.html('');
+          }
+        };
+
+        scope.init = function(){
+          scope.calendar.fullCalendar(options);
+        };
+
+        eventSourcesWatcher.onAdded = function(source) {
+          scope.calendar.fullCalendar('addEventSource', source);
+          sourcesChanged = true;
+        };
+
+        eventSourcesWatcher.onRemoved = function(source) {
+          scope.calendar.fullCalendar('removeEventSource', source);
+          sourcesChanged = true;
+        };
+
+        eventsWatcher.onAdded = function(event) {
+          scope.calendar.fullCalendar('renderEvent', event);
+        };
+
+        eventsWatcher.onRemoved = function(event) {
+          scope.calendar.fullCalendar('removeEvents', function(e) { return e === event; });
+        };
+
+        eventsWatcher.onChanged = function(event) {
+          scope.calendar.fullCalendar('updateEvent', event);
+        };
+
+        eventSourcesWatcher.subscribe(scope);
+        eventsWatcher.subscribe(scope, function(newTokens, oldTokens) {
+          if (sourcesChanged === true) {
+            sourcesChanged = false;
+            // prevent incremental updates in this case
+            return false;
+          }
+        });
+
+        scope.$watch(getOptions, function(newO,oldO){
+            scope.destroy();
+            scope.init();
+        });
+      }
+    };
+}]);
 
 //MESSAGE
 
@@ -1857,6 +2344,76 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 	};	
 }]);
 
+app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+    $scope.toggleLeft = buildDelayedToggler('left');
+    $scope.toggleRight = buildToggler('right');
+    $scope.isOpenRight = function(){
+      return $mdSidenav('right').isOpen();
+    };
+
+    /**
+     * Supplies a function that will continue to operate until the
+     * time is up.
+     */
+    function debounce(func, wait, context) {
+      var timer;
+
+      return function debounced() {
+        var context = $scope,
+            args = Array.prototype.slice.call(arguments);
+        $timeout.cancel(timer);
+        timer = $timeout(function() {
+          timer = undefined;
+          func.apply(context, args);
+        }, wait || 10);
+      };
+    }
+
+    /**
+     * Build handler to open/close a SideNav; when animation finishes
+     * report completion in console
+     */
+    function buildDelayedToggler(navID) {
+      return debounce(function() {
+        // Component lookup should always be available since we are not using `ng-if`
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }, 200);
+    }
+
+    function buildToggler(navID) {
+      return function() {
+        // Component lookup should always be available since we are not using `ng-if`
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }
+    }
+  })
+  .controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+    $scope.close = function () {
+      // Component lookup should always be available since we are not using `ng-if`
+      $mdSidenav('left').close()
+        .then(function () {
+          $log.debug("close LEFT is done");
+        });
+
+    };
+  })
+  .controller('RightCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+    $scope.close = function () {
+      // Component lookup should always be available since we are not using `ng-if`
+      $mdSidenav('right').close()
+        .then(function () {
+          $log.debug("close RIGHT is done");
+        });
+    };
+  });
 
 
 app.controller('eventExternalController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
