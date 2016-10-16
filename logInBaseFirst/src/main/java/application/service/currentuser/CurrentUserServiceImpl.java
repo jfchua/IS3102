@@ -12,7 +12,7 @@ public class CurrentUserServiceImpl implements CurrentUserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CurrentUserDetailsService.class);
 
-    @Override
+   /* @Override
     public boolean canAccessUser(CurrentUser currentUser, Long userId) {
         LOGGER.debug("Checking if user={} has access to user={}", currentUser, userId);
         System.out.println("canaccess");
@@ -21,6 +21,6 @@ public class CurrentUserServiceImpl implements CurrentUserService {
         return currentUser != null
                 && (currentUser.getRoles().contains("ADMIN") || currentUser.getId().equals(userId));
         //== Role.ADMIN
-    }
+    }*/
 
 }

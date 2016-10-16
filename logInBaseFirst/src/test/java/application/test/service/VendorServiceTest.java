@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import application.domain.ClientOrganisation;
 import application.domain.Vendor;
 import application.exception.ClientOrganisationNotFoundException;
+import application.exception.InvalidEmailException;
 import application.exception.UserNotFoundException;
 import application.exception.VendorNotFoundException;
 import application.service.user.ClientOrganisationService;
@@ -55,7 +56,7 @@ public class VendorServiceTest extends AbstractTest {
 	public void testDeleteVendorNotFound() throws ClientOrganisationNotFoundException, VendorNotFoundException{
 		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
 		Boolean result = vendorService.deleteVendor(org, Long.MAX_VALUE);
-		Assert.assertTrue(result);
+		Assert.assertFalse(result);
 	}
 	
 	@Test
@@ -71,15 +72,31 @@ public class VendorServiceTest extends AbstractTest {
 	}
 	
 	@Test
-	public void testCreateVendor(){
-		//	boolean createVendor(ClientOrganisation client, String email, String name, String description, String contact);
-
+	public void testCreateVendor() throws ClientOrganisationNotFoundException, InvalidEmailException{
+		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
+		boolean result =  vendorService.createVendor(org, "vendor@vendor.com", "vendorname", "vendordescription", "95959595");
+		Assert.assertTrue(result);
+	}
+	
+	@Test(expected=InvalidEmailException.class)
+	public void testCreateVendorInvalidEmail() throws ClientOrganisationNotFoundException, InvalidEmailException{
+		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
+		boolean result =  vendorService.createVendor(org, "invalidemail", "vendorname", "vendordescription", "95959595");
+		Assert.assertTrue(result);
 	}
 		
 	@Test
-	public void testEditVendor(){
-		//	boolean editVendor(long id, String email, String name, String description, String contact);	
-
+	public void testEditVendor() throws ClientOrganisationNotFoundException, InvalidEmailException, VendorNotFoundException{
+		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
+		boolean result = vendorService.editVendor((long)2, "email@email.com", "newname", "newdesc", "12345678");	
+		Assert.assertTrue(result);
+	}
+	
+	@Test(expected=InvalidEmailException.class)
+	public void testEditVendorInvalidEmail() throws ClientOrganisationNotFoundException, InvalidEmailException, VendorNotFoundException{
+		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
+		boolean result = vendorService.editVendor((long)2, "invalidemail", "newname", "newdesc", "12345678");	
+		Assert.assertTrue(result);
 	}
 
 	

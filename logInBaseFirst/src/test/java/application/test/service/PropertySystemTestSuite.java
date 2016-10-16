@@ -10,7 +10,11 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	   BuildingServiceTest.class
+	   BuildingServiceTest.class,
+	   FileUploadCheckingServiceTest.class,
+	   VendorServiceTest.class,
+	   IconServiceTest.class
+	   
 	})
 public class PropertySystemTestSuite
 {

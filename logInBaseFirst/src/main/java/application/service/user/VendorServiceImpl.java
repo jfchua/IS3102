@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import application.domain.Building;
 import application.domain.ClientOrganisation;
 import application.domain.Vendor;
+import application.exception.InvalidEmailException;
 import application.exception.VendorNotFoundException;
 import application.repository.ClientOrganisationRepository;
 import application.repository.VendorRepository;
@@ -31,13 +32,13 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	public boolean createVendor(ClientOrganisation client, String email, String name, String description, String contact) {
+	public boolean createVendor(ClientOrganisation client, String email, String name, String description, String contact) throws InvalidEmailException {
 		// TODO Auto-generated method stub	
 		Pattern pat = Pattern.compile("^.+@.+\\..+$");
 		Matcher get = pat.matcher(email);		
 		if(!get.matches()){
-			System.out.println("invalid email address");
-			return false;
+			throw new InvalidEmailException("The email " + email + " is invalid");
+			//return false;
 		}
 		else{
 			Vendor vendor = new Vendor();
@@ -85,17 +86,18 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	public boolean editVendor(long id, String email, String name, String description, String contact) {
+	public boolean editVendor(long id, String email, String name, String description, String contact) throws InvalidEmailException, VendorNotFoundException {
 		// TODO Auto-generated method stub
+		Pattern pat = Pattern.compile("^.+@.+\\..+$");
+		Matcher get = pat.matcher(email);		
+		if(!get.matches()){
+			throw new InvalidEmailException("The email " + email + " is invalid");
+		}
+		Optional<Vendor> vendor1 = getVendorById(id);
 		try{
-			Optional<Vendor> vendor1 = getVendorById(id);
+			//Optional<Vendor> vendor1 = getVendorById(id);
 			if(vendor1.isPresent()){
-				Pattern pat = Pattern.compile("^.+@.+\\..+$");
-				Matcher get = pat.matcher(email);		
-				if(!get.matches()){
-					System.out.println("invalid email address");
-					return false;
-				}
+				
 				Vendor vendor = vendor1.get();
 				vendor.setEmail(email);
 				vendor.setName(name);
@@ -104,6 +106,7 @@ public class VendorServiceImpl implements VendorService {
 				vendorRepository.save(vendor);
 			}
 		}catch(Exception e){
+			System.err.println(e.getMessage());
 			return false;
 		}
 		return true;

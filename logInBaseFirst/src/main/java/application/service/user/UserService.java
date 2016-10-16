@@ -10,6 +10,7 @@ import application.domain.PasswordResetToken;
 import application.domain.Role;
 import application.domain.User;
 import application.exception.EmailAlreadyExistsException;
+import application.exception.InvalidEmailException;
 import application.exception.OldPasswordInvalidException;
 import application.exception.PasswordResetTokenNotFoundException;
 import application.exception.UserNotFoundException;
@@ -30,7 +31,7 @@ public interface UserService {
 
 	boolean changePassword(long id, String password) throws UserNotFoundException;
 
-	boolean createNewUser(ClientOrganisation clientOrg,String name, String userEmail, Set<Role> roles) throws UserNotFoundException, EmailAlreadyExistsException;
+	boolean createNewUser(ClientOrganisation clientOrg,String name, String userEmail, Set<Role> roles) throws UserNotFoundException, EmailAlreadyExistsException, InvalidEmailException;
 
 	boolean editUser(String name, User user, Set<Role> roles) throws UserNotFoundException;
 
@@ -44,6 +45,6 @@ public interface UserService {
 
 	Set<User> getTicketManagers(ClientOrganisation clientOrg);
 
-	void checkOldPassword(Long id, String oldpass) throws OldPasswordInvalidException, UserNotFoundException;
+	boolean checkOldPassword(Long id, String oldpass) throws OldPasswordInvalidException, UserNotFoundException;
 
 }

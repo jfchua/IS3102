@@ -8,8 +8,8 @@ import application.domain.*;
 
 public interface UnitService {
 	
-		Unit createUnit(int left, int top, int height, int width, String color, String type,
-			String unitNumber, int dimensionLength, int dimensionWidth, Boolean rentable, String description);
+/*		Unit createUnit(int left, int top, int height, int width, String color, String type,
+			String unitNumber, int dimensionLength, int dimensionWidth, Boolean rentable, String description);*/
 	
 		Unit createUnitOnLevel(long levelId, int left, int top, int height, int width, String color, String type,String unitNumber,
 				int dimensionLength, int dimensionWidth, Boolean rentable, String description);	

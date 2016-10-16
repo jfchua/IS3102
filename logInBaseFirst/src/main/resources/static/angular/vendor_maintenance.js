@@ -34,12 +34,12 @@ app.controller('vendorController', ['$scope', '$http','$location','$routeParams'
 
 		console.log("SAVING THE vendor");
 		send.success(function(){
-			
-			alert('VENDOR IS SAVED! GOING BACK TO VIEW BUILDINGS');
+
+			alert('Vendor saved successfully, going back to view buildings');
 			$location.path("/viewAllVendors");
 		});
-		send.error(function(){
-			alert('SAVING VENDOR GOT ERROR!');
+		send.error(function(data){
+			alert('Error,' + data);
 		});
 	};
 
@@ -60,7 +60,7 @@ app.controller('updateVendorController', ['$scope', '$http','$location','$routeP
 		var url = "https://localhost:8443/vendor/updateVendor";
 	});
 
-	
+
 
 	$scope.updateVendor = function(){
 		console.log("Start updating");
@@ -84,31 +84,31 @@ app.controller('updateVendorController', ['$scope', '$http','$location','$routeP
 
 		console.log("UPDATING THE VENDOR");
 		send.success(function(){
-			alert('VENDOR IS SAVED!');
+			alert('Vendor successfully updated');
 			$location.path("/viewAllVendors");
 		});
-		send.error(function(){
-			alert('UPDATING VENDOR GOT ERROR!');
+		send.error(function(data){
+			alert('Error, ' + data);
 		});
 	};	
 
 	$scope.deleteVendor = function(){
 		if(confirm('CONFIRM TO DELETE VENDOR '+$scope.vendor.name+'?')){
-		$scope.data = {};
-		console.log("Start deleting vendor");
-		//$scope.vendor = shareData.getData();
-		console.log($scope.vendor.id);
-		var tempObj ={vendorId:$scope.vendor.id};
-		console.log("fetch id "+ tempObj);
-		$http.post("//localhost:8443/vendor/deleteVendor", JSON.stringify(tempObj)).then(function(response){
-			console.log("Cancel the VENDOR");
-			alert('VENDOR IS DELETED!GOING BACK TO VIEW VENDORS');
-			$location.path("/viewAllVendors");
-		},function(response){
-			alert("DID NOT Cancel VENDOR");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)
+			$scope.data = {};
+			console.log("Start deleting vendor");
+			//$scope.vendor = shareData.getData();
+			console.log($scope.vendor.id);
+			var tempObj ={vendorId:$scope.vendor.id};
+			console.log("fetch id "+ tempObj);
+			$http.post("//localhost:8443/vendor/deleteVendor", JSON.stringify(tempObj)).then(function(response){
+				console.log("Cancel the VENDOR");
+				alert('Vendor successfully delete, going back to viewing vendors');
+				$location.path("/viewAllVendors");
+			},function(response){
+				alert('Error deleting vendor, ' + response);
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)
 		}
 	}
 
@@ -135,9 +135,9 @@ app.controller('deleteMaintenanceController', ['$scope',  '$timeout','$http','sh
 				//console.log("response is : ")+JSON.stringify(response);
 			}	
 			)
-	
+
 		}
-		
+
 
 	}
 
@@ -176,7 +176,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 		var getLevels = $http({
 			method  : 'GET',
 			url     : 'https://localhost:8443/level/viewLevels/'+id,
-	});
+		});
 		console.log("Getting the levels using the url: " + $scope.url);
 		getLevels.success(function(response){
 			$scope.levels = response;
@@ -194,11 +194,11 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 		}
 		console.log("finish selecting level");		
 	}
-	
+
 	$scope.selectedUnits=[];
 	$scope.getUnit = function(levelId){
 		//$scope.url = "https://localhost:8443/property/viewUnits/";
-		
+
 		$scope.levelID = levelId; 
 		var dataObj = {id: $scope.levelID};
 		console.log("GETTING THE ALL UNITS INFO")
@@ -206,7 +206,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 			method  : 'POST',
 			url     : 'https://localhost:8443/property/viewUnits/',
 			data    : dataObj,
-	});
+		});
 		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
 		getUnits.success(function(response){
 			$scope.units = response;
@@ -217,22 +217,22 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 		getUnits.error(function(){
 			alert('Get units error!!!!!!!!!!');
 		});		
-		
+
 		$scope.currentlySelectedUnit;
 		$scope.selectUnit = function(){
 			var duplicate = false;
 			var index = 0;
-		    angular.forEach($scope.selectedUnits, function() {
-		        if(duplicate==false&&$scope.currentlySelectedUnit.id == $scope.selectedUnits[index].id){
-		        	duplicate = true;
-		        }else
-		        	index = index + 1;
-		    });
-		    console.log(duplicate);
+			angular.forEach($scope.selectedUnits, function() {
+				if(duplicate==false&&$scope.currentlySelectedUnit.id == $scope.selectedUnits[index].id){
+					duplicate = true;
+				}else
+					index = index + 1;
+			});
+			console.log(duplicate);
 			if(!duplicate){
 				$scope.selectedUnits.push($scope.currentlySelectedUnit);
 			}
-			
+
 		}
 
 		$scope.deleteUnit = function(unit){
@@ -261,52 +261,52 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
 		});
 	}*/
-	
+
 	$scope.selectedVendors=[];
 	//$scope.getAllVendors = function(){
-		console.log("GETTING THE ALL UNITS INFO")
-		var getVendors = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/vendor/viewAllVendors/',
+	console.log("GETTING THE ALL UNITS INFO")
+	var getVendors = $http({
+		method  : 'GET',
+		url     : 'https://localhost:8443/vendor/viewAllVendors/',
 	});
-		getVendors.success(function(response){
-			$scope.vendors = response;
-			console.log("RESPONSE IS" + JSON.stringify(response));
+	getVendors.success(function(response){
+		$scope.vendors = response;
+		console.log("RESPONSE IS" + JSON.stringify(response));
 
-			console.log('Vendors Gotten');
+		console.log('Vendors Gotten');
+	});
+	getVendors.error(function(){
+		alert('Error getting vendors');
+	});		
+
+	$scope.currentlySelectedVendor;
+	$scope.selectVendor = function(){
+
+		var duplicate = false;
+		var index = 0;
+		angular.forEach($scope.selectedVendors, function() {
+			if(duplicate==false&&$scope.currentlySelectedVendor.id == $scope.selectedVendors[index].id)
+				duplicate = true;
+			else
+				index = index + 1;
 		});
-		getVendors.error(function(){
-			alert('Get vendors error!!!!!!!!!!');
-		});		
-		
-		$scope.currentlySelectedVendor;
-		$scope.selectVendor = function(){
-			
-			var duplicate = false;
-			var index = 0;
-		    angular.forEach($scope.selectedVendors, function() {
-		        if(duplicate==false&&$scope.currentlySelectedVendor.id == $scope.selectedVendors[index].id)
-		        	duplicate = true;
-		        else
-		        	index = index + 1;
-		    });
-		    console.log(duplicate);
-			if(!duplicate){
-				$scope.selectedVendors.push($scope.currentlySelectedVendor);
-			}
-			
-			
+		console.log(duplicate);
+		if(!duplicate){
+			$scope.selectedVendors.push($scope.currentlySelectedVendor);
 		}
 
-		$scope.deleteVendor = function(vendor){
-			var index = $scope.selectedVendors.indexOf(vendor);
-			$scope.selectedVendors.splice(index, 1);  
-		}
-		console.log("finish selecting vendors");		
-//}
-	
+
+	}
+
+	$scope.deleteVendor = function(vendor){
+		var index = $scope.selectedVendors.indexOf(vendor);
+		$scope.selectedVendors.splice(index, 1);  
+	}
+	console.log("finish selecting vendors");		
+//	}
+
 	$scope.addMaintenance = function(){
-		
+
 		console.log("start adding");
 		$scope.data = {};
 
@@ -326,7 +326,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 			data    : dataObj //forms user object
 		});
 
-		
+
 		send.success(function(){
 			alert('MAINTENANCE IS SAVED! GOING BACK TO VIEW ALL MAINTENANCES');
 			$location.path("/viewMaintenance");
@@ -335,7 +335,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 			alert('MAINTENANCE IS NOT SAVED BECAUSE IT IS NOT AVAILABLE!');
 		});
 	};
-	
+
 }]);
 
 app.controller('updateMaintenanceController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
@@ -356,7 +356,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 		$scope.maintenance = angular.copy($scope.maintenance1);
 
 		var url = "https://localhost:8443/maintenance/updateMaintenance";
-		
+
 		//GET SELECTED UNITS
 		var id=$scope.maintenance.id;
 
@@ -374,15 +374,15 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 			console.log(response);
 			$scope.selectedSchedulesUnits1 = response;
 			$scope.selectedSchedulesUnits=angular.copy($scope.selectedSchedulesUnits1);
-			
+
 		});
 		getBookings.error(function(response){
 			$location.path("/viewMaintenance");
 			console.log('GET Selected Units FAILED! ' + JSON.stringify(response));
 		});		
-	
-	
-	//FOR SELECTING BULDING
+
+
+		//FOR SELECTING BULDING
 		console.log("start selecting venue");
 		var getBuild = $http({
 			method  : 'GET',
@@ -404,7 +404,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 			$scope.selectedBuilding=$scope.currentlySelectedBuilding;
 		}
 		console.log("finish selecting building");
-		
+
 	})
 	//DELETE VENDOR
 	$scope.deleteVendor = function(vendor){
@@ -417,12 +417,12 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 		var index = $scope.selectedSchedulesUnits.indexOf(unit);
 		$scope.selectedSchedulesUnits.splice(index, 1);  
 	}
-	 //RESET SELECTED SCHEDULES UNITS TO LAST SAVED MAINTENANCE
+	//RESET SELECTED SCHEDULES UNITS TO LAST SAVED MAINTENANCE
 	$scope.resetMaintSchedules = function(){
 		$scope.maintenance = angular.copy($scope.maintenance1);
 		$scope.selectedSchedulesUnits=angular.copy($scope.selectedSchedulesUnits1);
 	}
-	
+
 
 	$scope.getLevel = function(id){
 		$scope.dataToShare = [];
@@ -433,7 +433,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 		var getLevels = $http({
 			method  : 'GET',
 			url     : 'https://localhost:8443/level/viewLevels/'+id,
-	});
+		});
 		console.log("Getting the levels using the url: " + $scope.url);
 		getLevels.success(function(response){
 			$scope.levels = response;
@@ -451,11 +451,11 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 		}
 		console.log("finish selecting level");		
 	}
-	
+
 	$scope.selectedUnits=[];
 	$scope.getUnit = function(levelId){
 		//$scope.url = "https://localhost:8443/property/viewUnits/";
-		
+
 		$scope.levelID = levelId; 
 		var dataObj = {id: $scope.levelID};
 		console.log("GETTING THE ALL UNITS INFO")
@@ -463,7 +463,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 			method  : 'POST',
 			url     : 'https://localhost:8443/property/viewUnits/',
 			data    : dataObj,
-	});
+		});
 		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
 		getUnits.success(function(response){
 			$scope.units = response;
@@ -474,7 +474,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 		getUnits.error(function(){
 			alert('Get units error!!!!!!!!!!');
 		});		
-		
+
 		$scope.currentlySelectedUnit;
 		$scope.selectUnit = function(){
 			$scope.selectedUnits.push($scope.currentlySelectedUnit);
@@ -486,7 +486,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 		}
 		console.log("finish selecting units");		
 	}
-	
+
 	$scope.getUnitsId = function(){
 		var dataObj ={id: $scope.selectedUnits};
 		console.log("units to be get are "+JSON.stringify(dataObj));
@@ -506,9 +506,9 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
 		});
 	}	
-	
-	
-	
+
+
+
 	$scope.updateMaintenance = function(){
 		console.log("Start updating");
 		$scope.data = {};
@@ -541,9 +541,9 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 			alert('UPDATING MAINT GOT ERROR!');
 		});
 	};	
-	
-	
-	
+
+
+
 }]);
 
 
@@ -615,7 +615,7 @@ app.controller('maintenanceController',['$scope', '$http','$location','$routePar
 		//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
 	}
 
-	
+
 
 
 }]);

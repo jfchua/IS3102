@@ -81,7 +81,24 @@
 	$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 });
  */
-var app = angular.module('app', ['ngStorage', 'ngRoute','ngResource','ui.bootstrap','ngAnimate', 'ngSanitize','ui.router','500tech.simple-calendar','ngFileUpload'])
+var app = angular.module('app', [ 'ui.router',
+                                  'ngAnimate', 
+                                  'ui.calendar',
+                                 'ngStorage', 
+                                  'ngRoute',
+                                  'ngResource',
+                                  'chart.js',
+                                  'textAngular',
+                                  'gridshore.c3js.chart', 
+                                  'angular-growl',
+                                  'growlNotifications',   
+                                  'angular-loading-bar',
+                                  'angular-progress-button-styles',
+                                  'pascalprecht.translate',
+                                  'ui.bootstrap',                          
+                                  'ngSanitize',                       
+                                  '500tech.simple-calendar',
+                                  'ngFileUpload'])
 //Declaring Constants
 .constant('USER_ROLES', {
 	all: '*',
@@ -133,15 +150,15 @@ app.config(
 					authorizedRoles: [USER_ROLES.all]
 				}
 			})
-			.state('/workspace',{
+			.state('workspace',{
 				url:'/workspace',
-				templateUrl: '/views/index.html',
+				templateUrl: 'views/index.html',
 				controller: 'passController',
 				data: {
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('/viewIcon',{
+			.state('workspace.viewIcon',{
 				url: '/viewIcon',
 				templateUrl: '/views/viewIcon.html',
 				controller: 'iconController',
@@ -165,7 +182,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addBuilding',{
+			.state('workspace.addBuilding',{
 				url: '/addBuilding',
 				templateUrl: '/views/addBuilding.html',
 				controller: 'buildingController',
@@ -173,7 +190,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewBuilding',{
+			.state('workspace.viewBuilding',{
 				url: '/viewBuilding',
 				templateUrl: '/views/viewBuilding.html',
 				controller: 'buildingController',
@@ -181,7 +198,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateBuilding',{
+			.state('workspace.updateBuilding',{
 				url: '/updateBuilding',		
 				templateUrl: '/views/updateBuilding.html',
 				controller: 'updateBuildingController',
@@ -189,7 +206,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/deleteBuilding',{
+			.state('workspace.deleteBuilding',{
 				url: '/deleteBuilding',
 				templateUrl: '/views/deleteBuilding.html',
 				controller: 'deleteBuildingController',
@@ -197,7 +214,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewLevels',{
+			.state('workspace.viewLevels',{
 				url: '/viewLevels',
 				templateUrl: '/views/viewLevels.html',
 				controller: 'viewLevelController',
@@ -205,7 +222,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addLevel',{
+			.state('workspace.addLevel',{
 				url: '/addLevel',
 				templateUrl: '/views/addLevel.html',
 				controller: 'addLevelController',
@@ -213,7 +230,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateLevel',{
+			.state('workspace.updateLevel',{
 				url: '/updateLevel',
 				templateUrl: '/views/updateLevel.html',
 				controller: 'levelController',
@@ -221,7 +238,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/deleteLevel',{
+			.state('workspace.deleteLevel',{
 				url: '/deleteLevel',
 				templateUrl: '/views/deleteLevel.html',
 				controller: 'levelController',
@@ -237,7 +254,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewAllRates',{
+			.state('workspace.viewAllRates',{
 				url: '/viewAllRates',
 				templateUrl: '/views/viewAllRates.html',
 				controller: 'rateController',
@@ -269,7 +286,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.event]
 				}
 			})
-			.state('/uploadCompanyLogo',{
+			.state('workspace.uploadCompanyLogo',{
 				url:'/uploadCompanyLogo',
 				templateUrl: '/views/uploadCompanyLogo.html',
 				controller: 'logoController',
@@ -294,7 +311,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('/new',{
+			.state('workspace.new',{
 				url:'/new',
 				templateUrl: '/message/new.html',
 				controller: 'NewMailController',
@@ -302,15 +319,15 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('/addClientOrg',{
-				url:'/addClientOrg',
+			.state('workspace.addClientOrg',{
+				url:'addClientOrg',
 				templateUrl: '/views/addClientOrg.html',
 				controller: 'clientOrgController',
 				data: {
 					authorizedRoles: [USER_ROLES.superadmin]
 				}
 			})	
-			.state('/viewClientOrgs',{
+			.state('workspace.viewClientOrgs',{
 				url:'/viewClientOrgs',
 				templateUrl: '/views/viewClientOrgs.html',
 				controller: 'viewClientOrgs',
@@ -318,7 +335,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.superadmin]
 				}
 			})
-			.state('/createFloorPlan',{
+			.state('workspace.createFloorPlan',{
 				url:'/createFloorPlan',
 				templateUrl: '/views/floorPlanAngular.html',
 				controller: 'floorPlanController',
@@ -326,7 +343,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})	
-			.state('/viewFloorPlan',{
+			.state('workspace.viewFloorPlan',{
  			url:'/viewFloorPlan',
  				templateUrl: '/views/viewFloorPlan.html',
  				controller: 'viewFloorPlanController',
@@ -334,7 +351,7 @@ app.config(
  					authorizedRoles: [USER_ROLES.property]
  				}
  		})
-			.state('/viewMaintenance',{
+			.state('workspace.viewMaintenance',{
 				url:'/viewMaintenance',	
 				templateUrl: '/views/viewMaintenance.html',
 				controller: 'maintenanceController',
@@ -366,7 +383,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.property]
 				}
 			})
-			.state('/addMaintenance',{
+			.state('workspace.addMaintenance',{
 				url:'/addMaintenance',	
 				templateUrl: '/views/addMaintenance.html',
 				controller: 'addMaintenanceController',
@@ -390,7 +407,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewAllVendors',{
+			.state('workspace.viewAllVendors',{
 				url:'/viewAllVendors',
 				templateUrl: '/views/viewAllVendors.html',
 				controller: 'vendorController',
@@ -398,7 +415,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addVendor',{
+			.state('workspace.addVendor',{
 				url:'/addVendor',	
 				templateUrl: '/views/addVendor.html',
 				controller: 'vendorController',
@@ -422,7 +439,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addEventEx',{
+			.state('workspace.addEventEx',{
 				url:'/addEventEx',
 				templateUrl: '/views/addEventEx.html',
 				//controller: 'eventExternalController',
@@ -480,7 +497,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewAllEventsEx',{
+			.state('workspace.viewAllEventsEx',{
 				url:'/viewAllEventsEx',
 				templateUrl: '/views/viewAllEventsEx.html',
 				controller: 'eventExternalController',
@@ -536,7 +553,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewAllEvents',{
+			.state('workspace.viewAllEvents',{
 				url:'/viewAllEvents',
 				templateUrl: '/views/viewAllEvents.html',
 				controller: 'eventController',
@@ -568,7 +585,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewEventOrganizers',{
+			.state('workspace.viewEventOrganizers',{
 				url:'/viewEventOrganizers',
 				templateUrl: '/views/viewEventOrganizers.html',
 				controller: 'viewEventOrganiserController',
@@ -576,7 +593,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewAllPaymentPlans',{
+			.state('workspace.viewAllPaymentPlans',{
 				url:'/viewAllPaymentPlans',
 				templateUrl: '/views/viewAllPaymentPlans.html',
 				controller: 'paymentController',
@@ -600,7 +617,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.all]
 				}
 			})	
-			.state('/createNewUser',{
+			.state('workspace.createNewUser',{
 				url:'/createNewUser',
 				templateUrl: '/views/createUser.html',
 				controller: 'createNewUserController',
@@ -608,7 +625,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})	
-			.state('/viewUserList',{
+			.state('workspace.viewUserList',{
 				url:'/viewUserList',
 				templateUrl: '/views/viewUserList.html',
 				controller: 'viewUserList',
@@ -616,7 +633,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.admin]
 				}
 			})	
-			.state('/viewAuditLog',{
+			.state('workspace.viewAuditLog',{
 				url:'/viewAuditLog',
 				templateUrl: '/views/viewAuditLog.html',
 				controller: 'auditLogController',
@@ -1340,6 +1357,99 @@ app.factory('datfactory', function ($http, $q){
 	return this;
 });
 
+// DIRECTIVE AND CONTROLLER FOR UI
+app.directive('topnav',function(){
+	return {
+    templateUrl:'views/topnav.html?v='+window.app_version,
+    restrict: 'E',
+    replace: true,
+    controller: function($scope){
+
+    	$scope.showMenu = function(){
+
+	        $('.dashboard-page').toggleClass('push-right');
+
+    	}
+    	$scope.changeTheme = function(setTheme){
+
+			$('<link>')
+			  .appendTo('head')
+			  .attr({type : 'text/css', rel : 'stylesheet'})
+			  .attr('href', 'styles/app-'+setTheme+'.css?v='+window.app_version);
+
+			// $.get('/api/change-theme?setTheme='+setTheme);
+
+		}
+		$scope.rightToLeft = function(){
+			// alert('message');
+			$('body').toggleClass('rtl');
+
+			// var t = $('body').hasClass('rtl');
+			// console.log(t);
+			
+			if($('body').hasClass('rtl')) {
+				$('.stat').removeClass('hvr-wobble-horizontal');
+			}
+			
+
+		}
+
+
+		
+    }
+}
+});
+
+app.directive('sidebar',function(){
+	return {
+    templateUrl:'views/sidebar.html',
+    restrict: 'E',
+    replace: true,
+
+    controller: function($scope){
+
+		setTimeout(function(){
+			$('.sidenav-outer').perfectScrollbar();
+		}, 100);
+		
+	}
+}
+});
+app.directive('menubar',function(){
+		return {
+        templateUrl:'views/menu-bar.html',
+        restrict: 'E',
+        replace: true,
+    }
+})
+app.directive('sidebarwidgets',function(){
+		return {
+        templateUrl:'views/sidebar-widgets.html',
+        restrict: 'E',
+        replace: true,
+	}
+});
+app.directive('sidebarProfile',function(){
+		return {
+        templateUrl:'views/sidebar-profile.html',
+        restrict: 'E',
+        replace: true,
+    	}
+	});
+app	.directive('sidebarCalendar',function(){
+		return {
+        templateUrl:'views/sidebar-calendar.html',
+        restrict: 'E',
+        replace: true,
+    	}
+	});
+app.directive('sidebarNewsfeed',function(){
+		return {
+        templateUrl:'views/sidebar-newsfeed.html',
+        restrict: 'E',
+        replace: true,
+    	}
+	});
 app.controller('AlertDemoCtrl', function ($scope, datfactory, $http){
 	datfactory.getlist()
 	.then(function(arrItems){
@@ -1379,6 +1489,117 @@ app.controller('AlertDemoCtrl', function ($scope, datfactory, $http){
 
 	};
 });
+app.controller('DropdownCtrl', function ($scope, $log) {
+	  $scope.items = [
+	                  'The first choice!',
+	                  'And another choice for you.',
+	                  'but wait! A third!'
+	                ];
+
+	                $scope.status = {
+	                  isopen: false
+	                };
+
+	                $scope.toggled = function(open) {
+	                  $log.log('Dropdown is now: ', open);
+	                };
+
+	                $scope.toggleDropdown = function($event) {
+	                  $event.preventDefault();
+	                  $event.stopPropagation();
+	                  $scope.status.isopen = !$scope.status.isopen;
+	                };
+	              });
+app.controller('sidenavCtrl', function($scope, $location){
+	$scope.selectedMenu = 'dashboard';
+	$scope.collapseVar = 0;
+
+	$scope.check = function(x){
+
+		if(x==$scope.collapseVar)
+			$scope.collapseVar = 0;
+		else
+			$scope.collapseVar = x;
+	};
+	$scope.multiCheck = function(y){
+
+		if(y==$scope.multiCollapseVar)
+			$scope.multiCollapseVar = 0;
+		else
+			$scope.multiCollapseVar = y;
+	};
+});
+
+app.controller('ButtonsCtrl', function ($scope) {
+	  $scope.singleModel = 1;
+
+	  $scope.radioModel = 'Middle';
+
+	  $scope.checkModel = {
+	    left: false,
+	    middle: true,
+	    right: false
+	  };
+	});
+app.controller('progressCtrl', function($scope) {
+	[].slice.call( document.querySelectorAll( 'button.progress-button' ) ).forEach( function( bttn ) {
+		new ProgressButton( bttn, {
+			callback : function( instance ) {
+				var progress = 0,
+				interval = setInterval( function() {
+					progress = Math.min( progress + Math.random() * 0.1, 1 );
+					instance._setProgress( progress );
+					if( progress === 1 ) {
+						instance._stop(1);
+						clearInterval( interval );
+					}
+				}, 80 );
+			}
+		});
+	});
+});	
+app.controller('ProgressDemoCtrl', function ($scope) {
+	  $scope.max = 200;
+
+	  $scope.random = function() {
+	    var value = Math.floor((Math.random() * 100) + 1);
+	    var type;
+
+	    if (value < 25) {
+	      type = 'success';
+	    } else if (value < 50) {
+	      type = 'info';
+	    } else if (value < 75) {
+	      type = 'warning';
+	    } else {
+	      type = 'danger';
+	    }
+
+	    $scope.showWarning = (type === 'danger' || type === 'warning');
+
+	    $scope.dynamic = value;
+	    $scope.type = type;
+	  };
+	  $scope.random();
+
+	  $scope.randomStacked = function() {
+	    $scope.stacked = [];
+	    var types = ['success', 'info', 'warning', 'danger'];
+
+	    for (var i = 0, n = Math.floor((Math.random() * 4) + 1); i < n; i++) {
+	        var index = Math.floor((Math.random() * 4));
+	        $scope.stacked.push({
+	          value: Math.floor((Math.random() * 30) + 1),
+	          type: types[index]
+	        });
+	    }
+	  };
+	  $scope.randomStacked();
+	});
+app.controller('CollapseDemoCtrl', function ($scope) {
+  $scope.isCollapsed = false;
+});
+
 
 //MESSAGE
 
@@ -1857,6 +2078,76 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 	};	
 }]);
 
+app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+    $scope.toggleLeft = buildDelayedToggler('left');
+    $scope.toggleRight = buildToggler('right');
+    $scope.isOpenRight = function(){
+      return $mdSidenav('right').isOpen();
+    };
+
+    /**
+     * Supplies a function that will continue to operate until the
+     * time is up.
+     */
+    function debounce(func, wait, context) {
+      var timer;
+
+      return function debounced() {
+        var context = $scope,
+            args = Array.prototype.slice.call(arguments);
+        $timeout.cancel(timer);
+        timer = $timeout(function() {
+          timer = undefined;
+          func.apply(context, args);
+        }, wait || 10);
+      };
+    }
+
+    /**
+     * Build handler to open/close a SideNav; when animation finishes
+     * report completion in console
+     */
+    function buildDelayedToggler(navID) {
+      return debounce(function() {
+        // Component lookup should always be available since we are not using `ng-if`
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }, 200);
+    }
+
+    function buildToggler(navID) {
+      return function() {
+        // Component lookup should always be available since we are not using `ng-if`
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }
+    }
+  })
+  .controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+    $scope.close = function () {
+      // Component lookup should always be available since we are not using `ng-if`
+      $mdSidenav('left').close()
+        .then(function () {
+          $log.debug("close LEFT is done");
+        });
+
+    };
+  })
+  .controller('RightCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+    $scope.close = function () {
+      // Component lookup should always be available since we are not using `ng-if`
+      $mdSidenav('right').close()
+        .then(function () {
+          $log.debug("close RIGHT is done");
+        });
+    };
+  });
 
 
 app.controller('eventExternalController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {

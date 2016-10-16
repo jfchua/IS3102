@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,7 @@ import application.domain.PasswordResetToken;
 import application.domain.Role;
 import application.domain.User;
 import application.exception.EmailAlreadyExistsException;
+import application.exception.InvalidEmailException;
 import application.exception.OldPasswordInvalidException;
 import application.exception.PasswordResetTokenNotFoundException;
 import application.exception.UserNotFoundException;
@@ -142,8 +145,13 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-	public boolean createNewUser(ClientOrganisation clientOrg, String name, String userEmail, Set<Role> roles) throws EmailAlreadyExistsException, UserNotFoundException{
-
+	public boolean createNewUser(ClientOrganisation clientOrg, String name, String userEmail, Set<Role> roles) throws EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException{
+		Pattern pat = Pattern.compile("^.+@.+\\..+$");
+		Matcher get = pat.matcher(userEmail);		
+		if(!get.matches()){
+			throw new InvalidEmailException("The email " + userEmail + " is invalid");
+			//return false;
+		}
 		try{
 			if ( this.getUserByEmail(userEmail).isPresent() ){
 				//User already exists
@@ -283,16 +291,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void checkOldPassword(Long id, String oldpass) throws OldPasswordInvalidException, UserNotFoundException {
+	public boolean checkOldPassword(Long id, String oldpass) throws OldPasswordInvalidException, UserNotFoundException {
 
 			Optional<User> user = this.getUserById(id);
 			String oldPassUser = user.get().getPasswordHash();
+
 			BCryptPasswordEncoder t = new BCryptPasswordEncoder();
-			String encryptedOldPassword = t.encode(oldpass);
-			if ( !t.matches(oldPassUser, encryptedOldPassword)){
+			if ( !t.matches(oldpass, oldPassUser)){
 				System.err.println("invalid old pass");
 				throw new OldPasswordInvalidException("The old password entered was invalid");
 			}
+			return true;
 
 
 	}

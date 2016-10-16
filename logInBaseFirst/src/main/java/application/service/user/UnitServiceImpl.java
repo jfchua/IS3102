@@ -28,7 +28,7 @@ public class UnitServiceImpl implements UnitService {
 		this.iconRepository=iconRepository;
 		
 	}
-	@Override
+/*	@Override
 	public Unit createUnit(int left, int top, int height, int width, String color, String type,
 			String unitNumber, int dimensionLength, int dimensionWidth, Boolean rentable, String description) {
 		Square square=createSquare(left,top,height,width,color,type);
@@ -45,7 +45,7 @@ public class UnitServiceImpl implements UnitService {
 		squareRepository.save(square);
 	
 		return unit;
-	}
+	}*/
 	@Override
 	public Unit createUnitOnLevel(long levelId, int left, int top, int height, int width, String color, String type,
 			String unitNumber, int dimensionLength, int dimensionWidth, Boolean rentable, String description) {

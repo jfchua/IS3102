@@ -50,6 +50,7 @@ import application.domain.ToDoTask;
 import application.domain.Unit;
 import application.domain.User;
 import application.domain.validator.EventCreateFormValidator;
+import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
 import application.service.user.EventOrganizerService;
 import application.service.user.EventService;
@@ -65,6 +66,7 @@ public class EventController {
 	private final EventOrganizerService eventOrganizerService;
 	private final UserService userService;
 	private JSONParser parser = new JSONParser();
+	private Gson geeson = new Gson();
 
 
 	@Autowired
@@ -82,11 +84,11 @@ public class EventController {
 	// Each object (building) will contain... long id, collection of levels.
 	@RequestMapping(value = "/getEvent/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getEvent(@PathVariable("id") String eventId, HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> getEvent(@PathVariable("id") String eventId, HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return null; 
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();				   
@@ -116,12 +118,15 @@ public class EventController {
 						.create();
 				String json = gson2.toJson(event);
 				System.out.println("EVENT IS " + json);
-				return json;
+				return new ResponseEntity<String>(json,HttpStatus.OK);
 			}else
-				return "cannot fetch";
+				return new ResponseEntity<String>(geeson.toJson("Server error in getting event"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( EventNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (Exception e){
-			return "cannot fetch";
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting event"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -130,11 +135,11 @@ public class EventController {
 	// Each object (building) will contain... long id, .
 	@RequestMapping(value = "/viewAllEvents",  method = RequestMethod.GET)
 	@ResponseBody
-	public String viewAllEvents(HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> viewAllEvents(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return null; 
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
@@ -170,11 +175,12 @@ public class EventController {
 					.serializeNulls()
 					.create();			    
 			String json = gson2.toJson(events);
+			String json2 = gson2.toJson("Server error in getting all the events");
 			System.out.println(json);
-			return json;
+			return new ResponseEntity<String>(json,HttpStatus.OK);
 		}
 		catch (Exception e){
-			return "cannot fetch";
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -184,12 +190,11 @@ public class EventController {
 	// Each object (building) will contain... long id, .
 	@RequestMapping(value = "/viewApprovedEvents",  method = RequestMethod.GET)
 	@ResponseBody
-	public String viewApprovedEvents(HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> viewApprovedEvents(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return null; 
-		}
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
 			Set<Event> events = eventService.getAllApprovedEvents(client);
@@ -226,10 +231,10 @@ public class EventController {
 					.create();			    
 			String json = gson2.toJson(events);
 			System.out.println(json);
-			return json;
+			return new ResponseEntity<String>(json,HttpStatus.OK);
 		}
 		catch (Exception e){
-			return "cannot fetch";
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -239,11 +244,12 @@ public class EventController {
 	// Each object (building) will contain... long id, .
 	@RequestMapping(value = "/viewToBeApprovedEvents",  method = RequestMethod.GET)
 	@ResponseBody
-	public String viewToBeApprovedEvents(HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> viewToBeApprovedEvents(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return null; 
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
+
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
@@ -281,10 +287,11 @@ public class EventController {
 					.create();			    
 			String json = gson2.toJson(events);
 			System.out.println(json);
-			return json;
+			return new ResponseEntity<String>(json,HttpStatus.OK);
 		}
+
 		catch (Exception e){
-			return "cannot fetch";
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -293,11 +300,12 @@ public class EventController {
 	// Call $http.post(URL,(String)id);
 	@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteEvent(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> deleteEvent(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return null; 
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting event"),HttpStatus.INTERNAL_SERVER_ERROR);
+
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
@@ -313,13 +321,16 @@ public class EventController {
 			boolean bl=eventService.deleteEvent(client, eventId);
 			System.out.println(bl);	
 			if(!bl){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);//added by hailing need test
+				return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		catch ( EventNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}						
 
 	@PreAuthorize("hasAnyAuthority('ROLE_EVENT')")
@@ -328,13 +339,13 @@ public class EventController {
 	//Call $httpPost(Url,JSONData);
 	@RequestMapping(value = "/approveEvent", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> approveEvent(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> approveEvent(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
 		System.out.println("start approving not yet");
 		Principal principal = rq.getUserPrincipal();
 		System.out.println(principal.getName());
 		Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
 		if ( !eventOrg1.isPresent() ){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		try{
 			User eventManager = eventOrg1.get();
@@ -360,10 +371,13 @@ public class EventController {
 				messageService.sendMessage(eventManager, u, subject, msg);
 			}
 		}
-		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		catch ( EventNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}	
 
 	@PreAuthorize("hasAnyAuthority('ROLE_EVENT')")
@@ -372,12 +386,13 @@ public class EventController {
 	//Call $httpPost(Url,JSONData);
 	@RequestMapping(value = "/updateEventStatus", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> updateEventStatus(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> updateEventStatus(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
 		System.out.println("start updating not yet");
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return null; 
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting event"),HttpStatus.INTERNAL_SERVER_ERROR);
+
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
@@ -392,10 +407,13 @@ public class EventController {
 			boolean bl=eventService.updateEventStatusForPayment(client, eventId, status);
 			System.out.println(bl);
 		}
-		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		catch ( EventNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}		
 
 	@PreAuthorize("hasAnyAuthority('ROLE_EVENT')")
@@ -403,7 +421,7 @@ public class EventController {
 	// Each object (building) will contain... long id, .
 	@RequestMapping(value = "/viewEventOrganizers",  method = RequestMethod.GET)
 	@ResponseBody
-	public String viewEventOrganizers(HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> viewEventOrganizers(HttpServletRequest rq) throws UserNotFoundException {
 		//Principal principal = rq.getUserPrincipal();
 		//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 		Principal principal = rq.getUserPrincipal();
@@ -411,7 +429,7 @@ public class EventController {
 		Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
 		//Optional<EventOrganizer> eventOrg1 = eventOrganizerService.getEventOrganizerByEmail(principal.getName());
 		if ( !eventOrg1.isPresent() ){
-			return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		try{
 			//EventOrganizer eventOrg = eventOrg1.get();
@@ -451,10 +469,11 @@ public class EventController {
 					.create();			    
 			String json = gson2.toJson(eventOrgs);
 			System.out.println(json);
-			return json;
+			return new ResponseEntity<String>(json,HttpStatus.OK);
+
 		}
 		catch (Exception e){
-			return "cannot fetch";
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}

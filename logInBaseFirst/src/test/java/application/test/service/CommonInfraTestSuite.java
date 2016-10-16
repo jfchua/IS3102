@@ -14,7 +14,8 @@ import org.junit.runners.Suite;
 	   UserServiceTest.class,
 	   ToDoTaskServiceTest.class,
 	   MessageServiceTest.class,
-	   CurrentUserDetailsServiceTest.class
+	   CurrentUserDetailsServiceTest.class,
+	   EmailServiceTest.class
 	})
 public class CommonInfraTestSuite
 {
