@@ -16,6 +16,7 @@ import application.domain.ClientOrganisation;
 import application.domain.User;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
+import application.exception.InvalidEmailException;
 import application.exception.OrganisationNameAlreadyExistsException;
 import application.exception.UserNotFoundException;
 import application.service.user.ClientOrganisationService;
@@ -33,7 +34,7 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 		List<String> subs = new ArrayList<String>();
 		subs.add("TESTSUB");
 		try{
-			clientOrganisationService.createNewClientOrganisation("deletetestname123", "testemail@testemail", subs, "testadminname");
+			clientOrganisationService.createNewClientOrganisation("deletetestname123", "testemail@testemail.edu", subs, "testadminname");
 		}
 		catch (Exception e){
 			System.out.println(e.getMessage());
@@ -68,28 +69,37 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	}
 	
 	@Test
-	public void testCreateNewClientOrganisation() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException {
+	public void testCreateNewClientOrganisation() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException {
 		List<String> subs = new ArrayList<String>();
 		System.err.println("before createnewclientorg");
-		boolean result = clientOrganisationService.createNewClientOrganisation("testname123", "testemail@test", subs, "testadminname");
+		boolean result = clientOrganisationService.createNewClientOrganisation("testname123", "testemail@test.org", subs, "testadminname");
 		System.err.println("after  createnewclientorg");
 		Assert.assertTrue(result);	
 	}
 	
 	@Test(expected=EmailAlreadyExistsException.class)
-	public void testCreateNewClientOrganisationUserAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException {
+	public void testCreateNewClientOrganisationUserAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException {
 		List<String> subs = new ArrayList<String>();
 		System.err.println("before createnewclientorg");
-		boolean result = clientOrganisationService.createNewClientOrganisation("testname123", "property@localhost", subs, "testadminname");
+		boolean result = clientOrganisationService.createNewClientOrganisation("testname123", "kenneth1399@hotmail.com", subs, "testadminname");
 		System.err.println("after  createnewclientorg");
 		Assert.assertFalse(result);	
 	}
 	
 	@Test(expected=OrganisationNameAlreadyExistsException.class)
-	public void testCreateNewClientOrganisationOrgNameAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException {
+	public void testCreateNewClientOrganisationOrgNameAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException {
 		List<String> subs = new ArrayList<String>();
 		System.err.println("before createnewclientorg");
-		boolean result = clientOrganisationService.createNewClientOrganisation("Expo", "testy@localhost", subs, "testname");
+		boolean result = clientOrganisationService.createNewClientOrganisation("Expo", "testy@localhost.com", subs, "testname");
+		System.err.println("after  createnewclientorg");
+		Assert.assertFalse(result);	
+	}
+	
+	@Test(expected=InvalidEmailException.class)
+	public void testCreateNewClientOrganisationInvalidEmail() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException {
+		List<String> subs = new ArrayList<String>();
+		System.err.println("before createnewclientorg");
+		boolean result = clientOrganisationService.createNewClientOrganisation("Expo2", "invalidemail", subs, "testname");
 		System.err.println("after  createnewclientorg");
 		Assert.assertFalse(result);	
 	}

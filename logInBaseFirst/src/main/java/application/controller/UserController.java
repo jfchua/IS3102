@@ -43,6 +43,7 @@ import application.domain.Vendor;
 import application.domain.validator.UserCreateFormValidator;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
+import application.exception.InvalidEmailException;
 import application.exception.OldPasswordInvalidException;
 import application.exception.OrganisationNameAlreadyExistsException;
 import application.exception.UserNotFoundException;
@@ -121,6 +122,12 @@ public class UserController {
  			System.out.println("CREATED USER FOR CHUAJINFA with client org" + userService.getUserByEmail(email).get().getClientOrganisation().getOrganisationName());*/
 			
 
+		}
+		catch ( InvalidEmailException e ){
+			Gson g = new Gson();
+			String json = g.toJson(e.getMessage());
+			System.out.println("EEPTOIN" + json);
+			return new ResponseEntity<String>(json,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch ( EmailAlreadyExistsException e ){
 			Gson g = new Gson();
@@ -387,6 +394,9 @@ public class UserController {
 			al.setUserEmail(currUser.getEmail());
 			auditLogRepository.save(al);
 
+		}
+		catch ( InvalidEmailException e ){
+			return new ResponseEntity<String>(gson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch ( EmailAlreadyExistsException e){
 			return new ResponseEntity<String>(gson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);

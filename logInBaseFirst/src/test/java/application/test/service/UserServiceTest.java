@@ -2,7 +2,6 @@ package application.test.service;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -11,7 +10,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import application.domain.ClientOrganisation;
@@ -20,10 +18,10 @@ import application.domain.Role;
 import application.domain.User;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
+import application.exception.InvalidEmailException;
+import application.exception.OldPasswordInvalidException;
 import application.exception.PasswordResetTokenNotFoundException;
 import application.exception.UserNotFoundException;
-import application.repository.RoleRepository;
-import application.repository.UserRepository;
 import application.service.user.ClientOrganisationService;
 import application.service.user.UserService;
 import application.test.AbstractTest;
@@ -34,12 +32,9 @@ public class UserServiceTest extends AbstractTest {
 
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private UserRepository userRepository;
+
 	@Autowired
 	private ClientOrganisationService clientOrgService;
-	@Autowired
-	private RoleRepository roleRepository;
 
 	@Before
 	public void setUp() throws UserNotFoundException{
@@ -73,7 +68,7 @@ public class UserServiceTest extends AbstractTest {
 		Collection<User> users = userService.viewAllUsers(tempOrg);
 		Assert.assertNotNull("Getting users should not be null as users belong to expo", users);
 	}
-	
+
 	@Test(expected=ClientOrganisationNotFoundException.class)
 	public void testViewAllUsersFromNonExistClientOrg() throws ClientOrganisationNotFoundException{
 		ClientOrganisation tempOrg = clientOrgService.getClientOrganisationByName("NON-EXIST");
@@ -92,7 +87,7 @@ public class UserServiceTest extends AbstractTest {
 		//Assert.assertEquals("Expected id attribute to match", id,entity.get().getId());
 
 	}
-	
+
 	@Test(expected=UserNotFoundException.class)
 	public void testFindUserByIdNotFound() throws UserNotFoundException {
 
@@ -103,7 +98,7 @@ public class UserServiceTest extends AbstractTest {
 		Assert.assertNull("Expected null user instead", entity);
 
 	}
-	
+
 	@Test
 	public void testFindUserByEmailFound() throws UserNotFoundException {
 
@@ -123,19 +118,27 @@ public class UserServiceTest extends AbstractTest {
 
 
 	@Test
-	public void testCreateUser() throws ClientOrganisationNotFoundException, EmailAlreadyExistsException, UserNotFoundException {
+	public void testCreateUser() throws ClientOrganisationNotFoundException, EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException {
 		Set<Role> setOfRoles = new HashSet<Role>();
 		ClientOrganisation tempOrg = clientOrgService.getClientOrganisationByName("Suntec");
 		boolean result = userService.createNewUser(tempOrg, "test", "test@test.com", setOfRoles);
 		Assert.assertTrue(result);
 
 	}
-	
+
 	@Test(expected=EmailAlreadyExistsException.class)
-	public void testCreateUserAlreadyExists() throws ClientOrganisationNotFoundException, UserNotFoundException, EmailAlreadyExistsException {
+	public void testCreateUserAlreadyExists() throws ClientOrganisationNotFoundException, UserNotFoundException, EmailAlreadyExistsException, InvalidEmailException {
 		Set<Role> setOfRoles = new HashSet<Role>();
 		ClientOrganisation tempOrg = clientOrgService.getClientOrganisationByName("Suntec");
-		boolean result = userService.createNewUser(tempOrg, "test", "property@localhost", setOfRoles);
+		boolean result = userService.createNewUser(tempOrg, "test", "kenneth1399@hotmail.com", setOfRoles);
+		Assert.assertFalse(result);
+	}
+	
+	@Test(expected=InvalidEmailException.class)
+	public void testCreateUserInvalidEmail() throws ClientOrganisationNotFoundException, UserNotFoundException, EmailAlreadyExistsException, InvalidEmailException {
+		Set<Role> setOfRoles = new HashSet<Role>();
+		ClientOrganisation tempOrg = clientOrgService.getClientOrganisationByName("Suntec");
+		boolean result = userService.createNewUser(tempOrg, "test", "invalidemail", setOfRoles);
 		Assert.assertFalse(result);
 	}
 
@@ -159,7 +162,7 @@ public class UserServiceTest extends AbstractTest {
 		boolean result = userService.createPasswordResetTokenForUser(user, "tokentest123");
 		Assert.assertTrue(result);
 	}
-	
+
 	@Test(expected=UserNotFoundException.class)
 	public void testCreatePasswordResetTokenForNullUser() throws UserNotFoundException{
 		boolean result = userService.createPasswordResetTokenForUser(null, "tokentest321");
@@ -172,7 +175,7 @@ public class UserServiceTest extends AbstractTest {
 		boolean result = userService.deleteUser(userToDel);
 		Assert.assertTrue(result);
 	}
-	
+
 	@Test(expected=UserNotFoundException.class)
 	public void testDeleteNullUser() throws UserNotFoundException{
 		boolean result = userService.deleteUser(null);
@@ -200,7 +203,7 @@ public class UserServiceTest extends AbstractTest {
 		boolean result = userService.editUser("testname", userService.getUserByEmail("property@localhost").get(), new HashSet<Role>());
 		Assert.assertTrue(result);
 	}
-	
+
 	@Test(expected=UserNotFoundException.class)
 	public void testEditNullUsers() throws UserNotFoundException{
 		boolean result = userService.editUser("testname", null, new HashSet<Role>());
@@ -214,13 +217,27 @@ public class UserServiceTest extends AbstractTest {
 		boolean result = userService.changePassword(u.getId(), pas);
 		Assert.assertTrue(result);
 	}
-	
+
 	@Test(expected=UserNotFoundException.class)
 	public void testChangePasswordNullUser() throws UserNotFoundException{
 		Long id = Long.MAX_VALUE;
 		String pas = "newpass";
 		boolean result = userService.changePassword(id, pas);
 		Assert.assertFalse(result);
+	}
+
+	@Test
+	public void testCheckOldPassword() throws UserNotFoundException, OldPasswordInvalidException{
+		User u = userService.getUserByEmail("admin@localhost").get();
+		boolean result = userService.checkOldPassword(u.getId(), "1");
+		Assert.assertTrue(result);
+	}
+
+	@Test(expected=OldPasswordInvalidException.class)
+	public void testCheckOldPasswordInvalid() throws UserNotFoundException, OldPasswordInvalidException{
+		User u = userService.getUserByEmail("admin@localhost").get();
+		boolean result = userService.checkOldPassword(u.getId(), "invalidpass");
+		Assert.assertTrue(result);
 	}
 
 

@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,6 +22,7 @@ import application.domain.Role;
 import application.domain.User;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
+import application.exception.InvalidEmailException;
 import application.exception.OrganisationNameAlreadyExistsException;
 import application.exception.UserNotFoundException;
 import application.repository.ClientOrganisationRepository;
@@ -48,8 +51,13 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 	}
 
 
-	public boolean createNewClientOrganisation(String orgName, String adminEmail, List<String> subs,String nameAdmin) throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException{
-
+	public boolean createNewClientOrganisation(String orgName, String adminEmail, List<String> subs,String nameAdmin) throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException{
+		Pattern pat = Pattern.compile("^.+@.+\\..+$");
+		Matcher get = pat.matcher(adminEmail);		
+		if(!get.matches()){
+			throw new InvalidEmailException("The email " + adminEmail + " is invalid");
+			//return false;
+		}
 		try{
 			if ( userService.getUserByEmail(adminEmail).isPresent()) {
 				System.err.println("EMAIL ALREADY EXISTS");
