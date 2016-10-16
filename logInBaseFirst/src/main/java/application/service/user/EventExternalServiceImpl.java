@@ -321,16 +321,20 @@ public class EventExternalServiceImpl implements EventExternalService {
 			return false;
 		Date d1 = event_start_date;
 		Date d2 = event_end_date;
-		if(d1.compareTo(d2)>0)
+		if(d1.compareTo(d2)>0){
+			System.err.println("date error");
 			return false;
+		}
 		boolean isAvailable = true;
 		for(int i = 0; i<units.length; i ++){
 			long uId = Long.valueOf(units[i]);
 			Optional<Unit> unit1 = unitRepository.getUnitById(uId);
 			if(unit1.isPresent()&&isAvailable){
 				Unit unit = unit1.get();
-				if(!checkUnit(client, unit.getId()))
+				if(!checkUnit(client, unit.getId())){
+					System.err.println("unit error");
 					return false;
+				}
 				int count = bookingApplRepository.getNumberOfBookings(uId, d1, d2);
 				int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
 				if((count != 0)||(count2 != 0)){

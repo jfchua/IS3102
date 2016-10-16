@@ -9,7 +9,7 @@ app.controller('eventController', ['$scope', '$http','$location','$routeParams',
 			//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
 
 		},function(response){
-			alert("did not view all events");
+			alert(response);
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
@@ -27,7 +27,7 @@ app.controller('eventController', ['$scope', '$http','$location','$routeParams',
 			//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
 
 		},function(response){
-			alert("did not view all events");
+			alert(response);
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
@@ -43,7 +43,7 @@ app.controller('eventController', ['$scope', '$http','$location','$routeParams',
 			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
 
 		},function(response){
-			alert("did not view approved events");
+			alert(response);
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
@@ -77,6 +77,7 @@ app.controller('eventController', ['$scope', '$http','$location','$routeParams',
 		});
 		getEvent.error(function(response){
 			$location.path("/viewAllEvents");
+			//alert("Error, " + response);
 			console.log('GET Event FAILED! ' + JSON.stringify(response));
 		});			
 	}
@@ -193,7 +194,7 @@ app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareDat
 			$http.post("//localhost:8443/eventManager/deleteEvent", JSON.stringify(tempObj)).then(function(response){
 				console.log("Cancel the EVENT");
 			},function(response){
-				alert("DID NOT Cancel EVENT");
+				alert(response);
 				//console.log("response is : ")+JSON.stringify(response);
 			}	
 			)
@@ -289,10 +290,10 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$location','$ro
 		console.log("fetch id "+ tempObj);
 		$http.post("//localhost:8443/eventManager/approveEvent", JSON.stringify(tempObj)).then(function(response){
 			console.log("Approve the EVENT");
-			alert("EVENT IS APPROVED, GOING BACK TO VIEW TO BE APPROVED EVENTS");
+			alert("Successfully approved event, going back to viewing to be approved events");
 			$location.path("/viewToBeApprovedEvents");
 		},function(response){
-			alert("DID NOT approve EVENT");
+			alert(response);
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
@@ -318,11 +319,11 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$location','$ro
 
 		console.log("UPDATING THE EVENT");
 		send.success(function(){
-			alert('EVENT STATUS IS SAVED! GOING BACK TO VIEW ALL APPROVED EVENTS');
+			alert('Successfully saved event status, going back to viewing all approved events');
 			$location.path("/viewApprovedEvents");
 		});
-		send.error(function(){
-			alert('UPDATING EVENT GOT ERROR!');
+		send.error(function(data){
+			alert(data);
 		});
 	};
 

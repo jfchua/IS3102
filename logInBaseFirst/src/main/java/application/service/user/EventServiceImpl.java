@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import application.domain.Area;
+import application.domain.BookingAppl;
 import application.domain.ClientOrganisation;
 import application.domain.Event;
 import application.domain.EventCreateForm;
@@ -25,6 +26,8 @@ import application.domain.Message;
 import application.domain.Role;
 import application.domain.Unit;
 import application.domain.User;
+import application.exception.EventNotFoundException;
+import application.repository.BookingApplRepository;
 import application.repository.EventOrganizerRepository;
 import application.repository.EventRepository;
 import application.repository.UnitRepository;
@@ -34,19 +37,21 @@ import application.repository.UnitRepository;
 public class EventServiceImpl implements EventService {
 	private final EventRepository eventRepository;
 	private final UnitRepository unitRepository;
-	
+    private final BookingApplRepository bookingApplRepository;
 	private final EventOrganizerRepository eventOrganizerRepository;
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
 	@Autowired
-	public EventServiceImpl(EventRepository eventRepository, UnitRepository unitRepository,EventOrganizerRepository eventOrganizerRepository) {
+	public EventServiceImpl(EventRepository eventRepository, UnitRepository unitRepository,
+			EventOrganizerRepository eventOrganizerRepository, BookingApplRepository bookingRepository) {
 		super();
 		this.eventRepository = eventRepository;
 		this.unitRepository = unitRepository;
 		this.eventOrganizerRepository=eventOrganizerRepository;
+		this.bookingApplRepository = bookingRepository;
 		//this.eventOrganizerRepository = eventOrganizerRepository;
-		
+
 	}
 
 	/*public Collection<Event> getEventsByUsername(){
@@ -57,7 +62,7 @@ public class EventServiceImpl implements EventService {
 	}
 	 */
 
-/*
+	/*
 	@Override
 	public Set<EventOrganizer> getAllEventOrganizers() {
 		// TODO Auto-generated method stub
@@ -86,10 +91,10 @@ public class EventServiceImpl implements EventService {
 		Set<Event> allEvents = getAllEvents(client);
 		Set<Event> approvedEvents = new HashSet<Event>();
 		for(Event ev: allEvents){
-				if(ev.getEvent_approval_status().equals("approved"))
-					approvedEvents.add(ev);	
+			if(ev.getEvent_approval_status().equals("approved"))
+				approvedEvents.add(ev);	
 		}
-	    return approvedEvents;
+		return approvedEvents;
 	}
 
 
@@ -98,111 +103,147 @@ public class EventServiceImpl implements EventService {
 		Set<Event> allEvents = getAllEvents(client);
 		Set<Event> toBeApprovedEvents = new HashSet<Event>();
 		for(Event ev: allEvents){
-				if(ev.getEvent_approval_status().equals("processing"))
-					toBeApprovedEvents.add(ev);	
+			if(ev.getEvent_approval_status().equals("processing"))
+				toBeApprovedEvents.add(ev);	
 		}
-	    return toBeApprovedEvents;
+		return toBeApprovedEvents;
 	}
 
 
 
 	@Override
-	public boolean updateEventStatusForPayment(ClientOrganisation client,long id, String status) {
+	public boolean updateEventStatusForPayment(ClientOrganisation client,long id, String status) throws EventNotFoundException {
+		Optional<Event> event1 = getEventById(id);
 		try{		
-			Optional<Event> event1 = getEventById(id);
-			if(event1.isPresent()){	
-				Event event = event1.get();
-                if(checkEvent(client, id)){
-				event.setEvent_approval_status(status);
-				eventRepository.save(event);
-                }
-                else
-                	return false;
-			}
-		}
-	catch(Exception e){
-		return false;
-	}
-		return true;
-	}
 
-
-	@Override
-	public boolean approveEvent(ClientOrganisation client, long id) {
-		try{		
-			Optional<Event> event1 = getEventById(id);
 			if(event1.isPresent()){	
 				Event event = event1.get();
 				if(checkEvent(client, id)){
-				event.setEvent_approval_status("approved");
-				eventRepository.save(event);
-				 }
-                else
-                	return false;
+					event.setEvent_approval_status(status);
+					eventRepository.save(event);
+				}
+				else
+					return false;
 			}
 		}
-	catch(Exception e){
-		return false;
-	}
+		catch(Exception e){
+			return false;
+		}
 		return true;
 	}
 
 
 	@Override
-	public boolean deleteEvent(ClientOrganisation client, long id) {
-		// TODO Auto-generated method stub
+	public boolean approveEvent(ClientOrganisation client, long id) throws EventNotFoundException {
+		Optional<Event> event1 = getEventById(id);
 		try{		
-			Optional<Event> event1 = getEventById(id);
+
 			if(event1.isPresent()){	
 				Event event = event1.get();
 				if(checkEvent(client, id)){
-				eventRepository.delete(event);
-				eventRepository.flush();
-				 }
-                else
-                	return false;
+					event.setEvent_approval_status("approved");
+					eventRepository.save(event);
+				}
+				else
+					return false;
 			}
 		}
-	catch(Exception e){
-		return false;
-	}
+		catch(Exception e){
+			return false;
+		}
 		return true;
 	}
 
 
 	@Override
-	public Optional<Event> getEventById(long id) {
+	public boolean deleteEvent(ClientOrganisation client, long id) throws EventNotFoundException {
+		try{		
+			System.err.println("Deleting event of id " + id);
+			Optional<Event> event1 = getEventById(id);
+			System.err.println("PROBLEM FOUND" + id);
+			System.err.println("Deleting event of id0 " + id);
+			if(event1.isPresent()){	
+				System.err.println("Deleting event of id1 " + id);
+				Event event = event1.get();
+				System.err.println("Deleting event of id2 " + id);
+				if(checkEvent(client, id)){
+					System.err.println("Beginning to delete the event");
+					Set<BookingAppl> bookings = event.getBookings();
+					if(!bookings.isEmpty()){
+					for(BookingAppl b: bookings){				
+						Unit unit = b.getUnit();
+						Set<BookingAppl> bookings1 = unit.getBookings();
+						bookings1.remove(b);
+						unit.setBookings(bookings1);
+						unitRepository.flush();
+						bookings.remove(b);
+						bookingApplRepository.delete(b);
+					}
+					event.setBookings(new HashSet<BookingAppl>());
+					}
+					eventRepository.delete(event);
+					eventRepository.flush();
+				}
+				else{
+					System.err.println("Error at checking event in delete event method");
+					return false;
+				}
+			}
+		}
+		catch (EventNotFoundException e){
+			throw e;
+		}
+		catch(Exception e){
+			System.out.println("EXCEPTION" + e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
+
+	@Override
+	public Optional<Event> getEventById(long id) throws EventNotFoundException {
 		// TODO Auto-generated method stub
 		LOGGER.debug("Getting event={}", id);
+		Event e = eventRepository.findOne(id);
+		if ( e == null ){
+			System.err.println("Throwing: Event of id: " + id + " was not found" );
+			throw new EventNotFoundException("Event of id: " + id + " was not found");
+		}
+		System.err.println("returning" + id);
 		return Optional.ofNullable(eventRepository.findOne(id));
 	}
 
 	@Override
-	public boolean checkEvent(ClientOrganisation client, long id) {
+	public boolean checkEvent(ClientOrganisation client, long id) throws EventNotFoundException {
+		System.err.println("Checking event of id " + id);
 		Set<User> users = client.getUsers();
 		boolean doesHave = false;
+		Optional<Event> event1 = getEventById(id);
 		try{
-			Optional<Event> event1 = getEventById(id);
+
 			if(event1.isPresent()){
 				Event event = event1.get();
-		     for(User u: users){
-			 Set<Role> roles = u.getRoles();
-			   for(Role r: roles){
-			    if(r.getName().equals("ROLE_EXTEVE") && u.getEvents().contains(event)){
-			    doesHave = true;
-			    break;
-			    }
-			   }
-		    }
+				for(User u: users){
+					Set<Role> roles = u.getRoles();
+					for(Role r: roles){
+						if(r.getName().equals("ROLE_EXTEVE") && u.getEvents().contains(event)){
+							doesHave = true;
+							System.err.println("Does have is now true");
+							break;
+						}
+					}
+				}
 			}
 		}catch(Exception e){
+			System.err.println("Exception at check event method" + e.getMessage());
 			return false;
-			}
+		}
 		return doesHave;
 	}
 
-	
-	
+
+
 	/*
 	@Override
 	public void createEvent(ClientOrganisation client, String unitsId, String event_title, String event_content,
@@ -226,7 +267,7 @@ public class EventServiceImpl implements EventService {
 				unit.setEvents(eventFromUnit);			
 				System.out.println("save unit");
 				System.out.println("saved by repo");
-			
+
 			}
 			else{
 				System.out.println("no units");
@@ -247,9 +288,9 @@ public class EventServiceImpl implements EventService {
 		    eventRepository.save(event);
 			eventOrganizerRepository.save(eventOrg);
 		    eventRepository.save(event);
-		
-		
-		
+
+
+
 	}*/
 
 

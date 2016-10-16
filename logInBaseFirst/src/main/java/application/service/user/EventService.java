@@ -12,6 +12,7 @@ import application.domain.EventOrganizer;
 import application.domain.Message;
 import application.domain.SendMessageForm;
 import application.domain.User;
+import application.exception.EventNotFoundException;
 
 
 public interface EventService {
@@ -30,14 +31,14 @@ public interface EventService {
 	Set<Event> getAllToBeApprovedEvents(ClientOrganisation client);
 	
 
-	boolean updateEventStatusForPayment(ClientOrganisation client, long id, String status);
+	boolean updateEventStatusForPayment(ClientOrganisation client, long id, String status) throws EventNotFoundException;
 	
-	boolean approveEvent(ClientOrganisation client, long id);
+	boolean approveEvent(ClientOrganisation client, long id) throws EventNotFoundException;
 	
-	boolean deleteEvent(ClientOrganisation client, long id);
+	boolean deleteEvent(ClientOrganisation client, long id) throws EventNotFoundException;
 		
-	Optional<Event> getEventById(long id);
+	Optional<Event> getEventById(long id) throws EventNotFoundException;
 	
-	boolean checkEvent(ClientOrganisation client, long id);
+	boolean checkEvent(ClientOrganisation client, long id) throws EventNotFoundException;
 	
 }
