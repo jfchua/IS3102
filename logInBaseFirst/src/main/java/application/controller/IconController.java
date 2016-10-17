@@ -30,19 +30,19 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.domain.AuditLog;
-import application.domain.ClientOrganisation;
-import application.domain.Icon;
-import application.domain.User;
+import application.entity.AuditLog;
+import application.entity.ClientOrganisation;
+import application.entity.Icon;
+import application.entity.User;
 import application.exception.IconNotFoundException;
 import application.exception.InvalidFileUploadException;
 import application.exception.InvalidIconException;
 import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
-import application.service.user.IconService;
-import application.service.user.ClientOrganisationService;
-import application.service.user.FileUploadCheckingService;
-import application.service.user.UserService;
+import application.service.ClientOrganisationService;
+import application.service.FileUploadCheckingService;
+import application.service.IconService;
+import application.service.UserService;
 
 @Controller
 @RequestMapping("/property")

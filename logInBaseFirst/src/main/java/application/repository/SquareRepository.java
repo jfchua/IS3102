@@ -4,7 +4,7 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import application.domain.Square;
+import application.entity.Square;
 
 public interface SquareRepository extends JpaRepository<Square, Long>{
 	@Query(

@@ -25,13 +25,13 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.domain.Event;
-import application.domain.Maintenance;
-import application.domain.Square;
-import application.domain.Area;
-import application.domain.BookingAppl;
-import application.service.user.AreaService;
-import application.service.user.EventService;
+import application.entity.Area;
+import application.entity.BookingAppl;
+import application.entity.Event;
+import application.entity.Maintenance;
+import application.entity.Square;
+import application.service.AreaService;
+import application.service.EventService;
 
 
 @Controller

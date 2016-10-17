@@ -4,9 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import application.domain.ClientOrganisation;
-import application.domain.Message;
-import application.domain.User;
+import application.entity.ClientOrganisation;
+import application.entity.Message;
+import application.entity.User;
 
 import java.util.Optional;
 import java.util.Set;

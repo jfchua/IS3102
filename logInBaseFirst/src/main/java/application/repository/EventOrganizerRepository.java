@@ -2,12 +2,8 @@ package application.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-//import org.springframework.data.jpa.repository.Query;
-//import org.springframework.data.repository.query.Param;
-
-
-import application.domain.EventOrganizer;
-import application.domain.Event;
+import application.entity.Event;
+import application.entity.EventOrganizer;
 
 import java.util.Optional;
 import java.util.Set;

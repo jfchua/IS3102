@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import application.domain.Message;
-import application.domain.PasswordResetToken;
+import application.entity.Message;
+import application.entity.PasswordResetToken;
 
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long>, JpaSpecificationExecutor<PasswordResetToken> {
 

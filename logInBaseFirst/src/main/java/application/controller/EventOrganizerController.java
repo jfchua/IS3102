@@ -22,9 +22,9 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.domain.Event;
-import application.domain.EventOrganizer;
-import application.service.user.EventOrganizerService;
+import application.entity.Event;
+import application.entity.EventOrganizer;
+import application.service.EventOrganizerService;
 
 @Controller
 @RequestMapping("/eventOrg")

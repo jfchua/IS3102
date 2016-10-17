@@ -24,19 +24,20 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import application.domain.SpecialRate;
-import application.domain.User;
-import application.domain.Vendor;
+
+import application.entity.AuditLog;
+import application.entity.Building;
+import application.entity.ClientOrganisation;
+import application.entity.SpecialRate;
+import application.entity.User;
+import application.entity.Vendor;
 import application.exception.UserNotFoundException;
 import application.repository.VendorRepository;
+import application.service.BuildingService;
+import application.service.ClientOrganisationService;
+import application.service.SpecialRateService;
+import application.service.UserService;
 import application.repository.AuditLogRepository;
-import application.domain.AuditLog;
-import application.domain.Building;
-import application.domain.ClientOrganisation;
-import application.service.user.BuildingService;
-import application.service.user.ClientOrganisationService;
-import application.service.user.SpecialRateService;
-import application.service.user.UserService;
 
 @Controller
 @RequestMapping("/rate")
