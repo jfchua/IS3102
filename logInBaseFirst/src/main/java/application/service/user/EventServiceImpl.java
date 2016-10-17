@@ -159,16 +159,10 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public boolean deleteEvent(ClientOrganisation client, long id) throws EventNotFoundException {
 		try{		
-			System.err.println("Deleting event of id " + id);
 			Optional<Event> event1 = getEventById(id);
-			System.err.println("PROBLEM FOUND" + id);
-			System.err.println("Deleting event of id0 " + id);
 			if(event1.isPresent()){	
-				System.err.println("Deleting event of id1 " + id);
 				Event event = event1.get();
-				System.err.println("Deleting event of id2 " + id);
 				if(checkEvent(client, id)){
-					System.err.println("Beginning to delete the event");
 					Set<BookingAppl> bookings = event.getBookings();
 					if(!bookings.isEmpty()){
 					for(BookingAppl b: bookings){				
@@ -216,13 +210,11 @@ public class EventServiceImpl implements EventService {
 			System.err.println("Throwing: Event of id: " + id + " was not found" );
 			throw new EventNotFoundException("Event of id: " + id + " was not found");
 		}
-		System.err.println("returning" + id);
 		return Optional.ofNullable(eventRepository.findOne(id));
 	}
 
 	@Override
 	public boolean checkEvent(ClientOrganisation client, long id) throws EventNotFoundException {
-		System.err.println("Checking event of id " + id);
 		Set<User> users = client.getUsers();
 		boolean doesHave = false;
 		Optional<Event> event1 = getEventById(id);
