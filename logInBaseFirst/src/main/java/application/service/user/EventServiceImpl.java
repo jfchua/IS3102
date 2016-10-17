@@ -176,7 +176,7 @@ public class EventServiceImpl implements EventService {
 						bookings1.remove(b);
 						unit.setBookings(bookings1);
 						unitRepository.flush();
-						bookings.remove(b);
+						//bookings.remove(b);
 						bookingApplRepository.delete(b);
 					}
 					event.setBookings(new HashSet<BookingAppl>());
