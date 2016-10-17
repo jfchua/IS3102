@@ -274,19 +274,22 @@ public class EventExternalServiceImpl implements EventExternalService {
 					bookings1.remove(b);
 					unit.setBookings(bookings1);
 					unitRepository.save(unit);
-					bookings.remove(b);
+					//bookings.remove(b);
+					System.out.println("delete booking before");
 					bookingApplRepository.delete(b);
+					System.out.println("delete booking after");
 				}
+				bookingApplRepository.flush();
 				event.setBookings(new HashSet<BookingAppl>());
-			    User eventOrg1 = event.getEventOrg();
+			    /*User eventOrg1 = event.getEventOrg();
 				Set<Event> events = eventOrg1.getEvents();
 				events.remove(event);
 				eventOrg1.setEvents(events);
 				event.setEvent_approval_status("cancelled");
-				userRepository.save(eventOrg1);		   
+				userRepository.save(eventOrg1);	*/	   
 				eventRepository.save(event);
 				eventRepository.flush();
-			    userRepository.flush();
+			   // userRepository.flush();
 			}
 			}catch(Exception e){
 				return false;
