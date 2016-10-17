@@ -31,6 +31,7 @@ import application.repository.BookingApplRepository;
 import application.repository.EventOrganizerRepository;
 import application.repository.EventRepository;
 import application.repository.UnitRepository;
+import application.repository.UserRepository;
 
 
 @Service
@@ -38,17 +39,17 @@ public class EventServiceImpl implements EventService {
 	private final EventRepository eventRepository;
 	private final UnitRepository unitRepository;
     private final BookingApplRepository bookingApplRepository;
-	private final EventOrganizerRepository eventOrganizerRepository;
+    private final UserRepository userRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
 	@Autowired
 	public EventServiceImpl(EventRepository eventRepository, UnitRepository unitRepository,
-			EventOrganizerRepository eventOrganizerRepository, BookingApplRepository bookingRepository) {
+			UserRepository userRepository, BookingApplRepository bookingRepository) {
 		super();
 		this.eventRepository = eventRepository;
 		this.unitRepository = unitRepository;
-		this.eventOrganizerRepository=eventOrganizerRepository;
+		this.userRepository=userRepository;
 		this.bookingApplRepository = bookingRepository;
 		//this.eventOrganizerRepository = eventOrganizerRepository;
 
@@ -181,6 +182,11 @@ public class EventServiceImpl implements EventService {
 					}
 					event.setBookings(new HashSet<BookingAppl>());
 					}
+					 User eventOrg1 = event.getEventOrg();
+				     Set<Event> events = eventOrg1.getEvents();
+			         events.remove(event);
+				    eventOrg1.setEvents(events);
+				    userRepository.flush();
 					eventRepository.delete(event);
 					eventRepository.flush();
 				}
