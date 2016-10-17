@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import application.domain.Area;
-import application.domain.Level;
-import application.domain.Unit;
+import application.entity.Area;
+import application.entity.Level;
+import application.entity.Unit;
 
 
 public interface AreaRepository extends JpaRepository<Area, Long>{

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import application.domain.SpecialRate;
+import application.entity.SpecialRate;
 
 public interface SpecialRateRepository extends JpaRepository<SpecialRate, Long> {
 

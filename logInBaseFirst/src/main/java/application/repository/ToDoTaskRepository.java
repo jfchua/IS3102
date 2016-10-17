@@ -3,7 +3,7 @@ package application.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import application.domain.ToDoTask;
+import application.entity.ToDoTask;
 
 public interface ToDoTaskRepository extends JpaRepository<ToDoTask, Long> {
 

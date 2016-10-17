@@ -31,14 +31,11 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.domain.*;
-import application.domain.validator.EventCreateFormValidator;
+import application.entity.*;
 import application.exception.UserNotFoundException;
-import application.service.user.EventExternalService;
-import application.service.user.EventOrganizerService;
-import application.service.user.UserService;
-//import application.service.user.EventService;
-//import application.service.user.UserService;
+import application.service.EventExternalService;
+import application.service.EventOrganizerService;
+import application.service.UserService;
 
 @Controller
 @RequestMapping("/event")
