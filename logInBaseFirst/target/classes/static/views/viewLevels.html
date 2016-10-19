@@ -24,8 +24,8 @@
                                <tr>
                                <th><i></i> ID </th>
                                <th><i></i> Level Number </th>
-                               <th><i></i> Length </th>
-                               <th><i></i> Width </th>
+                               <th><i></i> Length(meter) </th>
+                               <th><i></i> Width(meter)</th>
                                <th>Action</th>
                                </tr>
                             </thead>
@@ -34,8 +34,8 @@
                              <td><a  ui-sref="dashboard.viewFloorPlan" ng-click="passLevel(x)" tooltip-placement="top" tooltip="Floor Plan"><i class="glyphicon glyphicon-eye-open"></i></a>
                           </td>
                              <td>{{ x.levelNum }}</td>
-                             <td>{{ x.length }} meter</td>
-                             <td>{{ x.width }} meter</td>
+                             <td>{{ x.length }}</td>
+                             <td>{{ x.width }}</td>
                              <!--<td><a href="/#/updateLevel">Update</a></td>-->
                              <td>
                              		<a  ui-sref="dashboard.updateLevel" ng-click="passLevel(x)" tooltip-placement="top" tooltip="Update Level"><i class="glyphicon glyphicon-pencil"></i></a>

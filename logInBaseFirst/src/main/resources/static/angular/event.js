@@ -1,4 +1,4 @@
-app.controller('eventController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('eventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.data = {};
 
@@ -76,7 +76,7 @@ app.controller('eventController', ['$scope', '$http','$location','$routeParams',
 			//$location.path("/viewLevels");
 		});
 		getEvent.error(function(response){
-			$location.path("/viewAllEvents");
+			$state.go("dashboard.viewAllEvents");
 			//alert("Error, " + response);
 			console.log('GET Event FAILED! ' + JSON.stringify(response));
 		});			
@@ -164,7 +164,7 @@ app.controller('eventController', ['$scope', '$http','$location','$routeParams',
 			//$location.path("/viewLevels");
 		});
 		getNotifications.error(function(response){
-			$location.path("/viewEventOrganizers");
+			$state.go("dashboard.viewEventOrganizers");
 			console.log('GET NOTIFICATIONS FAILED! ' + JSON.stringify(response));
 		});
 		
@@ -177,7 +177,7 @@ app.controller('eventController', ['$scope', '$http','$location','$routeParams',
 
 
 //DELETE EVENT
-app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareData','$location', function ($scope,  $timeout,$http ,shareData,$location) {
+app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
 	angular.element(document).ready(function () {
 
 		$scope.event = shareData.getData();
@@ -204,7 +204,7 @@ app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareDat
 }])
 
 //VIEW APPROVED EVENTS
-app.controller('viewApprovedEventController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('viewApprovedEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.data = {};
 		$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
@@ -228,7 +228,7 @@ app.controller('viewApprovedEventController', ['$scope', '$http','$location','$r
 }]);
 
 //VIEW TO BE APPROVED EVENTS
-app.controller('viewToBeApprovedEventController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('viewToBeApprovedEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 	
 	
@@ -255,7 +255,7 @@ app.controller('viewToBeApprovedEventController', ['$scope', '$http','$location'
 }]);
 
 //VIEW EVENT DETAILS OF TO BE APPROVED EVENTS / APPROVED EVENTS AND UPDATE STATUS
-app.controller('viewEventDetailsController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('viewEventDetailsController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		
 	
@@ -291,7 +291,7 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$location','$ro
 		$http.post("//localhost:8443/eventManager/approveEvent", JSON.stringify(tempObj)).then(function(response){
 			console.log("Approve the EVENT");
 			alert("Successfully approved event, going back to viewing to be approved events");
-			$location.path("/viewToBeApprovedEvents");
+			$state.go("dashboard.viewToBeApprovedEvents");
 		},function(response){
 			alert(response);
 			//console.log("response is : ")+JSON.stringify(response);
@@ -320,7 +320,7 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$location','$ro
 		console.log("UPDATING THE EVENT");
 		send.success(function(){
 			alert('Successfully saved event status, going back to viewing all approved events');
-			$location.path("/viewApprovedEvents");
+			$state.go("dashboard.viewApprovedEvents");
 		});
 		send.error(function(data){
 			alert(data);
@@ -330,7 +330,7 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$location','$ro
 }]);
 
 //VIEW EVENT ORGANISERS
-app.controller('viewEventOrganiserController', ['$scope',  '$timeout','$http','shareData','$location', function ($scope,  $timeout,$http ,shareData,$location) {
+app.controller('viewEventOrganiserController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
 	angular.element(document).ready(function () {
 	
 			$scope.data = {};
@@ -353,7 +353,7 @@ app.controller('viewEventOrganiserController', ['$scope',  '$timeout','$http','s
 }])
 
 //VIEW NOTIFICATIONS
-app.controller('notificationController', ['$scope', '$http','shareData','$location', function ($scope, $http, shareData,$location) {		
+app.controller('notificationController', ['$scope', '$http','shareData','$state', function ($scope, $http, shareData,$state) {		
 
 	angular.element(document).ready(function () {
 	
@@ -377,7 +377,7 @@ app.controller('notificationController', ['$scope', '$http','shareData','$locati
 				//$location.path("/viewLevels");
 			});
 			getNotifications.error(function(response){
-				$location.path("/viewEventOrganizers");
+				$state.go("dashboard.viewEventOrganizers");
 				console.log('GET NOTIFICATIONS FAILED! ' + JSON.stringify(response));
 			});
 			

@@ -96,8 +96,7 @@ var app = angular.module('app', [ 'ui.router',
                                   'angular-progress-button-styles',
                                   'pascalprecht.translate',
                                   'ui.bootstrap',                          
-                                  'ngSanitize',                       
-                                  
+                                  'ngSanitize',                                                       
                                   'ngFileUpload',
                                   'ui.bootstrap.contextMenu'])
 //Declaring Constants

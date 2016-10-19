@@ -1,5 +1,5 @@
 //VIEW ALL EVENTS,
-app.controller('eventExternalController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('eventExternalController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 
 	angular.element(document).ready(function () {
 
@@ -57,7 +57,7 @@ $scope.getEvent = function(id){
 		//$location.path("/viewLevels");
 	});
 	getEvent.error(function(response){
-		$location.path("/viewAllEventsEx");
+		$state.go("dashboard.viewAllEventsEx");
 		console.log('GET Event FAILED! ' + JSON.stringify(response));
 	});
 
@@ -126,14 +126,14 @@ $scope.getBookings = function(id){
 		//$location.path("/viewLevels");
 	});
 	getBookings.error(function(response){
-		$location.path("/viewAllEventsEx");
+		$state.go("dashboard.viewAllEventsEx");
 		console.log('GET Booking FAILED! ' + JSON.stringify(response));
 	});
 
 }
 }]);
 //VIEW ALL APPROVED EVENTS
-app.controller('viewApprovedEventsController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('viewApprovedEventsController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 
 	angular.element(document).ready(function () {
 		$scope.data = {};
@@ -176,7 +176,7 @@ $scope.getEvent = function(id){
 		//$location.path("/viewLevels");
 	});
 	getEvent.error(function(response){
-		$location.path("/viewAllEventsEx");
+		$state.go("dashboard.viewAllEventsEx");
 		console.log('GET Event FAILED! ' + JSON.stringify(response));
 	});
 
@@ -244,7 +244,7 @@ $scope.getBookings = function(id){
 		//$location.path("/viewLevels");
 	});
 	getBookings.error(function(response){
-		$location.path("/viewAllEventsEx");
+		$state.go("dashboard.viewAllEventsEx");
 		console.log('GET Booking FAILED! ' + JSON.stringify(response));
 	});
 
@@ -254,7 +254,7 @@ $scope.getBookings = function(id){
 
 }]);
 //DELETE EVENT
-app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareData','$location', function ($scope,  $timeout,$http ,shareData,$location) {
+app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
 	angular.element(document).ready(function () {
 
 		$scope.event = shareData.getData();
@@ -270,7 +270,7 @@ app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareD
 				console.log("Cancel the EVENT");
 				alert('EVENT IS DELETED! GOING BACK TO VIEW EVENTS...');
 				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$location.path("/viewAllEventsEx");
+				$state.go("dashboard.viewAllEventsEx");
 			},function(response){
 				alert("DID NOT CANCEL EVENT");
 				//console.log("response is : ")+JSON.stringify(response);
@@ -283,7 +283,7 @@ app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareD
 
 }])
 
-app.controller('addEController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
+app.controller('addEController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData){
 	console.log("start selecting venue");
 	var getBuild = $http({
 		method  : 'GET',
@@ -460,7 +460,7 @@ app.controller('addEController', ['$scope', '$http','$location','$routeParams','
 		console.log("SAVING THE Event");
 		send.success(function(){
 			alert('Event IS SAVED!');
-			$location.path("/viewAllEventsEx");
+			$state.go("dashboard.viewAllEventsEx");
 		});
 		send.error(function(){
 			alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
@@ -470,7 +470,7 @@ app.controller('addEController', ['$scope', '$http','$location','$routeParams','
 	
 }]);
 
-app.controller('updateEController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
+app.controller('updateEController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData){
 	angular.element(document).ready(function () {
 		//VIEW EVENT
 			$scope.event1 = shareData.getData();
@@ -512,7 +512,7 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 				
 			});
 			getBookings.error(function(response){
-				$location.path("/viewAllEventsEx");
+				$state.go("dashboard.viewAllEventsEx");
 				console.log('GET Selected Units FAILED! ' + JSON.stringify(response));
 			});		
 		
@@ -715,7 +715,7 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 		console.log("UPDATING THE EVENT");
 		send.success(function(){
 			alert('EVENT IS SAVED! GOING BACK TO VIEW ALL EVENTS');
-			$location.path("/viewAllEventsEx");
+			$state.go("dashboard.viewAllEventsEx");
 		});
 		send.error(function(){
 			alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
@@ -727,7 +727,7 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 
 
 
-app.controller('bookingController', ['$scope','$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('bookingController', ['$scope','$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {	
 	//console.log(tempObj)
 	console.log("DISPLAY ALL BOOKINGS");
@@ -752,7 +752,7 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 		//$location.path("/viewLevels");
 	});
 	getBookings.error(function(response){
-		$location.path("/viewAllEventsEx");
+		$state.go("dashboard.viewAllEventsEx");
 		console.log('GET Booking FAILED! ' + JSON.stringify(response));
 	});
 	
@@ -772,11 +772,11 @@ $scope.deleteBooking = function(id){
 		deleteBooking.success(function(response){
 			alert('DELETE BOOKING SUCCESS! ');
 			console.log("ID IS " + id);
-			$location.path("/viewAllEventsEx");
+			$state.go("dashboard.viewAllEventsEx");
 		});
 		deleteBooking.error(function(response){
 			alert('DELETE BOOKING FAIL! ');
-			$location.path("/viewAllEventsEx");
+			$state.go("dashboard.viewAllEventsEx");
 			console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
 		});
     } else {
