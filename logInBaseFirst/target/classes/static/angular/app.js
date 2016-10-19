@@ -174,7 +174,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addIcon',{
+			.state('dashboard.addIcon',{
 				url: '/addIcon',
 				templateUrl: '/views/addIcon.html',
 				controller: 'addIconController',
@@ -182,7 +182,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateIcon',{
+			.state('dashboard.updateIcon',{
 				url: '/updateIcon',
 				templateUrl: '/views/updateIcon.html',
 				controller: 'updateIconController',
@@ -254,7 +254,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-            .state('/addSpecialRate',{
+            .state('dashboard.addSpecialRate',{
 				url: '/addSpecialRate',
 				templateUrl: '/views/addSpecialRate.html',
 				controller: 'rateController',
@@ -270,7 +270,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateSpecialRate',{
+			.state('dashboard.updateSpecialRate',{
 				url: '/updateSpecialRate',		
 				templateUrl: '/views/updateSpecialRate.html',
 				controller: 'updateRateController',
@@ -278,7 +278,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/deleteSpecialRate',{
+			.state('dashboard.deleteSpecialRate',{
 				url: '/deleteSpecialRate',
 				templateUrl: '/views/deleteSpecialRate.html',
 				controller: 'deleteRateController',
@@ -286,7 +286,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addEvent',{
+			.state('dashboard.addEvent',{
 				url:'/addEvent',
 				templateUrl: '/views/addEvent.html',
 				controller: 'eventController',
@@ -303,7 +303,7 @@ app.config(
 				}
 			})
 
-			.state('/messageList',{
+			.state('dashboard.messageList',{
 				url:'/messageList',
 				templateUrl: '/message/message.html',
 				controller: 'ListController',
@@ -311,7 +311,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('/view/:id',{
+			.state('dashboard.view/:id',{
 				url:'/view/:id',
 				templateUrl: '/message/detail.html',
 				controller: 'DetailController',
@@ -367,7 +367,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewBuildingMtn',{
+			.state('dashboard.viewBuildingMtn',{
 				url:'/viewBuildingMtn',
 				templateUrl: '/views/viewBuildingMtn.html',
 				controller: 'buildingController',
@@ -375,7 +375,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.property]
 				}
 			})
-			.state('/viewLevelsMtn',{
+			.state('dashboard.viewLevelsMtn',{
 				url:'/viewLevelsMtn',
 				templateUrl: '/views/viewLevelsMtn.html',
 				controller: 'buildingController',
@@ -383,7 +383,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.property]
 				}
 			})
-			.state('/viewFloorPlanMtn',{
+			.state('dashboard.viewFloorPlanMtn',{
 				url:'/viewFloorPlanMtn',
 				templateUrl: '/views/viewFloorPlanMtn.html',
 				controller: 'floorPlanController',//hailing test hahahahha
@@ -399,7 +399,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateMaintenance',{
+			.state('dashboard.updateMaintenance',{
 				url:'/updateMaintenance',
 				templateUrl: '/views/updateMaintenance.html',
 				controller: 'updateMaintenanceController',
@@ -407,7 +407,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/deleteMaintenance',{
+			.state('dashboard.deleteMaintenance',{
 				url:'/deleteMaintenance',
 				templateUrl: '/views/deleteMaintenance.html',
 				controller: 'deleteMaintenanceController',
@@ -431,7 +431,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateVendor',{
+			.state('dashboard.updateVendor',{
 				url:'/updateVendor',
 				templateUrl: '/views/updateVendor.html',
 				controller: 'updateVendorController',
@@ -439,7 +439,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/deleteVendor',{
+			.state('dashboard.deleteVendor',{
 				url:'/deleteVendor',
 				templateUrl: '/views/deleteVendor.html',
 				controller: 'updateVendorController',
@@ -456,7 +456,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewBuildingEx',{
+			.state('dashboard.viewBuildingEx',{
 				url:'/viewBuildingEx',
 				templateUrl: '/views/viewBuildingEx.html',
 				controller: 'buildingController',
@@ -464,7 +464,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewLevelsEx',{
+			.state('dashboard.viewLevelsEx',{
 				url:'/viewLevelsEx',
 				templateUrl: '/views/viewLevelsEx.html',
 				controller: 'buildingController',
@@ -472,7 +472,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewFloorPlanEx',{
+			.state('dashboard.viewFloorPlanEx',{
 				url:'/viewFloorPlanEx',
 				templateUrl: '/views/viewFloorPlanEx.html',
 				controller: 'floorPlanController',
@@ -480,7 +480,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/createUnitPlanEx',{
+			.state('dashboard.createUnitPlanEx',{
 				url:'/createUnitPlanEx',
 				templateUrl: '/views/createUnitPlanEx.html',
 				controller: 'areaPlanController',
@@ -488,7 +488,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/updateEventEx',{
+			.state('dashboard.updateEventEx',{
 				url:'/updateEventEx',
 				templateUrl: '/views/updateEventEx.html',
 				//controller: 'eventExternalController',
@@ -497,7 +497,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/cancelEventEx',{
+			.state('dashboard.cancelEventEx',{
 				url:'/cancelEventEx',
 				templateUrl: '/views/cancelEventEx.html',
 				controller: 'deleteEventExController',
@@ -513,7 +513,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewApprovedEventsEx',{
+			.state('dashboard.viewApprovedEventsEx',{
 				url:'/viewApprovedEventsEx',
 				templateUrl: '/views/viewApprovedEventsEx.html',
 				controller: 'viewApprovedEventsController',
@@ -521,7 +521,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewToBeApprovedEvents',{
+			.state('dashboard.viewToBeApprovedEvents',{
 				url:'/viewToBeApprovedEvents',
 				templateUrl: '/views/viewToBeApprovedEvents.html',
 				controller: 'viewToBeApprovedEventController',
@@ -529,7 +529,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewBookingEx',{
+			.state('dashboard.viewBookingEx',{
  				url:'/viewBookingEx',
  				templateUrl: '/views/viewBookingEx.html',
  				controller: 'bookingController',
@@ -537,7 +537,7 @@ app.config(
  					authorizedRoles:[USER_ROLES.organiser]
  				}
  			})
-			.state('/viewNotifications',{
+			.state('dashboard.viewNotifications',{
 				url:'/viewNotifications',
 				templateUrl: '/views/viewNotifications.html',
 				controller: 'notificationController',
@@ -545,7 +545,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.event]
 				}
 			})
-			.state('/updateEventStatus',{
+			.state('dashboard.updateEventStatus',{
 				url:'/updateEventStatus',
 				templateUrl: '/views/updateEventStatus.html',
 				controller: 'viewEventDetailsController',
@@ -553,7 +553,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/deleteEvent',{
+			.state('dashboard.deleteEvent',{
 				url:'/deleteEvent',
 				templateUrl: '/views/deleteEvent.html',
 				controller: 'deleteEventController',
@@ -569,7 +569,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewApprovedEvents',{
+			.state('dashboard.viewApprovedEvents',{
 				url:'/viewApprovedEvents',
 				templateUrl: '/views/viewApprovedEvents.html',
 				controller: 'viewApprovedEventController',
@@ -577,7 +577,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewEventDetails',{
+			.state('dashboard.viewEventDetails',{
 				url:'/viewEventDetails',
 				templateUrl: '/views/viewEventDetails.html',
 				controller: 'viewEventDetailsController',
@@ -585,7 +585,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewEventDetailsApproved',{
+			.state('dashboard.viewEventDetailsApproved',{
 				url:'/viewEventDetailsApproved',
 				templateUrl: '/views/viewEventDetailsApproved.html',
 				controller: 'viewEventDetailsController',
@@ -609,7 +609,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.finance]
 				}
 			})
-			.state('/addPaymentPlan',{
+			.state('dashboard.addPaymentPlan',{
 				url:'/addPaymentPlan',
 				templateUrl: '/views/addPaymentPlan.html',
 				controller: 'paymentController',
@@ -649,7 +649,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.admin]
 				}
 			})
-			.state('/viewUserProfile',{
+			.state('dashboard.viewUserProfile',{
 				url:'/viewUserProfile',
 				templateUrl: '/views/viewUserProfile.html',
 				controller: 'userProfileController',
@@ -657,7 +657,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('/editUserProfile',{
+			.state('dashboard.editUserProfile',{
 				url:'/editUserProfile',
 				templateUrl: '/views/editUserProfile.html',
 				controller: 'userProfileController',
