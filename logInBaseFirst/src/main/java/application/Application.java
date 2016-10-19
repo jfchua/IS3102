@@ -21,7 +21,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
-import session.SessionListener;
+import application.session.SessionListener;
 @EnableAutoConfiguration
 //@ComponentScan
 @Configuration

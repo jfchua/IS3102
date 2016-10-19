@@ -97,7 +97,7 @@ var app = angular.module('app', [ 'ui.router',
                                   'pascalprecht.translate',
                                   'ui.bootstrap',                          
                                   'ngSanitize',                       
-                                  '500tech.simple-calendar',
+                                  
                                   'ngFileUpload',
                                   'ui.bootstrap.contextMenu'])
 //Declaring Constants
@@ -1255,11 +1255,11 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 
 /*1. TO DO LIST*/
 app.controller('taskController', function($scope, $http, $route) {
-	//CONFIG CALENDAR
+		//CONFIG CALENDAR
 	   $scope.uiConfig = {
 			      calendar:{
 			        width: 600,
-			        editable: true,
+			        editable:false,
 			        header:{
 			          left: 'month agendaWeek agendaDay',
 			          center: 'title',
@@ -1270,35 +1270,110 @@ app.controller('taskController', function($scope, $http, $route) {
 			        eventResize: $scope.alertOnResize
 			      }
 			    };
+	   $scope.eventSources=[];
+	   //RETRIEVE EVENTS
+	   //$scope.eventsFormated=[];
+	   var getEvents = function(){
+			//var buildings ={name: $scope.name, address: $scope.address};
+			$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
+				$scope.events = response.data;
+				//console.log("DISPLAY ALL EVENT fir event manager");
+				//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
+				//ADD EVENTS INTO EVENTSOURCES OF CALENDAR
+				
+				if($scope.events.length!=0){
+					var index=0;
+				    angular.forEach($scope.events, function() {
+
+				         var event=[{start: $scope.events[index].event_start_date,
+				        	 		end: $scope.events[index].event_end_date,			         
+				        		 	title:$scope.events[index].event_title,
+				        		 	allDay: false,
+				        		 	color: 'SeaGreen'
+				         			}];
+				         
+				        $scope.eventSources.push(event);
+				        	index = index + 1;
+				    });
+				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
+				   // console.log( $scope.eventSources);
+					}
+			},function(response){
+				//alert(response);
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)	
+			
+		}
 	   
-		var today = new Date();
-		var next = new Date();
-		next.setDate(next.getDate() + 3); 
+	   
+	   //RETRIEVE MAINTENANCES
+	   //$scope.eventsFormated=[];
+	   var getMaints = function(){
+			//var buildings ={name: $scope.name, address: $scope.address};
+			$http.get("//localhost:8443/maintenance/viewMaintenance").then(function(response){
+				$scope.maints = response.data;
+				if($scope.maints.length!=0){
+					var index=0;
+				    angular.forEach($scope.maints, function() {
+
+				         var maint=[{start: $scope.maints[index].start,
+				        	 		end: $scope.maints[index].end,			         
+				        		 	title:$scope.maints[index].description,
+				        		 	allDay: false,
+				        		 	color: 'IndianRed'
+				         			}];
+				         
+				        $scope.eventSources.push(maint);
+				        	index = index + 1;
+				    });
+				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
+				   // console.log( $scope.eventSources);
+					}
+			},function(response){
+				//alert(response);
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)	
+			
+		}
+	   
+		//var today = new Date();
+		//var next = new Date();
+		//next.setDate(next.getDate() + 3); 
 		//TEST FOR USING CALENDAR
-		$scope.eventSources =[[{start:today,title:"haha"}]];
-		$scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);
-		 console.log($scope.eventSources);
+		//$scope.eventSources =[[{start:today,title:"haha"}]];
+		//$scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);
+		
+		// console.log($scope.eventSources);
 		 $scope.today = new Date();
-		// $scope.eventSources=[];
 		
 		 $scope.saved = localStorage.getItem('taskItems');
 		 $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
 			JSON.parse($scope.saved) : [ {description: "Why not add a task?", date: $scope.today, complete: false}];
 			localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-
+			
+			//GET TODOS
+			//$scope.todosFormated=[];
 			var getTdList = function(){$http({
 				method: 'GET',
 				url: 'https://localhost:8443/todo/getToDoList'
 			}).success(function (result) {
 				$scope.saved = result;
-				$scope.eventSources.length=0;
-				console.log($scope.eventSources);
+				//CLEAR EVENTSOURCES OF CALENDAR
+				//$scope.eventSources.length=0;
+				//$scope.eventSources=[$scope.eventsFormated];
+				//console.log($scope.eventSources);
+				//ADD TODOS TO EVENTSOURCES OF CALENDAR
 				if($scope.saved.length!=0){
 				var index=0;
 			    angular.forEach($scope.saved, function() {
 
 			         var todo=[{start: $scope.saved[index].date,
-			        		 	title:$scope.saved[index].task
+			        		 	title:$scope.saved[index].task,
+			        		 	className: ['newtask'],
+			        		 	editable:false,
+			        		 	color: 'SteelBlue'
 			         			}];
 			        		 
 			        $scope.eventSources.push(todo);
@@ -1306,18 +1381,22 @@ app.controller('taskController', function($scope, $http, $route) {
 			         
 			        	index = index + 1;
 			    });
-			    $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
+			  //  $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
 			   // console.log( $scope.eventSources);
 				}
+				
 			}).error(function(result){
 				//do something
 				console.log("ERROR GETTING TODO LIST");
 			})
 			}
-			
-
 			//$scope.save();
+			//GET TODOS			
 			getTdList();
+			//GET EVENTS
+			getEvents();
+			//GET MAINTENANCES
+			getMaints();
 			$scope.newTask = null;
 			$scope.newTaskDate = null;
 			$scope.categories = [
@@ -1344,8 +1423,13 @@ app.controller('taskController', function($scope, $http, $route) {
 						method: 'GET',
 						url: 'https://localhost:8443/todo/getToDoList'
 					}).success(function (result) {
-						$scope.saved = result;
+						//$scope.saved = result;
+						//GET TODOS	
+						$scope.eventSources.length=0;
+						
+						getEvents();
 						getTdList();
+						getMaints();
 					}).error(function(result){
 						//do something
 						console.log("ERROR GETTING TODO LIST");
@@ -1379,16 +1463,21 @@ app.controller('taskController', function($scope, $http, $route) {
 						method: 'GET',
 						url: 'https://localhost:8443/todo/getToDoList'
 					}).success(function (result) {
-						$scope.saved = result;
+						//$scope.saved = result;		
+						$scope.eventSources.length=0;
+						
+						getEvents();
 						getTdList();
+						getMaints();
 					}).error(function(result){
 						//do something
 						console.log("ERROR GETTING TODO LIST");
 					})
 				}, function myError(response) {
 					alert(response);
-				});
-				getTdList();
+				});		
+				//getTdList();
+			
 				
 
 			};
@@ -1722,6 +1811,43 @@ app.controller('calendarCtrl', function ($scope,$http) {
 	    
 	});
 
+app.directive('popOverForm', function($compile, $templateCache, $q, $http) {
+
+	  var getTemplate = function(contentType) {
+	    var def = $q.defer();
+
+	    var template = '';
+	    switch (contentType) {
+	      case 'user':
+	        template = $templateCache.get("views/updateUnitTemplate.html");
+	        if (typeof template === "undefined") {
+	          $http.get("views/updateUnitTemplate.html")
+	            .success(function(data) {
+	              $templateCache.put("views/updateUnitTemplate.html", data);
+	              def.resolve(data);
+	            });
+	        }else {
+	               def.resolve(template);
+	            }
+	        break;
+	    }
+	    return def.promise;
+	  }
+	  return {
+	    restrict: "A",
+	    link: function(scope, element, attrs) {
+	      getTemplate("user").then(function(popOverContent) {
+	        var options = {
+	          content: popOverContent,
+	          placement: "right",
+	          html: true,
+	          date: scope.date
+	        };
+	        $(element).popover(options);
+	      });
+	    }
+	  };
+	});
 //MESSAGE
 
 //Message
