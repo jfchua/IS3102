@@ -1255,10 +1255,34 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 
 /*1. TO DO LIST*/
 app.controller('taskController', function($scope, $http, $route) {
-	$scope.today = new Date();
-	$scope.eventSources=[];
-	$scope.saved = localStorage.getItem('taskItems');
-	$scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
+	//CONFIG CALENDAR
+	   $scope.uiConfig = {
+			      calendar:{
+			        width: 600,
+			        editable: true,
+			        header:{
+			          left: 'month agendaWeek agendaDay',
+			          center: 'title',
+			          right: 'today prev,next'
+			        },
+			        eventClick: $scope.alertEventOnClick,
+			        eventDrop: $scope.alertOnDrop,
+			        eventResize: $scope.alertOnResize
+			      }
+			    };
+	   
+		var today = new Date();
+		var next = new Date();
+		next.setDate(next.getDate() + 3); 
+		//TEST FOR USING CALENDAR
+		$scope.eventSources =[[{start:today,title:"haha"}]];
+		$scope.eventSources.push([{start:today,end:next,title:"haha",allDay: false}]);
+		 console.log($scope.eventSources);
+		 $scope.today = new Date();
+		// $scope.eventSources=[];
+		
+		 $scope.saved = localStorage.getItem('taskItems');
+		 $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
 			JSON.parse($scope.saved) : [ {description: "Why not add a task?", date: $scope.today, complete: false}];
 			localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
 
@@ -1267,12 +1291,15 @@ app.controller('taskController', function($scope, $http, $route) {
 				url: 'https://localhost:8443/todo/getToDoList'
 			}).success(function (result) {
 				$scope.saved = result;
+				$scope.eventSources.length=0;
+				console.log($scope.eventSources);
+				if($scope.saved.length!=0){
 				var index=0;
 			    angular.forEach($scope.saved, function() {
 
-			         var todo={event:{ start: $scope.saved[index].date,
+			         var todo=[{start: $scope.saved[index].date,
 			        		 	title:$scope.saved[index].task
-			         }}
+			         			}];
 			        		 
 			        $scope.eventSources.push(todo);
 			         
@@ -1280,7 +1307,8 @@ app.controller('taskController', function($scope, $http, $route) {
 			        	index = index + 1;
 			    });
 			
-			    console.log( $scope.eventSources);
+			   // console.log( $scope.eventSources);
+				}
 			}).error(function(result){
 				//do something
 				console.log("ERROR GETTING TODO LIST");
@@ -1312,22 +1340,12 @@ app.controller('taskController', function($scope, $http, $route) {
 					data: {task:newTask, date: newTaskDate}
 				}).then(function mySuccess(response) {
 					console.log("ADDED NEW TO DO LIST");
-					//$scope.saved = [];
-					console.log($scope.saved);
-					
-					console.log($scope.saved);
 					$http({
 						method: 'GET',
 						url: 'https://localhost:8443/todo/getToDoList'
 					}).success(function (result) {
 						$scope.saved = result;
-						console.log($scope.saved);
-						$scope.saved = result;
-					         var todo={event:{start: newTaskDate,
-				        		 	title:newTask
-			         			}}
-					        $scope.eventSources.push(todo);  
-					    console.log( $scope.eventSources);
+						getTdList();
 					}).error(function(result){
 						//do something
 						console.log("ERROR GETTING TODO LIST");
@@ -1347,7 +1365,7 @@ app.controller('taskController', function($scope, $http, $route) {
 				$scope.newTaskDate = '';
 				$scope.newTaskCategory = $scope.categories;
 				localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-
+				
 			};
 			$scope.deleteTask = function (id) {
 				$http({
@@ -1681,8 +1699,12 @@ app.directive('todolist',function(){
 });
 app.controller('calendarCtrl', function ($scope,$http) {
 	var today = new Date();
-	   $scope.eventSources =[[{start:today,title:"haha"}]];
-	   console.log($scope.eventSources);
+	var next = new Date();
+	next.setDate(next.getDate() + 3); 
+
+	   //$scope.eventSources =[[{start:today,title:"haha"}]];
+	  // $scope.eventSources.push([{start:today,end:next,title:"haha",allDay: false}]);
+	   //console.log($scope.eventSources);
 	   $scope.uiConfig = {
 			      calendar:{
 			        width: 600,
