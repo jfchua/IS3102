@@ -36,7 +36,7 @@ public class IconServiceImpl implements IconService {
 	public boolean createIconOnClientOrganisation(ClientOrganisation client, String iconType, String iconPath) throws InvalidIconException {
 		String t = iconPath.toUpperCase();
 		System.err.println("creating icon: " + t);
-		if ( !t.contains(".JPG") && !t.contains(".JPEG") && !t.contains(".TIF") && !t.contains(".PNG") ){
+		if ( !t.contains(".SVG")&&!t.contains(".JPG") && !t.contains(".JPEG") && !t.contains(".TIF") && !t.contains(".PNG") ){
 			System.err.println("Invalid icon: " + t);
 			throw new InvalidIconException("Icon is invalid");
 		}

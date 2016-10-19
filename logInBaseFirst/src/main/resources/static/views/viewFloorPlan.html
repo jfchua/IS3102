@@ -4,8 +4,8 @@
 		<div class="clearfix">
 		                        <ol class="breadcrumb no-bg no-m-t">
 		                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-		                            <li><a href="#/workspace">Workspace</a></li>
-		                            <li><a ui-sref="workspace.viewBuilding">View Buildings</a></li>
+		                            <li><a href="#/dashboard">Workspace</a></li>
+		                            <li><a ui-sref="dashboard.viewBuilding">View Buildings</a></li>
 		                             <li><a ng-click="passBuilding()" >View Levels</a></li>
 		                             <li><a>View Floor Plan</a></li>
 		                             
@@ -34,9 +34,14 @@
 			    <div><p> {{showDetail}}</p></div>
 		</div>
      <div class="col-md-3">
-     <a ui-sref="workspace.createFloorPlan" ng-click="editFloorPlan()" tooltip-placement="right" tooltip="Edit Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-pencil"></i></button></a>
      <br>
-     <br>
+      <br>
+       <br>
+     <a ui-sref="dashboard.createFloorPlan" ng-click="editFloorPlan()" tooltip-placement="right" tooltip="Edit Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-pencil"></i></button></a>
+     </div>
+     <div class="col-md-3">
+     <br>    
      <a ng-click="downloadPlan()" tooltip-placement="right" tooltip="Download Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-download-alt"></i></button></a>
+    
     </div>         
     </div>
