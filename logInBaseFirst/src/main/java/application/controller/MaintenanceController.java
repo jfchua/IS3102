@@ -31,19 +31,19 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.domain.BookingAppl;
-import application.domain.ClientOrganisation;
-import application.domain.Event;
-import application.domain.Level;
-import application.domain.Maintenance;
-import application.domain.MaintenanceSchedule;
-import application.domain.Unit;
-import application.domain.User;
+import application.entity.BookingAppl;
+import application.entity.ClientOrganisation;
+import application.entity.Event;
+import application.entity.Level;
+import application.entity.Maintenance;
+import application.entity.MaintenanceSchedule;
+import application.entity.Unit;
+import application.entity.User;
 import application.exception.UserNotFoundException;
-import application.service.user.MaintenanceService;
-import application.service.user.UnitService;
-import application.service.user.UserService;
-import application.service.user.VendorService;
+import application.service.MaintenanceService;
+import application.service.UnitService;
+import application.service.UserService;
+import application.service.VendorService;
 
 @Controller
 @RequestMapping("/maintenance")

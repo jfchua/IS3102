@@ -6,11 +6,12 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import application.domain.BookingAppl;
-import application.domain.ClientOrganisation;
-import application.domain.MaintenanceSchedule;
-import application.domain.Unit;
-import application.domain.User;
+
+import application.entity.BookingAppl;
+import application.entity.ClientOrganisation;
+import application.entity.MaintenanceSchedule;
+import application.entity.Unit;
+import application.entity.User;
 
 public interface MaintenanceScheduleRepository extends JpaRepository<MaintenanceSchedule, Long> {
 	

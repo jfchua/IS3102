@@ -28,9 +28,9 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.domain.*;
-import application.service.user.LevelService;
-import application.service.user.UnitService;
+import application.entity.*;
+import application.service.LevelService;
+import application.service.UnitService;
 
 @Controller
 @RequestMapping("/property")

@@ -28,16 +28,16 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.domain.ClientOrganisation;
-import application.domain.User;
-import application.domain.Vendor;
+import application.entity.ClientOrganisation;
+import application.entity.User;
+import application.entity.Vendor;
 import application.exception.InvalidEmailException;
 import application.exception.UserNotFoundException;
 import application.exception.VendorNotFoundException;
 import application.repository.VendorRepository;
-import application.service.user.ClientOrganisationService;
-import application.service.user.UserService;
-import application.service.user.VendorService;
+import application.service.ClientOrganisationService;
+import application.service.UserService;
+import application.service.VendorService;
 
 @Controller
 @RequestMapping("/vendor")

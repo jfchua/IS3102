@@ -7,10 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import application.domain.Building;
-//import application.domain.Event;
-import application.domain.Level;
-//import application.domain.User;
+import application.entity.Building;
+import application.entity.Level;
 
 public interface LevelRepository extends JpaRepository<Level, Long>{
 	@Query(

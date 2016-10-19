@@ -45,19 +45,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import application.domain.ClientOrganisation;
-import application.domain.GraphAdapterBuilder;
-import application.domain.Message;
-import application.domain.PasswordResetToken;
-import application.domain.SendMessageForm;
-import application.domain.User;
-import application.domain.validator.SendMessageFormValidator;
+import application.entity.ClientOrganisation;
+import application.entity.GraphAdapterBuilder;
+import application.entity.Message;
+import application.entity.PasswordResetToken;
+import application.entity.SendMessageForm;
+import application.entity.SendMessageFormValidator;
+import application.entity.User;
 import application.exception.MessageNotFoundException;
 import application.exception.ToDoTaskNotFoundException;
 import application.exception.UserNotFoundException;
 import application.repository.MessageRepository;
-import application.service.user.MessageService;
-import application.service.user.UserService;
+import application.service.MessageService;
+import application.service.UserService;
 
 @Controller
 public class MessageController {

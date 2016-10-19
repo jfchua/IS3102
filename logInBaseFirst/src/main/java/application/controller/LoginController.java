@@ -42,15 +42,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 
-import application.domain.ClientOrganisation;
-import application.domain.PasswordResetToken;
-import application.domain.User;
+import application.entity.ClientOrganisation;
+import application.entity.PasswordResetToken;
+import application.entity.User;
 import application.exception.PasswordResetTokenNotFoundException;
 import application.exception.UserNotFoundException;
 import application.repository.ClientOrganisationRepository;
 import application.repository.PasswordResetTokenRepository;
-import application.service.user.EmailService;
-import application.service.user.UserService;
+import application.service.EmailService;
+import application.service.UserService;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperRunManager;
 

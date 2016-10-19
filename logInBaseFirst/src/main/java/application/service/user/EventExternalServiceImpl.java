@@ -35,7 +35,7 @@ import application.repository.UnitRepository;
 import application.repository.UserRepository;
 @Service
 public class EventExternalServiceImpl implements EventExternalService {
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 	private final EventRepository eventRepository;
 	//private final EventOrganizerRepository eventOrganizerRepository;
 	private final UnitRepository unitRepository;
@@ -60,14 +60,14 @@ public class EventExternalServiceImpl implements EventExternalService {
 		Set<User> eventOrgs = userRepository.getAllUsers(client);
 		boolean doesHave = false;
 		for(User u: eventOrgs){
-			 Set<Role> roles = u.getRoles();
-			   for(Role r: roles){
-			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
-			    doesHave = true;
-			   }
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
+					doesHave = true;
+			}
 		}
 		if(doesHave)
-	        return eventOrg.getEvents();
+			return eventOrg.getEvents();
 		else
 			return new HashSet<Event>();
 	}
@@ -75,22 +75,22 @@ public class EventExternalServiceImpl implements EventExternalService {
 	@Override
 	public Set<Event> getAllApprovedEventsByOrg(ClientOrganisation client, User eventOrg) {
 		Set<Event> approvedEvent = new HashSet<Event>();
-	    Set<Event> allEvents = eventOrg.getEvents();
-	    Set<User> eventOrgs = userRepository.getAllUsers(client);
+		Set<Event> allEvents = eventOrg.getEvents();
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
 		boolean doesHave = false;
 		for(User u: eventOrgs){
-			 Set<Role> roles = u.getRoles();
-			   for(Role r: roles){
-			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
-			    doesHave = true;
-			   }
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
+					doesHave = true;
+			}
 		}
 		if(doesHave){
-		for(Event ev: allEvents){
+			for(Event ev: allEvents){
 				if(ev.getEvent_approval_status().equals("approved"))
 					approvedEvent.add(ev);
 			}
-	    return approvedEvent;
+			return approvedEvent;
 		}
 		else
 			return new HashSet<Event>();
@@ -101,27 +101,27 @@ public class EventExternalServiceImpl implements EventExternalService {
 			String status, Date event_start_date, Date event_end_date, String filePath) {
 		boolean isAvailable = true;
 		Set<User> eventOrgs = userRepository.getAllUsers(client);
-		
+
 		// does the user belong to client organization and does the user have role of "external event organizer"
 		boolean doesHave = false;
 		for(User u: eventOrgs){
-			 Set<Role> roles = u.getRoles();
-			   for(Role r: roles){
-			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
-			    doesHave = true;
-			   }
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
+					doesHave = true;
+			}
 		}
 		if(!doesHave)
 			return false;
 		System.out.println("1");
-		
+
 		//is the ending date after the starting date?
 		Date d1 = event_start_date;
 		Date d2 = event_end_date;
 		if(d1.compareTo(d2)>0)
 			return false;
 		System.out.println("2");
-		
+
 		try{		
 			Optional<Event> event1 = getEventById(id);
 			if(event1.isPresent()&&isAvailable){			
@@ -129,119 +129,119 @@ public class EventExternalServiceImpl implements EventExternalService {
 				System.out.println("3");
 				Set<BookingAppl> bookingList = event.getBookings();
 				Set<Unit> unitsOld = new HashSet<Unit>();
-				
+
 				// unitsOld is the set of units booked previously, unitsNew is the set of units booked now
 				for(BookingAppl b: bookingList)
 					unitsOld.add(b.getUnit());
 				System.out.println("4");
 				String[] units = unitsId.split(" ");
 				Set<Unit> unitsNew = new HashSet<Unit>();
-                System.out.println(units.length);
-				
+				System.out.println(units.length);
+
 				//check availability of units
 				for(int i = 0; i<units.length; i ++){
 					System.out.println("inside the loop now");
-				if(!checkUnit(client, Long.valueOf(units[i])))
-					return false;
-				Optional<Unit> unitNew = unitRepository.getUnitById(Long.valueOf(units[i]));
-				if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){	
-					System.out.println("iffff");
-					Unit unit1 = unitNew.get();		
-					unitsNew.add(unit1);
-					int count = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
-					int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
-					System.out.println(count);
-					if((count != 0)||(count2!=0)){
-						isAvailable = false;
-						break;
-					}		
-				}//DONE
-				else if (unitNew.isPresent()&&(unitsOld.contains(unitNew.get()))){
-				    Unit unit1 = unitNew.get();
-				    unitsNew.add(unit1);
-				    System.out.println("elseeee");
-		            BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
-		            MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
-		            System.out.println(b.getId());
-		            Event eventFromB = b.getEvent();            
-		            if(!(event.getId().equals(eventFromB.getId()))||(m!=null)){
-		            	isAvailable = false;
-		            	break;
-		            }
-				}
-				System.out.println("5");
+					if(!checkUnit(client, Long.valueOf(units[i])))
+						return false;
+					Optional<Unit> unitNew = unitRepository.getUnitById(Long.valueOf(units[i]));
+					if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){	
+						System.out.println("iffff");
+						Unit unit1 = unitNew.get();		
+						unitsNew.add(unit1);
+						int count = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+						int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+						System.out.println(count);
+						if((count != 0)||(count2!=0)){
+							isAvailable = false;
+							break;
+						}		
+					}//DONE
+					else if (unitNew.isPresent()&&(unitsOld.contains(unitNew.get()))){
+						Unit unit1 = unitNew.get();
+						unitsNew.add(unit1);
+						System.out.println("elseeee");
+						BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
+						MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
+						System.out.println(b.getId());
+						Event eventFromB = b.getEvent();            
+						if(!(event.getId().equals(eventFromB.getId()))||(m!=null)){
+							isAvailable = false;
+							break;
+						}
+					}
+					System.out.println("5");
 				}//DONE!!! 4/10/2016
-				
+
 				System.out.println(isAvailable);
 				if(isAvailable){			
-				//remove all previously done bookings
-				System.out.println(bookingList.size());
-				for(BookingAppl b1: bookingList){
-					Unit unit = b1.getUnit();
-					if(!unitsNew.contains(unit)){
-					Set<BookingAppl> bookingsFromUnit = unit.getBookings();
-					bookingsFromUnit.remove(b1);
-					bookingList.remove(b1);
-					bookingApplRepository.delete(b1);
+					//remove all previously done bookings
+					System.out.println(bookingList.size());
+					for(BookingAppl b1: bookingList){
+						Unit unit = b1.getUnit();
+						if(!unitsNew.contains(unit)){
+							Set<BookingAppl> bookingsFromUnit = unit.getBookings();
+							bookingsFromUnit.remove(b1);
+							bookingList.remove(b1);
+							bookingApplRepository.delete(b1);
+						}
 					}
-				}
-				System.out.println("6");
-				System.out.println(unitsNew.size());
-				
-				//save the new booking
-				for(BookingAppl b2: bookingList){
-					b2.setEvent_start_date_time(event_start_date);
-					b2.setEvent_end_date_time(event_end_date);
-				}
-				for(Unit i : unitsNew){
-					System.out.println("once");
-					if(!unitsOld.contains(i)){
-					BookingAppl newBooking = new BookingAppl();
-					newBooking.setEvent_start_date_time(event_start_date);
-					System.out.println(event_start_date);
-					newBooking.setEvent_end_date_time(event_end_date);
-					newBooking.setUnit(i);
-				    newBooking.setEvent(event);
-				    newBooking.setOwner(event.getId());
-				    newBooking.setRoom(i.getId());
-				    Set<BookingAppl> bookingsFromUnit = i.getBookings();
-				    System.out.println("twice");
-				    bookingsFromUnit.add(newBooking);
-				    System.out.println("trice");
-				    bookingList.add(newBooking);	
+					System.out.println("6");
+					System.out.println(unitsNew.size());
+
+					//save the new booking
+					for(BookingAppl b2: bookingList){
+						b2.setEvent_start_date_time(event_start_date);
+						b2.setEvent_end_date_time(event_end_date);
 					}
-				    //unitRepository.save(i);
-				    //bookingApplRepository.save(newBooking);
-				}
-			    
-				System.out.println("end of second for loop");	
-				System.out.println(event.getBookings().size());
-				event.setEvent_title(event_title);
-				System.out.println("after title");
-				event.setEvent_content(event_content);
-				event.setEvent_description(event_description);
-				event.setEvent_approval_status(status);
-				event.setEvent_start_date(event_start_date);
-				event.setEvent_end_date(event_end_date);
-				event.setFilePath(filePath);
-				System.out.println("fourth");
-				event.setBookings(bookingList); 
-				System.out.println("fifth");
-				eventRepository.flush();
-				//eventRepository.saveAndFlush(event);
-			    System.out.println("saved by repo");	
-			    Set<Event> events = eventOrg.getEvents();
-				events.add(event);
-				eventOrg.setEvents(events);
-				event.setEventOrg(eventOrg);
-			//	eventRepository.save(event);
-				userRepository.save(eventOrg);
+					for(Unit i : unitsNew){
+						System.out.println("once");
+						if(!unitsOld.contains(i)){
+							BookingAppl newBooking = new BookingAppl();
+							newBooking.setEvent_start_date_time(event_start_date);
+							System.out.println(event_start_date);
+							newBooking.setEvent_end_date_time(event_end_date);
+							newBooking.setUnit(i);
+							newBooking.setEvent(event);
+							newBooking.setOwner(event.getId());
+							newBooking.setRoom(i.getId());
+							Set<BookingAppl> bookingsFromUnit = i.getBookings();
+							System.out.println("twice");
+							bookingsFromUnit.add(newBooking);
+							System.out.println("trice");
+							bookingList.add(newBooking);	
+						}
+						//unitRepository.save(i);
+						//bookingApplRepository.save(newBooking);
+					}
+
+					System.out.println("end of second for loop");	
+					System.out.println(event.getBookings().size());
+					event.setEvent_title(event_title);
+					System.out.println("after title");
+					event.setEvent_content(event_content);
+					event.setEvent_description(event_description);
+					event.setEvent_approval_status(status);
+					event.setEvent_start_date(event_start_date);
+					event.setEvent_end_date(event_end_date);
+					event.setFilePath(filePath);
+					System.out.println("fourth");
+					event.setBookings(bookingList); 
+					System.out.println("fifth");
+					eventRepository.flush();
+					//eventRepository.saveAndFlush(event);
+					System.out.println("saved by repo");	
+					Set<Event> events = eventOrg.getEvents();
+					events.add(event);
+					eventOrg.setEvents(events);
+					event.setEventOrg(eventOrg);
+					//	eventRepository.save(event);
+					userRepository.save(eventOrg);
 				}
 			}
-			}catch(Exception e){
-				return isAvailable;
-			}
+		}catch(Exception e){
 			return isAvailable;
+		}
+		return isAvailable;
 	}
 
 	@Override
@@ -249,19 +249,19 @@ public class EventExternalServiceImpl implements EventExternalService {
 		System.out.println(id);
 		Set<User> eventOrgs = userRepository.getAllUsers(client);
 		boolean doesHave = false;
-        try{		
+		try{		
 			Optional<Event> event1 = getEventById(id);
 			Event event = null;
 			if(event1.isPresent()){		
 				System.out.println("inside TRY");				
-				 event = event1.get();
-				 User eventOrg = event.getEventOrg();
-				 for(User u: eventOrgs){
-					 Set<Role> roles = u.getRoles();
-					   for(Role r: roles){
-					    if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
-					    doesHave = true;
-					   }
+				event = event1.get();
+				User eventOrg = event.getEventOrg();
+				for(User u: eventOrgs){
+					Set<Role> roles = u.getRoles();
+					for(Role r: roles){
+						if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
+							doesHave = true;
+					}
 				}
 				if(!doesHave)
 					return false;
@@ -274,24 +274,27 @@ public class EventExternalServiceImpl implements EventExternalService {
 					bookings1.remove(b);
 					unit.setBookings(bookings1);
 					unitRepository.save(unit);
-					bookings.remove(b);
+					//bookings.remove(b);
+					System.out.println("delete booking before");
 					bookingApplRepository.delete(b);
+					System.out.println("delete booking after");
 				}
+				bookingApplRepository.flush();
 				event.setBookings(new HashSet<BookingAppl>());
-			    User eventOrg1 = event.getEventOrg();
+				/*User eventOrg1 = event.getEventOrg();
 				Set<Event> events = eventOrg1.getEvents();
 				events.remove(event);
 				eventOrg1.setEvents(events);
 				event.setEvent_approval_status("cancelled");
-				userRepository.save(eventOrg1);		   
+				userRepository.save(eventOrg1);	*/	   
 				eventRepository.save(event);
 				eventRepository.flush();
-			    userRepository.flush();
+				// userRepository.flush();
 			}
-			}catch(Exception e){
-				return false;
-			}
-			return true;
+		}catch(Exception e){
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -311,11 +314,11 @@ public class EventExternalServiceImpl implements EventExternalService {
 		Set<User> eventOrgs = userRepository.getAllUsers(client);
 		boolean doesHave = false;
 		for(User u: eventOrgs){
-			 Set<Role> roles = u.getRoles();
-			   for(Role r: roles){
-			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
-			    doesHave = true;
-			   }
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
+					doesHave = true;
+			}
 		}
 		if(!doesHave)
 			return false;
@@ -362,9 +365,9 @@ public class EventExternalServiceImpl implements EventExternalService {
 					booking.setRoom(unit.getId());
 					bookings.add(booking);
 					//bookingApplRepository.save(booking);
-			        Set<BookingAppl> bookingList = unit.getBookings();
-			        bookingList.add(booking);
-			        unit.setBookings(bookingList);		
+					Set<BookingAppl> bookingList = unit.getBookings();
+					bookingList.add(booking);
+					unit.setBookings(bookingList);		
 					//unitRepository.save(unit);
 				}
 			}
@@ -395,18 +398,18 @@ public class EventExternalServiceImpl implements EventExternalService {
 		try{
 			Optional<Event> event1 = getEventById(eventId);
 			if(event1.isPresent()){
-			Event event = event1.get();
-			User eventOrg= event.getEventOrg();
-			Set<Event> events = eventOrg.getEvents();
-			events.add(event);
-			eventOrg.setEvents(events);
-			userRepository.save(eventOrg);
+				Event event = event1.get();
+				User eventOrg= event.getEventOrg();
+				Set<Event> events = eventOrg.getEvents();
+				events.add(event);
+				eventOrg.setEvents(events);
+				userRepository.save(eventOrg);
 			}
-			}
-			catch(Exception e){
-				return false;
-				}
-			return true;
+		}
+		catch(Exception e){
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -414,21 +417,21 @@ public class EventExternalServiceImpl implements EventExternalService {
 		try{
 			Optional<Event> event1 = getEventById(eventId);
 			if(event1.isPresent()){
-		Event event = event1.get();		
-		User eventOrg = event.getEventOrg();
-		System.out.println("inside TRY 1");
-		Set<Event> events = eventOrg.getEvents();
-		System.out.println("inside TRY 2");
-		events.remove(event);
-		System.out.println("inside TRY 3");
-		eventOrg.setEvents(events);
-		System.out.println("hasnt persist yet");
-		userRepository.save(eventOrg);
+				Event event = event1.get();		
+				User eventOrg = event.getEventOrg();
+				System.out.println("inside TRY 1");
+				Set<Event> events = eventOrg.getEvents();
+				System.out.println("inside TRY 2");
+				events.remove(event);
+				System.out.println("inside TRY 3");
+				eventOrg.setEvents(events);
+				System.out.println("hasnt persist yet");
+				userRepository.save(eventOrg);
 			}
 		}
 		catch(Exception e){
 			return false;
-			}
+		}
 		return true;
 	}
 
@@ -438,15 +441,15 @@ public class EventExternalServiceImpl implements EventExternalService {
 		try{
 			Optional<Event> event1 = getEventById(eventId);
 			if(event1.isPresent()){
-		Event event = event1.get();	
-		Set<BookingAppl> bookingList = event.getBookings();
-		for(BookingAppl b : bookingList)
-			unitsId = unitsId + b.getUnit().getId() +" ";
-	     }
+				Event event = event1.get();	
+				Set<BookingAppl> bookingList = event.getBookings();
+				for(BookingAppl b : bookingList)
+					unitsId = unitsId + b.getUnit().getId() +" ";
+			}
 		}catch(Exception e){
-		
+
 		}
-     return unitsId;
+		return unitsId;
 	}
 
 	@Override
@@ -474,19 +477,19 @@ public class EventExternalServiceImpl implements EventExternalService {
 			Optional<Event> event1 = getEventById(eventId);
 			if(event1.isPresent()){
 				Event event = event1.get();
-		     for(User u: eventOrgs){
-			 Set<Role> roles = u.getRoles();
-			   for(Role r: roles){
-			    if(r.getName().equals("ROLE_EXTEVE") && u.getEvents().contains(event)){
-			    doesHave = true;
-			    break;
-			    }
-			   }
-		    }
+				for(User u: eventOrgs){
+					Set<Role> roles = u.getRoles();
+					for(Role r: roles){
+						if(r.getName().equals("ROLE_EXTEVE") && u.getEvents().contains(event)){
+							doesHave = true;
+							break;
+						}
+					}
+				}
 			}
 		}catch(Exception e){
 			return false;
-			}
+		}
 		return doesHave;
 	}
 
@@ -496,12 +499,12 @@ public class EventExternalServiceImpl implements EventExternalService {
 		try{
 			Optional<Event> event1 = getEventById(id);
 			if(event1.isPresent()&&checkEvent(client, id)){
-			Event event = event1.get();
-		    bookings = event.getBookings();
+				Event event = event1.get();
+				bookings = event.getBookings();
 			}
 		}catch(Exception e){
-			
-			}
+
+		}
 		return bookings;
 	}
 
@@ -513,11 +516,11 @@ public class EventExternalServiceImpl implements EventExternalService {
 		String[] units = unitsId.split(" ");
 		System.out.println(units[0]);
 		for(User u: eventOrgs){
-			 Set<Role> roles = u.getRoles();
-			   for(Role r: roles){
-			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(user))
-			    doesHave = true;
-			   }
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_EXTEVE") && u.equals(user))
+					doesHave = true;
+			}
 		}
 		if(!doesHave)
 			return false;
@@ -535,7 +538,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 					return false;
 				int count = bookingApplRepository.getNumberOfBookings(uId, d1, d2);
 				int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
-               if((count != 0)||(count2 != 0)){
+				if((count != 0)||(count2 != 0)){
 					isAvailable = false;
 					break;
 				}
@@ -549,27 +552,27 @@ public class EventExternalServiceImpl implements EventExternalService {
 			Date event_start_date, Date event_end_date) {
 		boolean isAvailable = true;
 		Set<User> eventOrgs = userRepository.getAllUsers(client);
-		
+
 		// does the user belong to client organization and does the user have role of "external event organizer"
 		boolean doesHave = false;
 		for(User u: eventOrgs){
-			 Set<Role> roles = u.getRoles();
-			   for(Role r: roles){
-			    if(r.getName().equals("ROLE_EXTEVE") && u.equals(user))
-			    doesHave = true;
-			   }
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_EXTEVE") && u.equals(user))
+					doesHave = true;
+			}
 		}
 		if(!doesHave)
 			return false;
 		System.out.println("1");
-		
+
 		//is the ending date after the starting date?
 		Date d1 = event_start_date;
 		Date d2 = event_end_date;
 		if(d1.compareTo(d2)>0)
 			return false;
 		System.out.println("2");
-		
+
 		try{		
 			Optional<Event> event1 = getEventById(eventId);
 			if(event1.isPresent()&&isAvailable){			
@@ -577,52 +580,52 @@ public class EventExternalServiceImpl implements EventExternalService {
 				System.out.println("3");
 				Set<BookingAppl> bookingList = event.getBookings();
 				Set<Unit> unitsOld = new HashSet<Unit>();
-				
+
 				// unitsOld is the set of units booked previously, unitsNew is the set of units booked now
 				for(BookingAppl b: bookingList)
 					unitsOld.add(b.getUnit());
 				System.out.println("4");
 				String[] units = unitsId.split(" ");
 				Set<Unit> unitsNew = new HashSet<Unit>();
-                System.out.println(units.length);
-				
+				System.out.println(units.length);
+
 				//check availability of units
 				for(int i = 0; i<units.length; i ++){
 					System.out.println("inside the loop now");
-				if(!checkUnit(client, Long.valueOf(units[i])))
-					return false;
-				Optional<Unit> unitNew = unitRepository.getUnitById(Long.valueOf(units[i]));
-				if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){	
-					System.out.println("iffff");
-					Unit unit1 = unitNew.get();		
-					unitsNew.add(unit1);
-					int count = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
-					int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
-					System.out.println(count);
-					if((count != 0)||(count2!=0)){
-						isAvailable = false;
-						break;
-					}		
-				}//DONE
-				else if (unitNew.isPresent()&&(unitsOld.contains(unitNew.get()))){
-				    Unit unit1 = unitNew.get();
-				    unitsNew.add(unit1);
-				    System.out.println("elseeee");
-		            BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
-		            MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
-		            System.out.println(b.getId());
-		            Event eventFromB = b.getEvent();            
-		            if(!(event.getId().equals(eventFromB.getId()))||(m!=null)){
-		            	isAvailable = false;
-		            	break;
-		            }
-				}
-				System.out.println("5");
+					if(!checkUnit(client, Long.valueOf(units[i])))
+						return false;
+					Optional<Unit> unitNew = unitRepository.getUnitById(Long.valueOf(units[i]));
+					if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){	
+						System.out.println("iffff");
+						Unit unit1 = unitNew.get();		
+						unitsNew.add(unit1);
+						int count = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+						int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+						System.out.println(count);
+						if((count != 0)||(count2!=0)){
+							isAvailable = false;
+							break;
+						}		
+					}//DONE
+					else if (unitNew.isPresent()&&(unitsOld.contains(unitNew.get()))){
+						Unit unit1 = unitNew.get();
+						unitsNew.add(unit1);
+						System.out.println("elseeee");
+						BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
+						MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
+						System.out.println(b.getId());
+						Event eventFromB = b.getEvent();            
+						if(!(event.getId().equals(eventFromB.getId()))||(m!=null)){
+							isAvailable = false;
+							break;
+						}
+					}
+					System.out.println("5");
 				}
 			}
 		}catch(Exception e){
 			return false;
-			}
-	  return isAvailable;
+		}
+		return isAvailable;
 	}
 }

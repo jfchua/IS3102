@@ -25,18 +25,18 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.domain.AuditLog;
-import application.domain.Building;
-import application.domain.ClientOrganisation;
-import application.domain.Level;
-import application.domain.User;
+import application.entity.AuditLog;
+import application.entity.Building;
+import application.entity.ClientOrganisation;
+import application.entity.Level;
+import application.entity.User;
 import application.exception.BuildingNotFoundException;
 import application.exception.InvalidPostalCodeException;
 import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
-import application.service.user.BuildingService;
-import application.service.user.ClientOrganisationService;
-import application.service.user.UserService;
+import application.service.BuildingService;
+import application.service.ClientOrganisationService;
+import application.service.UserService;
 
 @Controller
 @RequestMapping("/building")

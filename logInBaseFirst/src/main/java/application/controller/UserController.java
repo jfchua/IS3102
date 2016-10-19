@@ -33,14 +33,14 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.domain.AuditLog;
-import application.domain.ClientOrganisation;
-import application.domain.Message;
-import application.domain.Role;
-import application.domain.ToDoTask;
-import application.domain.User;
-import application.domain.Vendor;
-import application.domain.validator.UserCreateFormValidator;
+import application.entity.AuditLog;
+import application.entity.ClientOrganisation;
+import application.entity.Message;
+import application.entity.Role;
+import application.entity.ToDoTask;
+import application.entity.User;
+import application.entity.UserCreateFormValidator;
+import application.entity.Vendor;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.InvalidEmailException;
@@ -51,8 +51,8 @@ import application.repository.AuditLogRepository;
 import application.repository.ClientOrganisationRepository;
 import application.repository.RoleRepository;
 import application.repository.UserRepository;
-import application.service.user.ClientOrganisationService;
-import application.service.user.UserService;
+import application.service.ClientOrganisationService;
+import application.service.UserService;
 
 @Controller
 public class UserController {
