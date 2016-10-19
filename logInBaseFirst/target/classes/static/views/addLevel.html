@@ -44,4 +44,12 @@
 				</div>
 			</div>
         </div>
+         <div class="col-md-3">
+        <growl-notifications>
+        <growl-notification  ng-if="addLevelFail.status" class="growl-primary fading">
+							<a href="#" ng-click="$growlNotification.remove()" class="close"><i class="fa fa-times"></i></a>
+							Level number is out of range</growl-notification>
+
+						</growl-notifications>
+		</div>
 </div>

@@ -315,10 +315,11 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state', fu
 			
 		});
 		send.error(function(){
-			alert('SAVING LEVEL GOT ERROR! LEVEL NUMBER IS OUT OF RANGE');
+			$scope.addLevelFail={status:true};
+			//alert('SAVING LEVEL GOT ERROR! LEVEL NUMBER IS OUT OF RANGE');
 		});
 	};
-
+	$scope.addLevelFail={status:false};
 
 
 }])
