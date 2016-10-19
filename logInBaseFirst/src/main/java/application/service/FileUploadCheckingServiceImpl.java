@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import application.exception.InvalidFileUploadException;
 @Service
 public class FileUploadCheckingServiceImpl implements FileUploadCheckingService{
-	private final List<String> ALLOWED_EXT = Arrays.asList("PNG","CSV","TIF","JPG","JPEG");
+	private final List<String> ALLOWED_EXT = Arrays.asList("PNG","CSV","TIF","JPG","JPEG","SVG");
 	
 	public boolean checkFile(MultipartFile file) throws InvalidFileUploadException {
 		//long size = file.getSize();

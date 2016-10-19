@@ -1276,7 +1276,7 @@ app.controller('taskController', function($scope, $http, $route) {
 		next.setDate(next.getDate() + 3); 
 		//TEST FOR USING CALENDAR
 		$scope.eventSources =[[{start:today,title:"haha"}]];
-		$scope.eventSources.push([{start:today,end:next,title:"haha",allDay: false}]);
+		$scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);
 		 console.log($scope.eventSources);
 		 $scope.today = new Date();
 		// $scope.eventSources=[];
@@ -1306,7 +1306,7 @@ app.controller('taskController', function($scope, $http, $route) {
 			         
 			        	index = index + 1;
 			    });
-			
+			    $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
 			   // console.log( $scope.eventSources);
 				}
 			}).error(function(result){
@@ -1380,7 +1380,7 @@ app.controller('taskController', function($scope, $http, $route) {
 						url: 'https://localhost:8443/todo/getToDoList'
 					}).success(function (result) {
 						$scope.saved = result;
-						
+						getTdList();
 					}).error(function(result){
 						//do something
 						console.log("ERROR GETTING TODO LIST");
