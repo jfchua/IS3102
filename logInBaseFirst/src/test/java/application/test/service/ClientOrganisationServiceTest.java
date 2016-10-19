@@ -112,7 +112,7 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	
 	@Test(expected=ClientOrganisationNotFoundException.class)
 	public void testDeleteClientOrgNotExist() throws ClientOrganisationNotFoundException {
-		boolean result = clientOrganisationService.deleteClientOrg((long)99999);
+		boolean result = clientOrganisationService.deleteClientOrg(Long.MAX_VALUE);
 		Assert.assertFalse("client org should not be deleted as it does not exist", result);		
 	}
 	

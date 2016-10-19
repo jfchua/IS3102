@@ -80,7 +80,7 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
   //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
   $scope.passBuilding = function(){
 	  shareData.addData(building);
-	  $state.go("workspace.viewLevels");
+	  $state.go("dashboard.viewLevels");
   }
   
   $scope.editFloorPlan= function(){
@@ -276,7 +276,7 @@ app.directive('resizable', function () {
 
 
 //UPDATE FLOOR PLAN
-app.controller('floorPlanController', function ($scope, $http,shareData,$location) {
+app.controller('floorPlanController', function ($scope, $http,shareData,$state) {
   //jQuery = window.jQuery;
   //console.log(jQuery);
   //console.log(jQuery.ui);
@@ -286,7 +286,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
   var building;
   $scope.units=[];
   var widthForFloorPlan;
-  
+  var obj;
   angular.element(document).ready(function () {
 	  
 	    	//GET LEVEL
@@ -325,12 +325,13 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
 	        console.log("DID NOT view");
 	        console.log("response is "+angular.fromJson(response.data).error);
 	      })
-	      $scope.icons=[];
+	      
+	     // $scope.icons=[];
 	       //RETRIEVE ICON WHEN LOADED
 			$http.get("//localhost:8443/property/viewIcons").then(function(response){			
-				console.log(angular.fromJson(response.data));
+				//console.log(response.data);
 				$scope.icons = response.data;
-				console.log($scope.icons);
+				//console.log($scope.icons);
 				//console.log($scope.icons[0]);
 				//console.log($scope.icons[0].iconType);
 				//console.log($scope.icons[0].iconPath);
@@ -339,7 +340,57 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
 				alert("DID NOT VIEW ICONS");
 				
 			})
+			
+			/*
+			$scope.defaultTypes=[
+			                  {'name':'Entry','type':'./svg/entry.svg'},
+			                  {'name':'Escalator','type':'./svg/escalator.svg'},
+			                  {'name':'Exit','type':'./svg/exit.svg'},
+			                  {'name':'Lift','type':'./svg/lift.svg'},
+			                  {'name':'Service Lift','type':'./svg/servicelift.svg'},
+			                  {'name':'Staircase','type':'./svg/staircase.svg'},
+			                  {'name':'Toilet','type':'./svg/toilet.svg'},
+			                  {'name':'Unit','type':'./svg/rect.svg'}];
+			$scope.selectedDefaultType=$scope.defaultTypes[0];
+			*/
     });
+  
+  
+  $scope.menuOptions = [
+                     
+                       // null,        // Dividier
+                        ['Entry', function ($itemScope, $event, modelValue, text, $li) {
+                            $scope.specialType='./svg/entry.svg';
+                            $scope.addSpecialUnit();
+                        }],
+                 
+                        ['Escalator', function ($itemScope, $event, modelValue, text, $li) {
+                            $scope.specialType='./svg/escalator.svg';
+                            $scope.addSpecialUnit();
+                        }],
+                        ['Exit', function ($itemScope, $event, modelValue, text, $li) {                     
+                            $scope.specialType='./svg/exit.svg';
+                            $scope.addSpecialUnit();
+                        }],
+                        ['Lift', function ($itemScope, $event, modelValue, text, $li) {                      
+                            $scope.specialType='./svg/lift.svg';
+                            $scope.addSpecialUnit();
+                        }],
+                        ['Service Lift', function ($itemScope, $event, modelValue, text, $li) {                      
+                            $scope.specialType='./svg/servicelift.svg';
+                            $scope.addSpecialUnit();
+                        }],
+                        ['Staircase', function ($itemScope, $event, modelValue, text, $li) {                        
+                            $scope.specialType='./svg/staircase.svg';
+                            $scope.addSpecialUnit();
+                        }],
+                        ['Toilet', function ($itemScope, $event, modelValue, text, $li) {                  
+                            $scope.specialType='./svg/toilet.svg';
+                            $scope.addSpecialUnit();
+                        }],
+                    ];
+  
+  
 /*
   $scope.addUnit = function () {  
 	    var dataObj={"levelId":levelId,"id": 0,"unitNumber": "#unit","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "./svg/rect.svg","icon": ""}};
@@ -479,8 +530,8 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
     $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
       console.log("pure response is "+JSON.stringify(response.data));
       alert("FLOOR PLAN IS SAVED. GOING BACK TO VIEW FLOOR PLAN...");
-      shareData.addData(level);
-      $location.path("/viewFloorPlan");
+      shareData.addData(obj);
+      $state.go("dashboard.viewFloorPlan");
     },function(response){//else is not saved successfully
       console.log("DID NOT SAVE");
       console.log("response is "+JSON.stringify(response.data));
@@ -500,7 +551,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
   //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
   $scope.passBuilding = function(){
 	  shareData.addData(building);
-	 // $state.go("workspace.viewLevels");
+	 // $state.go("dashboard.viewLevels");
   }
   
   $scope.viewLevelsByBuildingId = function(){
@@ -541,7 +592,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$locatio
         //$location.path("/viewLevels");
       });
       getLevels.error(function(response){
-        $location.path("/viewBuilding");//not sure
+        $state.go("dashboard.viewBuilding");//not sure
         console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
       });
 

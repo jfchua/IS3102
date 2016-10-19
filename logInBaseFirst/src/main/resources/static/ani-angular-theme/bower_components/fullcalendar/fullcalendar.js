@@ -774,7 +774,7 @@ function Header(calendar, options) {
 				var prevButton;
 				$.each(this.split(','), function(j, buttonName) {
 					if (buttonName == 'title') {
-						e.append("<span class='fc-header-title'><h2>&nbsp;</h2></span>");
+						e.append("<span class='fc-header-title'><h3>&nbsp;</h3></span>");
 						if (prevButton) {
 							prevButton.addClass(tm + '-corner-right');
 						}
@@ -794,7 +794,7 @@ function Header(calendar, options) {
 							var icon = options.theme ? smartProperty(options.buttonIcons, buttonName) : null; // why are we using smartProperty here?
 							var text = smartProperty(options.buttonText, buttonName); // why are we using smartProperty here?
 							var button = $(
-								"<span class='fc-button fc-button-" + buttonName + " " + tm + "-state-default'>" +
+								"<span class='btn btn-primary btn-xs fc-button-" + buttonName + " " + tm + "-state-default'>" +
 									(icon ?
 										"<span class='fc-icon-wrap'>" +
 											"<span class='ui-icon ui-icon-" + icon + "'/>" +
@@ -849,7 +849,7 @@ function Header(calendar, options) {
 	
 	
 	function updateTitle(html) {
-		element.find('h2')
+		element.find('h3')
 			.html(html);
 	}
 	

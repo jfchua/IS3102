@@ -746,21 +746,49 @@ public class UserController {
 				String client=clientObj.getOrganisationName();
 				System.out.println("start view");
 				Set<Role> roles=usr.getRoles();
-				String name=principal.getName();
+				JSONArray rolsArray = new JSONArray();
+				
+				String userName=principal.getName();
+				String name=usr.getName();
 				String roleString="";
 				for(Role role:roles){
 					roleString+=role.getName()+" ";
+					JSONObject roleJson = new JSONObject();
+					String roleString1=role.getName();
+					if(!roleString1.equals("ROLE_USER")){
+						roleString1=(roleString1.substring(5,roleString1.length())).toLowerCase();
+						if(roleString1.equals("superadmin")){
+							roleString1="Algattas admin";
+						}else if(roleString1.equals("admin")){
+							roleString1="IT admin";
+						}else if(roleString1.equals("event")){
+							roleString1="managing events";
+						}else if(roleString1.equals("property")){
+							roleString1="managing property";
+						}else if(roleString1.equals("finance")){
+							roleString1="managing finance";
+						}else if(roleString1.equals("ticketing")){
+							roleString1="managing tickets";
+						}else if(roleString1.equals("exteve")){
+							roleString1="organising events";
+						}
+					roleJson.put("role", roleString1);
+					rolsArray.add(roleJson);
+					}
 				}
 				JSONObject bd = new JSONObject(); 
 				bd.put("client", client); 
 				bd.put("role", roleString); 
 				bd.put("name", name); 
-				System.out.println("Returning building id : " + bd.toString());
+				bd.put("userName", userName);
+				bd.put("roles", rolsArray);
+				//bd.put("roles", roles); 
+				System.out.println("Returning user info : " + bd.toString());
 				return bd.toString();
 			}else{
 				JSONObject err = new JSONObject(); 
 				err.put("error", "error"); 
-				System.out.println("Returning building id : " + err.toString());
+				System.out.println("Returning user info error : " + err.toString());
 				return err.toString();
 
 			}

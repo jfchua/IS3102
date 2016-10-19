@@ -1,9 +1,9 @@
-<div class="news-feed" ng-controller="AlertDemoCtrl">
-	<div class="feed-header">{{ 'Notifications' | translate }}</div>
+<div class="news-feed" ng-controller="taskController as taskCtrl" >
+	<div class="feed-header">{{ 'To-do List' | translate }}</div>
 	<div class="feed-content">
-		<ul class="feed" uib-alert ng-repeat="x in alerts" close="closeAlert($index)">
-			<li >
-				<a href="">{{x}}</a> <span class="feed-date"></span>	
+		<ul class="feed" >
+			<li ng-repeat="todo in saved track by $index">
+				<a href="">{{todo.task}}</a> <span class="feed-date">{{todo.date}}</span>	
 				
 			</li>
 			
