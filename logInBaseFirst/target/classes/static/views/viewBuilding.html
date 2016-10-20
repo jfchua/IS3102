@@ -1,7 +1,7 @@
 <div class="clearfix">
                         <ol class="breadcrumb no-bg no-m-t">
                             <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                            <li><a href="#/workspace">Workspace</a></li>
+                            <li><a href="#/dashboard">Workspace</a></li>
                             <li><a>View Buildings</a></li>
                         </ol>
 </div>
@@ -36,7 +36,7 @@
 						</thead>
 						<tbody>
 							 <tr ng-repeat="x in buildings | orderBy:'name'">
-                            <td><a  ui-sref="workspace.viewLevels" ng-click="passBuilding(x)" tooltip-placement="top" tooltip="View Levels"><i class="glyphicon glyphicon-eye-open"></i></a></td>
+                            <td><a  ui-sref="dashboard.viewLevels" ng-click="passBuilding(x)" tooltip-placement="top" tooltip="View Levels"><i class="glyphicon glyphicon-eye-open"></i></a></td>
                               <!--  <td><button onClick="window.open('http://www.google.com.sg}');">{{ x.id }}</button></td>-->
                              <td>{{ x.name }}</td>
                              <td>{{ x.numFloor }}</td>
@@ -44,9 +44,9 @@
                              <td>{{ x.city }}</td>
                              <td>{{ x.postalCode }}</td>
                              <td>
-                             		<a  ui-sref="workspace.updateBuilding" ng-click="updateBuilding(x)" tooltip-placement="top" tooltip="Update Building"><i class="glyphicon glyphicon-pencil"></i></a>
-                             		<a  ui-sref="workspace.deleteBuilding" ng-click="deleteBuilding(x)" tooltip-placement="top" tooltip="Delete Building"><i class="glyphicon glyphicon-trash"></i></a>
-                             		<a  ui-sref="workspace.addLevel" ng-click="addLevel(x)" tooltip-placement="top" tooltip="Add level"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                             		<a  ui-sref="dashboard.updateBuilding" ng-click="updateBuilding(x)" tooltip-placement="top" tooltip="Update Building"><i class="glyphicon glyphicon-pencil"></i></a>
+                             		<a  ui-sref="dashboard.deleteBuilding" ng-click="deleteBuilding(x)" tooltip-placement="top" tooltip="Delete Building"><i class="glyphicon glyphicon-trash"></i></a>
+                             		<a  ui-sref="dashboard.addLevel" ng-click="addLevel(x)" tooltip-placement="top" tooltip="Add level"><i class="glyphicon glyphicon-plus-sign"></i></a>
                              </td>
                              </tr>
 							
@@ -57,7 +57,10 @@
 			</div>
 		</div>
 		<div class="col-md-3">
-		 <a ui-sref="workspace.addBuilding" tooltip-placement="right" tooltip="Add a building"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
-		<!--  	<a ui-sref="workspace.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
+		<br>
+		<br>
+		<br>
+		 <a ui-sref="dashboard.addBuilding" tooltip-placement="right" tooltip="Add a building"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
+		<!--  	<a ui-sref="dashboard.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
 		</div>
 	</div>

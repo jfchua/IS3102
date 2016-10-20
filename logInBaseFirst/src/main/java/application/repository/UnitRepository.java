@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import application.domain.Building;
-import application.domain.Level;
-import application.domain.Unit;
+import application.entity.Building;
+import application.entity.Level;
+import application.entity.Unit;
 
 public interface UnitRepository extends JpaRepository<Unit, Long>{
 

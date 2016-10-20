@@ -69,22 +69,20 @@ public class EventServiceTest extends AbstractTest {
 		unitId = u.getId();
 		unitId2 = u2.getId();
 
-		boolean eventtt = eService.createEvent(org, user, String.valueOf(unitId), "title", "content", "desc", "status", new Date(), new Date(), "path");
-		boolean eventtt2 = eService.createEvent(org, user, String.valueOf(unitId2), "ti2tle", "con2tent", "d2esc", "stat2us", new Date(), new Date(), "pa2th");
-		
+		eService.createEvent(org, user, String.valueOf(unitId), "title", "content", "desc", "status", new Date(), new Date(), "path");
+		eService.createEvent(org, user, String.valueOf(unitId2), "ti2tle", "con2tent", "d2esc", "stat2us", new Date(), new Date(), "pa2th");
+
 
 		Set<Event> resultEvent = eventService.getAllEvents(org);
 		for ( Event e: resultEvent){
 			if ( eventId == -1){
 				eventId = e.getId();
-				System.err.println("id is " + eventId);
 			}
 			else{
 				eventId2 = e.getId();
 				break;
 			}
 		}
-		System.err.println("the 2 ids are " + eventId + "  " + eventId2);
 	}
 
 	@After

@@ -4,7 +4,7 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import application.domain.Maintenance;
+import application.entity.Maintenance;
 public interface MaintenanceRepository extends JpaRepository<Maintenance, Long>{
 	@Query(
 	        value = "SELECT * FROM Maintenance", 

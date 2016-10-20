@@ -42,7 +42,7 @@ app.controller('iconController', function ($scope, $http,shareData) {
 
 
 //ADD ICON
-app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http','$location',function ($scope, Upload, $timeout,$http,$location ) {
+app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http','$state',function ($scope, Upload, $timeout,$http,$state ) {
 	//for selection of icon types in add a icon form
 	
 	
@@ -98,7 +98,7 @@ app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http','$lo
 			$timeout(function () {
 				$scope.picFile.result = response.data;
 				alert('ICON IS CREATED. GOING BACK TO VIEW ICONS...')
-				      $location.path("/viewIcon");
+				      $state.go("dashboard.viewIcon");
 				
 			});
 		}, function (response) {
@@ -117,7 +117,7 @@ app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http','$lo
 
 
 //UPDATE ICON
-app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','shareData','$location', function ($scope, Upload, $timeout,$http ,shareData,$location) {
+app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','shareData','$state', function ($scope, Upload, $timeout,$http ,shareData,$state) {
 	//for selection of icon types in add a icon form
 	//get icon from sharedata
 	
@@ -151,7 +151,7 @@ app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','
 			$timeout(function () {
 				$scope.picFile.result = response.data;
 				alert('Icon updated successfully. Going back to viewing icons')
-				      $location.path("/viewIcon");
+				      $state.go("workspace.viewIcon");
 				
 			});
 		}, function (response) {

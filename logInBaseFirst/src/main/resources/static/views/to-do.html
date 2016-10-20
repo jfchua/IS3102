@@ -1,0 +1,47 @@
+<div class="todo-container panel panel-primary">
+	<div class="panel-heading">
+		<div class="todo-header text-center">
+			<h4><i class="fa fa-tasks"></i>&nbsp;{{ 'todo' | translate }}</h4>
+		</div>
+	</div>
+	<div class="panel-body bg-primary">
+		<div class="todo-body">
+			<div class="todo-list-wrap">
+				<ul class="todo-list">
+					<li ng-repeat="todo in saved track by $index" ng-model="taskItem">
+						<label class="checkbox1 animated" for="{{todo.id}}"> 
+							<input id="{{todo.id}}" type="checkbox" class="" ng-model="todo.done" ng-click="deleteTask(todo.id)">
+							<span></span>
+						</label>
+					<span class="done-false animated">{{todo.task}}&nbsp;<span style="font-size:10px; float: right;"><i class="fa fa-calendar"></i>{{todo.date | date :'mediumDate'}}</span></span>
+						
+					
+						
+					</li>
+				</ul>
+			</div>
+			<form class="form-horizontal todo-from-bottom form-inline">
+			
+				<div class="row">
+				
+					
+					<div class="col-sm-6">
+					<div class="input-group">
+        				<input type="date" ng-model="newTaskDate" class="form-control" placeholder="Enter start date">
+      				 </div>
+      				 </div>
+      				 <div class="col-sm-6">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="New Task" ng-model="newTask" ng-model-instant >
+							<span class="input-group-btn">
+								<button class="btn btn-default" ng-click="addNew(newTask,newTaskDate)" type="submit">{{ 'add' | translate }}</button>
+							</span>
+				    	</div>
+				    	</div>	
+				   		
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+

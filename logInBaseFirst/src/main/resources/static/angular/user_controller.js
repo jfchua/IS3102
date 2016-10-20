@@ -45,7 +45,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 			if (response.name) {
 				console.log("VERIFIED WITH NAME: " + response.name);
 				$rootScope.authenticated = true;
-				$location.path("/workspace");
+				$location.path("/dashboard");
 				Auth.setUser(response);
 				return true;
 			} else {
@@ -78,7 +78,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 	self.login = function() {
 		authenticate(self.credentials, function() {
 			if ($rootScope.authenticated) {
-				$location.path("/workspace");
+				$location.path("/dashboard");
 				console.log("LOGGED IN");
 				self.error = false;
 			} else {

@@ -1,5 +1,5 @@
 //VIEW VENDOR, ADD VENDOR
-app.controller('vendorController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('vendorController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$http.get("//localhost:8443/vendor/viewAllVendors").then(function(response){
@@ -36,7 +36,7 @@ app.controller('vendorController', ['$scope', '$http','$location','$routeParams'
 		send.success(function(){
 
 			alert('Vendor saved successfully, going back to view buildings');
-			$location.path("/viewAllVendors");
+			$state.go("dashboard.viewAllVendors");
 		});
 		send.error(function(data){
 			alert('Error,' + data);
@@ -46,7 +46,7 @@ app.controller('vendorController', ['$scope', '$http','$location','$routeParams'
 }]);	
 //UPDATE A VENDOR, DELETE A VENDOR
 //VIEW VENDOR, ADD VENDOR
-app.controller('updateVendorController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('updateVendorController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.vendor1 = shareData.getData();
 		var dataObj = {			
@@ -85,7 +85,7 @@ app.controller('updateVendorController', ['$scope', '$http','$location','$routeP
 		console.log("UPDATING THE VENDOR");
 		send.success(function(){
 			alert('Vendor successfully updated');
-			$location.path("/viewAllVendors");
+			$state.go("dashboard.viewAllVendors");
 		});
 		send.error(function(data){
 			alert('Error, ' + data);
@@ -103,7 +103,7 @@ app.controller('updateVendorController', ['$scope', '$http','$location','$routeP
 			$http.post("//localhost:8443/vendor/deleteVendor", JSON.stringify(tempObj)).then(function(response){
 				console.log("Cancel the VENDOR");
 				alert('Vendor successfully delete, going back to viewing vendors');
-				$location.path("/viewAllVendors");
+				$state.go("dashboard.viewAllVendors");
 			},function(response){
 				alert('Error deleting vendor, ' + response);
 				//console.log("response is : ")+JSON.stringify(response);
@@ -116,7 +116,7 @@ app.controller('updateVendorController', ['$scope', '$http','$location','$routeP
 }]);	
 
 //DELETE MAINTENANCE
-app.controller('deleteMaintenanceController', ['$scope',  '$timeout','$http','shareData','$location', function ($scope,  $timeout,$http ,shareData,$location) {
+app.controller('deleteMaintenanceController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
 	angular.element(document).ready(function () {
 
 		$scope.maintenance = shareData.getData();
@@ -129,7 +129,7 @@ app.controller('deleteMaintenanceController', ['$scope',  '$timeout','$http','sh
 				console.log("delete the maintenance");
 				alert('MAINTENANCE IS DELETED! GOING BACK TO VIEW MAINTENANCES...');
 				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$location.path("/viewMaintenance");
+				$state.go("dashboard.viewMaintenance");
 			},function(response){
 				alert("DID NOT delete maintenance");
 				//console.log("response is : ")+JSON.stringify(response);
@@ -144,7 +144,7 @@ app.controller('deleteMaintenanceController', ['$scope',  '$timeout','$http','sh
 }])
 
 
-app.controller('addMaintenanceController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
+app.controller('addMaintenanceController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData){
 	console.log("start selecting venue");
 	var getBuild = $http({
 		method  : 'GET',
@@ -329,7 +329,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 
 		send.success(function(){
 			alert('MAINTENANCE IS SAVED! GOING BACK TO VIEW ALL MAINTENANCES');
-			$location.path("/viewMaintenance");
+			$state.go("dashboard.viewMaintenance");
 		});
 		send.error(function(){
 			alert('MAINTENANCE IS NOT SAVED BECAUSE IT IS NOT AVAILABLE!');
@@ -338,7 +338,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$location','$rout
 
 }]);
 
-app.controller('updateMaintenanceController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
+app.controller('updateMaintenanceController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData){
 	angular.element(document).ready(function () {
 		//VIEW MAINTENANCES
 		$scope.maintenance1 = shareData.getData();
@@ -377,7 +377,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 
 		});
 		getBookings.error(function(response){
-			$location.path("/viewMaintenance");
+			$state.go("dashboard.viewMaintenance");
 			console.log('GET Selected Units FAILED! ' + JSON.stringify(response));
 		});		
 
@@ -502,7 +502,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 			shareData.addData(JSON.stringify(response));
 		});
 		send.error(function(response){
-			$location.path("/viewAllEventsEx");
+			$state.go("dashboard.viewAllEventsEx");
 			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
 		});
 	}	
@@ -535,7 +535,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 		console.log("UPDATING THE MAINT");
 		send.success(function(){
 			alert('MAINT IS SAVED! GOING BACK TO VIEW MAINTNANCES');
-			$location.path("/viewMaintenance");
+			$state.go("dashboard.viewMaintenance");
 		});
 		send.error(function(){
 			alert('UPDATING MAINT GOT ERROR!');
@@ -552,7 +552,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$location','$r
 
 
 
-app.controller('maintenanceController',['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('maintenanceController',['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 
 		$scope.data = {};	
@@ -587,7 +587,7 @@ app.controller('maintenanceController',['$scope', '$http','$location','$routePar
 			//$location.path("/viewLevels");
 		});
 		getVendor.error(function(response){
-			$location.path("/viewMaintenance");
+			$state.go("dashboard.viewMaintenance");
 			console.log('GET MAINTENANCE FAILED! ' + JSON.stringify(response));
 		});			
 	}

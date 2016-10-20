@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import application.domain.Event;
-import application.domain.Message;
-import application.domain.User;
+import application.entity.Event;
+import application.entity.Message;
+import application.entity.User;
 
 public interface EventRepository extends JpaRepository<Event, Long>{
 	//find event by title

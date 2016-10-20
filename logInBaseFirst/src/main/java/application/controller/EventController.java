@@ -37,25 +37,25 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.domain.Area;
-import application.domain.BookingAppl;
-import application.domain.ClientOrganisation;
-import application.domain.Event;
-import application.domain.EventCreateForm;
-import application.domain.EventOrganizer;
-import application.domain.Message;
-import application.domain.PaymentPlan;
-import application.domain.Role;
-import application.domain.ToDoTask;
-import application.domain.Unit;
-import application.domain.User;
-import application.domain.validator.EventCreateFormValidator;
+import application.entity.Area;
+import application.entity.BookingAppl;
+import application.entity.ClientOrganisation;
+import application.entity.Event;
+import application.entity.EventCreateForm;
+import application.entity.EventCreateFormValidator;
+import application.entity.EventOrganizer;
+import application.entity.Message;
+import application.entity.PaymentPlan;
+import application.entity.Role;
+import application.entity.ToDoTask;
+import application.entity.Unit;
+import application.entity.User;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
-import application.service.user.EventOrganizerService;
-import application.service.user.EventService;
-import application.service.user.MessageService;
-import application.service.user.UserService;
+import application.service.EventOrganizerService;
+import application.service.EventService;
+import application.service.MessageService;
+import application.service.UserService;
 
 @Controller
 @RequestMapping("/eventManager")
@@ -185,7 +185,7 @@ public class EventController {
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAnyAuthority('ROLE_EVENT')")
+	@PreAuthorize("hasAnyAuthority('ROLE_EVENT','ROLE_PROPERTY')")
 	// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 	// Each object (building) will contain... long id, .
 	@RequestMapping(value = "/viewApprovedEvents",  method = RequestMethod.GET)

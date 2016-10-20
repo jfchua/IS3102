@@ -3,8 +3,8 @@
 <div class="clearfix">
                         <ol class="breadcrumb no-bg no-m-t">
                             <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                            <li><a href="#/workspace">Workspace</a></li>
-                            <li><a ui-sref="workspace.viewBuilding">View Buildings</a></li>
+                            <li><a href="#/dashboard">Workspace</a></li>
+                            <li><a ui-sref="dashboard.viewBuilding">View Buildings</a></li>
                              <li><a>Add Level</a></li>
                         </ol>
 </div>
@@ -44,4 +44,12 @@
 				</div>
 			</div>
         </div>
+         <div class="col-md-3">
+        <growl-notifications>
+        <growl-notification  ng-if="addLevelFail.status" class="growl-primary fading">
+							<a href="#" ng-click="$growlNotification.remove()" class="close"><i class="fa fa-times"></i></a>
+							Level number is out of range</growl-notification>
+
+						</growl-notifications>
+		</div>
 </div>

@@ -9,7 +9,7 @@
 		templateUrl: '/views/mainLogin.html',
 		controller: 'passController'
 	})
-	.when('/workspace',{
+	.when('/dashboard',{
 		templateUrl: '/views/index.html',
 		controller: 'passController',
 	})
@@ -96,9 +96,9 @@ var app = angular.module('app', [ 'ui.router',
                                   'angular-progress-button-styles',
                                   'pascalprecht.translate',
                                   'ui.bootstrap',                          
-                                  'ngSanitize',                       
-                                  '500tech.simple-calendar',
-                                  'ngFileUpload'])
+                                  'ngSanitize',                                                       
+                                  'ngFileUpload',
+                                  'ui.bootstrap.contextMenu'])
 //Declaring Constants
 .constant('USER_ROLES', {
 	all: '*',
@@ -150,15 +150,23 @@ app.config(
 					authorizedRoles: [USER_ROLES.all]
 				}
 			})
-			.state('workspace',{
-				url:'/workspace',
+			.state('dashboard',{
+				url:'/dashboard',
 				templateUrl: 'views/index.html',
 				controller: 'passController',
 				data: {
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('workspace.viewIcon',{
+			.state('dashboard.workspace',{
+				url:'/workspace',
+				templateUrl: 'views/workspace.html',
+				controller: 'workspaceController',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})
+			.state('dashboard.viewIcon',{
 				url: '/viewIcon',
 				templateUrl: '/views/viewIcon.html',
 				controller: 'iconController',
@@ -166,7 +174,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addIcon',{
+			.state('dashboard.addIcon',{
 				url: '/addIcon',
 				templateUrl: '/views/addIcon.html',
 				controller: 'addIconController',
@@ -174,7 +182,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateIcon',{
+			.state('dashboard.updateIcon',{
 				url: '/updateIcon',
 				templateUrl: '/views/updateIcon.html',
 				controller: 'updateIconController',
@@ -182,7 +190,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.addBuilding',{
+			.state('dashboard.addBuilding',{
 				url: '/addBuilding',
 				templateUrl: '/views/addBuilding.html',
 				controller: 'buildingController',
@@ -190,7 +198,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.viewBuilding',{
+			.state('dashboard.viewBuilding',{
 				url: '/viewBuilding',
 				templateUrl: '/views/viewBuilding.html',
 				controller: 'buildingController',
@@ -198,7 +206,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.updateBuilding',{
+			.state('dashboard.updateBuilding',{
 				url: '/updateBuilding',		
 				templateUrl: '/views/updateBuilding.html',
 				controller: 'updateBuildingController',
@@ -206,7 +214,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.deleteBuilding',{
+			.state('dashboard.deleteBuilding',{
 				url: '/deleteBuilding',
 				templateUrl: '/views/deleteBuilding.html',
 				controller: 'deleteBuildingController',
@@ -214,7 +222,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.viewLevels',{
+			.state('dashboard.viewLevels',{
 				url: '/viewLevels',
 				templateUrl: '/views/viewLevels.html',
 				controller: 'viewLevelController',
@@ -222,7 +230,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.addLevel',{
+			.state('dashboard.addLevel',{
 				url: '/addLevel',
 				templateUrl: '/views/addLevel.html',
 				controller: 'addLevelController',
@@ -230,7 +238,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.updateLevel',{
+			.state('dashboard.updateLevel',{
 				url: '/updateLevel',
 				templateUrl: '/views/updateLevel.html',
 				controller: 'levelController',
@@ -238,7 +246,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.deleteLevel',{
+			.state('dashboard.deleteLevel',{
 				url: '/deleteLevel',
 				templateUrl: '/views/deleteLevel.html',
 				controller: 'levelController',
@@ -246,7 +254,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-            .state('/addSpecialRate',{
+            .state('dashboard.addSpecialRate',{
 				url: '/addSpecialRate',
 				templateUrl: '/views/addSpecialRate.html',
 				controller: 'rateController',
@@ -254,7 +262,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.viewAllRates',{
+			.state('dashboard.viewAllRates',{
 				url: '/viewAllRates',
 				templateUrl: '/views/viewAllRates.html',
 				controller: 'rateController',
@@ -262,7 +270,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateSpecialRate',{
+			.state('dashboard.updateSpecialRate',{
 				url: '/updateSpecialRate',		
 				templateUrl: '/views/updateSpecialRate.html',
 				controller: 'updateRateController',
@@ -270,7 +278,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/deleteSpecialRate',{
+			.state('dashboard.deleteSpecialRate',{
 				url: '/deleteSpecialRate',
 				templateUrl: '/views/deleteSpecialRate.html',
 				controller: 'deleteRateController',
@@ -278,7 +286,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/addEvent',{
+			.state('dashboard.addEvent',{
 				url:'/addEvent',
 				templateUrl: '/views/addEvent.html',
 				controller: 'eventController',
@@ -286,7 +294,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.event]
 				}
 			})
-			.state('workspace.uploadCompanyLogo',{
+			.state('dashboard.uploadCompanyLogo',{
 				url:'/uploadCompanyLogo',
 				templateUrl: '/views/uploadCompanyLogo.html',
 				controller: 'logoController',
@@ -295,7 +303,7 @@ app.config(
 				}
 			})
 
-			.state('/messageList',{
+			.state('dashboard.messageList',{
 				url:'/messageList',
 				templateUrl: '/message/message.html',
 				controller: 'ListController',
@@ -303,7 +311,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('/view/:id',{
+			.state('dashboard.view/:id',{
 				url:'/view/:id',
 				templateUrl: '/message/detail.html',
 				controller: 'DetailController',
@@ -311,7 +319,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('workspace.new',{
+			.state('dashboard.new',{
 				url:'/new',
 				templateUrl: '/message/new.html',
 				controller: 'NewMailController',
@@ -319,7 +327,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('workspace.addClientOrg',{
+			.state('dashboard.addClientOrg',{
 				url:'addClientOrg',
 				templateUrl: '/views/addClientOrg.html',
 				controller: 'clientOrgController',
@@ -327,7 +335,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.superadmin]
 				}
 			})	
-			.state('workspace.viewClientOrgs',{
+			.state('dashboard.viewClientOrgs',{
 				url:'/viewClientOrgs',
 				templateUrl: '/views/viewClientOrgs.html',
 				controller: 'viewClientOrgs',
@@ -335,7 +343,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.superadmin]
 				}
 			})
-			.state('workspace.createFloorPlan',{
+			.state('dashboard.createFloorPlan',{
 				url:'/createFloorPlan',
 				templateUrl: '/views/floorPlanAngular.html',
 				controller: 'floorPlanController',
@@ -343,7 +351,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})	
-			.state('workspace.viewFloorPlan',{
+			.state('dashboard.viewFloorPlan',{
  			url:'/viewFloorPlan',
  				templateUrl: '/views/viewFloorPlan.html',
  				controller: 'viewFloorPlanController',
@@ -351,7 +359,7 @@ app.config(
  					authorizedRoles: [USER_ROLES.property]
  				}
  		})
-			.state('workspace.viewMaintenance',{
+			.state('dashboard.viewMaintenance',{
 				url:'/viewMaintenance',	
 				templateUrl: '/views/viewMaintenance.html',
 				controller: 'maintenanceController',
@@ -359,7 +367,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/viewBuildingMtn',{
+			.state('dashboard.viewBuildingMtn',{
 				url:'/viewBuildingMtn',
 				templateUrl: '/views/viewBuildingMtn.html',
 				controller: 'buildingController',
@@ -367,7 +375,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.property]
 				}
 			})
-			.state('/viewLevelsMtn',{
+			.state('dashboard.viewLevelsMtn',{
 				url:'/viewLevelsMtn',
 				templateUrl: '/views/viewLevelsMtn.html',
 				controller: 'buildingController',
@@ -375,7 +383,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.property]
 				}
 			})
-			.state('/viewFloorPlanMtn',{
+			.state('dashboard.viewFloorPlanMtn',{
 				url:'/viewFloorPlanMtn',
 				templateUrl: '/views/viewFloorPlanMtn.html',
 				controller: 'floorPlanController',//hailing test hahahahha
@@ -383,7 +391,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.property]
 				}
 			})
-			.state('workspace.addMaintenance',{
+			.state('dashboard.addMaintenance',{
 				url:'/addMaintenance',	
 				templateUrl: '/views/addMaintenance.html',
 				controller: 'addMaintenanceController',
@@ -391,7 +399,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateMaintenance',{
+			.state('dashboard.updateMaintenance',{
 				url:'/updateMaintenance',
 				templateUrl: '/views/updateMaintenance.html',
 				controller: 'updateMaintenanceController',
@@ -399,7 +407,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/deleteMaintenance',{
+			.state('dashboard.deleteMaintenance',{
 				url:'/deleteMaintenance',
 				templateUrl: '/views/deleteMaintenance.html',
 				controller: 'deleteMaintenanceController',
@@ -407,7 +415,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.viewAllVendors',{
+			.state('dashboard.viewAllVendors',{
 				url:'/viewAllVendors',
 				templateUrl: '/views/viewAllVendors.html',
 				controller: 'vendorController',
@@ -415,7 +423,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.addVendor',{
+			.state('dashboard.addVendor',{
 				url:'/addVendor',	
 				templateUrl: '/views/addVendor.html',
 				controller: 'vendorController',
@@ -423,7 +431,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/updateVendor',{
+			.state('dashboard.updateVendor',{
 				url:'/updateVendor',
 				templateUrl: '/views/updateVendor.html',
 				controller: 'updateVendorController',
@@ -431,7 +439,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('/deleteVendor',{
+			.state('dashboard.deleteVendor',{
 				url:'/deleteVendor',
 				templateUrl: '/views/deleteVendor.html',
 				controller: 'updateVendorController',
@@ -439,7 +447,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
-			.state('workspace.addEventEx',{
+			.state('dashboard.addEventEx',{
 				url:'/addEventEx',
 				templateUrl: '/views/addEventEx.html',
 				//controller: 'eventExternalController',
@@ -448,7 +456,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewBuildingEx',{
+			.state('dashboard.viewBuildingEx',{
 				url:'/viewBuildingEx',
 				templateUrl: '/views/viewBuildingEx.html',
 				controller: 'buildingController',
@@ -456,7 +464,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewLevelsEx',{
+			.state('dashboard.viewLevelsEx',{
 				url:'/viewLevelsEx',
 				templateUrl: '/views/viewLevelsEx.html',
 				controller: 'buildingController',
@@ -464,7 +472,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewFloorPlanEx',{
+			.state('dashboard.viewFloorPlanEx',{
 				url:'/viewFloorPlanEx',
 				templateUrl: '/views/viewFloorPlanEx.html',
 				controller: 'floorPlanController',
@@ -472,7 +480,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/createUnitPlanEx',{
+			.state('dashboard.createUnitPlanEx',{
 				url:'/createUnitPlanEx',
 				templateUrl: '/views/createUnitPlanEx.html',
 				controller: 'areaPlanController',
@@ -480,7 +488,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/updateEventEx',{
+			.state('dashboard.updateEventEx',{
 				url:'/updateEventEx',
 				templateUrl: '/views/updateEventEx.html',
 				//controller: 'eventExternalController',
@@ -489,7 +497,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/cancelEventEx',{
+			.state('dashboard.cancelEventEx',{
 				url:'/cancelEventEx',
 				templateUrl: '/views/cancelEventEx.html',
 				controller: 'deleteEventExController',
@@ -497,7 +505,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('workspace.viewAllEventsEx',{
+			.state('dashboard.viewAllEventsEx',{
 				url:'/viewAllEventsEx',
 				templateUrl: '/views/viewAllEventsEx.html',
 				controller: 'eventExternalController',
@@ -505,7 +513,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewApprovedEventsEx',{
+			.state('dashboard.viewApprovedEventsEx',{
 				url:'/viewApprovedEventsEx',
 				templateUrl: '/views/viewApprovedEventsEx.html',
 				controller: 'viewApprovedEventsController',
@@ -513,7 +521,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
-			.state('/viewToBeApprovedEvents',{
+			.state('dashboard.viewToBeApprovedEvents',{
 				url:'/viewToBeApprovedEvents',
 				templateUrl: '/views/viewToBeApprovedEvents.html',
 				controller: 'viewToBeApprovedEventController',
@@ -521,7 +529,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewBookingEx',{
+			.state('dashboard.viewBookingEx',{
  				url:'/viewBookingEx',
  				templateUrl: '/views/viewBookingEx.html',
  				controller: 'bookingController',
@@ -529,7 +537,7 @@ app.config(
  					authorizedRoles:[USER_ROLES.organiser]
  				}
  			})
-			.state('/viewNotifications',{
+			.state('dashboard.viewNotifications',{
 				url:'/viewNotifications',
 				templateUrl: '/views/viewNotifications.html',
 				controller: 'notificationController',
@@ -537,7 +545,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.event]
 				}
 			})
-			.state('/updateEventStatus',{
+			.state('dashboard.updateEventStatus',{
 				url:'/updateEventStatus',
 				templateUrl: '/views/updateEventStatus.html',
 				controller: 'viewEventDetailsController',
@@ -545,7 +553,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/deleteEvent',{
+			.state('dashboard.deleteEvent',{
 				url:'/deleteEvent',
 				templateUrl: '/views/deleteEvent.html',
 				controller: 'deleteEventController',
@@ -553,7 +561,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('workspace.viewAllEvents',{
+			.state('dashboard.viewAllEvents',{
 				url:'/viewAllEvents',
 				templateUrl: '/views/viewAllEvents.html',
 				controller: 'eventController',
@@ -561,7 +569,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewApprovedEvents',{
+			.state('dashboard.viewApprovedEvents',{
 				url:'/viewApprovedEvents',
 				templateUrl: '/views/viewApprovedEvents.html',
 				controller: 'viewApprovedEventController',
@@ -569,7 +577,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewEventDetails',{
+			.state('dashboard.viewEventDetails',{
 				url:'/viewEventDetails',
 				templateUrl: '/views/viewEventDetails.html',
 				controller: 'viewEventDetailsController',
@@ -577,7 +585,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('/viewEventDetailsApproved',{
+			.state('dashboard.viewEventDetailsApproved',{
 				url:'/viewEventDetailsApproved',
 				templateUrl: '/views/viewEventDetailsApproved.html',
 				controller: 'viewEventDetailsController',
@@ -585,7 +593,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('workspace.viewEventOrganizers',{
+			.state('dashboard.viewEventOrganizers',{
 				url:'/viewEventOrganizers',
 				templateUrl: '/views/viewEventOrganizers.html',
 				controller: 'viewEventOrganiserController',
@@ -593,7 +601,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
-			.state('workspace.viewAllPaymentPlans',{
+			.state('dashboard.viewAllPaymentPlans',{
 				url:'/viewAllPaymentPlans',
 				templateUrl: '/views/viewAllPaymentPlans.html',
 				controller: 'paymentController',
@@ -601,7 +609,7 @@ app.config(
 					authorizedRoles:[USER_ROLES.finance]
 				}
 			})
-			.state('/addPaymentPlan',{
+			.state('dashboard.addPaymentPlan',{
 				url:'/addPaymentPlan',
 				templateUrl: '/views/addPaymentPlan.html',
 				controller: 'paymentController',
@@ -617,7 +625,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.all]
 				}
 			})	
-			.state('workspace.createNewUser',{
+			.state('dashboard.createNewUser',{
 				url:'/createNewUser',
 				templateUrl: '/views/createUser.html',
 				controller: 'createNewUserController',
@@ -625,7 +633,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})	
-			.state('workspace.viewUserList',{
+			.state('dashboard.viewUserList',{
 				url:'/viewUserList',
 				templateUrl: '/views/viewUserList.html',
 				controller: 'viewUserList',
@@ -633,7 +641,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.admin]
 				}
 			})	
-			.state('workspace.viewAuditLog',{
+			.state('dashboard.viewAuditLog',{
 				url:'/viewAuditLog',
 				templateUrl: '/views/viewAuditLog.html',
 				controller: 'auditLogController',
@@ -641,7 +649,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.admin]
 				}
 			})
-			.state('/viewUserProfile',{
+			.state('dashboard.viewUserProfile',{
 				url:'/viewUserProfile',
 				templateUrl: '/views/viewUserProfile.html',
 				controller: 'userProfileController',
@@ -649,7 +657,7 @@ app.config(
 					authorizedRoles: [USER_ROLES.user]
 				}
 			})
-			.state('/editUserProfile',{
+			.state('dashboard.editUserProfile',{
 				url:'/editUserProfile',
 				templateUrl: '/views/editUserProfile.html',
 				controller: 'userProfileController',
@@ -757,7 +765,7 @@ app.config(function ($httpProvider) {
 
 
 
-		/*workspace*/
+		/*dashboard*/
 		app.controller('MyController', function ($scope, $http) {
 			var urlBase = "https://localhost:8443/user";
 			function findAllNotifications() {
@@ -1067,7 +1075,7 @@ app.controller('viewUserList', ['$scope','$http','$location',
 		toEdit.success(function(response){
 
 			alert('Successfully updated the user');
-			$location.path("/workspace");
+			$location.path("/dashboard");
 		});
 		toEdit.error(function(response){
 			alert('Error, ');
@@ -1244,30 +1252,150 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 
 
 
-
-
 /*1. TO DO LIST*/
 app.controller('taskController', function($scope, $http, $route) {
-	$scope.today = new Date();
-	$scope.saved = localStorage.getItem('taskItems');
-	$scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
+		//CONFIG CALENDAR
+	   $scope.uiConfig = {
+			      calendar:{
+			        width: 600,
+			        editable:false,
+			        header:{
+			          left: 'month agendaWeek agendaDay',
+			          center: 'title',
+			          right: 'today prev,next'
+			        },
+			        eventClick: $scope.alertEventOnClick,
+			        eventDrop: $scope.alertOnDrop,
+			        eventResize: $scope.alertOnResize
+			      }
+			    };
+	   $scope.eventSources=[];
+	   //RETRIEVE EVENTS
+	   //$scope.eventsFormated=[];
+	   var getEvents = function(){
+			//var buildings ={name: $scope.name, address: $scope.address};
+			$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
+				$scope.events = response.data;
+				//console.log("DISPLAY ALL EVENT fir event manager");
+				//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
+				//ADD EVENTS INTO EVENTSOURCES OF CALENDAR
+				
+				if($scope.events.length!=0){
+					var index=0;
+				    angular.forEach($scope.events, function() {
+
+				         var event=[{start: $scope.events[index].event_start_date,
+				        	 		end: $scope.events[index].event_end_date,			         
+				        		 	title:$scope.events[index].event_title,
+				        		 	allDay: false,
+				        		 	color: 'SeaGreen'
+				         			}];
+				         
+				        $scope.eventSources.push(event);
+				        	index = index + 1;
+				    });
+				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
+				   // console.log( $scope.eventSources);
+					}
+			},function(response){
+				//alert(response);
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)	
+			
+		}
+	   
+	   
+	   //RETRIEVE MAINTENANCES
+	   //$scope.eventsFormated=[];
+	   var getMaints = function(){
+			//var buildings ={name: $scope.name, address: $scope.address};
+			$http.get("//localhost:8443/maintenance/viewMaintenance").then(function(response){
+				$scope.maints = response.data;
+				if($scope.maints.length!=0){
+					var index=0;
+				    angular.forEach($scope.maints, function() {
+
+				         var maint=[{start: $scope.maints[index].start,
+				        	 		end: $scope.maints[index].end,			         
+				        		 	title:$scope.maints[index].description,
+				        		 	allDay: false,
+				        		 	color: 'IndianRed'
+				         			}];
+				         
+				        $scope.eventSources.push(maint);
+				        	index = index + 1;
+				    });
+				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
+				   // console.log( $scope.eventSources);
+					}
+			},function(response){
+				//alert(response);
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)	
+			
+		}
+	   
+		//var today = new Date();
+		//var next = new Date();
+		//next.setDate(next.getDate() + 3); 
+		//TEST FOR USING CALENDAR
+		//$scope.eventSources =[[{start:today,title:"haha"}]];
+		//$scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);
+		
+		// console.log($scope.eventSources);
+		 $scope.today = new Date();
+		
+		 $scope.saved = localStorage.getItem('taskItems');
+		 $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
 			JSON.parse($scope.saved) : [ {description: "Why not add a task?", date: $scope.today, complete: false}];
 			localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-
+			
+			//GET TODOS
+			//$scope.todosFormated=[];
 			var getTdList = function(){$http({
 				method: 'GET',
 				url: 'https://localhost:8443/todo/getToDoList'
 			}).success(function (result) {
 				$scope.saved = result;
+				//CLEAR EVENTSOURCES OF CALENDAR
+				//$scope.eventSources.length=0;
+				//$scope.eventSources=[$scope.eventsFormated];
+				//console.log($scope.eventSources);
+				//ADD TODOS TO EVENTSOURCES OF CALENDAR
+				if($scope.saved.length!=0){
+				var index=0;
+			    angular.forEach($scope.saved, function() {
+
+			         var todo=[{start: $scope.saved[index].date,
+			        		 	title:$scope.saved[index].task,
+			        		 	className: ['newtask'],
+			        		 	editable:false,
+			        		 	color: 'SteelBlue'
+			         			}];
+			        		 
+			        $scope.eventSources.push(todo);
+			         
+			         
+			        	index = index + 1;
+			    });
+			  //  $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
+			   // console.log( $scope.eventSources);
+				}
+				
 			}).error(function(result){
 				//do something
 				console.log("ERROR GETTING TODO LIST");
 			})
 			}
-
-
 			//$scope.save();
+			//GET TODOS			
 			getTdList();
+			//GET EVENTS
+			getEvents();
+			//GET MAINTENANCES
+			getMaints();
 			$scope.newTask = null;
 			$scope.newTaskDate = null;
 			$scope.categories = [
@@ -1278,17 +1406,36 @@ app.controller('taskController', function($scope, $http, $route) {
 			                     {name: 'Other'}
 			                     ];
 			$scope.newTaskCategory = $scope.categories;
-			$scope.addNew = function () {
+			$scope.addNew = function (newTask,newTaskDate) {
+				//console.log(newTask);
+				//console.log(newTaskDate);
+				//console.log($scope.newTask);
+				//console.log($scope.newTaskDate);
+				//$scope.saved.push({task:newTask, date: newTaskDate});
 				$http({
 					method : "POST",
 					url : "https://localhost:8443/todo/addToDoTask",
-					data: {task:$scope.newTask, date: $scope.newTaskDate}
+					data: {task:newTask, date: newTaskDate}
 				}).then(function mySuccess(response) {
 					console.log("ADDED NEW TO DO LIST");
-					getTdList();
-
-					$route.reload();
-					console.log("refresh page")
+					$http({
+						method: 'GET',
+						url: 'https://localhost:8443/todo/getToDoList'
+					}).success(function (result) {
+						//$scope.saved = result;
+						//GET TODOS	
+						$scope.eventSources.length=0;
+						
+						getEvents();
+						getTdList();
+						getMaints();
+					}).error(function(result){
+						//do something
+						console.log("ERROR GETTING TODO LIST");
+					})
+				
+					//$route.reload();
+					//console.log("refresh page")
 
 
 
@@ -1301,7 +1448,7 @@ app.controller('taskController', function($scope, $http, $route) {
 				$scope.newTaskDate = '';
 				$scope.newTaskCategory = $scope.categories;
 				localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-
+				
 			};
 			$scope.deleteTask = function (id) {
 				$http({
@@ -1310,16 +1457,31 @@ app.controller('taskController', function($scope, $http, $route) {
 					data: id
 				}).then(function mySuccess(response) {
 					console.log("Successfully delete task with Id: " + id);
-					getTdList();
+					$scope.saved = [];
+					$http({
+						method: 'GET',
+						url: 'https://localhost:8443/todo/getToDoList'
+					}).success(function (result) {
+						//$scope.saved = result;		
+						$scope.eventSources.length=0;
+						
+						getEvents();
+						getTdList();
+						getMaints();
+					}).error(function(result){
+						//do something
+						console.log("ERROR GETTING TODO LIST");
+					})
 				}, function myError(response) {
 					alert(response);
-				});
-				getTdList();
-
+				});		
+				//getTdList();
+			
+				
 
 			};
 });
-
+/*
 app.controller('DemoCtrl', function ($scope, $http) {
 	$scope.selectedNotifications = null;
 	$scope.testNotifications = [];
@@ -1337,7 +1499,7 @@ app.controller('DemoCtrl', function ($scope, $http) {
 		alert(result);
 	})
 });
-
+*/
 //2. ALERT NOTIFICATIONS
 
 app.factory('datfactory', function ($http, $q){
@@ -1463,12 +1625,21 @@ app.controller('AlertDemoCtrl', function ($scope, datfactory, $http){
           })*/
 		$scope.alerts = [];
 		$scope.getId = [];
+		$scope.alertsForTopNav=[];
 		for(var key in arrItems){
 
 			$scope.alerts.push(arrItems[key].senderName + ": "  + arrItems[key].subject + " - " + arrItems[key].message);
+			$scope.alertsForTopNav.push({'senderName':arrItems[key].senderName,
+											'subject':arrItems[key].subject,
+											'message':arrItems[key].message
+										});
+			
 			$scope.getId.push(arrItems[key].id);
 			console.log($scope.alerts);
+			
+			//$scope.numberOfNotification=$scope.alerts.length;
 		}
+		$scope.numberOfNotification=$scope.alerts.length;
 
 	});
 	$scope.closeAlert = function(index) {
@@ -1600,7 +1771,82 @@ app.controller('CollapseDemoCtrl', function ($scope) {
   $scope.isCollapsed = false;
 });
 
+app.directive('todolist',function(){
+		return {
+	    templateUrl:'views/to-do.html?v='+window.app_version,
+	    restrict: 'E',
+	    replace: true,
+    	controller: function($scope){
 
+			setTimeout(function(){
+    			$('.todo-list-wrap').perfectScrollbar();
+			}, 100);
+
+        }
+	}
+});
+app.controller('calendarCtrl', function ($scope,$http) {
+	var today = new Date();
+	var next = new Date();
+	next.setDate(next.getDate() + 3); 
+
+	   //$scope.eventSources =[[{start:today,title:"haha"}]];
+	  // $scope.eventSources.push([{start:today,end:next,title:"haha",allDay: false}]);
+	   //console.log($scope.eventSources);
+	   $scope.uiConfig = {
+			      calendar:{
+			        width: 600,
+			        editable: true,
+			        header:{
+			          left: 'month agendaWeek agendaDay',
+			          center: 'title',
+			          right: 'today prev,next'
+			        },
+			        eventClick: $scope.alertEventOnClick,
+			        eventDrop: $scope.alertOnDrop,
+			        eventResize: $scope.alertOnResize
+			      }
+			    };
+	    
+	});
+
+app.directive('popOverForm', function($compile, $templateCache, $q, $http) {
+
+	  var getTemplate = function(contentType) {
+	    var def = $q.defer();
+
+	    var template = '';
+	    switch (contentType) {
+	      case 'user':
+	        template = $templateCache.get("views/updateUnitTemplate.html");
+	        if (typeof template === "undefined") {
+	          $http.get("views/updateUnitTemplate.html")
+	            .success(function(data) {
+	              $templateCache.put("views/updateUnitTemplate.html", data);
+	              def.resolve(data);
+	            });
+	        }else {
+	               def.resolve(template);
+	            }
+	        break;
+	    }
+	    return def.promise;
+	  }
+	  return {
+	    restrict: "A",
+	    link: function(scope, element, attrs) {
+	      getTemplate("user").then(function(popOverContent) {
+	        var options = {
+	          content: popOverContent,
+	          placement: "right",
+	          html: true,
+	          date: scope.date
+	        };
+	        $(element).popover(options);
+	      });
+	    }
+	  };
+	});
 //MESSAGE
 
 //Message
@@ -1696,7 +1942,7 @@ app.controller('NewMailController', function($scope, $location, $http){
 		});
 
 		//alert('message sent');
-		$location.path('/workspace');
+		$location.path('/dashboard');
 	};
 });
 
@@ -2541,7 +2787,7 @@ app.controller('clientOrgController', ['$scope', '$http','$location', function (
 		console.log("SAVING THE CLIENT ORG");
 		send.success(function(data){
 			alert('Client organisation successfully saved' );
-			$location.path("/workspace");
+			$location.path("/dashboard");
 		});
 		send.error(function(data){
 			alert(data);
@@ -2654,7 +2900,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location',
 		toEdit.success(function(response){
 			$scope.Profiles = response;
 			alert('Succesfully updated the client organisation');
-			$location.path("/workspace");
+			$location.path("/dashboard");
 		});
 		toEdit.error(function(response){
 			alert('Error, ');

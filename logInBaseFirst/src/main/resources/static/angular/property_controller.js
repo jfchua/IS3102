@@ -25,7 +25,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 		console.log("SAVING THE BUILDING");
 		send.success(function(){
 			alert('Building has been saved successfully');
-			$state.go("workspace.viewBuilding");
+			$state.go("dashboard.viewBuilding");
 			
 		});
 		send.error(function(data){
@@ -89,7 +89,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 			//$location.path("/viewLevels");
 		});
 		getLevels.error(function(response){
-			$state.go("workspace.viewBuilding");
+			$state.go("dashboard.viewBuilding");
 			console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
 		});
 	};	
@@ -189,10 +189,8 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 		console.log("UPDATING THE BUILDING");
 		send.success(function(){
 			alert('Building successfully updated');
-			//$location.path("workspace.viewBuilding");
-			 //$state.go("workspace.viewBuilding", {});
-			//$state.go('^.viewBuilding');
-			$state.go('workspace.viewBuilding');
+			
+			$state.go('dashboard.viewBuilding');
 		});
 		send.error(function(data){
 			alert('Error, ' + data);
@@ -223,7 +221,7 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 				alert('Building successfully delete. Going back to view buildings...');
 				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
 				//$location.path("/viewBuilding");
-				 $state.go("workspace.viewBuilding");
+				 $state.go("dashboard.viewBuilding");
 				
 			},function(response){
 				alert("Error, " + response);
@@ -268,7 +266,7 @@ app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$
 			//$location.path("/viewLevels");
 		});
 		getLevels.error(function(response){
-			$state.go("workspace.viewBuilding");
+			$state.go("dashboard.viewBuilding");
 			console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
 		});
 		var url = "https://localhost:8443/level/viewLevels";
@@ -313,14 +311,15 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state', fu
 		send.success(function(){
 			alert('LEVEL IS SAVED!');
 			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-			      $state.go("workspace.viewBuilding");
+			      $state.go("dashboard.viewBuilding");
 			
 		});
 		send.error(function(){
-			alert('SAVING LEVEL GOT ERROR! LEVEL NUMBER IS OUT OF RANGE');
+			$scope.addLevelFail={status:true};
+			//alert('SAVING LEVEL GOT ERROR! LEVEL NUMBER IS OUT OF RANGE');
 		});
 	};
-
+	$scope.addLevelFail={status:false};
 
 
 }])
@@ -382,7 +381,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$state', funct
 		send.success(function(){
 			shareData.addData(building); 
 			alert('LEVEL '+$scope.level.levelNum+' IS UPDATED! GOING BACK TO VIEW LEVELS');
-			$state.go("workspace.viewLevels");
+			$state.go("dashboard.viewLevels");
 			//add go back to view levels when ready
 		});
 		send.error(function(){
@@ -405,7 +404,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$state', funct
 				shareData.addData(building); 
 				console.log(building);
 				alert('LEVEL '+$scope.level.levelNum+' IS DELETED! GOING BACK TO VIEW LEVELS');
-				$state.go("workspace.viewLevels");
+				$state.go("dashboard.viewLevels");
 			},function(response){
 				alert("DID NOT DELETE LEVEL");
 				//console.log("response is : ")+JSON.stringify(response);
@@ -451,7 +450,7 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 		console.log("SAVING THE RATE");
 		send.success(function(){
 			alert('RATE IS SAVED! GOING BACK TO VIEW RATES');
-			$state.go("workspace.viewAllRates");
+			$state.go("dashboard.viewAllRates");
 			
 		});
 		send.error(function(){
@@ -501,7 +500,7 @@ $scope.updateSpecialRate = function(rate){
 			shareData.addData(JSON.stringify(response));
 		});
 		getRate.error(function(response){
-			$state.go("workspace.viewAllRates");
+			$state.go("dashboard.viewAllRates");
 			console.log('GET RATE FAILED! ' + JSON.stringify(response));
 		});
 
@@ -573,7 +572,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 		console.log("UPDATING THE RATE");
 		send.success(function(){
 			alert('RATE IS SAVED!');
-			$state.go("workspace.viewAllRates");
+			$state.go("dashboard.viewAllRates");
 		});
 		send.error(function(){
 			alert('UPDATING RATE GOT ERROR!');
@@ -603,7 +602,7 @@ app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData
 				console.log("Delete the RATE");
 				alert('SPECIAL RATE IS DELETED! GOING BACK TO VIEW ALL RATES...');
 				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$state.go("workspace.viewAllRates");
+				$state.go("dashboard.viewAllRates");
 				
 			},function(response){
 				alert("DID NOT DELETE");

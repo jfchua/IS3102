@@ -33,14 +33,14 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.domain.AuditLog;
-import application.domain.ClientOrganisation;
-import application.domain.Message;
-import application.domain.Role;
-import application.domain.ToDoTask;
-import application.domain.User;
-import application.domain.Vendor;
-import application.domain.validator.UserCreateFormValidator;
+import application.entity.AuditLog;
+import application.entity.ClientOrganisation;
+import application.entity.Message;
+import application.entity.Role;
+import application.entity.ToDoTask;
+import application.entity.User;
+import application.entity.UserCreateFormValidator;
+import application.entity.Vendor;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.InvalidEmailException;
@@ -51,8 +51,8 @@ import application.repository.AuditLogRepository;
 import application.repository.ClientOrganisationRepository;
 import application.repository.RoleRepository;
 import application.repository.UserRepository;
-import application.service.user.ClientOrganisationService;
-import application.service.user.UserService;
+import application.service.ClientOrganisationService;
+import application.service.UserService;
 
 @Controller
 public class UserController {
@@ -746,21 +746,49 @@ public class UserController {
 				String client=clientObj.getOrganisationName();
 				System.out.println("start view");
 				Set<Role> roles=usr.getRoles();
-				String name=principal.getName();
+				JSONArray rolsArray = new JSONArray();
+				
+				String userName=principal.getName();
+				String name=usr.getName();
 				String roleString="";
 				for(Role role:roles){
 					roleString+=role.getName()+" ";
+					JSONObject roleJson = new JSONObject();
+					String roleString1=role.getName();
+					if(!roleString1.equals("ROLE_USER")){
+						roleString1=(roleString1.substring(5,roleString1.length())).toLowerCase();
+						if(roleString1.equals("superadmin")){
+							roleString1="Algattas admin";
+						}else if(roleString1.equals("admin")){
+							roleString1="IT admin";
+						}else if(roleString1.equals("event")){
+							roleString1="managing events";
+						}else if(roleString1.equals("property")){
+							roleString1="managing property";
+						}else if(roleString1.equals("finance")){
+							roleString1="managing finance";
+						}else if(roleString1.equals("ticketing")){
+							roleString1="managing tickets";
+						}else if(roleString1.equals("exteve")){
+							roleString1="organising events";
+						}
+					roleJson.put("role", roleString1);
+					rolsArray.add(roleJson);
+					}
 				}
 				JSONObject bd = new JSONObject(); 
 				bd.put("client", client); 
 				bd.put("role", roleString); 
 				bd.put("name", name); 
-				System.out.println("Returning building id : " + bd.toString());
+				bd.put("userName", userName);
+				bd.put("roles", rolsArray);
+				//bd.put("roles", roles); 
+				System.out.println("Returning user info : " + bd.toString());
 				return bd.toString();
 			}else{
 				JSONObject err = new JSONObject(); 
 				err.put("error", "error"); 
-				System.out.println("Returning building id : " + err.toString());
+				System.out.println("Returning user info error : " + err.toString());
 				return err.toString();
 
 			}

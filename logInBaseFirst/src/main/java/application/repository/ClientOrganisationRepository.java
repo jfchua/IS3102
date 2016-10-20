@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import application.domain.ClientOrganisation;
+import application.entity.ClientOrganisation;
 
 public interface ClientOrganisationRepository extends JpaRepository<ClientOrganisation, Long> {
 

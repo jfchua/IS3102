@@ -24,16 +24,17 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.reflect.TypeToken;
-import application.domain.Building;
-import application.domain.ClientOrganisation;
-import application.domain.Icon;
-import application.service.user.BuildingService;
-import application.domain.Level;
-import application.domain.Unit;
-import application.domain.User;
+
+import application.entity.Building;
+import application.entity.ClientOrganisation;
+import application.entity.Icon;
+import application.entity.Level;
+import application.entity.Unit;
+import application.entity.User;
 import application.exception.UserNotFoundException;
-import application.service.user.LevelService;
-import application.service.user.UserService;
+import application.service.BuildingService;
+import application.service.LevelService;
+import application.service.UserService;
 
 @Controller
 @RequestMapping("/level")

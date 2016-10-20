@@ -1,5 +1,5 @@
 //VIEW VENDOR, ADD VENDOR
-app.controller('paymentController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('paymentController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$http.get("//localhost:8443/payment/viewAllPaymentPlans").then(function(response){
@@ -36,7 +36,7 @@ app.controller('paymentController', ['$scope', '$http','$location','$routeParams
 		console.log("SAVING THE PAYMENT");
 		send.success(function(){		
 			alert('PAYMENT IS SAVED! GOING BACK TO VIEW BUILDINGS');
-			$location.path("/viewAllPaymentPlans");
+			$state.go("dashboard.viewAllPaymentPlans");
 		});
 		send.error(function(){
 			alert('SAVING PAYMENT GOT ERROR!');
