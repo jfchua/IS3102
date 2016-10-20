@@ -96,10 +96,10 @@
         </div>
         <div class="col-md-3">
         <growl-notifications>
-        <growl-notification  ng-if="avail == 'AVAILABLE!'" class="growl-primary fading">
+        <growl-notification  ng-if="avail == 'AVAILABLE!'" class="growl-success alert-success fading">
 							<a href="#" ng-click="$growlNotification.remove()" class="close"><i class="fa fa-times"></i></a>
 							Selected units are available</growl-notification>
-		<growl-notification ng-if="avail == 'NOT AVAILABLE!'" class="growl-warning">
+		<growl-notification ng-if="avail == 'NOT AVAILABLE!'" class="growl-error">
 							<a href="#" ng-click="$growlNotification.remove()" class="close"><i class="fa fa-times"></i></a>
 							Selected units are not available
 						</growl-notification>

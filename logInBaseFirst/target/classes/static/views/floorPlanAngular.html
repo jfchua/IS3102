@@ -74,17 +74,17 @@
      
         <th>Description</th>
          
-  <tr ng-repeat="x in units track by $index" >
-  <td><a  ng-click="remove(x,$index)">Delete</a> </td>
-    <td>{{ x.id }} </td>
-     <td>{{x.square.left}}</td>
-     <td>{{x.square.top}}</td>
-     <td>{{x.square.height}}</td>
-     <td>{{x.square.width}}</td>
-        <td> {{x.square.color }} </td>
-    <td>{{ x.square.type }} </td>
-    <td><input type="text" name="unitNumber" ng-model="x.unitNumber" required> </td>
-      <td> <input type="text" name="description" ng-model="x.description" > </td>
+  <tr ng-repeat="unit in units track by $index" >
+  <td><a  ng-click="remove(unit)">Delete</a> </td>
+    <td>{{ unit.id }} </td>
+     <td>{{unit.square.left}}</td>
+     <td>{{unit.square.top}}</td>
+     <td>{{unit.square.height}}</td>
+     <td>{{unit.square.width}}</td>
+        <td> {{unit.square.color }} </td>
+    <td>{{ unit.square.type }} </td>
+    <td><input type="text" name="unitNumber" ng-model="unit.unitNumber" required> </td>
+      <td> <input type="text" name="description" ng-model="unit.description" > </td>
   </tr>
 </table>
 

@@ -343,6 +343,14 @@ app.config(
 					authorizedRoles: [USER_ROLES.superadmin]
 				}
 			})
+			.state('dashboard.viewDataVisual',{
+				url:'/viewDataVisual',
+				templateUrl: '/views/viewDataVisual.html',
+				controller: 'ChartCtrl',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})
 			.state('dashboard.createFloorPlan',{
 				url:'/createFloorPlan',
 				templateUrl: '/views/floorPlanAngular.html',
@@ -1809,6 +1817,93 @@ app.controller('calendarCtrl', function ($scope,$http) {
 			    };
 	    
 	});
+//FOR MOCK UP DATA VISUAL//NEED TO DELETE LATER
+app.controller('ChartCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
+	$scope.menuOptions = [
+	                      
+	                              // Dividier
+	                        ['All 6 Levels', function ($itemScope, $event, modelValue, text, $li) {
+	                           
+	                        }],
+	                      null, 
+	                        ['Level 1', function ($itemScope, $event, modelValue, text, $li) {
+	                           
+	                        }],
+	                        ['Level 2', function ($itemScope, $event, modelValue, text, $li) {                     
+	                           
+	                        }],
+	                        ['Level 3', function ($itemScope, $event, modelValue, text, $li) {                      
+	                            
+	                        }],
+	                        ['Level 4', function ($itemScope, $event, modelValue, text, $li) {                      
+	                           
+	                        }],
+	                        ['Level 5', function ($itemScope, $event, modelValue, text, $li) {                        
+	                            
+	                        }],
+	                        ['Level 6', function ($itemScope, $event, modelValue, text, $li) {                  
+	                            
+	                        }],
+	                    ];
+	
+	$scope.xaxis=[
+                  
+                  // null,        // Dividier
+                  
+            
+                   ['Units', function ($itemScope, $event, modelValue, text, $li) {
+                      
+                   }],
+                   ['Time', function ($itemScope, $event, modelValue, text, $li) {                     
+                      
+                   }],
+               ];
+    $scope.line = {
+	    labels: ['1', '2', '3', '4', '5', '6'],
+	          data: [
+	      [65, 59, 80, 81, 56, 55, 80]
+	      
+	    ],
+	    colours: ['#3CA2E0','#F0AD4E','#7AB67B','#D9534F','#3faae3'],
+	    onClick: function (points, evt) {
+	      console.log(points, evt);
+	    }
+
+    };
+
+    $scope.bar = {
+	    labels: ['2006', '2007', '2008', '2009', '2010', '2011', '2012'],
+		data: [
+		   [65, 59, 80, 81, 56, 55, 40],
+		   [28, 48, 40, 19, 86, 27, 90]
+		],
+		colours: ['#3CA2E0','#F0AD4E','#7AB67B','#D9534F','#3faae3']
+    	
+    };
+
+    $scope.donut = {
+    	labels: ["Download Sales", "In-Store Sales", "Mail-Order Sales"],
+    	      data: [300, 500, 100],
+    	      colours: ['#3CA2E0','#F0AD4E','#7AB67B','#D9534F','#3faae3']
+    };
+
+     $scope.pie = {
+    	labels : ["Download Sales", "In-Store Sales", "Mail-Order Sales"],
+    	      data : [300, 500, 100],
+    	      colours: ['#3CA2E0','#F0AD4E','#7AB67B','#D9534F','#3faae3']
+    };
+
+
+    $scope.datapoints=[{"x":10,"top-1":10,"top-2":15},
+                       {"x":20,"top-1":100,"top-2":35},
+                       {"x":30,"top-1":15,"top-2":75},
+                       {"x":40,"top-1":50,"top-2":45}];
+    $scope.datacolumns=[{"id":"top-1","type":"spline"},
+                        {"id":"top-2","type":"spline"}];
+    $scope.datax={"id":"x"};
+
+    
+}]);
 
 app.directive('popOverForm', function($compile, $templateCache, $q, $http) {
 

@@ -1,0 +1,133 @@
+<div class="clearfix">
+                        <ol class="breadcrumb no-bg no-m-t">
+                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                            <li><a href="#/dashboard">Workspace</a></li>
+                            <li><a>View Data Visualisation</a></li>
+                        </ol>
+</div>
+
+<div class="row">
+<div class="col-lg-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Line Chart	  
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+				
+		<div class=" col-lg-2">
+		
+		<div class="panel panel-primary">
+
+				<div class="panel-heading">
+				<h3 class="panel-title text-center">Select Units	  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				</div>
+				<div class="panel panel-info">
+				
+				<div class="panel-heading">
+					<h3 class="panel-title text-center">Building 1		  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				</div>
+				<div class="panel panel-info">
+				
+				<div class="panel-heading">
+					<h3 class="panel-title text-center" context-menu="menuOptions">All 6 levels		  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				</div>
+				<div class="panel panel-info">
+				
+				<div class="panel-heading">
+					<h3 class="panel-title text-center" >Units		  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				</div>
+				<div class="panel panel-primary">
+
+				<div class="panel-heading">
+				<h3 class="panel-title text-center">Select Time Period	  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				</div>
+		</div>
+		
+		<div class="col-lg-9" id="line-chart" ng-controller="ChartCtrl">
+			<div class="panel panel-primary">
+
+				<div class="panel-heading">
+					<h3 class="panel-title">View Vacancy Rate	  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+
+				</div>
+
+				<div class="panel-body">
+					<div><canvas id="line" class="chart chart-line chart-xl" data="line.data" labels="line.labels" click="line.onClick" series="line.series" colours="line.colours"></canvas></div>
+				</div>
+			</div>
+
+		</div>			
+		<div class="col-lg-1">
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+	<button type="button" class="btn btn-primary btn-circle btn-lg" context-menu="xaxis"><i class="glyphicon glyphicon-retweet"></i></button>
+		</div>
+				</div>
+			</div>
+
+		</div>
+		
+	</div>

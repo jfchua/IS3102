@@ -656,7 +656,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state) 
     
   }
   */
-	$scope.remove = function(unit,index) { 
+	$scope.remove = function(unit) { 
 		
 		  var dataObj = {
 			        id: levelId,
