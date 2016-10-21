@@ -48,10 +48,7 @@ public class Unit {
 	private String description;
 
 	
-	@Column(name = "availability", nullable = true)
-	@JsonIgnore
-	private ArrayList<Date> avail = new ArrayList<Date>();
-
+	
 	@ManyToOne//(cascade=CascadeType.ALL)
 	@JsonIgnore
 	private Level level;
@@ -102,10 +99,7 @@ public class Unit {
 	}*/
 	
 
-	public void createList(){
-		if(avail == null)
-			avail = new ArrayList<Date>();			
-	}
+
 
 	public Unit() {
 
@@ -180,13 +174,6 @@ public class Unit {
 		this.unitNumber = unitNumber;
 	}
 
-	public ArrayList<Date> getAvail() {
-		return avail;
-	}	
-
-	public void setAvail(ArrayList<Date> avail) {
-		this.avail = avail;
-	}
 
 /*
 	public Set<Maintenance> getMaintenances() {

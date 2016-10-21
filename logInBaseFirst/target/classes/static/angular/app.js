@@ -1303,7 +1303,7 @@ app.controller('taskController', function($scope, $http, $route) {
 				        	index = index + 1;
 				    });
 				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
-				   // console.log( $scope.eventSources);
+				    console.log( $scope.eventSources);
 					}
 			},function(response){
 				//alert(response);

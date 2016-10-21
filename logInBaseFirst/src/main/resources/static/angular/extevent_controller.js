@@ -466,7 +466,67 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
 		});
 	};
-	
+	  $scope.uiConfig = {
+		      calendar:{
+		        width: 300,
+		        editable:false,
+		        header:{
+		          left: 'month agendaWeek agendaDay',
+		          center: 'title',
+		          right: 'today prev,next'
+		        },
+		        eventClick: $scope.alertEventOnClick,
+		        eventDrop: $scope.alertOnDrop,
+		        eventResize: $scope.alertOnResize
+		      }
+		    };
+
+	  
+	  $scope.haha=[];
+	   //RETRIEVE EVENTS
+	   //$scope.eventsFormated=[];
+	   var getEvents = function(){
+			
+			$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
+				$scope.events = response.data;
+				//console.log("DISPLAY ALL EVENT fir event manager");
+				//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
+				//ADD EVENTS INTO EVENTSOURCES OF CALENDAR
+				
+				if($scope.events.length!=0){
+					var index=0;
+				    angular.forEach($scope.events, function() {
+
+				         var event=[{start: $scope.events[index].event_start_date,
+				        	 		end: $scope.events[index].event_end_date,			         
+				        		 	title:'Booked',
+				        		 	allDay: false,
+				        		 	color: 'IndianRed',
+				        		 	overlap:false
+				         			}];
+				         
+				        $scope.haha.push(event);
+				        	index = index + 1;
+				    });
+				    
+				  var today = new Date();
+					var end = new Date(); 
+					var start= new Date();
+				    start.setDate(today.getDate() + 5)
+				    end.setDate(today.getDate() + 5)
+				   // $scope.haha.push([{start:start,end:end,title:"IT Show 2017",allDay: true,editable:true,overlap:false}]);//need to delete this line
+					   
+				    console.log( $scope.haha);
+					}
+			},function(response){
+				//alert(response);
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)	
+			
+		}
+	   getEvents();
+	   
 	
 }]);
 
