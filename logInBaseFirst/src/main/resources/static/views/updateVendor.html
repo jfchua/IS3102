@@ -1,30 +1,46 @@
-
-	<div ng-cloak ng-controller="updateVendorController as updateVendorCtrl" >
-      <div class="container">
-        <div class="content" >
-        <h1>Update building</h1>
-          <a href="/#/viewAllVendors"><button>Back to view vendors</button></a>
-        <p class="tagline">Update your vendor here</p>
-        <form>
-         <div class="form-group">
-               <label for="exampleInput">Vendor Email</label>
-               <input type="email" ng-model="vendor.email" class="form-control"  placeholder="Enter vendor email">
-        </div>
-        <div class="form-group">
-               <label for="exampleInput">Vendor Name</label>
-               <input type="text" ng-model="vendor.name" class="form-control"  placeholder="Enter name">
-        </div>
-        <div class="form-group">
-               <label for="exampleInput">Vendor Description</label>
-               <input type="text" ng-model="vendor.description" class="form-control"  placeholder="Enter description">
-        </div>
-        <div class="form-group">
-               <label for="exampleInput">Vendor Contact</label>
-               <input type="text" ng-model="vendor.contact" class="form-control" placeholder="Enter contact">
-       </div>
-      <a href = "/#/viewAllVendors"><button ng-click = "updateVendor()"><input type="submit" value="Submit"></button></a> 
-      </form>      
-        </div>
-      </div>
+        <div ng-cloak ng-controller="updateVendorController as updateVendorCtrl" >
+        <div class="clearfix">
+                            <ol class="breadcrumb no-bg no-m-t">
+                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                                 <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                            <li><a ui-sref="dashboard.viewAllVendors">View Vendors</a></li>
+                                 <li><a>Upate Vendor</a></li>
+                            </ol>
     </div>
+            <div class="col-md-9">
+                <div class="panel panel-primary">
 
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Update vendor		  
+                            <div class="panel-control pull-right">
+                                <a class="panelButton"><i class="fa fa-refresh"></i></a>
+                                <a class="panelButton"><i class="fa fa-minus"></i></a>
+                                <a class="panelButton"><i class="fa fa-remove"></i></a>
+                            </div>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+            <form>
+             <div class="form-group">
+                   <label for="exampleInput">Vendor Email</label>
+                   <input type="email" ng-model="vendor.email" class="form-control underline"  placeholder="Enter vendor email">
+            </div>
+            <div class="form-group">
+                   <label for="exampleInput">Vendor Name</label>
+                   <input type="text" ng-model="vendor.name" class="form-control underline"  placeholder="Enter name">
+            </div>
+            <div class="form-group">
+                   <label for="exampleInput">Vendor Description</label>
+                   <input type="text" ng-model="vendor.description" class="form-control underline"  placeholder="Enter description">
+            </div>
+            <div class="form-group">
+                   <label for="exampleInput">Vendor Contact</label>
+                   <input type="text" ng-model="vendor.contact" class="form-control " placeholder="Enter contact">
+           </div>
+
+                 <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "updateVendor()">Submit</button> &nbsp;
+          </form>      
+           </div>
+                </div>
+            </div>
+    </div>

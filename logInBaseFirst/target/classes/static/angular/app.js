@@ -1981,7 +1981,7 @@ app.controller('DetailController', function($scope, $routeParams){
 	$scope.message = messages[$routeParams.id];
 });
 
-app.controller('NewMailController', function($scope, $location, $http){
+app.controller('NewMailController', function($scope, $state, $http){
 	var getMsg = $http({
 		method  : 'GET',
 		url     : 'https://localhost:8443/getUsersToSendTo',
@@ -2037,7 +2037,7 @@ app.controller('NewMailController', function($scope, $location, $http){
 		});
 
 		//alert('message sent');
-		$location.path('/dashboard');
+		$state.go('dashboard.workspace');
 	};
 });
 

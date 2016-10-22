@@ -1,13 +1,31 @@
-
 	<div ng-cloak ng-controller="NewMailController">
-    
-    <h1> NEW MESSAGE</h1>
-		<form class="form-horizontal" ng-submit="send()">
+    <div class="clearfix">
+                        <ol class="breadcrumb no-bg no-m-t">
+                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                            <li><a href="#/dashboard">Workspace</a></li>
+                             <li><a>Add Message</a></li>
+                        </ol>
+        </div>
+    <div class="col-md-9">
+			<div class="panel panel-primary">
+
+				<div class="panel-heading">
+					<h3 class="panel-title">Add building		  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+                <div class="panel-body">
+                    
+                    <form class="form-horizontal" ng-submit="send()">
 
 			<fieldset>
 				<div class="form-group">
 					<label for="subject" class="control-label">Subject</label> <input
-						type="text" class="form-control" ng-model="mail.subject"
+						type="text" class="form-control underline" ng-model="mail.subject"
 						ng-binding="newSubject" required />
 				</div>
 
@@ -32,7 +50,7 @@
 
 				<div class="form-group">
 					<label for="message">Message</label>
-					<textarea name="message" ng-model="message" class="form-control"
+					<textarea name="message" ng-model="message" class="form-control underline"
 						rows="5"></textarea>
 				</div>
 
@@ -42,6 +60,10 @@
 
 			</fieldset>
 		</form>
-
-		<br /> <a class="btn btn-primary pull-right" href="#/workspace">Back to workspace</a>
+                    
+                    
+                </div>
+        </div>
+        </div>
+		
 </div>

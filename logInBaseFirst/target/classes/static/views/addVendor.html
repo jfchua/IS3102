@@ -1,34 +1,52 @@
-
+        
 	<div ng-cloak ng-controller="vendorController as vendorCtrl" ng-submit="addVendor()">
-      <div class="container">
-        <div class="content" >
-        <h1>Add a new vendor</h1>
-          <a href="/#/viewAllVendors"><button>Back to view vendors</button></a>
-        <p class="tagline">Add your vendor here</p>
+        
+        <div class="clearfix">
+                        <ol class="breadcrumb no-bg no-m-t">
+                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                            <li><a ui-sref="dashboard.viewAllVendors">View Vendors</a></li>
+                             <li><a>Add vendor</a></li>
+                        </ol>
+        </div>
+        
+        
+      
+		<div class="col-md-9">
+			<div class="panel panel-primary">
+
+				<div class="panel-heading">
+					<h3 class="panel-title">Add vendor		  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body">
         <form>
         <div class="form-group">
                <label for="exampleInput">Vendor Email</label>
-               <input type="email" ng-model="vendor.email" class="form-control"  placeholder="Enter vendor email" required>
+               <input type="email" ng-model="vendor.email" class="form-control underline"  placeholder="Enter vendor email" required>
         </div>
         <div class="form-group">
                <label for="exampleInput">Vendor Name</label>
-               <input type="text" ng-model="vendor.name" class="form-control"  placeholder="Enter name" required>
+               <input type="text" ng-model="vendor.name" class="form-control underline"  placeholder="Enter name" required>
         </div>
         <div class="form-group">
                <label for="exampleInput">Vendor Description</label>
-               <input type="text" ng-model="vendor.description" class="form-control"  placeholder="Enter description">
+               <input type="text" ng-model="vendor.description" class="form-control underline"  placeholder="Enter description">
         </div>
         <div class="form-group">
                <label for="exampleInput">Vendor Contact</label>
-               <input type="text" ng-model="vendor.contact" class="form-control" placeholder="Enter contact">
+               <input type="text" ng-model="vendor.contact" class="form-control underline" placeholder="Enter contact">
        </div>
        <!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
-       <a href = "/#/viewAllVendors"><button ng-click = "addVendor()"><input type="submit" value="Submit"></button></a>
-       <br>
-       <a href="#/viewAllVendors">View Vendor List</a>
+             <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "addVendor()">Submit</button> &nbsp;
         </form>
+            
+				</div>
+			</div>
         </div>
-      </div>
-    </div>
-		
-
+</div>
