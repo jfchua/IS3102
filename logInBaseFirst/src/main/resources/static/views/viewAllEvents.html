@@ -1,5 +1,5 @@
 
-	<div class="row">
+
         <div class="clearfix">
                         <ol class="breadcrumb no-bg no-m-t">
                             <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
@@ -7,7 +7,19 @@
                             <li><a>View Events</a></li>
                         </ol>
         </div>
-        <div class="col-md-6" ng-cloak ng-controller="viewToBeApprovedEventController as viewToBeApprovedEventCtrl">
+        
+         
+		
+	
+
+ 
+
+<div class="col-lg-9">
+
+  <uib-tabset active="activeJustified" justified="true" class="panel">
+    
+     <uib-tab index="0" heading="To-be-Approved Events" class="panel panel-primary panel-title">
+     		<div ng-cloak ng-controller="viewToBeApprovedEventController as viewToBeApprovedEventCtrl">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">To-be-approved Events  
@@ -44,7 +56,9 @@
                 </div>
 			</div>
 		</div>
-         <div class="col-md-6" ng-cloak ng-controller="viewApprovedEventController as viewApprovedEventCtrl" >
+     </uib-tab>
+    <uib-tab index="1" heading="Approved Events" class="panel panel-primary panel-title">
+    	<div ng-cloak ng-controller="viewApprovedEventController as viewApprovedEventCtrl" >
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">Approved Events  
@@ -84,8 +98,93 @@
                 </div>
 			</div>
 		</div>
-		
-	</div>
+    </uib-tab>
+    <uib-tab index="2" heading="Successful Events" class="panel panel-primary panel-title">
+    <div ng-cloak ng-controller="successfulEventController as successfulEventCtrl" >
+     	<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Successful Events  
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+                    <table class="table table-hover">
+                        <thead>
 
- 
-      
+                           <tr>
+                           <th><i></i> ID </th>
+                           <th><i></i> Event Title </th>
+                           <th><i></i> Status </th>
+                           <!-- <th>Action</th>-->
+                           <th>Detail</th>
+                           </tr>
+                        </thead>
+                         <tbody>
+                             <tr ng-repeat="x in events | filter: eventFilter.event ">
+                             <td>{{ x.id }}</td>
+                             <td>{{ x.event_title }}</td>
+                             <td>{{ x.approvalStatus }}</td>
+                             <!--<td><a ng-model="myValue" href="/#/viewEventDetails" ng-click="getEvent(x.id)">View Details</a></td>-->
+                               <td> <a  ui-sref="dashboard.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                            </td>
+                               </tr>
+                             </tbody>
+                          </table>
+                </div>
+			</div>
+		</div>
+
+    
+    </uib-tab>
+    <uib-tab index="3" heading="Canceled Events" class="panel panel-primary panel-title">
+<div ng-cloak ng-controller="canceledEventController as canceledEventCtrl" >
+    	<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Successful Events  
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+                    <table class="table table-hover">
+                        <thead>
+
+                           <tr>
+                           <th><i></i> ID </th>
+                           <th><i></i> Event Title </th>
+                           <th><i></i> Status </th>
+                           <!-- <th>Action</th>-->
+                           <th>Action</th>
+                           </tr>
+                        </thead>
+                         <tbody>
+                             <tr ng-repeat="x in events | filter: eventFilter.event ">
+                             <td>{{ x.id }}</td>
+                             <td>{{ x.event_title }}</td>
+                             <td>{{ x.approvalStatus }}</td>
+                             <!--<td><a ng-model="myValue" href="/#/viewEventDetails" ng-click="getEvent(x.id)">View Details</a></td>-->
+                             <td><a  ui-sref="dashboard.deleteEvent" ng-click="passEvent(x)" tooltip-placement="top" tooltip="Delete Building"><i class="glyphicon glyphicon-trash"></i></a>
+                            <a  ui-sref="dashboard.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                              </td>
+                             </tr>
+                             </tbody>
+                          </table>
+                </div>
+			</div>
+ </div>
+
+	</uib-tab>
+  </uib-tabset>
+
+</div>
