@@ -1,9 +1,26 @@
+	<div ng-cloak ng-controller="auditLogController as auditLogCtrl">
+        <div class="clearfix">
+                        <ol class="breadcrumb no-bg no-m-t">
+                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                            <li><a >Generate Audit Log</a></li>
+                        </ol>
+</div>
+		<div class="col-md-9">
+			<div class="panel panel-primary">
 
-	<div ng-cloak ng-controller="auditLogController as auditLogCtrl"
-		ng-submit="submit()">
-		<div class="container">
-			<div class="content">
-				<h1>Generate Audit Log</h1>
+				<div class="panel-heading">
+					<h3 class="panel-title">Add building		  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body">
+                    
+                    
 				<form>
 					<!-- <div class="form-group">
                <label for="exampleInput">Username</label>
@@ -14,7 +31,7 @@
 					<div class="form-group">
 						<label for="recipient" class="control-label">User Email ( Default all selected ) </label> <select
 							name="email" ng-model="currentlySelected"
-							ng-change="selectRecipient()" class="form-control" required>
+							ng-change="selectRecipient()" class="form-control underline" required>
 							<option ng-repeat="contact in contacts">{{contact}}</option>
 						</select>
 					</div>
@@ -22,7 +39,7 @@
 					<div class="form-group">
 						<label for="recipient" class="control-label">System ( Default all selected )</label> <select
 							name="email" ng-model="currentlySelectedSystem"
-							ng-change="selectSystem()" class="form-control" required>
+							ng-change="selectSystem()" class="form-control underline" required>
 							<option>Notification</option>
 							<option>Property</option>
 							<option>User Management</option>
@@ -42,9 +59,14 @@
 					</div>
 
 					<!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
-					<input type="submit" value="Submit">
-				</form>
+				 <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "submit()">Submit</button> &nbsp;
+                 
+                    </form>
+                    
+                    
+                    
+                    
+				</div>
 			</div>
-		</div>
-	</div>
-
+        </div>
+</div>

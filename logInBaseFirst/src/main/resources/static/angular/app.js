@@ -1028,7 +1028,20 @@ app.controller('viewUserList', ['$scope','$http','$location',
 
 
 
-
+	$scope.checkRole =function(role,profile){
+		     var roles=profile.roles;
+			          
+		     var index = 0;
+			  angular.forEach(roles, function(item){             
+			   if(role == roles[index].name){	
+					  return true;
+			   }else{
+				   index = index + 1;
+			   }
+			  });      
+		
+			
+	} ;
 
 
 
@@ -1047,6 +1060,7 @@ app.controller('viewUserList', ['$scope','$http','$location',
 		fetch.success(function(response){
 
 			$scope.Profiles = response;
+			console.log($scope.Profiles);
 		//	alert('FETCHED ALL USERS SUCCESS!!! ' + JSON.stringify(response));
 		});
 		fetch.error(function(response){
