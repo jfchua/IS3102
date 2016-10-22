@@ -21,14 +21,14 @@
       </table>
         <form>
         <label>
-          <input type="radio" ng-model="event.event_approval_status" value="CANCELLED">
+          <input type="radio" ng-model="event.approvalStatus" value="CANCELLED">
              cancelled
         </label><br/>
         <label>
-          <input type="radio" ng-model="event.event_approval_status" value="SUCCESSFUL">
+          <input type="radio" ng-model="event.approvalStatus" value="SUCCESSFUL">
              successful
         </label><br/>
-        <div>currently selected: {{event.event_approval_status}}</div>
+        <div>currently selected: {{event.approvalStatus}}</div>
          <button ng-click="updateEventStatus()"><input type="submit" value="Submit"></button>
         <!-- <button ng-click = "updateEventStatus()"><input type="submit" value="Submit"></button>-->
          <button><a href = "/#/viewAllEvents">GO BACK TO VIEW ALL EVENTS</a></button>

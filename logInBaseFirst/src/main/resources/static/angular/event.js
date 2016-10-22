@@ -91,7 +91,7 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 				event_title: $scope.event1.event_title,
 				event_content: $scope.event1.event_content,
 				event_description: $scope.event1.event_description,
-				event_approval_status: $scope.event1.event_approval_status,						
+				event_approval_status: $scope.event1.approvalStatus,						
 				event_start_date: $scope.event1.event_start_date,				
 				event_end_date: $scope.event1.event_end_date,
 				//event_period: $scope.event1.event_period,
@@ -111,7 +111,7 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 				event_title: $scope.event1.event_title,
 				event_content: $scope.event1.event_content,
 				event_description: $scope.event1.event_description,
-				event_approval_status: $scope.event1.event_approval_status,						
+				event_approval_status: $scope.event1.approvalStatus,						
 				event_start_date: $scope.event1.event_start_date,				
 				event_end_date: $scope.event1.event_end_date,
 				//event_period: $scope.event1.event_period,
@@ -204,7 +204,7 @@ app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareDat
 }])
 
 //VIEW APPROVED EVENTS
-app.controller('viewApprovedEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('viewApprovedEventController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService',function ($scope, $http,$state, $routeParams, shareData,ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};
 		$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
@@ -224,6 +224,59 @@ app.controller('viewApprovedEventController', ['$scope', '$http','$state','$rout
 	$scope.passEvent = function(event){
 		shareData.addData(event);
 	}
+	$scope.complexResult = null;
+	 $scope.showAModal = function(event) {
+		 console.log(event);
+		    // Just provide a template url, a controller and call 'showModal'.
+		    ModalService.showModal({
+		    	
+		    	      templateUrl: "views/updateEventStatusTemplate.html",
+		    	      controller: "updateEventStatusController",
+		    	      inputs: {
+		    	        title: "Update Event Status",
+		    	        event:event
+		    	      }
+		    	    }).then(function(modal) {
+		    	      modal.element.modal();
+		    	      modal.close.then(function(result) {
+		    	       $scope.event  = result.event;
+		    	       $scope.updateEventStatus();
+		    	      });
+		    	    });
+
+		  };
+		  
+		  $scope.dismissModal = function(result) {
+			    close(result, 200); // close, but give 200ms for bootstrap to animate
+			 };
+			 
+		$scope.updateEventStatus = function(){
+					console.log("Start updating");
+					$scope.data = {};
+					//$scope.event = JSON.parse(shareData.getData());
+					console.log($scope.event.id);
+					var dataObj = {				
+							id: $scope.event.id,
+							event_approval_status: $scope.event.approvalStatus,
+					};		
+					console.log(dataObj.event_approval_status);
+					console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+
+					var send = $http({
+						method  : 'POST',
+						url     : 'https://localhost:8443/eventManager/updateEventStatus',
+						data    : dataObj //forms user object
+					});
+
+					console.log("UPDATING THE EVENT");
+					send.success(function(){
+						alert('Successfully saved event status, going back to viewing all approved events');
+						$state.go("dashboard.viewApprovedEvents");
+					});
+					send.error(function(data){
+						alert(data);
+					});
+				};
 
 }]);
 
@@ -255,7 +308,7 @@ app.controller('viewToBeApprovedEventController', ['$scope', '$http','$state','$
 }]);
 
 //VIEW EVENT DETAILS OF TO BE APPROVED EVENTS / APPROVED EVENTS AND UPDATE STATUS
-app.controller('viewEventDetailsController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('viewEventDetailsController', ['$scope', '$http','$state','$routeParams','shareData',function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		
 	
@@ -267,7 +320,7 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$state','$route
 					event_title: $scope.event1.event_title,
 					event_content: $scope.event1.event_content,
 					event_description: $scope.event1.event_description,
-					event_approval_status: $scope.event1.event_approval_status,						
+					event_approval_status: $scope.event1.approvalStatus,						
 					event_start_date: $scope.event1.event_start_date,				
 					event_end_date: $scope.event1.event_end_date,
 					//event_period: $scope.event1.event_period,
@@ -291,7 +344,7 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$state','$route
 		$http.post("//localhost:8443/eventManager/approveEvent", JSON.stringify(tempObj)).then(function(response){
 			console.log("Approve the EVENT");
 			alert("Successfully approved event, going back to viewing to be approved events");
-			$state.go("dashboard.viewToBeApprovedEvents");
+			$state.go("dashboard.viewAllEvents");
 		},function(response){
 			alert(response);
 			//console.log("response is : ")+JSON.stringify(response);
@@ -306,7 +359,7 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$state','$route
 		console.log($scope.event.id);
 		var dataObj = {				
 				id: $scope.event.id,
-				event_approval_status: $scope.event.event_approval_status,
+				event_approval_status: $scope.event.approvalStatus,
 		};		
 		console.log(dataObj.event_approval_status);
 		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
@@ -326,9 +379,45 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$state','$route
 			alert(data);
 		});
 	};
-
 }]);
 
+
+//UPDATE EVENT STATUS MODAL
+app.controller('updateEventStatusController', ['$scope', '$element', 'title', 'close', 'event',
+                                                function($scope, $element, title, close,event) {
+	
+		//UPDATE MODAL
+
+		  $scope.title = title;
+		  $scope.event=event;
+		  console.log(title);
+		  console.log(close);
+		  console.log($element);
+		  //  This close function doesn't need to use jQuery or bootstrap, because
+		  //  the button has the 'data-dismiss' attribute.
+		  $scope.close = function() {
+		 	  close({
+		      event:$scope.event
+		    }, 500); // close, but give 500ms for bootstrap to animate
+		  };
+
+		  //  This cancel function must use the bootstrap, 'modal' function because
+		  //  the doesn't have the 'data-dismiss' attribute.
+		  $scope.cancel = function() {
+
+		    //  Manually hide the modal.
+		    $element.modal('hide');
+		    
+		    //  Now call close, returning control to the caller.
+		    close({
+		    	event:$scope.event
+		    }, 500); // close, but give 500ms for bootstrap to animate
+		  };
+
+		
+
+	
+}])
 //VIEW EVENT ORGANISERS
 app.controller('viewEventOrganiserController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
 	angular.element(document).ready(function () {
