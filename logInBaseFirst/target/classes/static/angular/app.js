@@ -98,7 +98,8 @@ var app = angular.module('app', [ 'ui.router',
                                   'ui.bootstrap',                          
                                   'ngSanitize',                                                       
                                   'ngFileUpload',
-                                  'ui.bootstrap.contextMenu'])
+                                  'ui.bootstrap.contextMenu',
+                                  'angularModalService'])
 //Declaring Constants
 .constant('USER_ROLES', {
 	all: '*',
