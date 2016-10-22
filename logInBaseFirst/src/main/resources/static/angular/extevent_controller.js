@@ -9,7 +9,7 @@ app.controller('eventExternalController', ['$scope', '$http','$state','$routePar
 	$http.get("//localhost:8443/event/viewAllEvents").then(function(response){
 		$scope.events = response.data;
 		console.log("DISPLAY ALL EVENT");
-		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
+		console.log($scope.events);
 
 	},function(response){
 		alert("did not view all events");
@@ -453,6 +453,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		//$scope.avail = "";
 		send.success(function(response){
 			$scope.totalRent = response;
+			$scope.totalRentAfter = response*1.07;
 			console.log($scope.totalRent);
 		});
 		send.error(function(response){
@@ -571,9 +572,9 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			var dataObj = {			
 					units:$scope.event1.units,
 					event_title: $scope.event1.event_title,
-					event_content: $scope.event1.event_content,
+					event_content: $scope.event1.event_type,
 					event_description: $scope.event1.event_description,
-					event_approval_status: $scope.event1.event_approval_status,						
+					event_approval_status: $scope.event1.approvalStatus,						
 					event_start_date: $scope.event1.event_start_date,						
 					event_end_date: $scope.event1.event_end_date,
 					filePath: $scope.event1.filePath,
@@ -582,7 +583,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			$scope.event = angular.copy($scope.event1)
 			console.log($scope.event1);
 			var url = "https://localhost:8443/event/updateEvent";
-			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
+			console.log($scope.event1.event_title);
 			
 			//GET SELECTED UNITS
 			var id=$scope.event.id;
@@ -770,7 +771,32 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 		});
 	}
 
+	$scope.checkRent = function(){
+		console.log("start checking rent");
+		$scope.data = {};
 
+		var dataObj = {
+				units: $scope.selectedBookingsUnits,
+				event_start_date: ($scope.event.event_start_date).toString(),
+				event_end_date: ($scope.event.event_end_date).toString(),
+		};
+		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/event/checkRent',
+			data    : dataObj //forms user object
+		});
+		//$scope.avail = "";
+		send.success(function(response){
+			$scope.totalRent = response;
+			$scope.totalRentAfter = response*1.07;
+			console.log($scope.totalRent);
+		});
+		send.error(function(response){
+			$scope.totalRent = response;
+			console.log($scope.totalRent);
+		});
+	}
 
 	$scope.updateEvent = function(){
 		console.log("Start updating");
