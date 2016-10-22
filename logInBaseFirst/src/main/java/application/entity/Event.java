@@ -223,4 +223,12 @@ public class Event {
 			this.paymentStatus = paymentStatus;
 		}
 
+		public EventType getEvent_type() {
+			return event_type;
+		}
+
+		public void setEvent_type(EventType event_type) {
+			this.event_type = event_type;
+		}
+		
 }

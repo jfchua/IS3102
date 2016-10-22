@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -41,10 +42,11 @@ public class ClientOrganisation {
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Building> buildings = new HashSet<Building>();
 	
-
-
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<SpecialRate> specialRates = new HashSet<SpecialRate>();
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	private PaymentPolicy paymentPolicy;
 
 
 	@Column(name = "logoFilePath",nullable = true,unique=true)
@@ -93,6 +95,18 @@ public class ClientOrganisation {
 
 
 	
+	public PaymentPolicy getPaymentPolicy() {
+		return paymentPolicy;
+	}
+
+
+
+	public void setPaymentPolicy(PaymentPolicy paymentPolicy) {
+		this.paymentPolicy = paymentPolicy;
+	}
+
+
+
 	public String getLogoFilePath() {
 		return logoFilePath;
 	}
