@@ -657,14 +657,15 @@ public class EventExternalServiceImpl implements EventExternalService {
 			return 0.00;
 		Double rent = 0.00;
 		long diff = event_end_date.getTime() - event_start_date.getTime();
-		long duration = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + 1;
+		long duration = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+		Double duration1 = Double.valueOf(duration);
 		for(int i = 0; i<units.length; i ++){
 			long uId = Long.valueOf(units[i]);
 			Optional<Unit> unit1 = unitRepository.getUnitById(uId);
 			if(unit1.isPresent()){
 				Unit unit = unit1.get();
 		        Double rentU = unit.getRent();
-		        rent += duration*rentU;
+		        rent += duration1*rentU;
 			}
 		}
 		return rent;
