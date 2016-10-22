@@ -22,6 +22,9 @@ public class PaymentPolicy {
 	 @Column(name = "subsequent_number")
 	 private int subsequentNumber;
 	 
+	 @Column(name = "due_days")
+	 private int dueDays;
+	 
 	 public PaymentPolicy(){
 		 super();
 	 }
@@ -45,4 +48,14 @@ public class PaymentPolicy {
 	public Long getId() {
 		return id;
 	}
+
+	public int getNumOfDueDays() {
+		return dueDays;
+	}
+
+	public void setNumOfDueDays(int numOfDueDays) {
+		this.dueDays = numOfDueDays;
+	}
+	
+	
 }

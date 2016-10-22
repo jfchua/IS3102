@@ -130,8 +130,9 @@ public class PaymentPolicyController {
 	            System.out.println(rate);
 	            System.out.println("rate2");
 				int period = ((Long)jsonObject.get("subsequentNumber")).intValue();
-				//String description = (String)jsonObject.get("description");			
-				boolean bl = paymentPolicyService.createPaymentPolicy(client, rate, period);
+				//String description = (String)jsonObject.get("description");	
+				int due = ((Long)jsonObject.get("dueDays")).intValue();
+				boolean bl = paymentPolicyService.createPaymentPolicy(client, rate, period, due);
 				System.out.println("adding rate " + rate);
 				if(!bl){
 					System.out.println("invalid rate");
@@ -193,7 +194,8 @@ public class PaymentPolicyController {
 			            System.out.println(rate);
 			            System.out.println("rate2");
 						int period = ((Long)jsonObject.get("subsequentNumber")).intValue();
-						boolean bl = paymentPolicyService.updatePaymentPolicy(client, rateId, rate, period);
+						int due = ((Long)jsonObject.get("dueDays")).intValue();
+						boolean bl = paymentPolicyService.updatePaymentPolicy(client, rateId, rate, period, due);
 						System.out.println("editing rate " + rateId);
 						if(!bl){
 							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
