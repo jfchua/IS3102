@@ -77,10 +77,11 @@ public class PaymentPolicyController {
 			ClientOrganisation client = usr.get().getClientOrganisation();
 		    System.out.println("start view");
 			PaymentPolicy payment = client.getPaymentPolicy();
-			System.out.println(payment.getDepositRate());   
+			//System.out.println(payment.getDepositRate());   
 			Gson gson2 = new Gson();
 			String json = gson2.toJson(payment);
-		    System.out.println(json);
+		    if(payment != null)
+			   System.out.println(json);
 		    return new ResponseEntity<PaymentPolicy>(payment, HttpStatus.OK);
 			}
 			catch (Exception e){
@@ -125,10 +126,10 @@ public class PaymentPolicyController {
 				System.out.println(client.getOrganisationName());
 				Object obj = parser.parse(rateJSON);
 				JSONObject jsonObject = (JSONObject) obj;
-	            Double rate = (Double)jsonObject.get("deposit_rate");
+	            Double rate = (Double)jsonObject.get("depositRate");
 	            System.out.println(rate);
 	            System.out.println("rate2");
-				int period = (Integer)jsonObject.get("subsequent_number");
+				int period = ((Long)jsonObject.get("subsequentNumber")).intValue();
 				//String description = (String)jsonObject.get("description");			
 				boolean bl = paymentPolicyService.createPaymentPolicy(client, rate, period);
 				System.out.println("adding rate " + rate);
@@ -174,9 +175,9 @@ public class PaymentPolicyController {
 				//This method takes in a JSON format which contains an object with 5 attributes
 				//Long/String id, int levelNum, int length, int width, String filePath
 				//Call $httpPost(Url,JSONData);
-				@RequestMapping(value = "/updateRate", method = RequestMethod.POST)
+				@RequestMapping(value = "/updatePaymentPolicy", method = RequestMethod.POST)
 				@ResponseBody
-				public ResponseEntity<Void> updateRate(@RequestBody String rateJSON, HttpServletRequest rq) throws UserNotFoundException {
+				public ResponseEntity<Void> updatePaymentPolicy(@RequestBody String rateJSON, HttpServletRequest rq) throws UserNotFoundException {
 					Principal principal = rq.getUserPrincipal();
 					Optional<User> usr = userService.getUserByEmail(principal.getName());
 					if ( !usr.isPresent() ){
@@ -188,10 +189,10 @@ public class PaymentPolicyController {
 						Object obj = parser.parse(rateJSON);
 						JSONObject jsonObject = (JSONObject) obj;
 						long rateId = (Long)jsonObject.get("id");
-						Double rate = (Double)jsonObject.get("deposit_rate");
+						Double rate = (Double)jsonObject.get("depositRate");
 			            System.out.println(rate);
 			            System.out.println("rate2");
-						int period = (Integer)jsonObject.get("subsequent_number");
+						int period = ((Long)jsonObject.get("subsequentNumber")).intValue();
 						boolean bl = paymentPolicyService.updatePaymentPolicy(client, rateId, rate, period);
 						System.out.println("editing rate " + rateId);
 						if(!bl){
