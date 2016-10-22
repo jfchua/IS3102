@@ -23,7 +23,7 @@ public class PaymentPolicy {
 	 private int subsequentNumber;
 	 
 	 @Column(name = "due_days")
-	 private int dueDays;
+	 private int numOfDueDays;
 	 
 	 public PaymentPolicy(){
 		 super();
@@ -50,11 +50,11 @@ public class PaymentPolicy {
 	}
 
 	public int getNumOfDueDays() {
-		return dueDays;
+		return numOfDueDays;
 	}
 
 	public void setNumOfDueDays(int numOfDueDays) {
-		this.dueDays = numOfDueDays;
+		this.numOfDueDays = numOfDueDays;
 	}
 	
 	
