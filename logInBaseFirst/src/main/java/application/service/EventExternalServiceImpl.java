@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,10 @@ import application.entity.MaintenanceSchedule;
 import application.entity.Role;
 import application.entity.Unit;
 import application.entity.User;
+import application.enumeration.ApprovalStatus;
+import application.enumeration.EventType;
+import application.enumeration.IconType;
+import application.enumeration.PaymentStatus;
 import application.repository.BookingApplRepository;
 import application.repository.EventOrganizerRepository;
 import application.repository.EventRepository;
@@ -87,7 +92,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 		}
 		if(doesHave){
 			for(Event ev: allEvents){
-				if(ev.getEvent_approval_status().equals("approved"))
+				if(String.valueOf(ev.getApprovalStatus()).equals("APPROVED"))
 					approvedEvent.add(ev);
 			}
 			return approvedEvent;
@@ -149,7 +154,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 						Unit unit1 = unitNew.get();		
 						unitsNew.add(unit1);
 						int count = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
-						int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+						int count2 = maintenanceScheduleRepository.getNumberOfMaintenanceSchedules(Long.valueOf(units[i]), d1, d2);
 						System.out.println(count);
 						if((count != 0)||(count2!=0)){
 							isAvailable = false;
@@ -218,9 +223,9 @@ public class EventExternalServiceImpl implements EventExternalService {
 					System.out.println(event.getBookings().size());
 					event.setEvent_title(event_title);
 					System.out.println("after title");
-					event.setEvent_content(event_content);
+					event.setEventType(EventType.valueOf(event_content));
 					event.setEvent_description(event_description);
-					event.setEvent_approval_status(status);
+					event.setApprovalStatus(ApprovalStatus.valueOf(status));
 					event.setEvent_start_date(event_start_date);
 					event.setEvent_end_date(event_end_date);
 					event.setFilePath(filePath);
@@ -339,7 +344,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 					return false;
 				}
 				int count = bookingApplRepository.getNumberOfBookings(uId, d1, d2);
-				int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+				int count2 = maintenanceScheduleRepository.getNumberOfMaintenanceSchedules(uId, d1, d2);
 				if((count != 0)||(count2 != 0)){
 					isAvailable = false;
 					break;
@@ -372,12 +377,13 @@ public class EventExternalServiceImpl implements EventExternalService {
 				}
 			}
 			event.setEvent_title(event_title);
-			event.setEvent_content(event_content);
+			event.setEventType(EventType.valueOf(event_content));
 			event.setEvent_description(event_description);
-			event.setEvent_approval_status(status);
+			event.setApprovalStatus(ApprovalStatus.valueOf(status));
 			event.setEvent_start_date(event_start_date);
 			event.setEvent_end_date(event_end_date);
 			event.setFilePath(filePath);
+			event.setPaymentStatus(PaymentStatus.valueOf("NA"));
 			event.setBookings(bookings);
 			eventRepository.save(event);
 			System.out.println("event ID: "+event.getId());
@@ -627,5 +633,40 @@ public class EventExternalServiceImpl implements EventExternalService {
 			return false;
 		}
 		return isAvailable;
+	}
+
+	@Override
+	public Double checkRent(ClientOrganisation client, User user, String unitsId, Date event_start_date,
+			Date event_end_date) {
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		boolean doesHave = false;
+		String[] units = unitsId.split(" ");
+		System.out.println(units[0]);
+		for(User u: eventOrgs){
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_EXTEVE") && u.equals(user))
+					doesHave = true;
+			}
+		}
+		if(!doesHave)
+			return 0.00;
+		Date d1 = event_start_date;
+		Date d2 = event_end_date;
+		if(d1.compareTo(d2)>0)
+			return 0.00;
+		Double rent = 0.00;
+		long diff = event_end_date.getTime() - event_start_date.getTime();
+		long duration = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + 1;
+		for(int i = 0; i<units.length; i ++){
+			long uId = Long.valueOf(units[i]);
+			Optional<Unit> unit1 = unitRepository.getUnitById(uId);
+			if(unit1.isPresent()){
+				Unit unit = unit1.get();
+		        Double rentU = unit.getRent();
+		        rent += duration*rentU;
+			}
+		}
+		return rent;
 	}
 }

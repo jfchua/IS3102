@@ -26,6 +26,8 @@ import application.entity.Message;
 import application.entity.Role;
 import application.entity.Unit;
 import application.entity.User;
+import application.enumeration.ApprovalStatus;
+import application.enumeration.PaymentStatus;
 import application.exception.EventNotFoundException;
 import application.repository.BookingApplRepository;
 import application.repository.EventOrganizerRepository;
@@ -92,7 +94,7 @@ public class EventServiceImpl implements EventService {
 		Set<Event> allEvents = getAllEvents(client);
 		Set<Event> approvedEvents = new HashSet<Event>();
 		for(Event ev: allEvents){
-			if(ev.getEvent_approval_status().equals("approved"))
+			if(String.valueOf(ev.getApprovalStatus()).equals("APPROVED"))
 				approvedEvents.add(ev);	
 		}
 		return approvedEvents;
@@ -104,7 +106,7 @@ public class EventServiceImpl implements EventService {
 		Set<Event> allEvents = getAllEvents(client);
 		Set<Event> toBeApprovedEvents = new HashSet<Event>();
 		for(Event ev: allEvents){
-			if(ev.getEvent_approval_status().equals("processing"))
+			if(String.valueOf(ev.getApprovalStatus()).equals("PROCESSING"))
 				toBeApprovedEvents.add(ev);	
 		}
 		return toBeApprovedEvents;
@@ -120,7 +122,7 @@ public class EventServiceImpl implements EventService {
 			if(event1.isPresent()){	
 				Event event = event1.get();
 				if(checkEvent(client, id)){
-					event.setEvent_approval_status(status);
+					event.setApprovalStatus(ApprovalStatus.valueOf(status));
 					eventRepository.save(event);
 				}
 				else
@@ -142,7 +144,8 @@ public class EventServiceImpl implements EventService {
 			if(event1.isPresent()){	
 				Event event = event1.get();
 				if(checkEvent(client, id)){
-					event.setEvent_approval_status("approved");
+					event.setApprovalStatus(ApprovalStatus.valueOf("APPROVED"));
+					event.setPaymentStatus(PaymentStatus.valueOf("UNPAID"));
 					eventRepository.save(event);
 				}
 				else

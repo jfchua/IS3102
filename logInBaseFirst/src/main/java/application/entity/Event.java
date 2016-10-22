@@ -23,6 +23,8 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import application.enumeration.ApprovalStatus;
+import application.enumeration.EventType;
 import application.enumeration.IconType;
 import application.enumeration.PaymentStatus;
 
@@ -41,22 +43,15 @@ public class Event {
 		@Column(name = "event_title", nullable = false)
 	    private String event_title;
 
-	    @Column(name = "event_content", nullable = false)
-	    private String event_content;
+		@Enumerated(EnumType.STRING)
+	    private EventType event_type;
 	    
 	    @Column(name = "event_description", nullable = false)
 	    private String event_description;
 	    
-	    @Column(name = "event_approval_status", nullable = true)
-	    private String event_approval_status;
-	    
-	   // @Column(name = "event_organisation", nullable = false)
-	    //private String event_organisation;
-	    
-	   
-	    /*
-	    @Column(name = "event_period", nullable = false)
-	    private String event_period;*/
+	    @Enumerated(EnumType.STRING)
+	    private ApprovalStatus approvalStatus;
+
 
 	    @Temporal(TemporalType.TIMESTAMP)
 		 @Column(name = "event_start_date", nullable = false)
@@ -159,12 +154,12 @@ public class Event {
 			this.event_title = event_title;
 		}
 
-		public String getEvent_content() {
-			return event_content;
+		public EventType getEventType() {
+			return event_type;
 		}
 
-		public void setEvent_content(String event_content) {
-			this.event_content = event_content;
+		public void setEventType(EventType event_content) {
+			this.event_type = event_content;
 		}
 
 		public String getEvent_description() {
@@ -175,12 +170,12 @@ public class Event {
 			this.event_description = event_description;
 		}
 
-		public String getEvent_approval_status() {
-			return event_approval_status;
+		public ApprovalStatus getApprovalStatus() {
+			return approvalStatus;
 		}
 
-		public void setEvent_approval_status(String event_approval_status) {
-			this.event_approval_status = event_approval_status;
+		public void setApprovalStatus(ApprovalStatus event_approval_status) {
+			this.approvalStatus = event_approval_status;
 		}
 		/*
 		public String getEvent_organisation() {

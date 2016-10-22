@@ -43,5 +43,7 @@ public interface EventExternalService {
 	
 	boolean checkAvailabilityForUpdate(ClientOrganisation client, User user,long eventId, String unitsId, Date event_start_date, Date event_end_date);
 
+	Double checkRent(ClientOrganisation client, User user, String unitsId, Date event_start_date, Date event_end_date);
+	
 	Set<BookingAppl> getBookings(ClientOrganisation client, long id);
 }

@@ -1,53 +1,75 @@
 
-	<div ng-cloak ng-controller="rateController as rateCtrl">
-      <div class="container">
-        <div class="content" >
-        <h1>Add a new special rate</h1>
-        <a href="/#/viewBuilding"><button>Back to view special rates</button></a>
-        <p class="tagline">Add your new special rate here</p>
-        <form>
-        <div class="form-group">
-               <label for="exampleInput">Rate</label>
-               <input type="number" step="0.01" min="0" ng-model="special.rate" class="form-control" id="specialRate" placeholder="Enter special rate">
-        </div>
-        <div class="form-group">
-               <label for="exampleInput">Description</label>
-               <input type="text" ng-model="special.description" class="form-control" id="description" placeholder="Enter description">
-        </div>
-        <select ng-model="myDropDown">   
-          <option value="period">Please Select A Period</option>     
-          <option value="month">Any Month?</option>
-          <option value="weekend">All Weekends?</option>
-          <option value="date">Any Specific Date?</option>
-       </select><br>
-     
-    <div ng-show="myDropDown=='month'" >
-    <label for="month" class="control-label">Select Month</label> <select
-						name="month" ng-model="special.period" ng-options="x.month as x.name for x in months"
-						class="form-control">
-					</select>
-    </div>  
-    
-    <div ng-show="myDropDown=='weekend'">   
-     <label for="weekend" class="control-label"></label> <select
-						name="weekend" ng-model="special.period" ng-options="x.weekend as x.name for x in weekends"
-						class="form-control">
-					</select>  
-    <!--<input type="text" ng-model="special.period" class="form-control"  ng-init="special.period='weekend'" value ="weekend" readonly><br>--> 
-    </div>
-    
-    <div ng-show="myDropDown=='date'">
-    <label for="exampleInput">Please Enter a date</label>
-               <input type="datetime-local" step="86400" ng-model="special.period" class="form-control" id="period" placeholder="Enter date">
-    </div>
+        <div ng-cloak ng-controller="rateController as rateCtrl">
 
-       <!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
-       <button ng-click = "addRate()"><input type="submit" value="Submit"></button>
-       <br>
-       <a href="#/viewAllRates">View Special Rates List</a>
-        </form>
+            <div class="clearfix">
+                            <ol class="breadcrumb no-bg no-m-t">
+                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="dashboard.viewAllRates">View Rates</a></li>
+                                 <li><a>Add Rate</a></li>
+                            </ol>
+            </div>
+         <div class="col-md-9">
+                <div class="panel panel-primary">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Add rate		  
+                            <div class="panel-control pull-right">
+                                <a class="panelButton"><i class="fa fa-refresh"></i></a>
+                                <a class="panelButton"><i class="fa fa-minus"></i></a>
+                                <a class="panelButton"><i class="fa fa-remove"></i></a>
+                            </div>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+
+            <form>
+            <div class="form-group">
+                   <label for="exampleInput">Rate</label>
+                   <input type="number" step="0.01" min="0" ng-model="special.rate" class="form-control underline" id="specialRate" placeholder="Enter special rate">
+            </div>
+            <div class="form-group">
+                   <label for="exampleInput">Description</label>
+                   <input type="text" ng-model="special.description" class="form-control underline" id="description" placeholder="Enter description">
+            </div>
+            <select ng-model="myDropDown">   
+              <option value="period">Please Select A Period</option>     
+              <option value="month">Any Month?</option>
+              <option value="weekend">All Weekends?</option>
+              <option value="date">Any Specific Date?</option>
+           </select><br>
+
+        <div ng-show="myDropDown=='month'" >
+        <label for="month" class="control-label">Select Month</label> <select
+                            name="month" ng-model="special.period" ng-options="x.month as x.name for x in months"
+                            class="form-control">
+                        </select>
+        </div>  
+
+        <div ng-show="myDropDown=='weekend'">   
+         <label for="weekend" class="control-label"></label> <select
+                            name="weekend" ng-model="special.period" ng-options="x.weekend as x.name for x in weekends"
+                            class="form-control">
+                        </select>  
+        <!--<input type="text" ng-model="special.period" class="form-control"  ng-init="special.period='weekend'" value ="weekend" readonly><br>--> 
         </div>
-      </div>
+
+        <div ng-show="myDropDown=='date'">
+        <label for="exampleInput">Please Enter a date</label>
+                   <input type="datetime-local" step="86400" ng-model="special.period" class="form-control underline" id="period" placeholder="Enter date">
+        </div>
+
+           <!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
+
+
+          <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "addRate()">Submit</button> &nbsp;
+
+                        </form>
+
+
+
+
+                    </div>
+                </div>
+            </div>
     </div>
-		
-	

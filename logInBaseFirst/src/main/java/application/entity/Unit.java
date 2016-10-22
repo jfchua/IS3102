@@ -42,7 +42,7 @@ public class Unit {
 	private Boolean rentable;
 
 	@Column(name = "rent")
-	private Long rent;
+	private Double rent;
 
 	@Column(name = "description", nullable = false)
 	private String description;
@@ -139,10 +139,10 @@ public class Unit {
 		this.rentable = rentable;
 	}
 
-	public long getRent() {
+	public Double getRent() {
 		return rent;
 	}
-	public void setRent(long rent) {
+	public void setRent(Double rent) {
 		this.rent = rent;
 	}
 	public int getDimension() {

@@ -1981,7 +1981,7 @@ app.controller('DetailController', function($scope, $routeParams){
 	$scope.message = messages[$routeParams.id];
 });
 
-app.controller('NewMailController', function($scope, $location, $http){
+app.controller('NewMailController', function($scope, $state, $http){
 	var getMsg = $http({
 		method  : 'GET',
 		url     : 'https://localhost:8443/getUsersToSendTo',
@@ -2004,7 +2004,20 @@ app.controller('NewMailController', function($scope, $location, $http){
 	$scope.currentlySelected = null;
 
 	$scope.selectRecipient = function(){
-		$scope.selectedContacts.push($scope.currentlySelected);
+		
+		var duplicate = false;
+		var index = 0;
+	    angular.forEach($scope.selectedContacts, function() {
+	        if(duplicate==false&&$scope.currentlySelected == $scope.selectedContacts[index])
+	        	duplicate = true;
+	        else
+	        	index = index + 1;
+	    });
+	    console.log(duplicate);
+		if(!duplicate){
+			$scope.selectedContacts.push($scope.currentlySelected);
+		}
+		
 	}
 
 	$scope.deleteRecipient = function(recipient){
@@ -2037,7 +2050,7 @@ app.controller('NewMailController', function($scope, $location, $http){
 		});
 
 		//alert('message sent');
-		$location.path('/dashboard');
+		$state.go('dashboard.workspace');
 	};
 });
 

@@ -4,11 +4,11 @@
 		
 			<li ng-show="IsUser()" ng-controller="AccountController"
 						class="active">
-				<a href="#/dashboard">
+				<a  ui-sref="dashboard.workspace">
 				<span class="glyphicon glyphicon-dashboard"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
-					<li><a  href="#/dashboard">{{ 'Workspace' | translate }}</a></li>
+					<li><a  ui-sref="dashboard.workspace">{{ 'Workspace' | translate }}</a></li>
 				</ul>
 			</li>
 			

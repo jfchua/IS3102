@@ -1,8 +1,26 @@
-
 	<div ng-cloak ng-controller="NewMailController">
-    
-    <h1> NEW MESSAGE</h1>
-		<form class="form-horizontal" ng-submit="send()">
+    <div class="clearfix">
+                        <ol class="breadcrumb no-bg no-m-t">
+                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                             <li><a>Add Message</a></li>
+                        </ol>
+        </div>
+    <div class="col-md-9">
+			<div class="panel panel-primary">
+
+				<div class="panel-heading">
+					<h3 class="panel-title">Add message		  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+                <div class="panel-body">
+                    
+                    <form class="form-horizontal" ng-submit="send()">
 
 			<fieldset>
 				<div class="form-group">
@@ -14,7 +32,7 @@
 				<div class="form-group">
 					<ul class="list-group" name="recipients">
 						<li ng-repeat="contact in selectedContacts"
-							class="list-group-item">{{contact}}
+							class="list-group-item" style="display: inline;">{{contact}}
 							<button ng-click="deleteRecipient(contact)">
 								<i class="glyphicon glyphicon-trash"></i>
 							</button>
@@ -42,6 +60,10 @@
 
 			</fieldset>
 		</form>
-
-		<br /> <a class="btn btn-primary pull-right" href="#/workspace">Back to workspace</a>
+                    
+                    
+                </div>
+        </div>
+        </div>
+		
 </div>

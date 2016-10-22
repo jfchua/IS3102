@@ -210,6 +210,51 @@ public class EventExternalController {
 			}
 			return new ResponseEntity<Void>(HttpStatus.OK);	
 		}	
+	    
+	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+		@RequestMapping(value = "/checkRent", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Double> checkRent(@RequestBody String eventJSON,
+				HttpServletRequest rq) throws UserNotFoundException {
+			System.out.println("start check rent for event");
+			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+			Principal principal = rq.getUserPrincipal();
+			System.out.println(principal.getName());
+			Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+			if ( !eventOrg1.isPresent() ){
+				return new ResponseEntity<Double>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			}
+			try{
+				User eventOrg = eventOrg1.get();
+				ClientOrganisation client = eventOrg.getClientOrganisation();
+				System.out.println(eventOrg.getName());
+				Object obj = parser.parse(eventJSON);
+				JSONObject jsonObject = (JSONObject) obj;
+				JSONArray units = (JSONArray)jsonObject.get("units");
+	            String unitsId = "";
+	            for(int i = 0; i < units.size(); i++){
+	            	JSONObject unitObj = (JSONObject)units.get(i);		
+	            	System.out.println(unitObj.toString());
+					long unitId = (Long)unitObj.get("id");
+					System.out.println(unitId);
+					unitsId = unitsId+unitId + " ";
+					System.out.println(unitsId);
+				}
+				Date event_start_date = sdf.parse((String)jsonObject.get("event_start_date"));
+				System.out.println(event_start_date);
+				Date event_end_date = sdf.parse((String)jsonObject.get("event_end_date"));				
+				Double price = eventExternalService.checkRent(client, eventOrg, unitsId, event_start_date, event_end_date);		
+				System.out.println(price);
+				Gson gson2 = new Gson();
+				String json = gson2.toJson(price);
+				return new ResponseEntity<Double>(price, HttpStatus.OK);	
+			}
+			catch (Exception e){
+				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+				return new ResponseEntity<Double>(HttpStatus.CONFLICT);
+			}		
+		}	
+
 
 	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 	// Call this method using $http.get and you will get a JSON format containing an array of event objects.
@@ -297,9 +342,9 @@ public class EventExternalController {
 					obj.put("units", unit);
 					System.out.println(unit);
 				    obj.put("event_title", event.getEvent_title());
-				    obj.put("event_content", event.getEvent_content());
+				    obj.put("event_content", event.getEventType());
 				    obj.put("event_description", event.getEvent_description());
-				    obj.put("event_approval_status", event.getEvent_approval_status());
+				    obj.put("event_approval_status", event.getApprovalStatus());
 				    obj.put("event_start_date", String.valueOf(event.getEvent_start_date()));
 				    obj.put("event_end_date", String.valueOf(event.getEvent_end_date()));
 				    obj.put("filePath", event.getFilePath());

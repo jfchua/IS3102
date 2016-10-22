@@ -6,7 +6,14 @@
            <a href="#/viewMaintenance"><button>View Maintenance List</button></a>
         <p class="tagline">Add your request here</p>
         <form>
-        
+         <div class="form-group">
+               <label for="exampleInput">Start Date</label>
+               <input type="datetime-local" ng-model="maintenance.start" class="form-control" placeholder="Enter start date">
+        </div>
+        <div class="form-group">
+               <label for="exampleInput">End Date</label>
+               <input type="datetime-local" ng-model="maintenance.end" class="form-control" placeholder="Enter end date">
+       </div>
         <div class="form-group">
 					<label for="building" class="control-label">Select Building</label> <select
 						name="building" ng-model="currentlySelectedBuilding" ng-options="x.id as x.name for x in buildings"
@@ -37,9 +44,12 @@
 				<div class="form-group">
 					<label for="unit" class="control-label">Select Unit</label> <select
 						name="unit" ng-model="currentlySelectedUnit" ng-options="x as x.unitNumber for x in units"
-						ng-change="selectUnit()" class="form-control">
-						
+						ng-change="selectUnit()" class="form-control">						
 					</select>
+					<div ng-mouseover="checkAvail()" >
+				    <p>Put mouse over to check Availability<br>
+				     Available?  {{avail}}</p>			   
+				    </div>
         </div>
         <br>
        <!--  <button  ng-click="getAllVendors()">Get List of Vendors</button>-->
@@ -66,14 +76,7 @@
                <label for="exampleInput">Vendor Id</label>
                <input type="text" ng-model="maintenance.vendorId" class="form-control" placeholder="Enter vendor id">
         </div>-->
-        <div class="form-group">
-               <label for="exampleInput">Start Date</label>
-               <input type="datetime-local" ng-model="maintenance.start" class="form-control" placeholder="Enter start date">
-        </div>
-        <div class="form-group">
-               <label for="exampleInput">End Date</label>
-               <input type="datetime-local" ng-model="maintenance.end" class="form-control" placeholder="Enter end date">
-       </div>
+       
        <div class="form-group">
                <label for="exampleInput"> Description </label>
                <input type="text" ng-model="maintenance.description" class="form-control" placeholder="Enter description">

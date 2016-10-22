@@ -23,7 +23,7 @@
 				</div>
 				<div class="panel-body">
         <form>
-                <div class="form-group">
+       <div class="form-group">
                <label for="exampleInput">Event Start Date</label>
                <input type="datetime-local" ng-model="event.event_start_date" class="form-control underline" placeholder="Enter start date">
        </div>
@@ -64,30 +64,34 @@
 						
 					</select>
 					
-					
-					
-					
-					
-					
-					
-					<!-- <p>Units selected: <input ng-model = "currentlySelectedUnit"></p>-->
+				<!-- <p>Units selected: <input ng-model = "currentlySelectedUnit"></p>-->
 				     <!--  <button ng-click = "checkAvail()">Check Availability</button>-->
 				    <div ng-mouseover="checkAvail()" >
-				    <p>Put mouse over to check Availability<br>
-				     Available?  {{avail}}</p>			   
-				    </div>
-				    
+				    <p>Put mouse over to check availability<br>
+				     Available?  {{avail}}</p>	   
+				    </div>			    
 				</div>		  
       
+        <div >
+         <button ng-click="checkRent()">Check total rent</button>
+                <p>TOTAL RENT: {{totalRent}}</p>
+               <!--<label for="exampleInput">Total Rent</label>
+               <input type="number" step="0.01" value="{{totalRent}}"class="form-control underline">-->
+        </div>
         <div class="form-group">
                <label for="exampleInput">Event Title</label>
                <input type="text" ng-model="event.event_title" class="form-control underline" placeholder="Enter event title">
         </div>
-        
         <div class="form-group">
+               Select an event type:
+                <select ng-model="eventType" ng-options="x.eventType as x.name for x in eventTypes">
+    </select>
+        </div>
+        
+       <!-- <div class="form-group">
                <label for="exampleInput">Event Content</label>
                <input type="text" ng-model="event.event_content" class="form-control underline" placeholder="Enter event content">
-        </div>
+        </div>-->
         <div class="form-group">
                <label for="exampleInput">Event Description</label>
                <input type="text" ng-model="event.event_description" class="form-control underline" placeholder="Enter event description">
