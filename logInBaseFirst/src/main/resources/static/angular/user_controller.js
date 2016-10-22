@@ -1,8 +1,8 @@
 'use strict';
 
 
-app.controller('UserController', ['$scope', 'UserService','$stateParams', '$routeParams','$rootScope', '$http', '$location', 'Auth', 
-                                  function($scope, UserService, $stateParams, $routeParams,$rootScope,$http, $location, Auth) {
+app.controller('UserController', ['$scope', 'UserService','$stateParams', '$routeParams','$rootScope', '$http', '$location', 'Auth','$state', 
+                                  function($scope, UserService, $stateParams, $routeParams,$rootScope,$http, $location, Auth,$state) {
 	var self = this;
 	self.email = '';
 	self.pass1  = '';

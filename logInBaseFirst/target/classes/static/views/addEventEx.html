@@ -9,7 +9,7 @@
 </div>
     
     
-    	<div class="col-md-9">
+    	<div class="col-md-6">
 			<div class="panel panel-primary">
 
 				<div class="panel-heading">
@@ -63,6 +63,13 @@
 						ng-change="selectUnit()" class="form-control underline">
 						
 					</select>
+					
+					
+					
+					
+					
+					
+					
 					<!-- <p>Units selected: <input ng-model = "currentlySelectedUnit"></p>-->
 				     <!--  <button ng-click = "checkAvail()">Check Availability</button>-->
 				    <div ng-mouseover="checkAvail()" >
@@ -94,12 +101,21 @@
 				</div>
 			</div>
         </div>
+        <div class="col-lg-6 col-md-8" >
+		 				<div class="conter-wrapper">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<div ui-calendar="uiConfig.calendar" ng-model="haha"></div>
+								</div>
+							</div>
+						</div>
+					</div>
         <div class="col-md-3">
         <growl-notifications>
-        <growl-notification  ng-if="avail == 'AVAILABLE!'" class="growl-primary fading">
+        <growl-notification  ng-if="avail == 'AVAILABLE!'" class="growl-success alert-success fading">
 							<a href="#" ng-click="$growlNotification.remove()" class="close"><i class="fa fa-times"></i></a>
 							Selected units are available</growl-notification>
-		<growl-notification ng-if="avail == 'NOT AVAILABLE!'" class="growl-warning">
+		<growl-notification ng-if="avail == 'NOT AVAILABLE!'" class="growl-error">
 							<a href="#" ng-click="$growlNotification.remove()" class="close"><i class="fa fa-times"></i></a>
 							Selected units are not available
 						</growl-notification>
