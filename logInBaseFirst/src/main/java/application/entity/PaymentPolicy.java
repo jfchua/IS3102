@@ -17,29 +17,29 @@ public class PaymentPolicy {
 	 private Long id;
 	 
 	 @Column(name = "deposit_rate")
-	 private Double deposit_rate;
+	 private Double depositRate;
 	 
 	 @Column(name = "subsequent_number")
-	 private int subsequent_number;
+	 private int subsequentNumber;
 	 
 	 public PaymentPolicy(){
 		 super();
 	 }
 
 	public Double getDepositRate() {
-		return deposit_rate;
+		return depositRate;
 	}
 
 	public void setDepositRate(Double depositRate) {
-		this.deposit_rate = depositRate;
+		this.depositRate = depositRate;
 	}
 
 	public int getSubsequentNumber() {
-		return subsequent_number;
+		return subsequentNumber;
 	}
 
 	public void setSubsequentNumber(int subsequentNumber) {
-		this.subsequent_number = subsequentNumber;
+		this.subsequentNumber = subsequentNumber;
 	}
 
 	public Long getId() {

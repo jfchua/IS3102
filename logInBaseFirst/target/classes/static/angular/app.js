@@ -626,6 +626,30 @@ app.config(
 					authorizedRoles:[USER_ROLES.finance]
 				}
 			})
+			.state('dashboard.viewPaymentPolicy',{
+				url:'/viewPaymentPolicy',
+				templateUrl: '/views/viewPaymentPolicy.html',
+				controller: 'policyController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.addPaymentPolicy',{
+				url:'/addPaymentPolicy',
+				templateUrl: '/views/addPaymentPolicy.html',
+				controller: 'policyController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.updatePaymentPolicy',{
+				url:'/updatePaymentPolicy',
+				templateUrl: '/views/updatePaymentPolicy.html',
+				controller: 'updatePolicyController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
 			.state('/401',{
 				url:'/401',
 				templateUrl: '/views/401.html',

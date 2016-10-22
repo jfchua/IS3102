@@ -47,7 +47,7 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 		try{
 			Optional<PaymentPolicy> rate1 = getPaymentPolicy(id);
 			PaymentPolicy payment = client.getPaymentPolicy();
-			if(rate1.isPresent()&&rate1.equals(payment)){
+			if(rate1.isPresent()&&((rate1.get()).equals(payment))){
 				client.setPaymentPolicy(null);
 				clientOrganisationRepository.save(client);	
 				paymentPolicyRepository.delete(rate1.get());
@@ -65,7 +65,7 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 		try{
 			Optional<PaymentPolicy> rate1 = getPaymentPolicy(id);
 			PaymentPolicy payment = client.getPaymentPolicy();
-			if(rate1.isPresent()&&rate1.equals(payment)){
+			if(rate1.isPresent()&&((rate1.get()).equals(payment))){
 				PaymentPolicy rate2 = rate1.get();
 			   //rate2.setDate(date);
 			   rate2.setDepositRate(rate);
