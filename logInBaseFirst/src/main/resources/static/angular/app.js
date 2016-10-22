@@ -2004,7 +2004,20 @@ app.controller('NewMailController', function($scope, $state, $http){
 	$scope.currentlySelected = null;
 
 	$scope.selectRecipient = function(){
-		$scope.selectedContacts.push($scope.currentlySelected);
+		
+		var duplicate = false;
+		var index = 0;
+	    angular.forEach($scope.selectedContacts, function() {
+	        if(duplicate==false&&$scope.currentlySelected == $scope.selectedContacts[index])
+	        	duplicate = true;
+	        else
+	        	index = index + 1;
+	    });
+	    console.log(duplicate);
+		if(!duplicate){
+			$scope.selectedContacts.push($scope.currentlySelected);
+		}
+		
 	}
 
 	$scope.deleteRecipient = function(recipient){

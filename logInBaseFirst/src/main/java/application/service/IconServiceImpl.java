@@ -64,7 +64,7 @@ public class IconServiceImpl implements IconService {
 			throw new IconNotFoundException("Icon with ID of " + iconId + "was not found");
 		}
 		String t = iconPath.toUpperCase();
-		if ( !t.contains(".JPG") && !t.contains(".JPEG") && !t.contains(".TIF") && !t.contains(".PNG") ){
+		if (!t.contains(".SVG") && !t.contains(".JPG") && !t.contains(".JPEG") && !t.contains(".TIF") && !t.contains(".PNG") ){
 			throw new InvalidIconException("Icon is invalid");
 		}
 		try{
