@@ -435,6 +435,38 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			alert('SELECTED UNITS ARE NOT AVAILABLE!');
 		});
 	}*/
+	$scope.checkRent = function(){
+		console.log("start checking rent");
+		$scope.data = {};
+
+		var dataObj = {
+				units: $scope.selectedUnits,
+				event_start_date: ($scope.event.event_start_date).toString(),
+				event_end_date: ($scope.event.event_end_date).toString(),
+		};
+		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/event/checkRent',
+			data    : dataObj //forms user object
+		});
+		//$scope.avail = "";
+		send.success(function(response){
+			$scope.totalRent = response;
+			console.log($scope.totalRent);
+		});
+		send.error(function(response){
+			$scope.totalRent = response;
+			console.log($scope.totalRent);
+		});
+	}
+	$scope.eventTypes=[{'name':'Concert','eventType':'CONCERT'},
+	                  {'name':'Conference','eventType':'CONFERENCE'},
+	                  {'name':'Fair','eventType':'FAIR'},
+	                  {'name':'Family Entertainment','eventType':'FAMILY'},
+	                  {'name':'Lifestyle/Leisure','eventType':'LIFESTYLE'},
+	                  {'name':'Seminar/Workshop','eventType':'SEMINAR'}];
+	$scope.eventType=$scope.eventTypes[0].eventType;
 	
 	$scope.addEvent = function(){
 		console.log("start adding");
@@ -443,9 +475,9 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		var dataObj = {
 				units: $scope.selectedUnits,
 				event_title: $scope.event.event_title,
-				event_content: $scope.event.event_content,
+				event_content: $scope.eventType,
 				event_description: $scope.event.event_description,
-				event_approval_status: "processing",
+				event_approval_status: "PROCESSING",
 				event_start_date: ($scope.event.event_start_date).toString(),
 				event_end_date: ($scope.event.event_end_date).toString(),
 				filePath: $scope.event.filePath,
@@ -757,7 +789,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 				event_title: $scope.event.event_title,
 				event_content: $scope.event.event_content,
 				event_description: $scope.event.event_description,
-				event_approval_status: "processing",
+				event_approval_status: "PROCESSING",
 				event_start_date: ($scope.event.event_start_date).toString(),
 				event_end_date: ($scope.event.event_end_date).toString(),
 				//event_period: $scope.event.event_period,
