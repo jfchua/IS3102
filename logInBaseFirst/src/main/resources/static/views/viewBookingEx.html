@@ -33,8 +33,8 @@
                                <th><i></i> End Date </th>
                                <th><i></i> Unit Booked </th>
                                <!-- <th><i></i> Change Unit </th>-->
-                               <th><i></i> Delete Booking </th>
-                               <th><i></i> Design Internal Plan </th>
+                               <th><i></i> Action </th>
+                               
                                </tr>
                         </thead>
                             <tbody>
@@ -45,8 +45,10 @@
                              <td>{{ x.event_end_date_time }}</td>
                              <td>{{ x.room }}</td>
                              <!-- <td><a ng-model="myValue" href="/#/updateBookingEx" ng-click="updateBooking(x.id)">Update</a></td>-->
-                             <td><a ng-model="myValue" ng-click="deleteBooking(x.id)">Delete</a></td>
-                             <td><a ng-model="myValue" href="/#/createUnitPlanEx" ng-click="getBooking(x.id)">Unit Plan</a></td>
+                               <td>
+                             		<a   ng-click="deleteBooking(x.id)" tooltip-placement="top" tooltip="Delete Booking"><i class="glyphicon glyphicon-trash"></i></a>
+                             		<a  ui-sref="dashboard.createUnitPlanEx" ng-click="getBooking(x.id)" tooltip-placement="top" tooltip="Add unit plan"><i class="glyphicon glyphicon-eye-open"></i></a>
+                             </td>
                              </tr>
                              </tbody>
                           </table>
