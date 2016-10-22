@@ -53,6 +53,7 @@ INSERT into users_roles values( 3,3);
 INSERT into users_roles values( 4,3);
 INSERT into users_roles values( 4,4);
 INSERT into users_roles values( 4,5);
+INSERT into users_roles values( 4,6);
 INSERT into users_roles values( 4,8);
 INSERT into users_roles values( 5,3);
 INSERT into users_roles values( 6,5);

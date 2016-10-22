@@ -9,7 +9,7 @@ import application.entity.User;
 
 public interface PaymentPlanService {
 	boolean createPaymentPlan(ClientOrganisation client, User user, long eventId, Double total, Double deposit, 
-			int subsequentNumber, Double subsequent);
+			int subsequentNumber);
 	
 	boolean updatePaymentPlan(ClientOrganisation client, User user, long paymentId, Double total, Double deposit, 
 			int subsequentNumber, Double subsequent);
@@ -24,6 +24,7 @@ public interface PaymentPlanService {
 	
 	boolean checkEvent(ClientOrganisation client, long eventId);
 	
+	Double checkRent(ClientOrganisation client, long eventId);
 	//boolean updateAmountPayable(ClientOrganisation client, long paymentId, Double paid);
 
 }

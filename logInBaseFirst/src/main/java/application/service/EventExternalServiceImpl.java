@@ -229,6 +229,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 					event.setEvent_start_date(event_start_date);
 					event.setEvent_end_date(event_end_date);
 					event.setFilePath(filePath);
+					event.setRent(checkRent(client, eventOrg, unitsId, event_start_date, event_end_date));
 					System.out.println("fourth");
 					event.setBookings(bookingList); 
 					System.out.println("fifth");
@@ -383,6 +384,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 			event.setEvent_start_date(event_start_date);
 			event.setEvent_end_date(event_end_date);
 			event.setFilePath(filePath);
+			event.setRent(checkRent(client, eventOrg, unitsId, event_start_date, event_end_date));
 			event.setPaymentStatus(PaymentStatus.valueOf("NA"));
 			event.setBookings(bookings);
 			eventRepository.save(event);

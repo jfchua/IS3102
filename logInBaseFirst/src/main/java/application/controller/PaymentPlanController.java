@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 //import org.hibernate.metamodel.source.annotations.xml.mocker.SchemaAware.SecondaryTableSchemaAware;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -127,9 +128,8 @@ public class PaymentPlanController {
 							Double total = (Double)jsonObject.get("total");
 							Double deposit = (Double)jsonObject.get("deposit");
 							int subseNumber = (Integer)jsonObject.get("subsequent_number");
-							Double subsequent = (Double)jsonObject.get("subsequent");
-
-							boolean bl = paymentPlanService.createPaymentPlan(client, user, eventId, total, deposit, subseNumber, subsequent);
+							//Double subsequent = (Double)jsonObject.get("subsequent");
+							boolean bl = paymentPlanService.createPaymentPlan(client, user, eventId, total, deposit, subseNumber);
 							System.out.println("adding payment plan " + total);
 							/*if(bl){
 								AuditLog al = new AuditLog();
@@ -150,6 +150,45 @@ public class PaymentPlanController {
 						}
 						return new ResponseEntity<Void>(HttpStatus.OK);
 					}	
-						
+					
+					
+					@RequestMapping(value = "/checkRent", method = RequestMethod.POST)
+					@ResponseBody
+					public ResponseEntity<String> checkRent(@RequestBody String eventJSON,
+							HttpServletRequest rq) throws UserNotFoundException {
+						System.out.println("start check rent for event");
+						Principal principal = rq.getUserPrincipal();
+						System.out.println(principal.getName());
+						Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+						if ( !eventOrg1.isPresent() ){
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+						}
+						try{
+							User eventOrg = eventOrg1.get();
+							ClientOrganisation client = eventOrg.getClientOrganisation();
+							System.out.println(eventOrg.getName());
+							Object obj = parser.parse(eventJSON);
+							JSONObject jsonObject = (JSONObject) obj;
+							Long eventId = (Long)jsonObject.get("event");				
+							Double price = paymentPlanService.checkRent(client, eventId);
+							PaymentPolicy payPol = client.getPaymentPolicy();
+							JSONObject obj1 = new JSONObject();
+							obj1.put("id", eventId);
+						    obj1.put("total", price);
+						    obj1.put("deposit", payPol.getDepositRate()*price);
+						    obj1.put("subsequentNumber",payPol.getSubsequentNumber());
+							//String json = gson2.toJson(event);
+							//System.out.println("EVENT IS " + json);
+						    System.out.println(obj1.toString());
+							//System.out.println(price);
+							//Gson gson2 = new Gson();
+							//String json = gson2.toJson(price);
+							return new ResponseEntity<String>(obj1.toString(), HttpStatus.OK);	
+						}
+						catch (Exception e){
+							System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);
+						}		
+					}							
 }
 

@@ -13,7 +13,7 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 	$scope.passPaymentPlan = function(plan){
 		shareData.addData(plan);
 	}
-
+/*
 	$scope.addPaymentPlan = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -41,9 +41,83 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 		send.error(function(){
 			alert('SAVING PAYMENT GOT ERROR!');
 		});
+	};*/
+
+}]);
+
+
+app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
+			$scope.events = response.data;
+			console.log("DISPLAY ALL PAYMENT PLANS");
+		},function(response){
+			alert("did not view plans");
+		}	
+		)	
+	});
+	$scope.plan = {};	
+	$scope.currentlySelectedEvent;
+	$scope.selectEvent = function(){
+		$scope.selectedEvent=$scope.currentlySelectedEvent;
+	}
+	$scope.checkRent = function(eventId){
+		console.log("start checking rent");
+		console.log(eventId);
+		$scope.data = {};
+		var dataObj = {event: eventId};
+		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/payment/checkRent',
+			data    : dataObj //forms user object
+		});
+		send.success(function(response){
+			$scope.plan = response;
+			$scope.totalRent = $scope.plan.total/1.07;
+			$scope.totalRentAfter = $scope.plan.total;
+			//$scope.plan.total= response*1.07;
+			console.log($scope.totalRent);
+		});
+		send.error(function(response){
+			$scope.totalRent = response;
+			console.log($scope.totalRent);
+		});	
+	}
+	$scope.addPaymentPlan = function(){
+		//alert("SUCCESS");
+		$scope.data = {};
+		var dataObj = {			
+				eventId: $scope.plan.id,
+				total: $scope.plan.total,
+				deposit: $scope.plan.deposit,
+				subsequent_number: $scope.plan.subsequent_number,
+		};
+
+		console.log("REACHED HERE FOR SUBMIT PAYMENT PLAN " + JSON.stringify(dataObj));
+
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/payment/addPaymentPlan',
+			data    : dataObj //forms user object
+		});
+
+		console.log("SAVING THE PAYMENT");
+		send.success(function(){		
+			alert('PAYMENT IS SAVED! GOING BACK TO VIEW PAYMENT PLANS');
+			$state.go("dashboard.viewAllPaymentPlans");
+		});
+		send.error(function(){
+			alert('SAVING PAYMENT GOT ERROR!');
+		});
 	};
 
-}]);	
+}]);
+
+
+
+
 
 app.controller('policyController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
@@ -86,7 +160,7 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 		var dataObj = {			
 				depositRate: $scope.policy.depositRate,
 				subsequentNumber: $scope.policy.subsequentNumber,
-				dueDays: $scope.policy.dueDays,
+				dueDays: $scope.policy.numOfDueDays,
 		};
 		console.log("REACHED HERE FOR SUBMIT PAYMENT POLICY " + JSON.stringify(dataObj));
 		var send = $http({
@@ -110,18 +184,18 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 app.controller('updatePolicyController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.policy1 = shareData.getData();	
-		console.log("$scope.policy1");
+		//console.log("$scope.policy1");
 		console.log($scope.policy1);
-		console.log("$scope.policy2");
+		//console.log("$scope.policy2");
 		var dataObj = {						
 				depositRate: $scope.policy1.depositRate,
 				subsequentNumber: $scope.policy1.subsequentNumber,
-				dueDays: $scope.policy1.dueDays,
+				dueDays: $scope.policy1.numOfDueDays,
 		};	
 		$scope.policy = angular.copy($scope.policy1);
-		console.log("$scope.policy3");
+		//console.log("$scope.policy3");
 		console.log($scope.policy);
-		console.log("$scope.policy4");
+		//console.log("$scope.policy4");
 	});
 
 	$scope.updatePaymentPolicy = function(){
@@ -131,7 +205,7 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 		        id:$scope.policy.id,
 				depositRate: $scope.policy.depositRate,
 				subsequentNumber: $scope.policy.subsequentNumber,
-				dueDays: $scope.policy.dueDays,
+				dueDays: $scope.policy.numOfDueDays,
 		};
 		console.log("REACHED HERE FOR SUBMIT PAYMENT POLICY " + JSON.stringify(dataObj));
 		var send = $http({
