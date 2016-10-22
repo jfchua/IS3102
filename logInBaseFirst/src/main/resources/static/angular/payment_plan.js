@@ -51,6 +51,7 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 		$http.get("//localhost:8443/policy/viewPaymentPolicy").then(function(response){
 			$scope.policy = response.data;
 			console.log("DISPLAY ALL PAYMENT PLANS");
+			console.log($scope.policy);
 		},function(response){
 			alert("did not view plans");
 		}	
@@ -60,8 +61,9 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 		shareData.addData(policy);
 	}
     $scope.deletePolicy = function(){
+    	console.log("Start deleting");
     	if(confirm('CONFIRM TO DELETE POLICY ?')){
-			var tempObj ={eventId:$scope.policy.id};
+			var tempObj ={id:$scope.policy.id};
 			console.log("fetch id "+ tempObj);
 			//var buildings ={name: $scope.name, address: $scope.address};
 			$http.post("//localhost:8443/policy/deletePaymentPolicy", JSON.stringify(tempObj)).then(function(response){
@@ -76,14 +78,15 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 			}	
 			)
 		}
+    	$scope.reload();
     }
  
 	$scope.addPaymentPolicy = function(){
 		
 		$scope.data = {};
 		var dataObj = {			
-				deposit_rate: $scope.policy.deposit_rate,
-				subsequent_number: $scope.policy.subsequent_number,
+				depositRate: $scope.policy.depositRate,
+				subsequentNumber: $scope.policy.subsequentNumber,
 		};
 		console.log("REACHED HERE FOR SUBMIT PAYMENT POLICY " + JSON.stringify(dataObj));
 		var send = $http({
@@ -107,11 +110,17 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 app.controller('updatePolicyController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.policy1 = shareData.getData();	
+		console.log("$scope.policy1");
+		console.log($scope.policy1);
+		console.log("$scope.policy2");
 		var dataObj = {						
-				deposit_rate: $scope.policy1.deposit_rate,
-				subsequent_number: $scope.policy1.subsequent_number,
+				depositRate: $scope.policy1.depositRate,
+				subsequentNumber: $scope.policy1.subsequentNumber,
 		};	
-		$scope.policy = angular.copy($scope.policy1)	
+		$scope.policy = angular.copy($scope.policy1);
+		console.log("$scope.policy3");
+		console.log($scope.policy);
+		console.log("$scope.policy4");
 	});
 
 	$scope.updatePaymentPolicy = function(){
@@ -119,8 +128,8 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 		$scope.data = {};
 		var dataObj = {				
 		        id:$scope.policy.id,
-				deposit_rate: $scope.policy.deposit_rate,
-				subsequent_number: $scope.policy.subsequent_number,
+				depositRate: $scope.policy.depositRate,
+				subsequentNumber: $scope.policy.subsequentNumber,
 		};
 		console.log("REACHED HERE FOR SUBMIT PAYMENT POLICY " + JSON.stringify(dataObj));
 		var send = $http({
