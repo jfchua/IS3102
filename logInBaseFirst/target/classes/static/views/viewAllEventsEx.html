@@ -30,10 +30,9 @@
                                    <th><i></i> Start Date </th>
                                    <th><i></i> End Date </th>
                                    <th><i></i> Status </th>
-                                   <th><i></i> View </th>
+                                   
                                    <th>Action</th>
-                                   <th></th>
-                                    <th></th>
+                                  
                                 </tr>
                             </thead>
                                 <tbody>
@@ -44,10 +43,11 @@
                                  <td>{{ x.event_start_date }}</td>
                                  <td>{{ x.event_end_date }}</td>
                                  <td>{{ x.approvalStatus }}</td>
-                                 <td><a  ui-sref="dashboard.updateEventEx" ng-click="passEvent(x)">Update</a></td>
-                                 <td><a  ui-sref="dashboard.cancelEventEx" ng-click="passEvent(x)">Delete</a></td>
-                                 <td><a  ui-sref="dashboard.viewBookingEx" ng-click="passEvent(x)">View Booking</a></td>
-
+                                 <td>
+                             		<a  ui-sref="dashboard.updateEventEx" ng-click="passEvent(x)" tooltip-placement="top" tooltip="Update Event"><i class="glyphicon glyphicon-pencil"></i></a>
+                             		<a  ui-sref="dashboard.cancelEventEx" ng-click="passEvent(x)" tooltip-placement="top" tooltip="Cancel Event"><i class="glyphicon glyphicon-trash"></i></a>
+                             		<a  ui-sref="dashboard.viewBookingEx" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Bookings"><i class="glyphicon glyphicon-eye-open"></i></a>
+                             </td>
                                  </tr>
                                  </tbody>
                               </table>
