@@ -34,33 +34,8 @@ $scope.viewApprovedEvents = function(){
 	)	
 }
 
-$scope.getEvent = function(id){		
-	$scope.dataToShare = [];	  
-	$scope.shareMyData = function (myValue) {
-		//$scope.dataToShare = myValue;
-		//shareData.addData($scope.dataToShare);
-	}
-	$scope.url = "https://localhost:8443/event/getEvent1/"+id;
-	//$scope.dataToShare = [];
-	console.log("GETTING THE EVENT INFO")
-	var getEvent = $http({
-		method  : 'GET',
-		url     : 'https://localhost:8443/event/getEvent1/' + id        
-	});
-	console.log("Getting the event using the url: " + $scope.url);
-	getEvent.success(function(response){
-		//$scope.dataToShare.push(id);
-		//$location.path("/viewLevels/"+id);
-		console.log('GET EVENT SUCCESS! ' + JSON.stringify(response));
-		console.log("ID IS " + id);
-		shareData.addData(JSON.stringify(response));
-		//$location.path("/viewLevels");
-	});
-	getEvent.error(function(response){
-		$state.go("dashboard.viewAllEventsEx");
-		console.log('GET Event FAILED! ' + JSON.stringify(response));
-	});
-
+$scope.getEvent = function(event){			
+		shareData.addData(event);
 }
 $scope.passEvent = function(event){
 	shareData.addData(event);
@@ -153,32 +128,10 @@ app.controller('viewApprovedEventsController', ['$scope', '$http','$state','$rou
 });
 
 
-$scope.getEvent = function(id){		
-	$scope.dataToShare = [];	  
-	$scope.shareMyData = function (myValue) {
-		//$scope.dataToShare = myValue;
-		//shareData.addData($scope.dataToShare);
-	}
-	$scope.url = "https://localhost:8443/event/getEvent1/"+id;
-	//$scope.dataToShare = [];
-	console.log("GETTING THE EVENT INFO")
-	var getEvent = $http({
-		method  : 'GET',
-		url     : 'https://localhost:8443/event/getEvent1/' + id        
-	});
-	console.log("Getting the event using the url: " + $scope.url);
-	getEvent.success(function(response){
-		//$scope.dataToShare.push(id);
-		//$location.path("/viewLevels/"+id);
-		console.log('GET EVENT SUCCESS! ' + JSON.stringify(response));
-		console.log("ID IS " + id);
-		shareData.addData(JSON.stringify(response));
-		//$location.path("/viewLevels");
-	});
-	getEvent.error(function(response){
-		$state.go("dashboard.viewAllEventsEx");
-		console.log('GET Event FAILED! ' + JSON.stringify(response));
-	});
+$scope.getEvent = function(event){		
+	
+		shareData.addData(event);
+
 
 }
 $scope.passEvent = function(event){
