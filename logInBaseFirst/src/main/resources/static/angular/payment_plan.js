@@ -90,12 +90,13 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 		$scope.data = {};
 		var dataObj = {			
 				eventId: $scope.plan.id,
-				total: $scope.plan.total,
-				deposit: $scope.plan.deposit,
-				subsequent_number: $scope.plan.subsequent_number,
+				total: ($scope.plan.total).toString(),
+				deposit:($scope.plan.deposit).toString(),
+				subsequent_number: $scope.plan.subsequentNumber,
 		};
 
-		console.log("REACHED HERE FOR SUBMIT PAYMENT PLAN " + JSON.stringify(dataObj));
+		console.log("SUBMIT PAYMENT PLAN");
+		console.log(JSON.stringify(dataObj));
 
 		var send = $http({
 			method  : 'POST',
