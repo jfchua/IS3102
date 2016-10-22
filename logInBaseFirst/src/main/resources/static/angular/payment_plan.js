@@ -59,9 +59,27 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 	$scope.passPaymentPolicy = function(policy){
 		shareData.addData(policy);
 	}
-
+    $scope.deletePolicy = function(){
+    	if(confirm('CONFIRM TO DELETE POLICY ?')){
+			var tempObj ={eventId:$scope.policy.id};
+			console.log("fetch id "+ tempObj);
+			//var buildings ={name: $scope.name, address: $scope.address};
+			$http.post("//localhost:8443/policy/deletePaymentPolicy", JSON.stringify(tempObj)).then(function(response){
+				//$scope.buildings = response.data;
+				console.log("DELETE");
+				alert('PAYMENT POLICY IS DELETED! GOING BACK TO VIEW PAYMENT POLICY...');
+				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
+				$state.go("dashboard.viewPaymentPolicy");
+			},function(response){
+				alert("DID NOT DELETE PAYMENT POLICY");
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)
+		}
+    }
+ 
 	$scope.addPaymentPolicy = function(){
-		//alert("SUCCESS");
+		
 		$scope.data = {};
 		var dataObj = {			
 				deposit_rate: $scope.policy.deposit_rate,
@@ -120,4 +138,12 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 		});
 	};
 
-}]);	
+}]);
+
+/*app.controller('deletePolicyController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
+	angular.element(document).ready(function () {
+		$scope.policy = shareData.getData();
+	});
+	$scope.deletePolicy = function(){}
+}])*/
+

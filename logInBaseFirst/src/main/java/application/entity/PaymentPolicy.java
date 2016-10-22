@@ -27,19 +27,19 @@ public class PaymentPolicy {
 	 }
 
 	public Double getDepositRate() {
-		return depositRate;
+		return deposit_rate;
 	}
 
 	public void setDepositRate(Double depositRate) {
-		this.depositRate = depositRate;
+		this.deposit_rate = depositRate;
 	}
 
 	public int getSubsequentNumber() {
-		return subsequentNumber;
+		return subsequent_number;
 	}
 
 	public void setSubsequentNumber(int subsequentNumber) {
-		this.subsequentNumber = subsequentNumber;
+		this.subsequent_number = subsequentNumber;
 	}
 
 	public Long getId() {
