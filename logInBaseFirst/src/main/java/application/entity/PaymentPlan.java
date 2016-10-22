@@ -61,7 +61,19 @@ public class PaymentPlan {
 	 @Column(name = "payable")
 	 private Double payable;
 	 
-     @OneToOne
+	 @Column(name = "ticket_revenue")
+	 private Double ticketRevenue;
+	 
+	 @Column(name = "overdue")
+	 private Boolean overdue;
+	 
+	 @Column(name = "gst")
+	 private Double gst;
+	 
+	 @Column(name = "total_before_gst")
+	 private Double totalBeforeGst; 
+
+	 @OneToOne
      @JsonIgnore
      private Event event;
      
@@ -159,5 +171,38 @@ public class PaymentPlan {
 
 	public void setNotificationDue(Date notificationDue) {
 		this.notificationDue = notificationDue;
-	}     
+	}   
+	
+
+    public Double getTicketRevenue() {
+		return ticketRevenue;
+	}
+
+	public void setTicketRevenue(Double ticketRevenue) {
+		this.ticketRevenue = ticketRevenue;
+	}
+
+	public Boolean getOverdue() {
+		return overdue;
+	}
+
+	public void setOverdue(Boolean overdue) {
+		this.overdue = overdue;
+	}
+
+	public Double getGst() {
+		return gst;
+	}
+
+	public void setGst(Double gst) {
+		this.gst = gst;
+	}
+
+	public Double getTotalBeforeGst() {
+		return totalBeforeGst;
+	}
+
+	public void setTotalBeforeGst(Double totalBeforeGst) {
+		this.totalBeforeGst = totalBeforeGst;
+	}
 }
