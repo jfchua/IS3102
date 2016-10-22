@@ -125,9 +125,13 @@ public class PaymentPlanController {
 							Object obj1 = parser.parse(paymentJSON);
 							JSONObject jsonObject = (JSONObject) obj1;
 							Long eventId = (Long)jsonObject.get("eventId");
-							Double total = (Double)jsonObject.get("total");
-							Double deposit = (Double)jsonObject.get("deposit");
-							int subseNumber = (Integer)jsonObject.get("subsequent_number");
+							System.out.println(eventId);
+							Double total = Double.valueOf((String)jsonObject.get("total"));
+							System.out.println(total);
+							Double deposit = Double.valueOf((String)jsonObject.get("deposit"));
+							System.out.println(deposit);
+							int subseNumber = ((Long)jsonObject.get("subsequent_number")).intValue();
+							System.out.println(subseNumber);
 							//Double subsequent = (Double)jsonObject.get("subsequent");
 							boolean bl = paymentPlanService.createPaymentPlan(client, user, eventId, total, deposit, subseNumber);
 							System.out.println("adding payment plan " + total);
