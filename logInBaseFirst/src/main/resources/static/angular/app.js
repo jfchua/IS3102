@@ -99,7 +99,8 @@ var app = angular.module('app', [ 'ui.router',
                                   'ngSanitize',                                                       
                                   'ngFileUpload',
                                   'ui.bootstrap.contextMenu',
-                                  'angularModalService'])
+                                  'angularModalService',
+                                  'ui.bootstrap.tabs'])
 //Declaring Constants
 .constant('USER_ROLES', {
 	all: '*',
@@ -517,7 +518,7 @@ app.config(
 			.state('dashboard.viewAllEventsEx',{
 				url:'/viewAllEventsEx',
 				templateUrl: '/views/viewAllEventsEx.html',
-				controller: 'eventExternalController',
+				controller: 'viewToBeApprovedEventController',
 				data:{
 					authorizedRoles:[USER_ROLES.organiser]
 				}
@@ -1307,7 +1308,7 @@ app.controller('taskController', function($scope, $http, $route) {
 	   //$scope.eventsFormated=[];
 	   var getEvents = function(){
 			//var buildings ={name: $scope.name, address: $scope.address};
-			$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
+			$http.get("//localhost:8443/eventManager/viewAllEvents").then(function(response){
 				$scope.events = response.data;
 				//console.log("DISPLAY ALL EVENT fir event manager");
 				//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
@@ -1316,7 +1317,7 @@ app.controller('taskController', function($scope, $http, $route) {
 				if($scope.events.length!=0){
 					var index=0;
 				    angular.forEach($scope.events, function() {
-
+				    	if($scope.events[index].approvalStatus=="APPROVED" ||$scope.events[index].approvalStatus=="SUCCESSFUL"){
 				         var event=[{start: $scope.events[index].event_start_date,
 				        	 		end: $scope.events[index].event_end_date,			         
 				        		 	title:$scope.events[index].event_title,
@@ -1326,6 +1327,7 @@ app.controller('taskController', function($scope, $http, $route) {
 				         
 				        $scope.eventSources.push(event);
 				        	index = index + 1;
+				    	}
 				    });
 				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
 				    console.log( $scope.eventSources);

@@ -1,4 +1,9 @@
 app.controller('eventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	$scope.eventFilter={
+			event:{
+				approvalStatus:"SUCCESSFUL"
+			}
+	};
 	angular.element(document).ready(function () {
 		$scope.data = {};
 
@@ -175,7 +180,58 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 
 }]);
 
+app.controller('successfulEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	$scope.eventFilter={
+			event:{
+				approvalStatus:"SUCCESSFUL"
+			}
+	};
+	angular.element(document).ready(function () {
+		$scope.data = {};
 
+		//var buildings ={name: $scope.name, address: $scope.address};
+		$http.get("//localhost:8443/eventManager/viewAllEvents").then(function(response){
+			$scope.events = response.data;
+			console.log("DISPLAY ALL EVENT fir event manager");
+			//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
+
+		},function(response){
+			alert(response);
+			//console.log("response is : ")+JSON.stringify(response);
+		}	
+		)	
+		
+	});
+	$scope.passEvent = function(event){
+		shareData.addData(event);
+	}
+}]);
+	app.controller('canceledEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+		$scope.eventFilter={
+				event:{
+					approvalStatus:"CANCELLED"
+				}
+		};
+		angular.element(document).ready(function () {
+			$scope.data = {};
+
+			//var buildings ={name: $scope.name, address: $scope.address};
+			$http.get("//localhost:8443/eventManager/viewAllEvents").then(function(response){
+				$scope.events = response.data;
+				console.log("DISPLAY ALL EVENT fir event manager");
+				//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
+
+			},function(response){
+				alert(response);
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)	
+			
+		});
+		$scope.passEvent = function(event){
+			shareData.addData(event);
+		}
+}]);
 //DELETE EVENT
 app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
 	angular.element(document).ready(function () {
@@ -271,7 +327,7 @@ app.controller('viewApprovedEventController', ['$scope', '$http','$state','$rout
 					console.log("UPDATING THE EVENT");
 					send.success(function(){
 						alert('Successfully saved event status, going back to viewing all approved events');
-						$state.go("dashboard.viewApprovedEvents");
+						$state.go("dashboard.viewAllEvents");
 					});
 					send.error(function(data){
 						alert(data);
@@ -280,6 +336,20 @@ app.controller('viewApprovedEventController', ['$scope', '$http','$state','$rout
 
 }]);
 
+app.filter('successfulEventsFilter', [function($filter) {
+	 return function(inputArray, searchCriteria, txnStatus){         
+	  if(!angular.isDefined(searchCriteria) || searchCriteria == ''){
+	   return inputArray;
+	  }         
+	  var data=[];
+	  angular.forEach(inputArray, function(item){             
+	   if(event.approvalStatus == txnStatus){	
+	     data.push(item);
+	   }
+	  });      
+	  return data;
+	 };
+	}]);
 //VIEW TO BE APPROVED EVENTS
 app.controller('viewToBeApprovedEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
@@ -373,7 +443,7 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$state','$route
 		console.log("UPDATING THE EVENT");
 		send.success(function(){
 			alert('Successfully saved event status, going back to viewing all approved events');
-			$state.go("dashboard.viewApprovedEvents");
+			$state.go("dashboard.viewAllEvents");
 		});
 		send.error(function(data){
 			alert(data);
