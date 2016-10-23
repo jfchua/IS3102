@@ -130,7 +130,7 @@ public class EventController {
 		}
 	}
 
-	@PreAuthorize("hasAnyAuthority('ROLE_EVENT','ROLE_USER')")
+	@PreAuthorize("hasAnyAuthority('ROLE_EVENT','ROLE_PROPERTY','ROLE_FINANCE')")
 	// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 	// Each object (building) will contain... long id, .
 	@RequestMapping(value = "/viewAllEvents",  method = RequestMethod.GET)

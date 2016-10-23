@@ -472,7 +472,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 	   //RETRIEVE EVENTS
 	   //$scope.eventsFormated=[];
 	   var getEvents = function(){
-			
+			//need to changed to same as workspace calendar view all events with status success approved,processing
 			$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
 				$scope.events = response.data;
 				//console.log("DISPLAY ALL EVENT fir event manager");
@@ -511,8 +511,42 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			)	
 			
 		}
-	   getEvents();
 	   
+	   
+	   
+	   //RETRIEVE MAINTENANCES
+	   //$scope.eventsFormated=[];
+	   var getMaints = function(){
+			//var buildings ={name: $scope.name, address: $scope.address};
+			$http.get("//localhost:8443/maintenance/viewMaintenance").then(function(response){
+				$scope.maints = response.data;
+				if($scope.maints.length!=0){
+					var index=0;
+				    angular.forEach($scope.maints, function() {
+
+				         var maint=[{start: $scope.maints[index].start,
+				        	 		end: $scope.maints[index].end,			         
+				        		 	title:"Booked",
+				        		 	allDay: false,
+				        		 	color: 'IndianRed'
+				         			}];
+				         
+				        $scope.haha.push(maint);
+				        	index = index + 1;
+				    });
+				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
+				   // console.log( $scope.eventSources);
+					}
+			},function(response){
+				//alert(response);
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)	
+			
+		}
+	   
+	   getEvents();
+	   getMaints();
 	
 }]);
 
