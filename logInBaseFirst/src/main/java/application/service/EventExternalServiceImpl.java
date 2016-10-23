@@ -689,4 +689,23 @@ public class EventExternalServiceImpl implements EventExternalService {
             return false;
 		}
 	}
+
+	@Override
+	public Set<Event> getEventsWithTicket(ClientOrganisation client) {
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		Set<Event> events = new HashSet<Event>();		
+		for(User u: eventOrgs){
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_EXTEVE")){
+					Set<Event> events1 = u.getEvents();
+					for(Event e : events1){
+						if(e.isHasTicket())
+						events.add(e);
+					}
+			}
+			}
+		}		
+		return events;
+	}
 }

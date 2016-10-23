@@ -472,6 +472,62 @@ public class PaymentPlanController {
 						return new ResponseEntity<Void>(HttpStatus.OK);
 					}						
 					
-					
+					// Call this method using $http.get and you will get a JSON format containing an array of event objects.
+					// Each object (building) will contain... long id, collection of levels.
+					@RequestMapping(value = "/viewAllEventsWithTicket", method = RequestMethod.GET)
+					@ResponseBody
+					public ResponseEntity<String> viewAllEventsWithTicket(HttpServletRequest rq) throws UserNotFoundException {
+						Principal principal = rq.getUserPrincipal();
+						Optional<User> usr = userService.getUserByEmail(principal.getName());
+						if ( !usr.isPresent() ){
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);
+						}
+						try{
+							ClientOrganisation client = usr.get().getClientOrganisation();				   				
+							Set<Event> events= eventExternalService.getEventsWithTicket(client);
+							System.out.println("There are X events and X is "+events.size());
+							JSONArray jArray = new JSONArray();
+								Gson gson2 = new GsonBuilder()
+										.setExclusionStrategies(new ExclusionStrategy() {
+											public boolean shouldSkipClass(Class<?> clazz) {
+												return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+											}
+											/**
+											 * Custom field exclusion goes here
+											 */
+											@Override
+											public boolean shouldSkipField(FieldAttributes f) {
+												//TODO Auto-generated method stub
+												return false;
+											}
+										})
+										/**
+										 * Use serializeNulls method if you want To serialize null values 
+										 * By default, Gson does not serialize null values
+										 */
+										.serializeNulls()
+										.create();
+								for(Event ev : events){
+									JSONObject obj1 = new JSONObject();
+									obj1.put("id", ev.getId());
+									System.out.println("event title is "+ev.getEvent_title());
+								    obj1.put("email", ev.getEventOrg().getEmail());
+								    System.out.println(ev.getEventOrg().getEmail());
+								    PaymentPlan pay= ev.getPaymentPlan();
+								    obj1.put("ticket",pay.getTicketRevenue());
+								    System.out.println("TOTAL2");
+								    Double balance = pay.getTotal()-pay.getTicketRevenue();
+								    obj1.put("outstanding",balance);
+								    System.out.println("TOTAL3" + balance);
+									jArray.add(obj1);
+								}
+								 System.out.println("finishing getting list of events");
+								return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);			
+						}
+						catch (Exception e){
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);
+						}
+					}
+										
 }
 
