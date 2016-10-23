@@ -622,7 +622,15 @@ app.config(
 			.state('dashboard.addPaymentPlan',{
 				url:'/addPaymentPlan',
 				templateUrl: '/views/addPaymentPlan.html',
-				controller: 'paymentController',
+				controller: 'addPaymentController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.updatePaymentPlan',{
+				url:'/updatePaymentPlan',
+				templateUrl: '/views/updatePaymentPlan.html',
+				controller: 'updatePaymentController',
 				data:{
 					authorizedRoles:[USER_ROLES.finance]
 				}
