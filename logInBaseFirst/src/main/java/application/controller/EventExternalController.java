@@ -582,7 +582,34 @@ public class EventExternalController {
 						return new ResponseEntity<Void>(HttpStatus.OK);
 					}
 					
-					
+	              @RequestMapping(value = "/requestTicket", method = RequestMethod.POST)
+					@ResponseBody
+					public ResponseEntity<Void> requestTicket(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
+						Principal principal = rq.getUserPrincipal();
+					 Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());	
+					   if ( !eventOrg1.isPresent() ){
+							return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+						}
+						try{	
+					    User eventOrg = eventOrg1.get();
+					    ClientOrganisation client = eventOrg.getClientOrganisation();
+							System.out.println("Start deleting");
+							Object obj = parser.parse(eventJSON);
+							JSONObject jsonObject = (JSONObject) obj;
+							//long buildingId = (Long)jsonObject.get("buildingId");
+							long eventId = (Long)jsonObject.get("eventId");
+							System.out.println("eventId");	
+							boolean bl=eventExternalService.requestTicket(client, eventId);
+							if(!bl){
+								System.out.println("REQUEST FAILURE");
+								return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
+							}			
+						}
+						catch (Exception e){
+							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+						}
+						return new ResponseEntity<Void>(HttpStatus.OK);
+					}					
 					
 					
 }

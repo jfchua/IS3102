@@ -672,4 +672,21 @@ public class EventExternalServiceImpl implements EventExternalService {
 		}
 		return rent;
 	}
+
+	@Override
+	public boolean requestTicket(ClientOrganisation client, long id) {
+		try{
+			Optional<Event> event1 = getEventById(id);
+			if(event1.isPresent()&&checkEvent(client, id)&&(String.valueOf(event1.get().getApprovalStatus()).equals("APPROVED"))){
+				Event event = event1.get();
+				event.setHasTicket(true);
+				eventRepository.flush();
+				return true;
+			}
+			else
+				return false;
+		}catch(Exception e){
+            return false;
+		}
+	}
 }

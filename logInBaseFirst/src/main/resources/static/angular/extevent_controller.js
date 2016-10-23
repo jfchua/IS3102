@@ -41,6 +41,27 @@ $scope.passEvent = function(event){
 	shareData.addData(event);
 	console.log(event);
 }
+
+$scope.requestForTicketSales = function(event){
+	if(confirm('CONFIRM TO HAVE TICKET SALES FOR '+event.event_title+'?')){
+
+		var tempObj ={eventId: event.id};
+		console.log("fetch id "+ tempObj);
+		//var buildings ={name: $scope.name, address: $scope.address};
+		$http.post("//localhost:8443/event/requestTicket", JSON.stringify(tempObj)).then(function(response){
+			//$scope.buildings = response.data;
+			console.log("REQUEST FOR TICKET SALES");
+			alert('SUCCESS REQUEST! GOING BACK TO VIEW EVENTS...');
+			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
+			$state.go("dashboard.viewAllEventsEx");
+		},function(response){
+			alert("DID NOT REQUEST");
+			//console.log("response is : ")+JSON.stringify(response);
+		}	
+		)
+	}	
+}
+
 $scope.getEventById= function(){
 
 	$scope.event1 = JSON.parse(shareData.getData());
