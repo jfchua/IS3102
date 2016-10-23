@@ -675,7 +675,14 @@ app.config(
 					authorizedRoles:[USER_ROLES.finance]
 				}
 			})
-
+            .state('dashboard.updateReceivedPayment',{
+				url:'/updateReceivedPayment',
+				templateUrl: '/views/updateReceivedPayment.html',
+				controller: 'receivedPController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
 			.state('/401',{
 				url:'/401',
 				templateUrl: '/views/401.html',
