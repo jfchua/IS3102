@@ -255,6 +255,22 @@ app.controller('receivedPController', ['$scope', '$http','$state','$routeParams'
 	}
 }]);
 
+app.controller('eventWithTicketController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$http.get("//localhost:8443/payment/viewAllEventsWithTicket").then(function(response){
+			$scope.events = response.data;
+			console.log("DISPLAY ALL EVENTS");
+		},function(response){
+			alert("did not view events");
+		}	
+		)	
+	});
+	$scope.passEvent = function(id){
+		shareData.addData(id);
+	}
+}]);
+
 
 app.controller('policyController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {

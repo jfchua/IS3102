@@ -48,4 +48,7 @@ public interface EventExternalService {
 	Set<BookingAppl> getBookings(ClientOrganisation client, long id);
 	
 	boolean requestTicket(ClientOrganisation client, long id);
+	
+	Set<Event> getEventsWithTicket(ClientOrganisation client);
+	
 }
