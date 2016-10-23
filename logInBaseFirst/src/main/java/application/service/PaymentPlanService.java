@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import application.entity.ClientOrganisation;
+import application.entity.Event;
 import application.entity.PaymentPlan;
 import application.entity.User;
 
@@ -28,5 +29,7 @@ public interface PaymentPlanService {
 	Double checkRent(ClientOrganisation client, long eventId);
 	//boolean updateAmountPayable(ClientOrganisation client, long paymentId, Double paid);
 	Double getOutstandingById(long userId);
+	
+	Set<Event> getEventsByOrgId(ClientOrganisation client, long id);
 
 }
