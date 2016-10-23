@@ -1,0 +1,41 @@
+
+<div class="modal fade">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Edit User</h4>
+      </div>
+      <div class="modal-body">
+        <p></p>
+        <form class="form-horizontal" role="form">
+		  				<div class="form-group">
+							<label  class="col-sm-2 control-label">Name</label>
+							<div class="col-sm-10">
+								<input type="name" class="form-control" ng-model="profile.name">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Email</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="profile.email"></p>
+							</div>
+						</div>
+						<div ng-repeat="gender in genders" ng-show="profile.editable">
+							<div class="action-checkbox">
+						<input id="{{gender}}" type="checkbox" value="{{gender}}"
+							ng-checked="selection.indexOf(gender) > -1"
+							ng-click="toggleSelection(gender)" /> <label for="{{gender}}"></label>
+						{{gender}}
+							</div>
+						</div>
+		</form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal">OK</button>
+        <button type="button" ng-click="cancel()" class="btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

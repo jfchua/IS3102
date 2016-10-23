@@ -1,87 +1,64 @@
-<div ng-controller="logoController" >
 
-		<div class="col-md-9">
-			<div class="panel panel-primary">
-
-				<div class="panel-heading">
-					<h3 class="panel-title">Add logo		  
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-						</div>
-					</h3>
-				</div>
-				<div class="panel-body">
-                    
-                    <form>
-                        <input type="file" ngf-select ng-model="picFile" name="file"    
-                                 accept="image/*" ngf-max-size="10MB" required
-                                 ngf-model-invalid="errorFile">
-                          <i ng-show="myForm.file.$error.required">*required</i><br>
-                          <i ng-show="myForm.file.$error.maxSize">File too large 
-                              {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
-                          <img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb"> <button ng-click="picFile = null" ng-show="picFile">Remove</button>
-                          <br/>
-                          <br>
-                          <button ng-disabled="!myForm.$valid" 
-                                  ng-click="uploadPic(picFile)">Submit</button>
-                          <span ng-show="picFile.result">Upload Successful</span>
-                          <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
-                        
-                            <br>
-                            
-					 <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "reset()">Submit</button> &nbsp;
-                 
-                    </form>
-                     
-                    
-                    
-                    
-				</div>
-			</div>
-        </div>
-    <div class="col-md-2">
-        <div class="panel panel-primary">
-
-				<div class="panel-heading">
-					<h3 class="panel-title">Current logo		  
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-						</div>
-					</h3>
-				</div>
-				<div class="panel-body">
-         
-                        <img ng-src={{logo}} alt="Company_Logo" />
+       <div class="clearfix">
+                            <ol class="breadcrumb no-bg no-m-t">
+                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a>Upload Logo</a></li>
+                            </ol>
             </div>
+<div class="row" ng-controller="logoController" >
+   <div class="col-md-6">
+                <div class="panel panel-primary">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Upload logo		  
+                            <div class="panel-control pull-right">
+                                <a class="panelButton"><i class="fa fa-refresh"></i></a>
+                                <a class="panelButton"><i class="fa fa-minus"></i></a>
+                                <a class="panelButton"><i class="fa fa-remove"></i></a>
+                            </div>
+                        </h3>
+                    </div>
+            <div class="panel-body">
+
+     <form  name="myForm">
+      <input type="file" ngf-select ng-model="picFile" name="file"    
+             accept="image/*" ngf-max-size="10MB" required
+             ngf-model-invalid="errorFile">
+      <i ng-show="myForm.file.$error.required">*required</i><br>
+      <i ng-show="myForm.file.$error.maxSize">File too large 
+          {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+      <img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb" height="200px" width= "200px"> <button ng-click="picFile = null" ng-show="picFile">Remove</button>
+      <br/>
+      <br>
+    
+ 
+    <br>
+   <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-disabled="!myForm.$valid" 
+              ng-click="uploadPic(picFile)">Submit</button> &nbsp;  <span ng-show="picFile.result">Upload Successful</span>
+      <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
+
+            </form>
+            </div>
+          </div>
         </div>
-    </div>
+		   <div class="col-md-3">
+                <div class="panel panel-primary">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Current logo	  
+                            <div class="panel-control pull-right">
+                                <a class="panelButton"><i class="fa fa-refresh"></i></a>
+                                <a class="panelButton"><i class="fa fa-minus"></i></a>
+                                <a class="panelButton"><i class="fa fa-remove"></i></a>
+                            </div>
+                        </h3>
+                    </div>
+            <div class="panel-body">
+
+    <img ng-src={{logo}} alt="Company_Logo" style='height: 100%; width: 100%; object-fit: contain'/>
+            </div>
+          </div>
+        </div>
 </div>
-<style>
-.thumb {
-	width: 24px;
-	height: 24px;
-	float: none;
-	position: relative;
-	top: 7px;
-}
-
-form .progress {
-	line-height: 15px;
-}
-
-.progress {
-	display: inline-block;
-	width: 100px;
-	border: 3px groove #CCC;
-}
-
-.progress div {
-	font-size: smaller;
-	background: orange;
-	width: 0;
-}
-</style>
+  

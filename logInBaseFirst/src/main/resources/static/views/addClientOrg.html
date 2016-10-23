@@ -1,24 +1,40 @@
+<div class="clearfix">
+                        <ol class="breadcrumb no-bg no-m-t">
+                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                            <li><a ui-sref="dashboard.viewClientOrgs">View Clients</a></li>
+                             <li><a>Add Client</a></li>
+                        </ol>
+</div>
+	<div class="row" ng-cloak ng-controller="clientOrgController as clientOrgCtrl">
+		<div class="col-md-9">
+			<div class="panel panel-primary">
 
-	<div ng-cloak ng-controller="clientOrgController as clientOrgCtrl"
-		ng-submit="submit()">
-		<div class="container">
-			<div class="content">
-				<h1>Add a new client organisation</h1>
+				<div class="panel-heading">
+					<h3 class="panel-title">Add client organisation	  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body">
 				<form>
 					<div class="form-group">
 						<label for="exampleInput">Organisation Name</label> <input
-							type="text" ng-model="clientOrg.name" class="form-control"
+							type="text" ng-model="clientOrg.name" class="form-control underline"
 							id="orgName" placeholder="Enter Organisation Name" required>
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">IT Admin's Email</label> <input
-							type="email" ng-model="clientOrg.email" class="form-control"
+							type="email" ng-model="clientOrg.email" class="form-control underline"
 							id="orgEmail" placeholder="Enter Organisation IT Admin's email"
 							required>
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">IT Admin's name</label> <input
-							type="text" ng-model="clientOrg.nameAdmin" class="form-control"
+							type="text" ng-model="clientOrg.nameAdmin" class="form-control underline"
 							id="orgEmail" placeholder="Enter Organisation IT Admin's name"
 							required>
 					</div>
@@ -34,9 +50,15 @@
 					</div>
 					<br>
 					<!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
-					<input type="submit" value="Submit">
-				</form>
+					
+				<button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "submit()">Submit</button> &nbsp;
+                 
+                    </form>
+                    
+                    
+                    
+                    
+				</div>
 			</div>
-		</div>
-	</div>
-
+        </div>
+</div>

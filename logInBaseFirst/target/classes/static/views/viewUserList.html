@@ -1,43 +1,87 @@
 
-<div ng-controller="viewUserList as ctrl">
-	<table>
-		<tr>
-			<td>Name</td>
-			<td>Email</td>
-			<td>Roles</td>
-			<td><span ng-click="add()">Add New</span></td>
-		</tr>
-		<tr ng-repeat="profile in Profiles | orderBy:'$index'">
-			<td><input type="text" ng-model="ctrl.profile.name"
-				ng-change="updateValue(ctrl.profile.name,ctrl.profile.email)"
-				ng-show="profile.editable"> <span ng-hide="profile.editable">{{
-					profile.name }}</span></td>
-
-
-
-			<td><p type="text" ng-model="ctrl.profile.email"
-					ng-show="profile.editable">
-					<span ng-hide="">
-				</p>{{ profile.email }}</span></td>
-				
-					
-
-			<td>
-				<div ng-repeat="gender in genders" ng-show="profile.editable">
-					<div class="action-checkbox">
-						<input id="{{gender}}" type="checkbox" value="{{gender}}"
-							ng-checked="selection.indexOf(gender) > -1"
-							ng-click="toggleSelection(gender)" /> <label for="{{gender}}"></label>
-						{{gender}}
-					</div>
+<div class="clearfix">
+                        <ol class="breadcrumb no-bg no-m-t">
+                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                            <li><a>View Users</a></li>
+                        </ol>
+</div>
+    <div class="row" ng-controller="viewUserList as ctrl">
+<div class="col-md-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Users	  
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
 				</div>
+				<div class="panel-body" >    
+            <table class="table table-hover">
+						<thead>
+							<tr>
+								<th><i></i> Name </th>
+                                <th><i></i> Email </th>
+                                <th><i></i> Roles </th>
+                                <th><i></i> Edit Roles </th>
+                                <th><i></i> Actions </th>
+                                
+							</tr>
+						</thead>
+						<tbody>
+							 <tr ng-repeat="profile in Profiles | orderBy:'$index'">
+                             <td><div ng-show="profile.editable">Current Name:</div><div>{{ profile.name }} </div>
+				                      <div ng-show="profile.editable">New Name:</div><div ng-show="profile.editable"> <input type="text" ng-model="ctrl.profile.name" ng-change="updateValue(ctrl.profile.name,ctrl.profile.email)">
+				                      </div>
+							</td>
+                             <td ng-model="ctrl.profile.email">{{profile.email}}</td>
+                             <td>
+                             
+                                 <div ng-repeat="role in genders">
+                                <input type="checkbox"  ng-checked="checkRole(role,profile)"  ng-disabled="true"> {{role}}
+                                    </div>
+                                    
+                            </td>
+                            <td>
+                            
+                                <div ng-repeat="gender in genders" ng-show="profile.editable">
+									<div class="action-checkbox">
+										<input id="{{gender}}" type="checkbox" value="{{gender}}"
+											ng-checked="selection.indexOf(gender) > -1"
+											ng-click="toggleSelection(gender)" /> <label for="{{gender}}"></label>
+										{{gender}}
+									</div>
+								</div>
 
-			</td>
-			<td><span ng-click="edit($index)" ng-hide="profile.editable">Edit</span>
-				<span ng-click="save($index)" ng-show="profile.editable">Save</span>
-				<span ng-click="delete($index)"> | Delete</span></td>
-		</tr>
-	</table>
+                                 
+                            </td>
+                             <td>
+                             		<a  ng-click="edit($index)" ng-hide="profile.editable" tooltip-placement="top" tooltip="Update user"><i class="glyphicon glyphicon-pencil"></i></a>
+                             		<a   ng-click="delete($index)" ng-hide="profile.editable" tooltip-placement="top" tooltip="Delete user"><i class="glyphicon glyphicon-trash"></i></a>
+                             		<a  ng-click="save($index)" ng-show="profile.editable" tooltip-placement="top" tooltip="Save user"><i class="glyphicon glyphicon-floppy-disk"></i></a>
+                             </td>
+                             </tr>
+							
+							
+						</tbody>
+					</table>			
+				</div>
+			</div>
+		</div>
+    <div class="col-md-3">
+		<br>
+		<br>
+		<br>
+		 <a ui-sref="dashboard.createNewUser" tooltip-placement="right" tooltip="Add a user"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
+		<!--  	<a ui-sref="dashboard.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
+		</div>
+    
+    
+
 
 
 </div>

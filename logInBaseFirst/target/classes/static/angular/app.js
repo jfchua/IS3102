@@ -330,7 +330,7 @@ app.config(
 				}
 			})
 			.state('dashboard.addClientOrg',{
-				url:'addClientOrg',
+				url:'/addClientOrg',
 				templateUrl: '/views/addClientOrg.html',
 				controller: 'clientOrgController',
 				data: {
@@ -518,7 +518,7 @@ app.config(
 			.state('dashboard.viewAllEventsEx',{
 				url:'/viewAllEventsEx',
 				templateUrl: '/views/viewAllEventsEx.html',
-				controller: 'viewToBeApprovedEventController',
+				controller: 'eventExternalController',
 				data:{
 					authorizedRoles:[USER_ROLES.organiser]
 				}
@@ -1008,8 +1008,8 @@ app.controller('createNewUserController', function($scope, $http){
 
 
 //VIEW USER START
-app.controller('viewUserList', ['$scope','$http','$location',
-                                function($scope, $http,$location) {
+app.controller('viewUserList', ['$scope','$http','$location','ModalService',
+                                function($scope, $http,$location,ModalService) {
 	//assign roles
 	$scope.genders=['ROLE_USER','ROLE_EVENT','ROlE_ADMIN','ROLE_PROPERTY','ROLE_FINANCE','ROLE_TICKETING','ROLE_EXTEVE'];
 
@@ -1046,21 +1046,21 @@ app.controller('viewUserList', ['$scope','$http','$location',
 
 	$scope.checkRole =function(role,profile){
 		     var roles=profile.roles;
-			          
+			 var hasRole=false;
 		     var index = 0;
 			  angular.forEach(roles, function(item){             
-			   if(role == roles[index].name){	
-					  return true;
+			   if(hasRole==false&&role == roles[index].name){	
+					 hasRole=true;
+					  console.log(hasRole);
 			   }else{
 				   index = index + 1;
 			   }
 			  });      
-		
+			  return hasRole;
 			
 	} ;
 
-
-
+	
 	$scope.Profiles = [];
 
 	$scope.send = function(){
@@ -1107,6 +1107,8 @@ app.controller('viewUserList', ['$scope','$http','$location',
 	$scope.email = "";
 
 	$scope.updateValue = function(name, email){
+		console.log(name);
+		console.log(email);
 		$scope.name = name;
 		$scope.email = email;
 	};
@@ -1139,7 +1141,8 @@ app.controller('viewUserList', ['$scope','$http','$location',
 		toEdit.success(function(response){
 
 			alert('Successfully updated the user');
-			$location.path("/dashboard");
+			$scope.send();
+
 		});
 		toEdit.error(function(response){
 			alert('Error, ');
@@ -1203,6 +1206,7 @@ app.controller('viewUserList', ['$scope','$http','$location',
 	}
 }
 ]);
+
 //EDIT USER PROFILE
 
 //USER PROFILE CONTROLLER
@@ -1317,7 +1321,7 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 
 
 /*1. TO DO LIST*/
-app.controller('taskController', function($scope, $http, $route) {
+app.controller('taskController', function($scope, $http, $route,Auth) {
 		//CONFIG CALENDAR
 	   $scope.uiConfig = {
 			      calendar:{
@@ -1402,6 +1406,46 @@ app.controller('taskController', function($scope, $http, $route) {
 			
 		}
 	   
+	  
+	   
+	   //RETRIEVE EVENTS OF EXTERNAL EVENT ORGANISER
+	   //$scope.eventsFormated=[];
+	   var getExEvents = function(){
+			//var buildings ={name: $scope.name, address: $scope.address};
+			$http.get("//localhost:8443/event/viewAllEvents").then(function(response){
+				$scope.events = response.data;
+				//console.log("DISPLAY ALL EVENT fir event manager");
+				//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
+				//ADD EVENTS INTO EVENTSOURCES OF CALENDAR
+				
+				if($scope.events.length!=0){
+					var index=0;
+				    angular.forEach($scope.events, function() {
+				    	if($scope.events[index].approvalStatus=="APPROVED" ||$scope.events[index].approvalStatus=="SUCCESSFUL"){
+				         var event=[{start: $scope.events[index].event_start_date,
+				        	 		end: $scope.events[index].event_end_date,			         
+				        		 	title:$scope.events[index].event_title,
+				        		 	allDay: false,
+				        		 	color: 'SeaGreen'
+				         			}];
+				         
+				        $scope.eventSources.push(event);
+				        	index = index + 1;
+				    	}
+				    });
+				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
+				    console.log( $scope.eventSources);
+					}
+			},function(response){
+				//alert(response);
+				//console.log("response is : ")+JSON.stringify(response);
+			}	
+			)	
+			
+		}
+	   
+	   
+	   
 		//var today = new Date();
 		//var next = new Date();
 		//next.setDate(next.getDate() + 3); 
@@ -1455,12 +1499,21 @@ app.controller('taskController', function($scope, $http, $route) {
 			})
 			}
 			//$scope.save();
-			//GET TODOS			
+			//FOR ALL USERS: GET TODOS	
 			getTdList();
-			//GET EVENTS
-			getEvents();
-			//GET MAINTENANCES
-			getMaints();
+			//FOR PROPERTY,EVENT,FINANCE,TICKETING: GET EVENTS AND MAINTENANCES
+			if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')){
+				getEvents();
+				getMaints();
+			}else if(Auth.hasRoles('ROLE_EXTEVE')){
+				getExEvents();
+			}
+			
+			//FOR PROPERTY MANAGER: GET MAINTENANCES		
+			/*if(Auth.hasRoles('ROLE_PROPERTY')){
+				
+			}*/
+			
 			$scope.newTask = null;
 			$scope.newTaskDate = null;
 			$scope.categories = [
@@ -1491,9 +1544,24 @@ app.controller('taskController', function($scope, $http, $route) {
 						//GET TODOS	
 						$scope.eventSources.length=0;
 						
-						getEvents();
+						//getEvents();
+						//getTdList();
+						//getMaints();
+						//FOR ALL USERS: GET TODOS	
 						getTdList();
-						getMaints();
+						//FOR PROPERTY,EVENT,FINANCE,TICKETING: GET EVENTS AND MAINTENANCES
+						if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')){
+							getEvents();
+							getMaints();
+						}else if(Auth.hasRoles('ROLE_EXTEVE')){
+							getExEvents();
+						}
+						
+						//FOR PROPERTY MANAGER: GET MAINTENANCES		
+						/*if(Auth.hasRoles('ROLE_PROPERTY')){
+							
+						}*/
+						
 					}).error(function(result){
 						//do something
 						console.log("ERROR GETTING TODO LIST");
@@ -1530,9 +1598,24 @@ app.controller('taskController', function($scope, $http, $route) {
 						//$scope.saved = result;		
 						$scope.eventSources.length=0;
 						
-						getEvents();
+						//getEvents();
+						//getTdList();
+						//getMaints();
+						//FOR ALL USERS: GET TODOS	
 						getTdList();
-						getMaints();
+						//FOR PROPERTY,EVENT,FINANCE,TICKETING: GET EVENTS AND MAINTENANCES
+						if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')){
+							getEvents();
+							getMaints();
+						}else if(Auth.hasRoles('ROLE_EXTEVE')){
+							getExEvents();
+						}
+						
+						//FOR PROPERTY MANAGER: GET MAINTENANCES		
+						/*if(Auth.hasRoles('ROLE_PROPERTY')){
+							
+						}*/
+						
 					}).error(function(result){
 						//do something
 						console.log("ERROR GETTING TODO LIST");
@@ -3022,7 +3105,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location',
 		//$location.path('/viewUserList');
 	}
 	$scope.send();
-
+	
 
 	$scope.entity = {};
 	$scope.name = "";
@@ -3065,13 +3148,32 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location',
 		toEdit.success(function(response){
 			$scope.Profiles = response;
 			alert('Succesfully updated the client organisation');
-			$location.path("/dashboard");
+			$scope.send();
 		});
 		toEdit.error(function(response){
 			alert('Error, ');
 		});
 
 	}
+	
+
+	$scope.checkRole =function(role,profile){
+		     var roles=profile.systemSubscriptions;
+		     console.log(roles);
+			 var hasRole=false;
+		     var index = 0;
+			  angular.forEach(roles, function(item){             
+			   if(hasRole==false&&role == roles[index]){	
+					 hasRole=true;
+					  console.log(hasRole);
+			   }else{
+				   index = index + 1;
+			   }
+			  });      
+			  return hasRole;
+			
+	} ;
+	
 
 	$scope.delete = function(index){
 		//$scope.Profiles.splice(index,1);
@@ -3321,6 +3423,7 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http', functi
 			$timeout(function () {
 				file.result = response.data;
 				alert("is success " + JSON.stringify(response.data));
+				getLogo();
 			});
 		}, function (response) {
 			if (response.status > 0)
