@@ -25,6 +25,9 @@ public class PaymentPolicy {
 	 @Column(name = "due_days")
 	 private int numOfDueDays;
 	 
+	 @Column(name = "interim_period")
+	 private int interimPeriod;
+	 
 	 public PaymentPolicy(){
 		 super();
 	 }
@@ -55,6 +58,14 @@ public class PaymentPolicy {
 
 	public void setNumOfDueDays(int numOfDueDays) {
 		this.numOfDueDays = numOfDueDays;
+	}
+
+	public int getInterimPeriod() {
+		return interimPeriod;
+	}
+
+	public void setInterimPeriod(int interimPeriod) {
+		this.interimPeriod = interimPeriod;
 	}
 	
 	

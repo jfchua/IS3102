@@ -19,7 +19,7 @@ public interface PaymentPlanService {
 	
 	Set<PaymentPlan> viewAllPaymentPlan(ClientOrganisation client, User user);
 	
-	boolean updateAmountPaid(ClientOrganisation client, User user, long paymentId, Double paid);
+	boolean updateAmountPaidByOrg(ClientOrganisation client, User user, long paymentPlanId, String chequeNum,Double paid);
 	
 	boolean checkEvent(ClientOrganisation client, long eventId);
 	
@@ -27,5 +27,6 @@ public interface PaymentPlanService {
 	
 	Double checkRent(ClientOrganisation client, long eventId);
 	//boolean updateAmountPayable(ClientOrganisation client, long paymentId, Double paid);
+	Double getOutstandingById(long userId);
 
 }

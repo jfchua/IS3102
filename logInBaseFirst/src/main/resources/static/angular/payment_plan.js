@@ -138,6 +138,25 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 
 }]);
 
+app.controller('balanceController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$http.get("//localhost:8443/payment/viewAllOutstandingBalance").then(function(response){
+			$scope.orgs = response.data;
+			console.log("DISPLAY ALL ORGS OUTSTANDING BALANCE");
+			console.log($scope.orgs);
+		},function(response){
+			alert("did not view balance");
+		}	
+		)	
+	});
+	$scope.passPaymentPlan = function(result){
+		shareData.addData(result);
+	}
+
+
+}]);
+
 
 app.controller('policyController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
@@ -181,6 +200,7 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 				depositRate: $scope.policy.depositRate,
 				subsequentNumber: $scope.policy.subsequentNumber,
 				dueDays: $scope.policy.numOfDueDays,
+				interimPeriod: $scope.policy.interimPeriod,
 		};
 		console.log("REACHED HERE FOR SUBMIT PAYMENT POLICY " + JSON.stringify(dataObj));
 		var send = $http({
@@ -211,6 +231,7 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 				depositRate: $scope.policy1.depositRate,
 				subsequentNumber: $scope.policy1.subsequentNumber,
 				dueDays: $scope.policy1.numOfDueDays,
+				interimPeriod: $scope.policy1.interimPeriod,
 		};	
 		$scope.policy = angular.copy($scope.policy1);
 		//console.log("$scope.policy3");
@@ -226,6 +247,7 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 				depositRate: $scope.policy.depositRate,
 				subsequentNumber: $scope.policy.subsequentNumber,
 				dueDays: $scope.policy.numOfDueDays,
+				interimPeriod: $scope.policy.interimPeriod,
 		};
 		console.log("REACHED HERE FOR SUBMIT PAYMENT POLICY " + JSON.stringify(dataObj));
 		var send = $http({
@@ -245,10 +267,4 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 
 }]);
 
-/*app.controller('deletePolicyController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
-	angular.element(document).ready(function () {
-		$scope.policy = shareData.getData();
-	});
-	$scope.deletePolicy = function(){}
-}])*/
 

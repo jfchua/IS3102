@@ -80,6 +80,9 @@ public class PaymentPlan {
      @JsonIgnore
      private Event event;
      
+	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
+	private Set<Payment> payments = new HashSet<Payment>();
+	 
      public PaymentPlan() {
  		//super();
  	}
@@ -216,6 +219,12 @@ public class PaymentPlan {
 	public void setDepositRate(Double depositRate) {
 		this.depositRate = depositRate;
 	}
-	
-	
+
+	public Set<Payment> getPayments() {
+		return payments;
+	}
+
+	public void setPayments(Set<Payment> payments) {
+		this.payments = payments;
+	}
 }

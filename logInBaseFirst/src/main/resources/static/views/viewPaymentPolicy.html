@@ -28,6 +28,7 @@
                            <th><i></i> Deposit Rate </th>
                            <th><i></i> Number Of Subsequent Payments </th>
                            <th><i></i> Number Of Due Days </th>
+                           <th><i></i> Period </th>
                            <th>Actions</th>
                        
                            </tr>
@@ -37,6 +38,7 @@
                       <td ng-bind="policy.depositRate"></td>
                        <td ng-bind="policy.subsequentNumber"></td>
                         <td ng-bind="policy.numOfDueDays"></td>
+                        <td ng-bind="policy.interimPeriod"></td>
                        <td>
                          <a  ui-sref="dashboard.updatePaymentPolicy" ng-click="passPaymentPolicy(policy)" tooltip-placement="top" tooltip="Update Policy"><i class="glyphicon glyphicon-pencil"></i></a>
                          <a  ng-click="deletePolicy()" tooltip-placement="top" tooltip="Delete Policy"><i class="glyphicon glyphicon-trash"></i></a>

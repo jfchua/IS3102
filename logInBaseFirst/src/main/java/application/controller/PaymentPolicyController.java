@@ -129,10 +129,11 @@ public class PaymentPolicyController {
 	            Double rate = (Double)jsonObject.get("depositRate");
 	            System.out.println(rate);
 	            System.out.println("rate2");
-				int period = ((Long)jsonObject.get("subsequentNumber")).intValue();
+				int subNum = ((Long)jsonObject.get("subsequentNumber")).intValue();
 				//String description = (String)jsonObject.get("description");	
 				int due = ((Long)jsonObject.get("dueDays")).intValue();
-				boolean bl = paymentPolicyService.createPaymentPolicy(client, rate, period, due);
+				int period = ((Long)jsonObject.get("interimPeriod")).intValue();
+				boolean bl = paymentPolicyService.createPaymentPolicy(client, rate, subNum, due, period);
 				System.out.println("adding rate " + rate);
 				if(!bl){
 					System.out.println("invalid rate");
@@ -193,9 +194,10 @@ public class PaymentPolicyController {
 						Double rate = (Double)jsonObject.get("depositRate");
 			            System.out.println(rate);
 			            System.out.println("rate2");
-						int period = ((Long)jsonObject.get("subsequentNumber")).intValue();
+						int subNum = ((Long)jsonObject.get("subsequentNumber")).intValue();
 						int due = ((Long)jsonObject.get("dueDays")).intValue();
-						boolean bl = paymentPolicyService.updatePaymentPolicy(client, rateId, rate, period, due);
+						int period = ((Long)jsonObject.get("interimPeriod")).intValue();
+						boolean bl = paymentPolicyService.updatePaymentPolicy(client, rateId, rate, subNum, due, period);
 						System.out.println("editing rate " + rateId);
 						if(!bl){
 							return new ResponseEntity<Void>(HttpStatus.CONFLICT);

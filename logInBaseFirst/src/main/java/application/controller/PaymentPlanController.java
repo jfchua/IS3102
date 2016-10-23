@@ -220,6 +220,64 @@ public class PaymentPlanController {
 							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 						}
 						return new ResponseEntity<Void>(HttpStatus.OK);
+					}	
+					
+					@RequestMapping(value = "/viewAllOutstandingBalance", method = RequestMethod.GET)
+					@ResponseBody
+					public ResponseEntity<String> viewAllOustandingBalance(HttpServletRequest rq) throws UserNotFoundException {
+						System.out.println("startADD");
+						Principal principal = rq.getUserPrincipal();
+						Optional<User> usr = userService.getUserByEmail(principal.getName());
+						if ( !usr.isPresent() ){
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+						}
+						JSONArray jArray = new JSONArray();
+						try{
+							User user = usr.get();
+							ClientOrganisation client = usr.get().getClientOrganisation();
+							Set<User> eventOrgs = userService.getExternalUsers(client);
+							System.err.println("HELLOOOOOOOOOOOOO");	
+							Gson gson2 = new GsonBuilder()
+									.setExclusionStrategies(new ExclusionStrategy() {
+										public boolean shouldSkipClass(Class<?> clazz) {
+											return (clazz==Event.class)||(clazz==Role.class)||(clazz==ToDoTask.class)||(clazz==Message.class)
+													||(clazz==ClientOrganisation.class);
+										}
+
+										/**
+										 * Custom field exclusion goes here
+										 */
+
+										@Override
+										public boolean shouldSkipField(FieldAttributes f) {
+											//TODO Auto-generated method stub
+											return false;
+											//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+										}
+
+									})
+									/**
+									 * Use serializeNulls method if you want To serialize null values 
+									 * By default, Gson does not serialize null values
+									 */
+									.serializeNulls()
+									.create();			
+							for(User u : eventOrgs){
+								JSONObject obj1 = new JSONObject();
+								obj1.put("id", u.getId());
+								System.out.println("event org name is "+u.getName());
+							    obj1.put("name", u.getName());
+							    obj1.put("email", u.getEmail());
+							    obj1.put("outstanding",paymentPlanService.getOutstandingById(u.getId()));
+								jArray.add(obj1);
+							}
+							System.out.println("finish getting all orgs oustanding amount");
+						}
+						catch (Exception e){
+							System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);
+						}
+						return new ResponseEntity<String>(jArray.toString(), HttpStatus.OK);
 					}						
 					
 }
