@@ -1,6 +1,8 @@
 package application.service;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,6 +68,12 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			return false;
 	    PaymentPlan plan = new PaymentPlan();
 	    plan.setTotal(total);
+	    NumberFormat formatter = new DecimalFormat("#0.00"); 
+	    plan.setGst(Double.valueOf(formatter.format(total/1.07*0.07)));
+	    plan.setTotalBeforeGst(total/1.07);
+	    plan.setDepositRate(payPol.getDepositRate());
+	    plan.setOverdue(false);
+	    plan.setTicketRevenue(0.00);
 	    plan.setDeposit(deposit);
 	    plan.setSubsequentNumber(subsequentNumber);
 	    Double subsequent = 0.00;
@@ -77,9 +85,9 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	    //plan.setCreated(date);
 	    Calendar cal = Calendar.getInstance();
 	    plan.setCreated(cal.getTime());
-	    cal.add(Calendar.DATE, +3);
+	    cal.add(Calendar.DATE, +dueDays);
 	    plan.setNotificationDue(cal.getTime());
-	    cal.add(Calendar.DATE, +3);
+	    cal.add(Calendar.DATE, +dueDays);
 	    plan.setDue(cal.getTime());
 	    //add due date and notification due date
 	    plan.setPaid(0.00);
@@ -103,22 +111,52 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	}
 
 	@Override
-	public boolean updatePaymentPlan(ClientOrganisation client, User user,long paymentId, Double total, Double deposit,
-			int subsequentNumber, Double subsequent) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean deletePaymentPlan(ClientOrganisation client, User user,long paymentId) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updatePaymentPlan(ClientOrganisation client, User user, long paymentId, Double depositRate, 
+			int subsequentNumber) {
+		Set<User> users = userRepository.getAllUsers(client);
+		System.out.println("clientUser");
+		
+		boolean doesHave = false;
+		for(User u: users){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_FINANCE") && u.equals(user))
+			    doesHave = true;
+			   }
+		}
+		if((!doesHave)||(!checkEvent(client, paymentId))||(subsequentNumber<0)||(depositRate<0)||(depositRate>1))
+			return false;
+		System.out.println("before try");
+		try{
+		    Optional<PaymentPlan> pay1 = getPaymentPlanById(paymentId); 
+		    System.out.println(pay1.isPresent());
+		    if(pay1.isPresent()){
+		    	PaymentPlan pay = pay1.get();
+		    	Double total = pay.getTotal();
+		    	//System.out.println(total);
+		    	NumberFormat formatter = new DecimalFormat("#0.00"); 
+			   // plan.setGst(Double.valueOf(formatter.format(total/1.07*0.07)));
+		    	pay.setDeposit(Double.valueOf(formatter.format(total*depositRate)));
+		    	//System.out.println(formatter.format(total*depositRate));
+		    	pay.setDepositRate(depositRate);
+		    	pay.setSubsequentNumber(subsequentNumber);
+		    	//System.out.println("after subsequent");
+		    	pay.setSubsequent(Double.valueOf(formatter.format((total-total*depositRate)/subsequentNumber)));
+		    	//System.out.println("finally!!!");
+		    	paymentPlanRepository.flush();
+		    	return true;
+		    }
+		    else
+		    return false;
+		}catch(Exception e){
+			return false;
+			}
 	}
 
 	@Override
 	public Optional<PaymentPlan> getPaymentPlanById(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.debug("Getting payment plan={}", id);
+		return Optional.ofNullable(paymentPlanRepository.findOne(id));
 	}
 
 	@Override
@@ -210,6 +248,22 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		}
 		else
 			return 0.00;
+	}
+
+	@Override
+	public boolean checkPaymentPlan(ClientOrganisation client, long paymentPlanId) {
+		try{
+			Optional<PaymentPlan> pay1 = getPaymentPlanById(paymentPlanId); 
+		    if(pay1.isPresent()){
+		    	PaymentPlan pay = pay1.get();
+		    	Event event = pay.getEvent();
+		    	return checkEvent(client, event.getId());
+		    }	
+		    else 
+		    	return false;
+		}catch (Exception e){
+		return false;
+		}
 	}
 
 }

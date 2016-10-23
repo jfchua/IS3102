@@ -34,6 +34,9 @@ public class PaymentPlan {
 	 @Column(name = "deposit")
 	 private Double deposit;
 	 
+	 @Column(name = "deposit_rate")
+	 private Double depositRate;
+	 
 	 @Column(name = "subsequent_number")
 	 private int subsequentNumber;
 	 
@@ -205,4 +208,14 @@ public class PaymentPlan {
 	public void setTotalBeforeGst(Double totalBeforeGst) {
 		this.totalBeforeGst = totalBeforeGst;
 	}
+
+	public Double getDepositRate() {
+		return depositRate;
+	}
+
+	public void setDepositRate(Double depositRate) {
+		this.depositRate = depositRate;
+	}
+	
+	
 }

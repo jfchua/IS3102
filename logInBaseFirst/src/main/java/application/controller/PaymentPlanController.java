@@ -2,6 +2,8 @@ package application.controller;
 
 import java.security.Principal;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -135,16 +137,6 @@ public class PaymentPlanController {
 							//Double subsequent = (Double)jsonObject.get("subsequent");
 							boolean bl = paymentPlanService.createPaymentPlan(client, user, eventId, total, deposit, subseNumber);
 							System.out.println("adding payment plan " + total);
-							/*if(bl){
-								AuditLog al = new AuditLog();
-								al.setTimeToNow();
-								al.setSystem("Property");
-								al.setAction("Add Building: " + name);
-								al.setUser(usr.get());
-								al.setUserEmail(usr.get().getEmail());
-								auditLogRepository.save(al);
-							}
-							else*/
 							if(!bl)
 								return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 						}
@@ -176,10 +168,12 @@ public class PaymentPlanController {
 							Long eventId = (Long)jsonObject.get("event");				
 							Double price = paymentPlanService.checkRent(client, eventId);
 							PaymentPolicy payPol = client.getPaymentPolicy();
+							NumberFormat formatter = new DecimalFormat("#0.00");     
+							//System.out.println(formatter.format(4.0));
 							JSONObject obj1 = new JSONObject();
 							obj1.put("id", eventId);
 						    obj1.put("total", price);
-						    obj1.put("deposit", payPol.getDepositRate()*price);
+						    obj1.put("deposit", formatter.format(payPol.getDepositRate()*price));
 						    obj1.put("subsequentNumber",payPol.getSubsequentNumber());
 							//String json = gson2.toJson(event);
 							//System.out.println("EVENT IS " + json);
@@ -193,6 +187,40 @@ public class PaymentPlanController {
 							System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
 							return new ResponseEntity<String>(HttpStatus.CONFLICT);
 						}		
-					}							
+					}	
+					
+					@RequestMapping(value = "/updatePaymentPlan", method = RequestMethod.POST)
+					@ResponseBody
+					public ResponseEntity<Void> updatePaymentPlan(@RequestBody String paymentJSON,HttpServletRequest rq) throws UserNotFoundException {
+						System.out.println("startADD");
+						Principal principal = rq.getUserPrincipal();
+						Optional<User> usr = userService.getUserByEmail(principal.getName());
+						if ( !usr.isPresent() ){
+							return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+						}
+						try{
+							User user = usr.get();
+							ClientOrganisation client = usr.get().getClientOrganisation();
+							Object obj1 = parser.parse(paymentJSON);
+							JSONObject jsonObject = (JSONObject) obj1;
+							Long paymentId = (Long)jsonObject.get("id");
+							System.out.println(paymentId);
+							Double depositRate = Double.valueOf((String)jsonObject.get("depositRate"));
+							System.out.println(depositRate);
+							int subseNumber = ((Long)jsonObject.get("subsequent_number")).intValue();
+							System.out.println(subseNumber);
+							//Double subsequent = (Double)jsonObject.get("subsequent");
+							boolean bl = paymentPlanService.updatePaymentPlan(client, user, paymentId, depositRate, subseNumber);
+							System.out.println("success or not?" + bl);
+							if(!bl)
+								return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+						}
+						catch (Exception e){
+							System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+						}
+						return new ResponseEntity<Void>(HttpStatus.OK);
+					}						
+					
 }
 
