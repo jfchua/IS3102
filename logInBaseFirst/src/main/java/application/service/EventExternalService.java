@@ -46,4 +46,6 @@ public interface EventExternalService {
 	Double checkRent(ClientOrganisation client, User user, String unitsId, Date event_start_date, Date event_end_date);
 	
 	Set<BookingAppl> getBookings(ClientOrganisation client, long id);
+	
+	boolean requestTicket(ClientOrganisation client, long id);
 }

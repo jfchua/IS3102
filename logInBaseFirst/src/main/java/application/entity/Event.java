@@ -64,6 +64,9 @@ public class Event {
 	    @Column(name = "filePath", nullable = true)
 	    private String filePath;	
 	    
+	    
+	    @Column(name = "has_ticket")
+	    private boolean hasTicket;	
 	    /*
 	    @Column(name = "rent", nullable = true)
 	    private Double rent;	*/
@@ -242,5 +245,14 @@ public class Event {
 		public void setRent(Double rent) {
 			this.rent = rent;
 		}*/
+
+		public boolean isHasTicket() {
+			return hasTicket;
+		}
+
+		public void setHasTicket(boolean hasTicket) {
+			this.hasTicket = hasTicket;
+		}
+		
 		
 }
