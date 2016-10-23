@@ -13,35 +13,7 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 	$scope.passPaymentPlan = function(plan){
 		shareData.addData(plan);
 	}
-/*
-	$scope.addPaymentPlan = function(){
-		//alert("SUCCESS");
-		$scope.data = {};
-		var dataObj = {			
-				eventId: $scope.plan.eventId,
-				total: $scope.plan.total,
-				deposit: $scope.plan.deposit,
-				subsequent_number: $scope.plan.subsequent_number,
-				subsequent: $scope.plan.subsequent,
-		};
 
-		console.log("REACHED HERE FOR SUBMIT PAYMENT PLAN " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/payment/addPaymentPlan',
-			data    : dataObj //forms user object
-		});
-
-		console.log("SAVING THE PAYMENT");
-		send.success(function(){		
-			alert('PAYMENT IS SAVED! GOING BACK TO VIEW BUILDINGS');
-			$state.go("dashboard.viewAllPaymentPlans");
-		});
-		send.error(function(){
-			alert('SAVING PAYMENT GOT ERROR!');
-		});
-	};*/
 
 }]);
 
@@ -118,6 +90,53 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 
 
 
+app.controller('updatePaymentController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.plan1 = shareData.getData();	
+		console.log("$scope.policy1");
+		console.log($scope.plan1);
+		console.log("$scope.policy2");
+		
+		var dataObj = {		
+				id : $scope.plan1.id,
+				total : $scope.plan1.total,
+				deposit: $scope.plan1.deposit,
+				subsequentNumber: $scope.plan1.subsequentNumber,
+		};	
+		$scope.plan = angular.copy($scope.plan1);
+		console.log("$scope.policy3");
+		console.log($scope.plan);
+		console.log("$scope.policy4");
+	});
+	
+	$scope.updatePaymentPlan = function(){
+		//alert("SUCCESS");
+		$scope.data = {};
+		var dataObj = {			
+				id: $scope.plan.id,
+				depositRate: ($scope.plan.depositRate).toString(),
+				subsequent_number: $scope.plan.subsequentNumber,
+		};
+		console.log("SUBMIT PAYMENT PLAN");
+		console.log(JSON.stringify(dataObj));
+
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/payment/updatePaymentPlan',
+			data    : dataObj //forms user object
+		});
+
+		console.log("UPDATING THE PAYMENT");
+		send.success(function(){		
+			alert('PAYMENT IS SAVED! GOING BACK TO VIEW PAYMENT PLANS');
+			$state.go("dashboard.viewAllPaymentPlans");
+		});
+		send.error(function(){
+			alert('SAVING PAYMENT GOT ERROR!');
+		});
+	};
+
+}]);
 
 
 app.controller('policyController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {

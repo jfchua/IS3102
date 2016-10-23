@@ -11,10 +11,9 @@ public interface PaymentPlanService {
 	boolean createPaymentPlan(ClientOrganisation client, User user, long eventId, Double total, Double deposit, 
 			int subsequentNumber);
 	
-	boolean updatePaymentPlan(ClientOrganisation client, User user, long paymentId, Double total, Double deposit, 
-			int subsequentNumber, Double subsequent);
-	
-	boolean deletePaymentPlan(ClientOrganisation client, User user, long paymentId);
+	boolean updatePaymentPlan(ClientOrganisation client, User user, long paymentId, Double depositRate, 
+			int subsequentNumber);
+
 	
 	Optional<PaymentPlan> getPaymentPlanById(long id);
 	
@@ -23,6 +22,8 @@ public interface PaymentPlanService {
 	boolean updateAmountPaid(ClientOrganisation client, User user, long paymentId, Double paid);
 	
 	boolean checkEvent(ClientOrganisation client, long eventId);
+	
+	boolean checkPaymentPlan(ClientOrganisation client, long paymentPlanId);
 	
 	Double checkRent(ClientOrganisation client, long eventId);
 	//boolean updateAmountPayable(ClientOrganisation client, long paymentId, Double paid);
