@@ -1,16 +1,16 @@
 
-	<div ng-cloak ng-controller="paymentController as paymentCtrl" >
+	<div ng-cloak ng-controller="balanceController as balanceCtrl" >
 	 <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
                                 <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-                                <li><a>View Payment Plans</a></li>
+                                <li><a>View Outstanding Balance For All Organisers</a></li>
                             </ol>
         </div>
       <div class="col-md-9">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					<h3 class="panel-title">Payment Plans  
+					<h3 class="panel-title">Outstanding Balance 
 						<div class="panel-control pull-right">
 						
 							<a class="panelButton"><i class="fa fa-refresh"></i></a>
@@ -24,23 +24,23 @@
 					<table class="table table-hover">              
                         <thead>
                            <tr>
-                           <th><i></i> ID </th>
-                            <th><i></i> Event Owner </th>
-                            <th><i></i> Total </th>
-                            <th><i></i> Deposit </th>
-                            <th><i></i> NO of Subsequent Payments</th>
+                           <th><i></i> Organiser ID </th>
+                            <th><i></i> Organiser Name </th>
+                            <th><i></i> Organiser Email </th>
+                            <th><i></i> Total Outstanding Balance </th>
                            <th>Actions</th>
                        
                            </tr>
                          <tbody>
-                         <tr ng-repeat="x in plans">
+                         <tr ng-repeat="x in orgs">
                             <td>{{ x.id }}</td>
-                            <td>{{ x.owner }}</td>
-                            <td>{{ x.total }}</td>
-                            <td>{{ x.deposit }}</td>
-                            <td>{{ x.subsequentNumber }}</td>
+                            <td>{{ x.name }}</td>
+                            <td>{{ x.email }}</td>
+                            <td>{{ x.outstanding }}</td>
                             <td>
-                            <a  ui-sref="dashboard.updatePaymentPlan" ng-click="passPaymentPlan(x)" tooltip-placement="top" tooltip="Update Payment Plan"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a  ui-sref="dashboard.updateReceivedPayment" ng-click="passOrganiser(x)" tooltip-placement="top" tooltip="Update Received Payment"><i class="glyphicon glyphicon-arrow-left"></i></a>
+                            <a  ui-sref="dashboard.updateOutgoingPayment" ng-click="passOrganiser(x)" tooltip-placement="top" tooltip="Update Outgoing Payment"><i class="glyphicon glyphicon-arrow-right"></i></a>
+                            <a  ui-sref="dashboard.viewPaymentHistory" ng-click="passOrganiser(x)" tooltip-placement="top" tooltip="View Payment History"><i class="glyphicon glyphicon-eye-open"></i></a>
                            </td>
                         </tr>
                          </tbody>

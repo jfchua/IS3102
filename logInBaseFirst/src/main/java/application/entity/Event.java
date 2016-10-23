@@ -64,8 +64,9 @@ public class Event {
 	    @Column(name = "filePath", nullable = true)
 	    private String filePath;	
 	    
+	    /*
 	    @Column(name = "rent", nullable = true)
-	    private Double rent;	
+	    private Double rent;	*/
 	    
 	    @Enumerated(EnumType.STRING)
 		 private PaymentStatus paymentStatus;
@@ -233,13 +234,13 @@ public class Event {
 		public void setEvent_type(EventType event_type) {
 			this.event_type = event_type;
 		}
-
+/*
 		public Double getRent() {
 			return rent;
 		}
 
 		public void setRent(Double rent) {
 			this.rent = rent;
-		}
+		}*/
 		
 }

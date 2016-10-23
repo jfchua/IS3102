@@ -33,6 +33,10 @@
                    <label for="exampleInput">Number Of Due Days</label>
                    <input type="number" min="0" ng-model="policy.numOfDueDays" class="form-control underline" id="description" placeholder="Enter number of subsequent policy">
             </div>
+            <div class="form-group">
+                   <label for="exampleInput">Period For Next Payment</label>
+                   <input type="number" min="0" ng-model="policy.interimPeriod" class="form-control underline" id="description" placeholder="Enter number of subsequent policy">
+            </div>
            <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "updatePaymentPolicy()">Submit</button> &nbsp;
                       <!--   <button ng-click = "updateBuilding()"><input type="submit" value="Submit"></button>-->
               </form>      

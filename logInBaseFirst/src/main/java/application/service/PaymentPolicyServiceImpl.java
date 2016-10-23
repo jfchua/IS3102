@@ -28,7 +28,7 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 	}
 	
 	@Override
-	public boolean createPaymentPolicy(ClientOrganisation client, Double rate, int num, int due) {
+	public boolean createPaymentPolicy(ClientOrganisation client, Double rate, int num, int due, int period) {
 		if((rate <= 0)||num<0)
 			return false;
 		else{
@@ -36,6 +36,7 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 			newPay.setDepositRate(rate);
 			newPay.setSubsequentNumber(num);
 			newPay.setNumOfDueDays(due);
+			newPay.setInterimPeriod(period);
 			paymentPolicyRepository.save(newPay);
 			client.setPaymentPolicy(newPay);
 			clientOrganisationRepository.save(client);
@@ -62,7 +63,7 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 	}
 
 	@Override
-	public boolean updatePaymentPolicy(ClientOrganisation client, long id, Double rate, int num, int due) {
+	public boolean updatePaymentPolicy(ClientOrganisation client, long id, Double rate, int num, int due, int period) {
 		try{
 			Optional<PaymentPolicy> rate1 = getPaymentPolicy(id);
 			PaymentPolicy payment = client.getPaymentPolicy();
@@ -72,6 +73,7 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 			   rate2.setDepositRate(rate);
 			   rate2.setSubsequentNumber(num);
 			   rate2.setNumOfDueDays(due);
+			   rate2.setInterimPeriod(period);
 		       paymentPolicyRepository.flush();
 			}
 			else

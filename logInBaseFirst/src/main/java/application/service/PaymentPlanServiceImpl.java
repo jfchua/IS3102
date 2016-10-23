@@ -19,14 +19,17 @@ import org.springframework.stereotype.Service;
 import application.entity.BookingAppl;
 import application.entity.ClientOrganisation;
 import application.entity.Event;
+import application.entity.Payment;
 import application.entity.PaymentPlan;
 import application.entity.PaymentPolicy;
 import application.entity.Role;
 import application.entity.Unit;
 import application.entity.User;
+import application.enumeration.PaymentStatus;
 import application.repository.ClientOrganisationRepository;
 import application.repository.EventRepository;
 import application.repository.PaymentPlanRepository;
+import application.repository.PaymentRepository;
 import application.repository.SpecialRateRepository;
 import application.repository.UserRepository;
 @Service
@@ -36,16 +39,18 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	private final PaymentPlanRepository paymentPlanRepository;
 	private final EventRepository eventRepository;
 	private final UserRepository userRepository;
+	private final PaymentRepository paymentRepository;
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildingServiceImpl.class);
 	
 	@Autowired
 	public PaymentPlanServiceImpl(PaymentPlanRepository paymentPlanRepository, ClientOrganisationRepository clientOrganisationRepository,
-			EventRepository eventRepository, UserRepository userRepository) {
+			EventRepository eventRepository, UserRepository userRepository, PaymentRepository paymentRepository) {
 		//super();
 		this.paymentPlanRepository = paymentPlanRepository;
 		this.clientOrganisationRepository = clientOrganisationRepository;
 		this.eventRepository= eventRepository;
 		this.userRepository = userRepository;
+		this.paymentRepository = paymentRepository;
 	}
 	
 	@Override
@@ -192,9 +197,68 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	}
 
 	@Override
-	public boolean updateAmountPaid(ClientOrganisation client, User user,long paymentId, Double paid) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updateAmountPaidByOrg(ClientOrganisation client, User user,long paymentPlanId,
+			String chequeNum, Double paid) {
+		Set<User> users = userRepository.getAllUsers(client);
+		System.out.println("clientUser");
+		PaymentPolicy payPol = client.getPaymentPolicy();
+		int period = payPol.getInterimPeriod();
+		int due = payPol.getNumOfDueDays();
+		boolean doesHave = false;
+		for(User u: users){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_FINANCE") && u.equals(user))
+			    doesHave = true;
+			   }
+		}
+		if((!doesHave)||(!checkEvent(client, paymentPlanId)))
+			return false;
+		try{
+		    Optional<PaymentPlan> pay1 = getPaymentPlanById(paymentPlanId); 
+		    System.out.println(pay1.isPresent());
+		    if(pay1.isPresent()){
+		    	PaymentPlan pay = pay1.get();
+		    	Set<Payment> payments = pay.getPayments();
+		    	Double payable = pay.getPayable();
+		    	Event event = pay.getEvent();
+		    	Double subsequent = pay.getSubsequent();
+		    	Double deposit = pay.getDeposit();
+		    	Date previousDue = pay.getNotificationDue();
+		    		    	
+		    	if((payable < paid)||(!((deposit == paid)||(subsequent == paid))))
+		    		return false;
+		    	Payment payment = new Payment();
+		    	Calendar cal = Calendar.getInstance();
+			    payment.setPaid(cal.getTime());
+		    	payment.setAmount(paid);
+		    	payment.setCheque(chequeNum);
+		    	payment.setPlan(paymentPlanId);
+		    	paymentRepository.save(payment);
+		    	payments.add(payment);
+		    	pay.setPaid(paid);
+		    	Double total = pay.getTotal();
+		    	pay.setPayable(total-paid);
+		    	
+		    	Calendar cal1 = Calendar.getInstance();
+		        cal1.setTime(previousDue);
+		        cal1.add(Calendar.DATE, period);		        
+		    	pay.setNotificationDue(cal1.getTime());
+		    	cal1.add(Calendar.DATE, due);
+		    	pay.setDue(cal1.getTime());
+		        if(payment.getPaid().before(pay.getDue()))
+		        	event.setPaymentStatus(PaymentStatus.valueOf("PAID"));
+		       /* else
+		        	pay.setOverdue(true);*/
+		        
+		    	paymentPlanRepository.flush();
+		    	return true;
+		    }
+		    else
+		    return false;
+		}catch(Exception e){
+			return false;
+			}
 	}
 	
 	@Override
@@ -263,6 +327,30 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		    	return false;
 		}catch (Exception e){
 		return false;
+		}
+	}
+
+	@Override
+	public Double getOutstandingById(long userId) {
+		try{
+			Optional<User> user1 = Optional.ofNullable(userRepository.findOne(userId)); 
+			Double outstanding = 0.00;
+		    if(user1.isPresent()){
+		    	User user = user1.get();
+		    	System.out.println("user id is "+user.getId());
+		    	Set<Event> events = user.getEvents();
+		    	for(Event e : events){
+		    		PaymentPlan pay = e.getPaymentPlan();
+		    		System.out.println("payment plan total "+ pay.getTotal());
+		    		outstanding += pay.getPayable();
+		    	}
+		    	System.out.println("outstanding");
+		    	return outstanding;
+		    }	
+		    else 
+		    	return 0.00;
+		}catch (Exception e){
+		return 0.00;
 		}
 	}
 

@@ -659,6 +659,14 @@ app.config(
 					authorizedRoles:[USER_ROLES.finance]
 				}
 			})
+			.state('dashboard.viewAllOutstandingBalance',{
+				url:'/viewAllOutstandingBalance',
+				templateUrl: '/views/viewAllOutstandingBalance.html',
+				controller: 'balanceController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
 			.state('/401',{
 				url:'/401',
 				templateUrl: '/views/401.html',
