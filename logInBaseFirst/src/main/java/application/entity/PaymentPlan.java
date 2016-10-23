@@ -74,7 +74,10 @@ public class PaymentPlan {
 	 private Double gst;
 	 
 	 @Column(name = "total_before_gst")
-	 private Double totalBeforeGst; 
+	 private Double totalBeforeGst;  
+	 
+	 @Column(name = "next_payment")
+	 private Double nextPayment;	 
 
 	 @OneToOne
      @JsonIgnore
@@ -227,4 +230,13 @@ public class PaymentPlan {
 	public void setPayments(Set<Payment> payments) {
 		this.payments = payments;
 	}
+
+	public Double getNextPayment() {
+		return nextPayment;
+	}
+
+	public void setNextPayment(Double nextPayment) {
+		this.nextPayment = nextPayment;
+	}
+	
 }
