@@ -150,11 +150,36 @@ app.controller('balanceController', ['$scope', '$http','$state','$routeParams','
 		}	
 		)	
 	});
-	$scope.passPaymentPlan = function(result){
-		shareData.addData(result);
+	$scope.passOrganiser = function(id){
+		shareData.addData(id);
 	}
+}]);
 
 
+app.controller('eventListController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$scope.org = shareData.getData();
+		$scope.url = "https://localhost:8443/payment/viewListOfEvents/"+$scope.org;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE EVENTS");
+		var getEvents = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/payment/viewListOfEvents/' + $scope.org,
+
+		});
+		console.log("Getting the events using the url: " + $scope.url);
+		getEvents.success(function(response){
+			console.log('GET EVENTS SUCCESS! ');
+			console.log(JSON.stringify(response));
+			console.log(response);
+			$scope.events = response;
+		});
+		getEvents.error(function(response){
+			$state.go("dashboard.viewAllOutstandingBalance");
+			console.log('GET EVENTS FAILED! ');
+		});
+	});
 }]);
 
 

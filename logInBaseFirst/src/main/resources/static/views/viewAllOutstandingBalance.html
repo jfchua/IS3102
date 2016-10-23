@@ -38,9 +38,10 @@
                             <td>{{ x.email }}</td>
                             <td>{{ x.outstanding }}</td>
                             <td>
-                            <a  ui-sref="dashboard.updateReceivedPayment" ng-click="passOrganiser(x)" tooltip-placement="top" tooltip="Update Received Payment"><i class="glyphicon glyphicon-arrow-left"></i></a>
-                            <a  ui-sref="dashboard.updateOutgoingPayment" ng-click="passOrganiser(x)" tooltip-placement="top" tooltip="Update Outgoing Payment"><i class="glyphicon glyphicon-arrow-right"></i></a>
-                            <a  ui-sref="dashboard.viewPaymentHistory" ng-click="passOrganiser(x)" tooltip-placement="top" tooltip="View Payment History"><i class="glyphicon glyphicon-eye-open"></i></a>
+                            <a  ui-sref="dashboard.updateReceivedPayment" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="Update Received Payment"><i class="glyphicon glyphicon-arrow-left"></i></a>
+                            <a  ui-sref="dashboard.updateOutgoingPayment" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="Update Outgoing Payment"><i class="glyphicon glyphicon-arrow-right"></i></a>
+                            <a  ui-sref="dashboard.viewListOfEvents" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View List Of Events"><i class="glyphicon glyphicon-list"></i></a>
+                            <a  ui-sref="dashboard.viewPaymentHistory" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View Payment History"><i class="glyphicon glyphicon-eye-open"></i></a>
                            </td>
                         </tr>
                          </tbody>

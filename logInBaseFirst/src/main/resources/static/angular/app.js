@@ -667,6 +667,15 @@ app.config(
 					authorizedRoles:[USER_ROLES.finance]
 				}
 			})
+			.state('dashboard.viewListOfEvents',{
+				url:'/viewListOfEvents',
+				templateUrl: '/views/viewListOfEvents.html',
+				controller: 'eventListController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+
 			.state('/401',{
 				url:'/401',
 				templateUrl: '/views/401.html',
