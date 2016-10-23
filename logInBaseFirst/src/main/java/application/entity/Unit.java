@@ -61,7 +61,17 @@ public class Unit {
 	@OneToMany(mappedBy ="unit", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JsonIgnore
 	private Set<BookingAppl> bookings = new HashSet<BookingAppl>();
-
+	
+	
+	@ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.REFRESH})
+	@JoinTable( 
+			name = "units_unitAttributeValues", 
+			joinColumns = @JoinColumn(name = "unit_id", referencedColumnName = "id"), 
+			inverseJoinColumns = @JoinColumn(name = "unitAttributeValue_id", referencedColumnName = "id"))
+	@JsonIgnore
+	private Set<UnitAttributeValue> unitAttributeValues = new HashSet<UnitAttributeValue>();
+	
+	
 	public Set<BookingAppl> getBookings() {
 		return bookings;
 	}
@@ -182,6 +192,14 @@ public class Unit {
 	public void setMaintenances(Set<Maintenance> maintenances) {
 		this.maintenances = maintenances;
 	}*/
+
+	public Set<UnitAttributeValue> getUnitAttributeValues() {
+		return unitAttributeValues;
+	}
+
+	public void setUnitAttributeValues(Set<UnitAttributeValue> unitAttributeValues) {
+		this.unitAttributeValues = unitAttributeValues;
+	}
 
 	@Override
 	public String toString() {
