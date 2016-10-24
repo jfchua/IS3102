@@ -27,15 +27,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import application.entity.Area;
+import application.entity.BookingAppl;
 import application.entity.Category;
+import application.entity.ClientOrganisation;
 import application.entity.Event;
 import application.entity.Level;
+import application.entity.PaymentPlan;
 import application.entity.Unit;
 import application.entity.User;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
 import application.service.BookingService;
 import application.service.EventExternalService;
+import application.service.EventService;
 import application.service.TicketingService;
 import application.service.UserService;
 
@@ -48,17 +52,19 @@ public class TicketingController {
 	private final BookingService bookingService;
 	private final UserService userService;
 	private final TicketingService ticketingService;
+	private final EventService eventService;
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 
 	@Autowired
-	public TicketingController(TicketingService ticketingService, EventExternalService eventService, BookingService bookingService,
+	public TicketingController(EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
 			UserService userService) {
 		super();
-		this.eventExternalService = eventService;
+		this.eventExternalService = eeventService;
 		this.bookingService = bookingService;
 		this.userService = userService;
 		this.ticketingService = ticketingService;
+		this.eventService = eventService;
 	}
 
 	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
@@ -170,8 +176,6 @@ public class TicketingController {
 	}
 
 	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
-	// Call this method using $http.get and you will get a JSON format containing an array of event objects.
-	// Each object (building) will contain... long id, collection of levels.
 	@RequestMapping(value = "/deleteCategory", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> delCat(@RequestBody String category,HttpServletRequest rq) throws UserNotFoundException {
@@ -192,6 +196,58 @@ public class TicketingController {
 			return new ResponseEntity<String>(geeson.toJson("Server error in deleting categories"),HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
+	}
+	
+	@RequestMapping(value = "/tixViewAllEvents",  method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<String> viewAllEvents(HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();
+			System.out.println("start view");
+			Set<Event> events = eventService.getAllEvents(client);
+			System.err.println("There are " + events.size() + " events");
+
+			//Gson gson = new Gson();
+			//String json = gson.toJson(levels);
+			//System.out.println("Returning levels with json of : " + json);
+			//return json;
+
+			Gson gson2 = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == Category.class)||(clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+						}
+
+						/**
+						 * Custom field exclusion goes here
+						 */
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+							//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+						}
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();			    
+			String json = gson2.toJson(eventService.getAllEvents());
+			String json2 = gson2.toJson("Server error in getting all the events");
+			System.out.println("Gotten events as: " + json);
+			return new ResponseEntity<String>(json,HttpStatus.OK);
+		}
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 }
 
