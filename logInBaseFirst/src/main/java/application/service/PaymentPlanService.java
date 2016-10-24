@@ -5,8 +5,10 @@ import java.util.Set;
 
 import application.entity.ClientOrganisation;
 import application.entity.Event;
+import application.entity.Payment;
 import application.entity.PaymentPlan;
 import application.entity.User;
+import application.exception.UserNotFoundException;
 
 public interface PaymentPlanService {
 	boolean createPaymentPlan(ClientOrganisation client, User user, long eventId, Double total, Double deposit, 
@@ -37,4 +39,8 @@ public interface PaymentPlanService {
 	boolean updateTicketRevenue(ClientOrganisation client, User user, long paymentPlanId, Double paid);
 	
 	boolean updateOutgoingPayment(ClientOrganisation client, User user, long paymentPlanId, Double paid);
+	
+	Set<Payment> getPaymentsByOrgId(ClientOrganisation client, long id);
+	
+	void alertForOverduePayment() throws UserNotFoundException;
 }

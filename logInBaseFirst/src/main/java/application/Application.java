@@ -18,6 +18,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -26,6 +27,7 @@ import application.session.SessionListener;
 //@ComponentScan
 @Configuration
 @SpringBootApplication
+@EnableScheduling
 @EnableAsync(proxyTargetClass=true)
 public class Application extends SpringBootServletInitializer {
 

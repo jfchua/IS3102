@@ -56,7 +56,62 @@
                     </div>
             <div class="panel-body">
 
-    <img ng-src={{logo}} alt="Company_Logo" style='height: 100%; width: 100%; object-fit: contain'/>
+    <img ng-src={{logo}} alt="You Have not Uploaded a Logo" style='height: 100%; width: 100%; object-fit: contain'/>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+                <div class="panel panel-primary">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Theme colour	  
+                            <div class="panel-control pull-right">
+                                <a class="panelButton"><i class="fa fa-refresh"></i></a>
+                                <a class="panelButton"><i class="fa fa-minus"></i></a>
+                                <a class="panelButton"><i class="fa fa-remove"></i></a>
+                            </div>
+                        </h3>
+                    </div>
+            <div class="panel-body">
+    <table class="table color-swatches-table text-center no-m-b">
+	                        <tr>
+	                            <td class="text-center colorr">
+	                                <a href="javascript:;" ng-click="changeTheme('blue')" class="theme-picker">
+	                                    <i class="fa fa-circle blue-base" style="font-size:30px;color:#3CA2E0"></i>
+	                                </a>
+	                            </td>
+	                            <td class="text-center colorr">
+	                                <a href="javascript:;" ng-click="changeTheme('green')" class="theme-picker">
+	                                    <i class="fa fa-circle green-base" style="font-size:30px;color:#27ae60"></i>
+	                                </a>
+	                            </td>
+	                            <td class="text-center colorr">
+	                                <a href="javascript:;" ng-click="changeTheme('red')" class="theme-picker">
+	                                    <i class="fa fa-circle red-base" style="font-size:30px;color:#D24D57"></i>
+	                                </a>
+	                            </td>
+	                        </tr>
+	                        <tr>
+	                         	<td class="text-center colorr">
+	                                <a href="javascript:;" ng-click="changeTheme('purple')" class="theme-picker">
+	                                    <i class="fa fa-circle purple-base" style="font-size:30px;color: #957BBD"></i>
+	                                </a>
+	                            </td>
+	                            <td class="text-center colorr">
+	                                <a href="javascript:;" ng-click="changeTheme('midnight-blue')" class="theme-picker">
+	                                    <i class="fa fa-circle midnight-blue-base" style="font-size:30px;color:#2c3e50"></i>
+	                                </a>
+	                            </td>
+	                            <td class="text-center colorr">
+	                                <a href="javascript:;" ng-click="changeTheme('lynch')" class="theme-picker">
+	                                    <i class="fa fa-circle lynch-base" style="font-size:30px;color:#6C7A89"></i>
+	                                </a>
+	                            </td>
+	                        </tr>
+	                    </table>
+	                     <button  class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "saveTheme()">Submit</button> &nbsp;
+                    
             </div>
           </div>
         </div>

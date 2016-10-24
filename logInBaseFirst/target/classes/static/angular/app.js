@@ -740,6 +740,14 @@ app.config(
 					authorizedRoles:[USER_ROLES.finance]
 				}
 			})
+			.state('dashboard.viewPaymentHistory',{
+				url:'/viewPaymentHistory',
+				templateUrl: '/views/viewPaymentHistory.html',
+				controller: 'paymentHistoryController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
 			.state('/401',{
 				url:'/401',
 				templateUrl: '/views/401.html',
@@ -3507,6 +3515,38 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http', functi
 		})
 	};
 	
+
+	$scope.themeSelected;
+	$scope.changeTheme = function(setTheme){
+		$scope.themeSelected=setTheme;
+		$('<link>')
+		  .appendTo('head')
+		  .attr({type : 'text/css', rel : 'stylesheet'})
+		  .attr('href', 'css/styles/app-'+setTheme+'.css');
+
+		// $.get('/api/change-theme?setTheme='+setTheme);
+
+	}
+	
+	$scope.saveTheme = function(){
+
+		var dataObj={theme:$scope.themeSelected};
+		
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443//saveTheme',
+			data    : dataObj, //forms user object
+			responseType: 'arraybuffer'
+		});
+
+		console.log("SAVING THEME");
+		send.success(function(data){
+			alert('THEME IS SAVED');
+		});
+		send.error(function(data){
+			alert('THEME IS NOT SAVED!');
+		});
+	}
 	
 }]);
 

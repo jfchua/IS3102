@@ -11,9 +11,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import application.entity.BookingAppl;
@@ -26,6 +28,7 @@ import application.entity.Role;
 import application.entity.Unit;
 import application.entity.User;
 import application.enumeration.PaymentStatus;
+import application.exception.UserNotFoundException;
 import application.repository.ClientOrganisationRepository;
 import application.repository.EventRepository;
 import application.repository.PaymentPlanRepository;
@@ -40,17 +43,20 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	private final EventRepository eventRepository;
 	private final UserRepository userRepository;
 	private final PaymentRepository paymentRepository;
+	private final MessageService messageService;
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildingServiceImpl.class);
 	
 	@Autowired
 	public PaymentPlanServiceImpl(PaymentPlanRepository paymentPlanRepository, ClientOrganisationRepository clientOrganisationRepository,
-			EventRepository eventRepository, UserRepository userRepository, PaymentRepository paymentRepository) {
+			EventRepository eventRepository, UserRepository userRepository, PaymentRepository paymentRepository,
+			MessageService messageService) {
 		//super();
 		this.paymentPlanRepository = paymentPlanRepository;
 		this.clientOrganisationRepository = clientOrganisationRepository;
 		this.eventRepository= eventRepository;
 		this.userRepository = userRepository;
 		this.paymentRepository = paymentRepository;
+		this.messageService =messageService;
 	}
 	
 	@Override
@@ -463,6 +469,65 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		}catch(Exception e){
 			return false;
 			}
+	}
+
+	@Override
+	public Set<Payment> getPaymentsByOrgId(ClientOrganisation client, long id) {
+		try{
+			Optional<User> user1 = Optional.ofNullable(userRepository.findOne(id)); 			
+		    if(user1.isPresent()&&(client.getUsers().contains(user1.get()))){
+		    	Set<Payment> payments = new HashSet<Payment>();
+		    	User user = user1.get();
+		    	System.out.println("user id is "+user.getId());
+		    	System.out.println("outstanding");
+		    	Set<Event> events = user.getEvents();
+		    	for(Event e : events){
+		    		Set<Payment> pays = e.getPaymentPlan().getPayments();
+		    		for(Payment p : pays)
+		    			payments.add(p);
+		    	}
+		    	return payments;
+		    }   
+		    else
+		    	return null;
+		}catch (Exception e){
+		return null;
+		}
+	}
+
+	@Override
+	@Scheduled(fixedRate = 60000)
+	public void alertForOverduePayment() throws UserNotFoundException {
+		// TODO Auto-generated method stub
+		//SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		//LOGGER.info("The time is now {}", dateFormat.format(new Date()));
+		Set<PaymentPlan> pays = paymentPlanRepository.getAll();
+		for(PaymentPlan p : pays){
+			Date due = p.getDue();
+			Calendar cal = Calendar.getInstance();
+			System.out.println("******HI*******");
+			if(DateUtils.isSameDay(cal.getTime(), due)){
+			//if((cal.getTime().equals(due))&&p.getOverdue()){
+				ClientOrganisation client = p.getEvent().getEventOrg().getClientOrganisation();
+			    p.setOverdue(true);
+			    paymentPlanRepository.flush();
+			    System.out.println("OVERDUE?"+p.getOverdue());
+				Set<User> users = client.getUsers();
+				User finance = null;
+				System.out.println("HI");
+				for(User u : users){
+					Set<Role> roles = u.getRoles();
+					for(Role r : roles){
+						if(r.getName().equals("ROLE_FINANCE")){
+							finance = u;
+							break;
+						}
+					}
+				}
+				System.out.println("******HI*******");
+				messageService.sendMessage(finance, finance, "Overdue Payment", "PaymentID is " +p.getId());
+			}
+		}
 	}
 
 }
