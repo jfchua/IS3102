@@ -633,6 +633,61 @@ public class PaymentPlanController {
 							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 						}
 						return new ResponseEntity<Void>(HttpStatus.OK);
-					}									
+					}
+					
+					@RequestMapping(value = "/getPaymentHistory/{id}", method = RequestMethod.GET)
+					@ResponseBody
+					public ResponseEntity<String> getPaymentHistory(@PathVariable("id") String orgId, HttpServletRequest rq) throws UserNotFoundException {
+						Principal principal = rq.getUserPrincipal();
+						Optional<User> usr = userService.getUserByEmail(principal.getName());
+						if ( !usr.isPresent() ){
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);
+						}
+						try{
+							ClientOrganisation client = usr.get().getClientOrganisation();				   
+							long id = Long.parseLong(orgId);
+							Set<Payment> payments= paymentPlanService.getPaymentsByOrgId(client, id);
+							System.out.println("There are X events and X is "+ payments.size());
+							JSONArray jArray = new JSONArray();
+								Gson gson2 = new GsonBuilder()
+										.setExclusionStrategies(new ExclusionStrategy() {
+											public boolean shouldSkipClass(Class<?> clazz) {
+												return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+											}
+											/**
+											 * Custom field exclusion goes here
+											 */
+											@Override
+											public boolean shouldSkipField(FieldAttributes f) {
+												//TODO Auto-generated method stub
+												return false;
+											}
+										})
+										/**
+										 * Use serializeNulls method if you want To serialize null values 
+										 * By default, Gson does not serialize null values
+										 */
+										.serializeNulls()
+										.create();
+								for(Payment p: payments){
+									JSONObject obj1 = new JSONObject();
+									obj1.put("id", p.getId());
+									System.out.println("payment id is "+p.getId());
+								    obj1.put("date", String.valueOf(p.getPaid()));								    
+								    obj1.put("plan",p.getPlan());
+								    System.out.println("TOTAL1");
+								    obj1.put("amount",p.getAmount());
+								    System.out.println("TOTAL2");
+								    obj1.put("cheque",p.getCheque());
+								    System.out.println("TOTAL3");
+									jArray.add(obj1);
+								}
+								 System.out.println("finishing getting list of payments");
+								return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);			
+						}
+						catch (Exception e){
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);
+						}
+					}
 }
 

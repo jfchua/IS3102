@@ -5,6 +5,7 @@ import java.util.Set;
 
 import application.entity.ClientOrganisation;
 import application.entity.Event;
+import application.entity.Payment;
 import application.entity.PaymentPlan;
 import application.entity.User;
 
@@ -37,4 +38,6 @@ public interface PaymentPlanService {
 	boolean updateTicketRevenue(ClientOrganisation client, User user, long paymentPlanId, Double paid);
 	
 	boolean updateOutgoingPayment(ClientOrganisation client, User user, long paymentPlanId, Double paid);
+	
+	Set<Payment> getPaymentsByOrgId(ClientOrganisation client, long id);
 }

@@ -377,6 +377,31 @@ app.controller('outgoingController', ['$scope', '$http','$state','$routeParams',
 }]);
 
 
+app.controller('paymentHistoryController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$scope.org = shareData.getData();
+		$scope.url = "https://localhost:8443/payment/getPaymentHistory/"+$scope.org;
+		console.log("GETTING THE EVENTS");
+		var getPayments = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/payment/getPaymentHistory/' + $scope.org,
+
+		});
+		console.log("Getting the payments using the url: " + $scope.url);
+		getPayments.success(function(response){
+			console.log('GET PAYMENTS SUCCESS! ');
+			console.log(JSON.stringify(response));
+			console.log(response);
+			$scope.payments = response;
+		});
+		getPayments.error(function(response){
+			$state.go("dashboard.viewAllOutstandingBalance");
+			console.log('GET PAYMENTS FAILED! ');
+		});
+	});
+}]);
+
 
 app.controller('policyController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
