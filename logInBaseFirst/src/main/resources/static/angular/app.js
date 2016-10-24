@@ -699,6 +699,14 @@ app.config(
 					authorizedRoles:[USER_ROLES.finance]
 				}
 			})
+			.state('dashboard.updateOutgoingPayment',{
+				url:'/updateOutgoingPayment',
+				templateUrl: '/views/updateOutgoingPayment.html',
+				controller: 'outgoingController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
 			.state('/401',{
 				url:'/401',
 				templateUrl: '/views/401.html',

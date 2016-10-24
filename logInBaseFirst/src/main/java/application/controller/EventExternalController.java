@@ -582,6 +582,7 @@ public class EventExternalController {
 						return new ResponseEntity<Void>(HttpStatus.OK);
 					}
 					
+	              @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 	              @RequestMapping(value = "/requestTickets", method = RequestMethod.POST)
 					@ResponseBody
 					public ResponseEntity<Void> requestTickets(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {

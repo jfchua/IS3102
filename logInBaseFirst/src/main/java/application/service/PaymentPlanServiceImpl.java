@@ -428,4 +428,41 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			}
 	}
 
+	@Override
+	public boolean updateOutgoingPayment(ClientOrganisation client, User user, long paymentPlanId, Double paid) {
+		Set<User> users = userRepository.getAllUsers(client);
+		System.out.println("clientUser");
+		PaymentPolicy payPol = client.getPaymentPolicy();
+		int period = payPol.getInterimPeriod();
+		int due = payPol.getNumOfDueDays();
+		boolean doesHave = false;
+		for(User u: users){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_FINANCE") && u.equals(user))
+			    doesHave = true;
+			   }
+		}
+		if((!doesHave)||(!checkEvent(client, paymentPlanId)))
+			return false;
+		try{
+		    Optional<PaymentPlan> pay1 = getPaymentPlanById(paymentPlanId); 
+		    System.out.println(pay1.isPresent());
+		    if(pay1.isPresent()){
+		    	PaymentPlan pay = pay1.get();
+		    	Double payable = pay.getPayable();
+		    	if((payable + paid)!= 0)
+                  return false;
+		    	pay.setPayable(0.00);
+		    	pay.setNextPayment(0.00);
+		    	paymentPlanRepository.flush();
+		    	return true;
+		    }
+		    else
+		    return false;
+		}catch(Exception e){
+			return false;
+			}
+	}
+
 }
