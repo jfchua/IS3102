@@ -40,6 +40,7 @@ import com.google.gson.GsonBuilder;
 
 import application.entity.Area;
 import application.entity.BookingAppl;
+import application.entity.Category;
 import application.entity.ClientOrganisation;
 import application.entity.Event;
 import application.entity.EventCreateForm;
@@ -156,7 +157,7 @@ public class EventController {
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+							return (clazz == Category.class)||(clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 						}
 
 						/**
@@ -209,7 +210,7 @@ public class EventController {
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+							return (clazz == Category.class)|| (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 						}
 
 						/**
@@ -265,7 +266,7 @@ public class EventController {
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+							return  (clazz == Category.class)||  (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 						}
 
 						/**

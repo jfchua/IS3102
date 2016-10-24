@@ -35,6 +35,10 @@ public class User {
 	//must be the same as the one referenced from  the SecurityConfig
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
+	
+	@OneToMany(cascade={CascadeType.ALL})
+	@Column(nullable = true)
+	private Set<Ticket> tickets = new HashSet<Ticket>();
 
 	@Column(name = "password_hash", nullable = false)
 	private String passwordHash;
