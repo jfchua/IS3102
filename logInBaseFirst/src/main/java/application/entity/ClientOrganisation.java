@@ -55,7 +55,9 @@ public class ClientOrganisation {
 	
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Icon> icons=new HashSet<Icon>();
-
+	
+	@OneToMany(fetch = FetchType.EAGER)
+	private Set<UnitAttributeType> unitAttributeTypes=new HashSet<UnitAttributeType>();
 	
 	public ClientOrganisation() {
 		super();
@@ -175,6 +177,18 @@ public class ClientOrganisation {
 
 	public void setIcons(Set<Icon> icons) {
 		this.icons = icons;
+	}
+
+
+
+	public Set<UnitAttributeType> getUnitAttributeTypes() {
+		return unitAttributeTypes;
+	}
+
+
+
+	public void setUnitAttributeTypes(Set<UnitAttributeType> unitAttributeTypes) {
+		this.unitAttributeTypes = unitAttributeTypes;
 	}
 
 
