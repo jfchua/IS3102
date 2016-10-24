@@ -1,7 +1,6 @@
 package application.test.service;
 
 import java.util.Collection;
-import java.util.Date;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -10,14 +9,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import application.domain.Message;
-import application.domain.ToDoTask;
-import application.domain.User;
+import application.entity.Message;
+import application.entity.User;
 import application.exception.MessageNotFoundException;
 import application.exception.UserNotFoundException;
-import application.service.user.MessageService;
-import application.service.user.ToDoTaskService;
-import application.service.user.UserService;
+import application.service.MessageService;
+import application.service.UserService;
 import application.test.AbstractTest;
 
 @Transactional

@@ -12,18 +12,18 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import application.domain.ClientOrganisation;
-import application.domain.PasswordResetToken;
-import application.domain.Role;
-import application.domain.User;
+import application.entity.ClientOrganisation;
+import application.entity.PasswordResetToken;
+import application.entity.Role;
+import application.entity.User;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.InvalidEmailException;
 import application.exception.OldPasswordInvalidException;
 import application.exception.PasswordResetTokenNotFoundException;
 import application.exception.UserNotFoundException;
-import application.service.user.ClientOrganisationService;
-import application.service.user.UserService;
+import application.service.ClientOrganisationService;
+import application.service.UserService;
 import application.test.AbstractTest;
 
 
