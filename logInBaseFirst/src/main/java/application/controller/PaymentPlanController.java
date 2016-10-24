@@ -330,7 +330,7 @@ public class PaymentPlanController {
 								    System.out.println("TOTAL1");
 								    obj1.put("ticket",pay.getTicketRevenue());
 								    System.out.println("TOTAL2");
-								    Double balance = pay.getTotal()-pay.getTicketRevenue();
+								    Double balance = pay.getPayable();
 								    obj1.put("balance",balance);
 								    System.out.println("TOTAL3" + balance);
 									jArray.add(obj1);
@@ -515,7 +515,7 @@ public class PaymentPlanController {
 								    PaymentPlan pay= ev.getPaymentPlan();
 								    obj1.put("ticket",pay.getTicketRevenue());
 								    System.out.println("TOTAL2");
-								    Double balance = pay.getTotal()-pay.getTicketRevenue();
+								    Double balance = pay.getPayable();
 								    obj1.put("outstanding",balance);
 								    System.out.println("TOTAL3" + balance);
 									jArray.add(obj1);
@@ -602,7 +602,37 @@ public class PaymentPlanController {
 							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 						}
 						return new ResponseEntity<Void>(HttpStatus.OK);
-					}				
+					}			
 					
+					@RequestMapping(value = "/updateOutgoingPayment", method = RequestMethod.POST)
+					@ResponseBody
+					public ResponseEntity<Void> updateOutgoingPayment(@RequestBody String paymentJSON,HttpServletRequest rq) throws UserNotFoundException {
+						System.out.println("startADD");
+						Principal principal = rq.getUserPrincipal();
+						Optional<User> usr = userService.getUserByEmail(principal.getName());
+						if ( !usr.isPresent() ){
+							return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+						}
+						try{
+							User user = usr.get();
+							ClientOrganisation client = usr.get().getClientOrganisation();
+							Object obj1 = parser.parse(paymentJSON);
+							JSONObject jsonObject = (JSONObject) obj1;
+							Long paymentId = (Long)jsonObject.get("id");
+							System.out.println(paymentId);
+							Double amount = Double.valueOf((String)jsonObject.get("toBePaid"));
+							System.out.println("ticket: "+ amount);
+							//Double subsequent = (Double)jsonObject.get("subsequent");
+							boolean bl = paymentPlanService.updateOutgoingPayment(client, user, paymentId, amount);
+							System.out.println("success or not?" + bl);
+							if(!bl)
+								return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+						}
+						catch (Exception e){
+							System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+						}
+						return new ResponseEntity<Void>(HttpStatus.OK);
+					}									
 }
 

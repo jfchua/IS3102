@@ -35,4 +35,6 @@ public interface PaymentPlanService {
 	PaymentPlan getPaymentPlanByEvent(ClientOrganisation client, long id);
 	
 	boolean updateTicketRevenue(ClientOrganisation client, User user, long paymentPlanId, Double paid);
+	
+	boolean updateOutgoingPayment(ClientOrganisation client, User user, long paymentPlanId, Double paid);
 }

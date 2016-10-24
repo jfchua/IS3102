@@ -322,6 +322,61 @@ app.controller('ticketRController', ['$scope', '$http','$state','$routeParams','
 	
 }]);
 
+app.controller('outgoingController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	$scope.payment={};
+	$scope.amountToBePaid={};
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$scope.org = shareData.getData();
+		$scope.url = "https://localhost:8443/payment/getPaymentViaEvent/"+$scope.org;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE Payment Plan");
+		var getEvents = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/payment/getPaymentViaEvent/' + $scope.org,
+
+		});
+		console.log("Getting the payment plan using the url: " + $scope.url);
+		getEvents.success(function(response){
+			console.log('GET PAYMENT PLAN SUCCESS! ');
+			console.log(response);
+			$scope.payment = response;
+			console.log($scope.payment.payable);
+			console.log($scope.payment.ticketRevenue);
+			$scope.amountToBePaid = (0-$scope.payment.payable).toString();
+		});
+		getEvents.error(function(response){
+			$state.go("dashboard.viewEventsWithTicketSales");
+			console.log('GET PAYMENT FAILED! ');
+		});			
+	});
+	
+	$scope.updateOutgoingPayment = function(){
+		$scope.data = {};
+		var dataObj = {			
+				id: $scope.payment.id,
+				toBePaid: $scope.amountToBePaid,
+		};
+		console.log("REACHED HERE FOR SUBMIT PAYMENT Plan " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/payment/updateOutgoingPayment',
+			data    : dataObj //forms user object
+		});
+
+		console.log("SAVING THE OUTGOING PAYMENT");
+		send.success(function(){		
+			alert('OUTGOING PAYMENT IS UPDATED! GOING BACK TO VIEW ALL EVENTS WITH TICKET SALES');
+			$state.go("dashboard.viewEventsWithTicketSales");
+		});
+		send.error(function(){
+			alert('SAVING OUTGOING PAYMENT GOT ERROR!');
+		});
+	}
+	
+}]);
+
+
 
 app.controller('policyController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
