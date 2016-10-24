@@ -582,9 +582,9 @@ public class EventExternalController {
 						return new ResponseEntity<Void>(HttpStatus.OK);
 					}
 					
-	              @RequestMapping(value = "/requestTicket", method = RequestMethod.POST)
+	              @RequestMapping(value = "/requestTickets", method = RequestMethod.POST)
 					@ResponseBody
-					public ResponseEntity<Void> requestTicket(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
+					public ResponseEntity<Void> requestTickets(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
 						Principal principal = rq.getUserPrincipal();
 					 Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());	
 					   if ( !eventOrg1.isPresent() ){

@@ -403,7 +403,6 @@ public class PaymentPlanController {
 						if ( !usr.isPresent() ){
 							return new ResponseEntity<PaymentPlan>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 						}
-						JSONArray jArray = new JSONArray();
 						try{
 							User user = usr.get();
 							ClientOrganisation client = usr.get().getClientOrganisation();		
@@ -528,6 +527,82 @@ public class PaymentPlanController {
 							return new ResponseEntity<String>(HttpStatus.CONFLICT);
 						}
 					}
-										
+
+					@RequestMapping(value = "/getPaymentViaEvent/{id}", method = RequestMethod.GET)
+					@ResponseBody
+					public ResponseEntity<PaymentPlan> getPaymentViaEvent(@PathVariable("id") String planId, HttpServletRequest rq) throws UserNotFoundException{
+						System.out.println("startADD");
+						Principal principal = rq.getUserPrincipal();
+						Optional<User> usr = userService.getUserByEmail(principal.getName());
+						if ( !usr.isPresent() ){
+							return new ResponseEntity<PaymentPlan>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+						}
+						
+						try{
+							User user = usr.get();
+							ClientOrganisation client = usr.get().getClientOrganisation();		
+							long id = Long.parseLong(planId);
+							PaymentPlan policy = paymentPlanService.getPaymentPlanByEvent(client, id);
+							Gson gson2 = new GsonBuilder()
+								    .setExclusionStrategies(new ExclusionStrategy() {
+								        public boolean shouldSkipClass(Class<?> clazz) {
+								            return (clazz == Event.class);
+								        }
+
+								        /**
+								          * Custom field exclusion goes here
+								          */
+
+										@Override
+										public boolean shouldSkipField(FieldAttributes f) {
+											//TODO Auto-generated method stub
+											return false;
+													//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+										}
+								     })
+								    /**
+								      * Use serializeNulls method if you want To serialize null values 
+								      * By default, Gson does not serialize null values
+								      */
+								    .serializeNulls()
+								    .create();		
+						    return new ResponseEntity<PaymentPlan>(policy, HttpStatus.OK);
+						}
+						catch (Exception e){
+							return new ResponseEntity<PaymentPlan>(HttpStatus.CONFLICT);
+						}
+					}									
+
+					@RequestMapping(value = "/updateTicketRevenue", method = RequestMethod.POST)
+					@ResponseBody
+					public ResponseEntity<Void> updateTicketRevenue(@RequestBody String paymentJSON,HttpServletRequest rq) throws UserNotFoundException {
+						System.out.println("startADD");
+						Principal principal = rq.getUserPrincipal();
+						Optional<User> usr = userService.getUserByEmail(principal.getName());
+						if ( !usr.isPresent() ){
+							return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+						}
+						try{
+							User user = usr.get();
+							ClientOrganisation client = usr.get().getClientOrganisation();
+							Object obj1 = parser.parse(paymentJSON);
+							JSONObject jsonObject = (JSONObject) obj1;
+							Long paymentId = (Long)jsonObject.get("id");
+							System.out.println(paymentId);
+							Double amount = Double.valueOf((String)jsonObject.get("ticket"));
+							System.out.println("ticket: "+ amount);
+							//Double subsequent = (Double)jsonObject.get("subsequent");
+							boolean bl = paymentPlanService.updateTicketRevenue(client, user, paymentId, amount);
+							System.out.println("success or not?" + bl);
+							if(!bl)
+								return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+						}
+						catch (Exception e){
+							System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+						}
+						return new ResponseEntity<Void>(HttpStatus.OK);
+					}				
+					
 }
 
