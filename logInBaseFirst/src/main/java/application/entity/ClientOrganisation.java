@@ -47,7 +47,8 @@ public class ClientOrganisation {
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	private PaymentPolicy paymentPolicy;
-
+	
+	
 
 	@Column(name = "logoFilePath",nullable = true,unique=true)
 	@JsonIgnore
@@ -58,6 +59,9 @@ public class ClientOrganisation {
 	
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<UnitAttributeType> unitAttributeTypes=new HashSet<UnitAttributeType>();
+	
+	@Column(name = "themecolour")
+	private String themeColour="blue";
 	
 	public ClientOrganisation() {
 		super();
@@ -189,6 +193,18 @@ public class ClientOrganisation {
 
 	public void setUnitAttributeTypes(Set<UnitAttributeType> unitAttributeTypes) {
 		this.unitAttributeTypes = unitAttributeTypes;
+	}
+
+
+
+	public String getThemeColour() {
+		return themeColour;
+	}
+
+
+
+	public void setThemeColour(String themeColour) {
+		this.themeColour = themeColour;
 	}
 
 

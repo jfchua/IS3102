@@ -10,6 +10,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.ServletOutputStream;
@@ -17,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -42,13 +46,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 
+import application.entity.Building;
 import application.entity.ClientOrganisation;
+import application.entity.Level;
 import application.entity.PasswordResetToken;
+import application.entity.Unit;
+import application.entity.UnitAttributeType;
+import application.entity.UnitAttributeValue;
 import application.entity.User;
+import application.exception.InvalidPostalCodeException;
 import application.exception.PasswordResetTokenNotFoundException;
 import application.exception.UserNotFoundException;
 import application.repository.ClientOrganisationRepository;
 import application.repository.PasswordResetTokenRepository;
+import application.service.ClientOrganisationService;
 import application.service.EmailService;
 import application.service.UserService;
 import net.sf.jasperreports.engine.JRException;
@@ -441,5 +452,33 @@ public class LoginController {
 
 
 	}
+	
+	//ADD ATTRIBUTE TYPE AND VALUE
+		@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+		@RequestMapping(value = "/saveTheme", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<String> saveTheme(@RequestBody String data,HttpServletRequest rq) throws UserNotFoundException,InvalidPostalCodeException {
+			System.out.println("start saving CSV");
+			Principal principal = rq.getUserPrincipal();
+			Optional<User> usr = userService.getUserByEmail(principal.getName());
+			if ( !usr.isPresent() ){
+				//throw new UserNotFoundException("User was not found");
+				return new ResponseEntity<String>(geeson.toJson("Current User was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			try{
+				ClientOrganisation client = usr.get().getClientOrganisation();
+				Object obj1 = parser.parse(data);
+				JSONObject jsonObject = (JSONObject) obj1;
+				String theme =(String)jsonObject.get("theme");
+				client.setThemeColour(theme);
+				clientOrganisationRepository.saveAndFlush(client);
+			}
+			catch (Exception e){
+				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+				return new ResponseEntity<String>(geeson.toJson("Server error in saving theme"),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			System.out.println("THEME SAVED");
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}	
 }
 
