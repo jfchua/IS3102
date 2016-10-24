@@ -744,6 +744,7 @@ public class UserController {
 				User usr=usrOpt.get();
 				ClientOrganisation clientObj = usr.getClientOrganisation();
 				String client=clientObj.getOrganisationName();
+				String theme=clientObj.getThemeColour();
 				System.out.println("start view");
 				Set<Role> roles=usr.getRoles();
 				JSONArray rolsArray = new JSONArray();
@@ -778,6 +779,7 @@ public class UserController {
 				}
 				JSONObject bd = new JSONObject(); 
 				bd.put("client", client); 
+				bd.put("theme", theme); 
 				bd.put("role", roleString); 
 				bd.put("name", name); 
 				bd.put("userName", userName);

@@ -3490,6 +3490,39 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http', functi
 			file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
 		})
 	};
+	
+	$scope.themeSelected;
+	$scope.changeTheme = function(setTheme){
+		$scope.themeSelected=setTheme;
+		$('<link>')
+		  .appendTo('head')
+		  .attr({type : 'text/css', rel : 'stylesheet'})
+		  .attr('href', 'css/styles/app-'+setTheme+'.css');
+
+		// $.get('/api/change-theme?setTheme='+setTheme);
+
+	}
+	
+	$scope.saveTheme = function(){
+
+		var dataObj={theme:$scope.themeSelected};
+		
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443//saveTheme',
+			data    : dataObj, //forms user object
+			responseType: 'arraybuffer'
+		});
+
+		console.log("SAVING THEME");
+		send.success(function(data){
+			alert('THEME IS SAVED');
+		});
+		send.error(function(data){
+			alert('THEME IS NOT SAVED!');
+		});
+	}
+	
 }]);
 
 

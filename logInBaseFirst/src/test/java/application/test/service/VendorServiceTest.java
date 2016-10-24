@@ -10,14 +10,14 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import application.domain.ClientOrganisation;
-import application.domain.Vendor;
+import application.entity.ClientOrganisation;
+import application.entity.Vendor;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.InvalidEmailException;
 import application.exception.UserNotFoundException;
 import application.exception.VendorNotFoundException;
-import application.service.user.ClientOrganisationService;
-import application.service.user.VendorService;
+import application.service.ClientOrganisationService;
+import application.service.VendorService;
 import application.test.AbstractTest;
 
 @Transactional

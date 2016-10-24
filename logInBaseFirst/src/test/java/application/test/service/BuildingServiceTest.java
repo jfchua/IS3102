@@ -1,6 +1,5 @@
 package application.test.service;
 
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.junit.After;
@@ -10,14 +9,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import application.domain.Building;
-import application.domain.ClientOrganisation;
+import application.entity.Building;
+import application.entity.ClientOrganisation;
 import application.exception.BuildingNotFoundException;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.InvalidPostalCodeException;
-import application.repository.UserRepository;
-import application.service.user.BuildingService;
-import application.service.user.ClientOrganisationService;
+import application.service.BuildingService;
+import application.service.ClientOrganisationService;
 import application.test.AbstractTest;
 
 @Transactional

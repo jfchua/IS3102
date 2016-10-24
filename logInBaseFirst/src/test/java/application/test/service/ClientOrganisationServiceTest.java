@@ -3,7 +3,6 @@ package application.test.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -12,15 +11,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import application.domain.ClientOrganisation;
-import application.domain.User;
+import application.entity.ClientOrganisation;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.InvalidEmailException;
 import application.exception.OrganisationNameAlreadyExistsException;
 import application.exception.UserNotFoundException;
-import application.service.user.ClientOrganisationService;
-import application.service.user.EmailService;
+import application.service.ClientOrganisationService;
 import application.test.AbstractTest;
 
 @Transactional

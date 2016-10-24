@@ -1,9 +1,6 @@
 package application.test.service;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -14,21 +11,20 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import application.domain.BookingAppl;
-import application.domain.ClientOrganisation;
-import application.domain.Event;
-import application.domain.Level;
-import application.domain.Unit;
-import application.domain.User;
+import application.entity.ClientOrganisation;
+import application.entity.Event;
+import application.entity.Level;
+import application.entity.Unit;
+import application.entity.User;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
-import application.service.user.ClientOrganisationService;
-import application.service.user.EventExternalService;
-import application.service.user.EventService;
-import application.service.user.LevelService;
-import application.service.user.UnitService;
-import application.service.user.UserService;
+import application.service.ClientOrganisationService;
+import application.service.EventExternalService;
+import application.service.EventService;
+import application.service.LevelService;
+import application.service.UnitService;
+import application.service.UserService;
 import application.test.AbstractTest;
 
 @Transactional

@@ -10,12 +10,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import application.domain.ToDoTask;
-import application.domain.User;
+import application.entity.ToDoTask;
+import application.entity.User;
 import application.exception.ToDoTaskNotFoundException;
 import application.exception.UserNotFoundException;
-import application.service.user.ToDoTaskService;
-import application.service.user.UserService;
+import application.service.ToDoTaskService;
+import application.service.UserService;
 import application.test.AbstractTest;
 @Transactional
 public class ToDoTaskServiceTest extends AbstractTest {
