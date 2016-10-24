@@ -171,4 +171,78 @@ app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','
 
 
 
+//UPLOAD CSV
+app.controller('csvController', function ($scope, $http,shareData) {
+	
+	angular.element(document).ready(function () {
+		
+		console.log("csvController ready");
+		
+	});
+	    var _lastGoodResult = '';
+	    $scope.toPrettyJSON = function (json, tabWidth) {
+				var objStr = JSON.stringify(json);
+				var obj = null;
+				try {
+					obj = $parse(objStr)({});
+				} catch(e){
+					// eat $parse error
+					return _lastGoodResult;
+				}
+
+				var result = JSON.stringify(obj, null, Number(tabWidth));
+				_lastGoodResult = result;
+
+				return result;
+	    };
+	    $scope.attributeTypes=[];
+	    $scope.updatedView=false;
+	    $scope.csvCallback = function (result) {
+	    	console.log($scope.csv.result);
+	    	$scope.datas=$scope.csv.result;
+	    	var contentString=$scope.csv.content;
+	    	var contentStrings=contentString.split('\n');
+	    	var headerString=contentStrings[0];
+			
+			$scope.typeStrings=headerString.split(',');
+	    	}
+	    
+	   $scope.updateTableHeader=function(){
+		   
+		   var index = 0;
+		    angular.forEach($scope.typeStrings, function() {
+		    	$scope.attributeTypes.push({header:$scope.typeStrings[index]});
+		        	index = index + 1;
+		    });
+		    console.log($scope.attributeTypes);
+		    $scope.updatedView=true;
+	   };
+	   
+	    $scope.saveData =function(){	
+	    		
+	    	var dataObj = {
+	    			datas:{
+	    				data:$scope.datas
+		            },
+		            attributeTypes:{
+		            	attributeType:$scope.attributeTypes
+			            }
+		        };
+	    	
+	    	
+	    }
+	    $scope.csv = {
+	    		content: null,
+	    		header: true,
+	    		headerVisible: true,
+	    		separator: ',',
+	    		separatorVisible: true,
+	    		result: null,
+	    		encoding: 'ISO-8859-1',
+	    		encodingVisible: true,
+	    		accept: true,
+	    		callback: 'csvCallback'
+	    		};
+	
+})
 

@@ -27,7 +27,7 @@ public class UnitAttributeType {
 	 @Column(name = "attributeType", nullable = false)
 	 private String attributeType;
 
-	 @OneToMany(mappedBy ="level", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	 @OneToMany(mappedBy ="unitAttributeType", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	  @JsonIgnore
 	  private Set<UnitAttributeValue> unitAttributeValues = new HashSet<UnitAttributeValue>();
 	 

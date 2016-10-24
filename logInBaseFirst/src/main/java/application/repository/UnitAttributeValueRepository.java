@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import application.entity.UnitAttributeValue;
 
-public interface UnitAttributeValue extends JpaRepository<UnitAttributeValue, Long>{
+public interface UnitAttributeValueRepository extends JpaRepository<UnitAttributeValue, Long>{
 
 }

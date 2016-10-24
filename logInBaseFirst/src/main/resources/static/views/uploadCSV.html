@@ -1,0 +1,59 @@
+<div class="row" ng-controller="csvController" ng-controller="csvCtrl" >
+<div class="clearfix">
+                        <ol class="breadcrumb no-bg no-m-t">
+                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                             <li><a>Upload CSV</a></li>
+                        </ol>
+</div>
+		<div class="col-md-9">
+			<div class="panel panel-primary">
+
+				<div class="panel-heading">
+					<h3 class="panel-title">Upload CSV		  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body">				
+                   <div class="block row">
+ 			<div class="title"><h4>Select your CSV file: </h4></div>
+  				<div class="block right">
+				    	<ng-csv-import 
+				     	content="csv.content"
+						header="csv.header"
+						header-visible="csv.headerVisible"
+						separator="csv.separator"
+						separator-visible="csv.separatorVisible"
+						result="csv.result"
+						encoding="csv.encoding"
+						encoding-visible="csv.encodingVisible"
+						callback="csvCallback"></ng-csv-import>
+				  </div>
+			</div> 
+
+						
+           				 <table ng-show="updatedView" class="table table-striped">
+						    <thead>
+						      <tr>
+						        <th ng-repeat="type in attributeTypes">{{ type.header }}
+						        </th>
+						      </tr>
+						      <tbody>
+						        <tr ng-repeat="data in datas">
+						          <td ng-repeat="type in attributeTypes">{{ data[type.header]}}</td>
+						        </tr>
+						      </tbody>
+						  </table>
+           
+                    <button ng-hide="updatedView" class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "updateTableHeader()">Submit</button> &nbsp;
+                    <button ng-show="updatedView" class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "saveData()">Confirm</button> &nbsp;
+                    
+                    
+				</div>
+			</div>
+        </div>
+</div>

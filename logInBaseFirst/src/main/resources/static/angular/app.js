@@ -100,7 +100,8 @@ var app = angular.module('app', [ 'ui.router',
                                   'ngFileUpload',
                                   'ui.bootstrap.contextMenu',
                                   'angularModalService',
-                                  'ui.bootstrap.tabs'])
+                                  'ui.bootstrap.tabs',
+                                  'ngCsvImport'])
 //Declaring Constants
 .constant('USER_ROLES', {
 	all: '*',
@@ -188,6 +189,14 @@ app.config(
 				url: '/updateIcon',
 				templateUrl: '/views/updateIcon.html',
 				controller: 'updateIconController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.uploadCSV',{
+				url: '/uploadCSV',
+				templateUrl: '/views/uploadCSV.html',
+				controller: 'csvController',
 				data: {
 					authorizedRoles: [USER_ROLES.property]
 				}
