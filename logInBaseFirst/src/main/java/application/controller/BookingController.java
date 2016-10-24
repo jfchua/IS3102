@@ -145,7 +145,7 @@ public class BookingController {
 						Gson gson2 = new GsonBuilder()
 							    .setExclusionStrategies(new ExclusionStrategy() {
 							        public boolean shouldSkipClass(Class<?> clazz) {
-							            return (clazz == Event.class)||(clazz == Area.class)||(clazz == Unit.class)||(clazz == MaintenanceSchedule.class);
+							            return (clazz == Event.class)||(clazz == Area.class)||(clazz == Unit.class)||(clazz == MaintenanceSchedule.class)||(clazz == UnitAttributeValue.class);
 							        }
 
 							        /**
@@ -202,6 +202,7 @@ public class BookingController {
 							Set<Unit> units = new HashSet<Unit>();
 							for(BookingAppl booking:bookings){									
 								booking.getUnit().setBookings(null);;
+								booking.getUnit().setUnitAttributeValues(null);
 								booking.getUnit().setMaintenanceSchedule(null);
 								booking.getUnit().setSquare(null);
 								booking.getUnit().setLevel(null);

@@ -388,7 +388,8 @@ public class MaintenanceController {
 					//return json;
 					Set<Unit> units = new HashSet<Unit>();
 					for(MaintenanceSchedule schedule:schedules){									
-						schedule.getUnit().setBookings(null);;
+						schedule.getUnit().setBookings(null);
+						schedule.getUnit().setUnitAttributeValues(null);
 						schedule.getUnit().setMaintenanceSchedule(null);
 						schedule.getUnit().setSquare(null);
 						schedule.getUnit().setLevel(null);
