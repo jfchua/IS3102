@@ -465,4 +465,28 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			}
 	}
 
+	@Override
+	public Set<Payment> getPaymentsByOrgId(ClientOrganisation client, long id) {
+		try{
+			Optional<User> user1 = Optional.ofNullable(userRepository.findOne(id)); 			
+		    if(user1.isPresent()&&(client.getUsers().contains(user1.get()))){
+		    	Set<Payment> payments = new HashSet<Payment>();
+		    	User user = user1.get();
+		    	System.out.println("user id is "+user.getId());
+		    	System.out.println("outstanding");
+		    	Set<Event> events = user.getEvents();
+		    	for(Event e : events){
+		    		Set<Payment> pays = e.getPaymentPlan().getPayments();
+		    		for(Payment p : pays)
+		    			payments.add(p);
+		    	}
+		    	return payments;
+		    }   
+		    else
+		    	return null;
+		}catch (Exception e){
+		return null;
+		}
+	}
+
 }

@@ -325,8 +325,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		getUnits.success(function(response){
 			$scope.units = response;
 			console.log("RESPONSE IS" + JSON.stringify(response));
-
-			console.log('Units Gotten');
+			console.log($scope.units);
 		});
 		getUnits.error(function(){
 			alert('Get units error!!!!!!!!!!');

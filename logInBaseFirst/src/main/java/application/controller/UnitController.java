@@ -159,7 +159,8 @@ public class UnitController {
 				System.out.println("Level id "+levelId);
 				//long levelId = Long.parseLong(level);
 				Set<Unit> units = unitService.getUnitsByLevelId(levelId);
-				for(Unit unit:units){									
+				for(Unit unit:units){	
+					System.out.println("********** unit: " + unit.getUnitNumber());
 					Set<UnitAttributeValue> values = unit.getUnitAttributeValues();
 					for(UnitAttributeValue value:values){
 						value.setUnits(null);
@@ -198,6 +199,10 @@ public class UnitController {
 			    return json;
 				}
 				catch (Exception e){
+					
+					System.out.println("************* ERROR: " + e.getMessage());
+					e.printStackTrace();
+					
 					JSONObject bd = new JSONObject(); 
 					bd.put("error", "cannot fetch"); 
 					

@@ -716,6 +716,14 @@ app.config(
 					authorizedRoles:[USER_ROLES.finance]
 				}
 			})
+			.state('dashboard.viewPaymentHistory',{
+				url:'/viewPaymentHistory',
+				templateUrl: '/views/viewPaymentHistory.html',
+				controller: 'paymentHistoryController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
 			.state('/401',{
 				url:'/401',
 				templateUrl: '/views/401.html',

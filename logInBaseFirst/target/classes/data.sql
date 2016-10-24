@@ -17,8 +17,10 @@ insert into role (name)values ("ROLE_FINANCE");
 insert into role (name)values ("ROLE_TICKETING");
 insert into role (name)values ("ROLE_EXTEVE");
  
+INSERT INTO payment_policy(deposit_rate, interim_period, due_days, subsequent_number)
+VALUES(0.4, 2, 2, 2);
 
-insert into client_organisation (organisation_name) values ("Expo");
+insert into client_organisation (organisation_name, payment_policy_id) values ("Expo", 1);
 insert into client_organisation (organisation_name) values ("Suntec");
 INSERT INTO user (email, password_hash,client_organisation_id, name)
 VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1 ,'Super Admin');
@@ -98,10 +100,18 @@ insert into vendor(contact, description, email, name)values("123", "good", "1@gm
 insert into vendor(contact, description, email, name)values("456", "good", "2@gmail.com", "HL");
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,2);
---INSERT INTO unit(description, length, rent, rentable, unit_number, width)
---VALUES('111',1,2,true,3,4);
---INSERT INTO unit(description, length, rent, rentable, unit_number, width)
---VALUES('123',1,2,true,5,4);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('111',123,2,80,1);
+INSERT INTO building_levels(building_id, levels_id)VALUES(1,1);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('coral', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO unit(description, length, rent, rentable, unit_number, width, level_id, square_id)
+VALUES('123',100,100,true,'unit1',100, 1, 1);
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
+VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party', 'CONCERT', null, 1, 'PAID', 4);
+INSERT INTO user_events(user_id, events_id)VALUES(4, 1);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-26 22:00:00', '2016-10-25 10:00:00', 1, 1, 1, 1);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)
 --VALUES('1123',1,2,true,6,4);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)
