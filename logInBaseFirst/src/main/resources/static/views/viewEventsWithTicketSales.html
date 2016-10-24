@@ -1,16 +1,16 @@
 
-	<div ng-cloak ng-controller="balanceController as balanceCtrl" >
+	<div ng-cloak ng-controller="eventWithTicketController as eventWithTicketCtrl" >
 	 <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
                                 <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-                                <li><a>View Outstanding Balance For All Organisers</a></li>
+                                <li><a>View Events With Ticket Sales</a></li>
                             </ol>
         </div>
       <div class="col-md-9">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					<h3 class="panel-title">Outstanding Balance 
+					<h3 class="panel-title">Event With Ticket Sales
 						<div class="panel-control pull-right">
 						
 							<a class="panelButton"><i class="fa fa-refresh"></i></a>
@@ -24,24 +24,23 @@
 					<table class="table table-hover">              
                         <thead>
                            <tr>
-                           <th><i></i> Organiser ID </th>
-                            <th><i></i> Organiser Name </th>
+                           <th><i></i> Event ID </th>
                             <th><i></i> Organiser Email </th>
+                            <th><i></i> Ticket revenue </th>
                             <th><i></i> Total Outstanding Balance </th>
                            <th>Actions</th>
                        
                            </tr>
                          <tbody>
-                         <tr ng-repeat="x in orgs">
+                         <tr ng-repeat="x in events">
                             <td>{{ x.id }}</td>
-                            <td>{{ x.name }}</td>
                             <td>{{ x.email }}</td>
+                            <td>{{ x.ticket }}</td>
                             <td>{{ x.outstanding }}</td>
                             <td>
-                            <a  ui-sref="dashboard.updateReceivedPayment" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="Update Received Payment"><i class="glyphicon glyphicon-arrow-left"></i></a>
-                            <a  ui-sref="dashboard.viewListOfEvents" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View List Of Events"><i class="glyphicon glyphicon-list"></i></a>
-                            <a  ui-sref="dashboard.viewPaymentHistory" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View Payment History"><i class="glyphicon glyphicon-eye-open"></i></a>
-                           </td>
+                            <a  ui-sref="dashboard.updateTicketRevenue" ng-click="passEvent(x.id)" tooltip-placement="top" tooltip="Update Received Payment"><i class="glyphicon glyphicon-shopping-cart"></i></a>
+                            <a  ui-sref="dashboard.updateOutgoingPayment" ng-click="passEvent(x.id)" tooltip-placement="top" tooltip="Update Outgoing Payment"><i class="glyphicon glyphicon-arrow-right"></i></a>
+                            </td>
                         </tr>
                          </tbody>
                          </thead>

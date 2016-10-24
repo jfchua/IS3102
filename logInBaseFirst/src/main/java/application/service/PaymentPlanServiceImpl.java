@@ -80,6 +80,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	    plan.setOverdue(false);
 	    plan.setTicketRevenue(0.00);
 	    plan.setDeposit(deposit);
+	    plan.setNextPayment(deposit);
 	    plan.setSubsequentNumber(subsequentNumber);
 	    Double subsequent = 0.00;
 	    if((total > deposit)&&subsequentNumber>0)
@@ -221,16 +222,18 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		    	PaymentPlan pay = pay1.get();
 		    	Set<Payment> payments = pay.getPayments();
 		    	Double payable = pay.getPayable();
+		    	System.out.println("payable " + payable);
 		    	Event event = pay.getEvent();
 		    	Double subsequent = pay.getSubsequent();
-		    	Double deposit = pay.getDeposit();
+		    	System.out.println("subsequent " + subsequent);
 		    	Date previousDue = pay.getNotificationDue();
-		    		    	
-		    	if((payable < paid)||(!((deposit == paid)||(subsequent == paid))))
+		    	System.out.println("before if");	    	
+		    	if(payable < paid)
 		    		return false;
 		    	Payment payment = new Payment();
 		    	Calendar cal = Calendar.getInstance();
 			    payment.setPaid(cal.getTime());
+			    System.out.println("paid time " + cal.getTime());
 		    	payment.setAmount(paid);
 		    	payment.setCheque(chequeNum);
 		    	payment.setPlan(paymentPlanId);
@@ -238,18 +241,22 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		    	payments.add(payment);
 		    	pay.setPaid(paid);
 		    	Double total = pay.getTotal();
+		    	System.out.println("total " + total);
 		    	pay.setPayable(total-paid);
-		    	
+		    	if((total-paid) >= subsequent)
+		    		pay.setNextPayment(subsequent);
+		    	else if (((total-paid)<subsequent)&&((total-paid)>0))
+		    		pay.setNextPayment(total-paid);
 		    	Calendar cal1 = Calendar.getInstance();
 		        cal1.setTime(previousDue);
-		        cal1.add(Calendar.DATE, period);		        
+		        cal1.add(Calendar.DATE, period);
+		        System.out.println("period " + period);
 		    	pay.setNotificationDue(cal1.getTime());
 		    	cal1.add(Calendar.DATE, due);
+		    	System.out.println("due " + due);
 		    	pay.setDue(cal1.getTime());
 		        if(payment.getPaid().before(pay.getDue()))
 		        	event.setPaymentStatus(PaymentStatus.valueOf("PAID"));
-		       /* else
-		        	pay.setOverdue(true);*/
 		        
 		    	paymentPlanRepository.flush();
 		    	return true;
@@ -351,6 +358,23 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		    	return 0.00;
 		}catch (Exception e){
 		return 0.00;
+		}
+	}
+
+	@Override
+	public Set<Event> getEventsByOrgId(ClientOrganisation client, long id) {
+		try{
+			Optional<User> user1 = Optional.ofNullable(userRepository.findOne(id)); 			
+		    if(user1.isPresent()&&(client.getUsers().contains(user1.get()))){
+		    	User user = user1.get();
+		    	System.out.println("user id is "+user.getId());
+		    	System.out.println("outstanding");
+		    	return user.getEvents();
+		    }   
+		    else
+		    	return null;
+		}catch (Exception e){
+		return null;
 		}
 	}
 

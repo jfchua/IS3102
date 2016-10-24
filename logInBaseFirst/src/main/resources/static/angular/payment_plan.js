@@ -150,11 +150,125 @@ app.controller('balanceController', ['$scope', '$http','$state','$routeParams','
 		}	
 		)	
 	});
-	$scope.passPaymentPlan = function(result){
-		shareData.addData(result);
+	$scope.passOrganiser = function(id){
+		shareData.addData(id);
 	}
+}]);
 
 
+app.controller('eventListController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$scope.org = shareData.getData();
+		$scope.url = "https://localhost:8443/payment/viewListOfEvents/"+$scope.org;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE EVENTS");
+		var getEvents = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/payment/viewListOfEvents/' + $scope.org,
+
+		});
+		console.log("Getting the events using the url: " + $scope.url);
+		getEvents.success(function(response){
+			console.log('GET EVENTS SUCCESS! ');
+			console.log(JSON.stringify(response));
+			console.log(response);
+			$scope.events = response;
+		});
+		getEvents.error(function(response){
+			$state.go("dashboard.viewAllOutstandingBalance");
+			console.log('GET EVENTS FAILED! ');
+		});
+	});
+}]);
+
+app.controller('receivedPController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$scope.org = shareData.getData();
+		$scope.url = "https://localhost:8443/payment/viewListOfPaymentPlans/"+$scope.org;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE Payment Plans");
+		var getEvents = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/payment/viewListOfPaymentPlans/' + $scope.org,
+
+		});
+		console.log("Getting the payment plans using the url: " + $scope.url);
+		getEvents.success(function(response){
+			console.log('GET EVENTS SUCCESS! ');
+			console.log(response);
+			$scope.plans = response;
+			$scope.selectedPlan;
+		});
+		getEvents.error(function(response){
+			$state.go("dashboard.viewAllOutstandingBalance");
+			console.log('GET EVENTS FAILED! ');
+		});
+	});
+	$scope.currentlySelectedPlan;
+	$scope.selectPlan = function(){
+		$scope.selectedPlan=$scope.currentlySelectedPlan;
+	}
+	console.log("finish selecting payment plan");
+	
+	$scope.getPlan = function(id){
+		$scope.dataToShare = [];
+		$scope.url = "https://localhost:8443/payment/getPaymentPlan/"+id;
+		console.log("GETTING THE PLAN INFO")
+		var getLevels = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/payment/getPaymentPlan/'+id,
+	});
+		console.log("Getting the payment plan using the url: " + $scope.url);
+		getLevels.success(function(response){
+			$scope.paymentPlan = response;
+			console.log("RESPONSE IS" + JSON.stringify(response));
+		});
+		getLevels.error(function(){
+			alert('Get Payment Plan Details error!!!!!!!!!!');
+		});			
+	}
+	
+	$scope.updateReceivedPayment = function(){
+		$scope.data = {};
+		var dataObj = {			
+				id: $scope.paymentPlan.id,
+				amountPaid: $scope.amountPaid,
+				cheque: $scope.chequeNum,
+		};
+		console.log("REACHED HERE FOR SUBMIT PAYMENT Plan " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/payment/updateReceivedPayment',
+			data    : dataObj //forms user object
+		});
+
+		console.log("SAVING THE PAYMENT PLan");
+		send.success(function(){		
+			alert('PAYMENT IS SAVED! GOING BACK TO VIEW ALL OUTSTANDING BALANCES');
+			$state.go("dashboard.viewAllOutstandingBalance");
+		});
+		send.error(function(){
+			alert('SAVING PAYMENT GOT ERROR!');
+		});
+	}
+}]);
+
+app.controller('eventWithTicketController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$http.get("//localhost:8443/payment/viewAllEventsWithTicket").then(function(response){
+			$scope.events = response.data;
+			console.log("DISPLAY ALL EVENTS");
+		},function(response){
+			alert("did not view events");
+		}	
+		)	
+	});
+	$scope.passEvent = function(id){
+		shareData.addData(id);
+	}
 }]);
 
 
