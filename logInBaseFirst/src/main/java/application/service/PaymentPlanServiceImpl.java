@@ -298,6 +298,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			Double rent = 0.00;
 			try{
 				Optional<Event> event1 = Optional.ofNullable(eventRepository.findOne(eventId));
+				 NumberFormat formatter = new DecimalFormat("#0.00"); 
 				if(event1.isPresent()){
 				Event event = event1.get();
 				Date start = event.getEvent_start_date();
@@ -312,7 +313,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			    	rent += rentU*duration1;
 			    }
 				}
-				return rent*1.07;
+				return Double.valueOf(formatter.format(rent*1.07));
 			}catch(Exception e){
 				return 0.00;
 				}
@@ -376,6 +377,55 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		}catch (Exception e){
 		return null;
 		}
+	}
+
+	@Override
+	public PaymentPlan getPaymentPlanByEvent(ClientOrganisation client, long id) {
+		if(checkEvent(client, id)){
+			try{
+				Optional<Event> event1 = Optional.ofNullable(eventRepository.findOne(id)); 			
+			   return event1.get().getPaymentPlan();
+			}catch (Exception e){
+			return null;
+			}	
+		}
+		else
+		return null;
+	}
+
+	@Override
+	public boolean updateTicketRevenue(ClientOrganisation client, User user, long paymentPlanId, Double paid) {
+		Set<User> users = userRepository.getAllUsers(client);
+		System.out.println("clientUser");
+		PaymentPolicy payPol = client.getPaymentPolicy();
+		int period = payPol.getInterimPeriod();
+		int due = payPol.getNumOfDueDays();
+		boolean doesHave = false;
+		for(User u: users){
+			 Set<Role> roles = u.getRoles();
+			   for(Role r: roles){
+			    if(r.getName().equals("ROLE_FINANCE") && u.equals(user))
+			    doesHave = true;
+			   }
+		}
+		if((!doesHave)||(!checkEvent(client, paymentPlanId)))
+			return false;
+		try{
+		    Optional<PaymentPlan> pay1 = getPaymentPlanById(paymentPlanId); 
+		    System.out.println(pay1.isPresent());
+		    if(pay1.isPresent()){
+		    	PaymentPlan pay = pay1.get();
+		    	pay.setTicketRevenue(paid);
+		    	Double payable = pay.getPayable();
+		    	pay.setPayable(payable-paid);
+		    	paymentPlanRepository.flush();
+		    	return true;
+		    }
+		    else
+		    return false;
+		}catch(Exception e){
+			return false;
+			}
 	}
 
 }

@@ -691,6 +691,14 @@ app.config(
 					authorizedRoles:[USER_ROLES.finance]
 				}
 			})
+			.state('dashboard.updateTicketRevenue',{
+				url:'/updateTicketRevenue',
+				templateUrl: '/views/updateTicketRevenue.html',
+				controller: 'ticketRController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
 			.state('/401',{
 				url:'/401',
 				templateUrl: '/views/401.html',
