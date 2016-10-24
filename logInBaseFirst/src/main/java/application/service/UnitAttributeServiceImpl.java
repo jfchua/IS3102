@@ -43,7 +43,7 @@ public class UnitAttributeServiceImpl implements UnitAttributeService {
 	
 	@Override
 	public boolean createAttributeTypeOnClient(ClientOrganisation client, String unitAttributeType) {
-		unitAttributeType=unitAttributeType.toUpperCase();
+		//unitAttributeType=unitAttributeType.toUpperCase();
 		UnitAttributeType type= new UnitAttributeType();
 		type.setAttributeType(unitAttributeType);
 		unitAttributeTypeRepository.saveAndFlush(type);
@@ -51,7 +51,7 @@ public class UnitAttributeServiceImpl implements UnitAttributeService {
 		types.add(type);
 		client.setUnitAttributeTypes(types);
 		clientOrganisationRepository.saveAndFlush(client);
-		return false;
+		return true;
 	}
 	
 	@Override
@@ -122,8 +122,11 @@ public class UnitAttributeServiceImpl implements UnitAttributeService {
 	@Override
 	public boolean attributeValueExistsOnType(UnitAttributeType unitAttributeType,UnitAttributeValue unitAttributeValue) {
 		// TODO Auto-generated method stub
-	
-		return false;
+		Set<UnitAttributeValue> values=unitAttributeType.getUnitAttributeValues();
+		if(values.contains(unitAttributeValue))
+			return true;
+		else
+			return false;
 	}
 	@Override
 	public boolean attributeValueExistsOnClient(ClientOrganisation client,String attributeValue) {
@@ -182,15 +185,40 @@ public class UnitAttributeServiceImpl implements UnitAttributeService {
 		return null;
 	}
 	@Override
-	public boolean setAttributeValueonTypeNUnit(UnitAttributeValue unitAttributeValue,UnitAttributeType custmisedType,Unit unit) {
-		// TODO Auto-generated method stub
-	
-		return false;
+	public boolean setAttributeValueonTypeNUnit(UnitAttributeValue unitAttributeValue,UnitAttributeType unitAttributeType,Unit unit) {
+		// TODO Auto-generated method stub	
+		Set<UnitAttributeValue> valuesOfType=unitAttributeType.getUnitAttributeValues();
+		valuesOfType.add(unitAttributeValue);
+		unitAttributeType.setUnitAttributeValues(valuesOfType);
+		unitAttributeTypeRepository.saveAndFlush(unitAttributeType);
+		
+		Set<UnitAttributeValue> valuesOfUnit=unit.getUnitAttributeValues();
+		valuesOfUnit.add(unitAttributeValue);
+		unit.setUnitAttributeValues(valuesOfUnit);
+		unitRepository.saveAndFlush(unit);
+		
+		Set<Unit> units=unitAttributeValue.getUnits();
+		units.add(unit);
+		unitAttributeValue.setUnits(units);				
+		unitAttributeValue.setUnitAttributeType(unitAttributeType);
+		unitAttributeValueRepository.saveAndFlush(unitAttributeValue);
+		return true;
+		
 	}
 	@Override
 	public boolean setAttributeValueonUnit(UnitAttributeValue unitAttributeValue,Unit unit) {
 		// TODO Auto-generated method stub
 	
-		return false;
+		
+		Set<UnitAttributeValue> valuesOfUnit=unit.getUnitAttributeValues();
+		valuesOfUnit.add(unitAttributeValue);
+		unit.setUnitAttributeValues(valuesOfUnit);
+		unitRepository.saveAndFlush(unit);
+		
+		Set<Unit> units=unitAttributeValue.getUnits();
+		units.add(unit);
+		unitAttributeValue.setUnits(units);				
+		unitAttributeValueRepository.saveAndFlush(unitAttributeValue);
+		return true;
 	}
 }

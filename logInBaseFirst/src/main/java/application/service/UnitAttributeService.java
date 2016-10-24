@@ -21,6 +21,6 @@ public interface UnitAttributeService {
 	boolean attributeValueExistsOnClient(ClientOrganisation client,String attributeValue);
 	UnitAttributeValue createAttributeValueOnTypeNUnit(String attributeValue, UnitAttributeType unitAttributeType,Unit unit);
 	UnitAttributeValue getAttributeValueByStringOnClient(ClientOrganisation client,String attributeValue);
-	boolean setAttributeValueonTypeNUnit(UnitAttributeValue unitAttributeValue,UnitAttributeType custmisedType,Unit unit);
+	boolean setAttributeValueonTypeNUnit(UnitAttributeValue unitAttributeValue,UnitAttributeType unitAttributeType,Unit unit);
 	boolean setAttributeValueonUnit(UnitAttributeValue unitAttributeValue,Unit unit);
 }

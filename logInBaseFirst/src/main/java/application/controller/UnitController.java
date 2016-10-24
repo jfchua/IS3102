@@ -159,6 +159,13 @@ public class UnitController {
 				System.out.println("Level id "+levelId);
 				//long levelId = Long.parseLong(level);
 				Set<Unit> units = unitService.getUnitsByLevelId(levelId);
+				for(Unit unit:units){									
+					Set<UnitAttributeValue> values = unit.getUnitAttributeValues();
+					for(UnitAttributeValue value:values){
+						value.setUnits(null);
+						value.getUnitAttributeType().setUnitAttributeValues(null);
+					}
+					}
 				System.out.println("Level units "+units);
 				Gson gson2 = new GsonBuilder()
 					    .setExclusionStrategies(new ExclusionStrategy() {

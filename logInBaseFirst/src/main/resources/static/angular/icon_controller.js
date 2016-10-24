@@ -219,17 +219,21 @@ app.controller('csvController', function ($scope, $http,shareData) {
 	   };
 	   
 	    $scope.saveData =function(){	
-	    		
+	    		console.log("START SAVING CSV");
 	    	var dataObj = {
 	    			datas:{
 	    				data:$scope.datas
 		            },
 		            attributeTypes:{
 		            	attributeType:$scope.attributeTypes
-			            }
-		        };
-	    	
-	    	
+			            }      
+	    };//END DATA OBJ
+	    	$http.post('//localhost:8443/property/saveDatas', JSON.stringify(dataObj)).then(function(response){
+	    		 alert("CSV FILE IS SAVED.");
+		  },function(response){
+			  console.log(response);
+		        console.log("DID NOT SAVE");
+	      })
 	    }
 	    $scope.csv = {
 	    		content: null,
