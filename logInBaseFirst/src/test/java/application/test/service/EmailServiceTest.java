@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import application.exception.InvalidAttachmentException;
-import application.service.user.EmailService;
+import application.service.EmailService;
 import application.test.AbstractTest;
 
 @Transactional

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import application.exception.InvalidFileUploadException;
-import application.service.user.FileUploadCheckingService;
+import application.service.FileUploadCheckingService;
 import application.test.AbstractTest;
 
 @Transactional

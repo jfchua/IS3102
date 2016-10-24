@@ -8,9 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
-import application.domain.CurrentUser;
-import application.exception.UserNotFoundException;
-import application.service.currentuser.CurrentUserDetailsService;
+import application.entity.CurrentUser;
+import application.service.CurrentUserDetailsService;
 import application.test.AbstractTest;
 
 @Transactional

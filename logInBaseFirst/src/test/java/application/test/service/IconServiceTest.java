@@ -7,13 +7,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import application.domain.ClientOrganisation;
-import application.domain.Icon;
+import application.entity.ClientOrganisation;
+import application.entity.Icon;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.IconNotFoundException;
 import application.exception.InvalidIconException;
-import application.service.user.ClientOrganisationService;
-import application.service.user.IconService;
+import application.service.ClientOrganisationService;
+import application.service.IconService;
 import application.test.AbstractTest;
 
 @Transactional
