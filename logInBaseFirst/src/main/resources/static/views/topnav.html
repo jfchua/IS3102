@@ -35,7 +35,7 @@
 				</ul>
 			</li>
 			<li class="dropdown admin-dropdown" dropdown on-toggle="toggled(open)">
-				<a href class="dropdown-toggle" dropdown-toggle><img src="img/expoIcon.png" class="topnav-img" alt=""> <span class="hidden-sm">{{ userInfo.name}}</span></a>
+				<a href class="dropdown-toggle" dropdown-toggle><img src="{{logo}}" class="topnav-img" alt=""> <span class="hidden-sm">{{ userInfo.name}}</span></a>
 				<ul class="dropdown-menu pull-right animated fadeIn">
 					<li ng-show="IsUser()" ng-controller="AccountController"
 						class="active"><a ui-sref="dashboard.viewUserProfile"><i

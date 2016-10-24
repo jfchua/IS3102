@@ -48,6 +48,7 @@ import com.google.gson.Gson;
 
 import application.entity.Building;
 import application.entity.ClientOrganisation;
+import application.entity.Icon;
 import application.entity.Level;
 import application.entity.PasswordResetToken;
 import application.entity.Unit;
@@ -361,7 +362,7 @@ public class LoginController {
 
 	@RequestMapping(value = "/getCompanyLogo", method = RequestMethod.GET)
 	@ResponseBody
-	public String getCompanyLogo(HttpServletRequest request ) throws IOException {
+	public ResponseEntity<String> getCompanyLogo(HttpServletRequest request ) throws IOException {
 		try{
 			Principal p = request.getUserPrincipal();
 			User curUser = userService.getUserByEmail(p.getName()).get();
@@ -372,11 +373,11 @@ public class LoginController {
 			Gson gson = new Gson();
 			String json = gson.toJson(temp);
 			System.out.println(json);
-			return json;	
+			return new ResponseEntity<String>(json,HttpStatus.OK);
 		}
 		catch(Exception e){
 			System.err.println(e.getMessage());
-			return "ERROR";
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 		//  return curUser.getClientOrganisation().getLogoFilePath();
 
