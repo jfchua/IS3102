@@ -272,6 +272,57 @@ app.controller('eventWithTicketController', ['$scope', '$http','$state','$routeP
 }]);
 
 
+app.controller('ticketRController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	$scope.payment={};
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$scope.org = shareData.getData();
+		$scope.url = "https://localhost:8443/payment/getPaymentViaEvent/"+$scope.org;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE Payment Plan");
+		var getEvents = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/payment/getPaymentViaEvent/' + $scope.org,
+
+		});
+		console.log("Getting the payment plan using the url: " + $scope.url);
+		getEvents.success(function(response){
+			console.log('GET PAYMENT PLAN SUCCESS! ');
+			console.log(response);
+			$scope.payment = response;
+		});
+		getEvents.error(function(response){
+			$state.go("dashboard.viewEventsWithTicketSales");
+			console.log('GET PAYMENT FAILED! ');
+		});
+	});
+	
+	$scope.updateTicketRevenue = function(){
+		$scope.data = {};
+		var dataObj = {			
+				id: $scope.payment.id,
+				ticket: ($scope.ticket).toString(),
+		};
+		console.log("REACHED HERE FOR SUBMIT PAYMENT Plan " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/payment/updateTicketRevenue',
+			data    : dataObj //forms user object
+		});
+
+		console.log("SAVING THE TICKET REVENUE");
+		send.success(function(){		
+			alert('TICKET REVENUE IS UPDATED! GOING BACK TO VIEW ALL EVENTS WITH TICKET SALES');
+			$state.go("dashboard.viewEventsWithTicketSales");
+		});
+		send.error(function(){
+			alert('UPDATING TICKET REVENUE GOT ERROR!');
+		});
+	}
+	
+}]);
+
+
 app.controller('policyController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	

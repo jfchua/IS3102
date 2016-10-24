@@ -32,4 +32,7 @@ public interface PaymentPlanService {
 	
 	Set<Event> getEventsByOrgId(ClientOrganisation client, long id);
 
+	PaymentPlan getPaymentPlanByEvent(ClientOrganisation client, long id);
+	
+	boolean updateTicketRevenue(ClientOrganisation client, User user, long paymentPlanId, Double paid);
 }

@@ -46,9 +46,10 @@ $scope.requestForTicketSales = function(event){
 	if(confirm('CONFIRM TO HAVE TICKET SALES FOR '+event.event_title+'?')){
 
 		var tempObj ={eventId: event.id};
-		console.log("fetch id "+ tempObj);
+		console.log("fetch id ");
+		console.log(tempObj);
 		//var buildings ={name: $scope.name, address: $scope.address};
-		$http.post("//localhost:8443/event/requestTicket", JSON.stringify(tempObj)).then(function(response){
+		$http.post("//localhost:8443/event/requestTickets", JSON.stringify(tempObj)).then(function(response){
 			//$scope.buildings = response.data;
 			console.log("REQUEST FOR TICKET SALES");
 			alert('SUCCESS REQUEST! GOING BACK TO VIEW EVENTS...');
