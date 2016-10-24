@@ -38,8 +38,10 @@ import application.entity.*;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
 import application.service.BookingService;
+import application.service.EmailService;
 import application.service.EventExternalService;
 import application.service.EventOrganizerService;
+import application.service.MessageService;
 import application.service.PaymentPlanService;
 import application.service.UserService;
 
@@ -50,16 +52,20 @@ public class PaymentPlanController {
 	private final EventExternalService eventExternalService;
 	private final PaymentPlanService paymentPlanService;
 	private final UserService userService;
+	private final MessageService messageService;
+	private final EmailService emailService;
 	//private final EventCreateFormValidator eventCreateFormValidator;
 	private JSONParser parser = new JSONParser();
 	
 	@Autowired
 	public PaymentPlanController(EventExternalService eventService, PaymentPlanService paymentPlanService,
-			UserService userService) {
+			UserService userService, MessageService messageService, EmailService emailService) {
 		super();
 		this.eventExternalService = eventService;
 		this.paymentPlanService = paymentPlanService;;
 		this.userService = userService;
+		this.messageService = messageService;
+		this.emailService = emailService;
 	}
 		
 		// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
@@ -129,6 +135,8 @@ public class PaymentPlanController {
 							Object obj1 = parser.parse(paymentJSON);
 							JSONObject jsonObject = (JSONObject) obj1;
 							Long eventId = (Long)jsonObject.get("eventId");
+							Event event = eventExternalService.getEventById(eventId).get();
+							User org = event.getEventOrg();
 							System.out.println(eventId);
 							Double total = Double.valueOf((String)jsonObject.get("total"));
 							System.out.println(total);
@@ -141,6 +149,13 @@ public class PaymentPlanController {
 							System.out.println("adding payment plan " + total);
 							if(!bl)
 								return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+							else{
+								String  subject = "Payment plan for event ID " + eventId + " created!";
+							    String msg = "Your event ID " + eventId + " has a new payment plan with total amount "+total+" .";			   
+							    emailService.sendEmail(org.getEmail(), subject, msg);
+							    messageService.sendMessage(user, org, subject, msg);
+							}
+								
 						}
 						catch (Exception e){
 							System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
@@ -170,6 +185,7 @@ public class PaymentPlanController {
 							Long eventId = (Long)jsonObject.get("event");				
 							Double price = paymentPlanService.checkRent(client, eventId);
 							PaymentPolicy payPol = client.getPaymentPolicy();
+						
 							NumberFormat formatter = new DecimalFormat("#0.00");     
 							//System.out.println(formatter.format(4.0));
 							JSONObject obj1 = new JSONObject();
