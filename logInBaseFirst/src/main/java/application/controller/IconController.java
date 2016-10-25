@@ -3,6 +3,7 @@ package application.controller;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -43,6 +44,7 @@ import application.service.ClientOrganisationService;
 import application.service.FileUploadCheckingService;
 import application.service.IconService;
 import application.service.UserService;
+import net.minidev.json.JSONArray;
 
 @Controller
 @RequestMapping("/property")
@@ -337,6 +339,43 @@ public class IconController {
 
 	}
 
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/getIconsMenu", method = RequestMethod.GET)
+	@ResponseBody
+	public  ResponseEntity<JSONArray> getIconsMenu(HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+
+			return new ResponseEntity<JSONArray>(HttpStatus.CONFLICT);
+			//return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();
+			//Set<Icon> icons = iconService.getAllIconFromClientOrganisation(client);	
+			Set<Icon> icons = client.getIcons();	
+			JSONArray menu = new JSONArray();
+		
+
+			int index=0;
+			for(Icon icon: icons){
+				String menuOptionName="<img  class=\"svgtest\" src=\""+icon.getIconPath()+"\" alt=\""+icon.getIconPath()+"\" width=\"50px\" height=\"50px\">";
+				String menuOptionFunc=" function ($itemScope, $event, modelValue, text, $li) {var icon=$scope.icon["+index+"];$scope.addSpecialUnitByIcon(icon);}";
+				JSONObject menuOption = new JSONObject(); 
+				menuOption.put("name", menuOptionName); 
+				menuOption.put("funct", menuOptionFunc); 
+				menu.add(menuOption);
+				index++;
+			}
+			
+			
+			return new ResponseEntity<JSONArray>(menu,HttpStatus.OK);
+		}
+		catch (Exception e){
+
+			return new ResponseEntity<JSONArray>(HttpStatus.CONFLICT);
+		}
+	}
 
 
 }

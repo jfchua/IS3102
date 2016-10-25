@@ -159,19 +159,26 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
   }
   */
   
-  function downloadPlan() {
+  $scope.downloadPlan = function () {
+	  console.log("her0");
 	  console.log(html2canvas);
 	    var canvasdiv = document.getElementById("glassbox");
-
-	    html2canvas(canvasdiv,{
-
-	        onrendered: function (canvas) {
-	            var a = document.createElement("a");
-	            a.href = canvas.toDataURL("plan/png");
-	            a.download ="plan.png";
-	            a.click();
-	        }
-	    });
+	    console.log("here1");
+	    html2canvas(document.body, {onrendered:function(canvas){
+	    	console.log("here2");
+	    	document.body.appendChild(canvas);
+	    }})
+	    
+//
+//	    html2canvas(canvasdiv,{
+//
+//	        onrendered: function (canvas) {
+//	            var a = document.createElement("a");
+//	            a.href = canvas.toDataURL("plan/png");
+//	            a.download ="plan.png";
+//	            a.click();
+//	        }
+//	    });
 	}
   /*
    $scope.downloadPlan = function(){
@@ -272,7 +279,20 @@ app.directive('resizable', function () {
   };
 })
 
-
+app.directive('egDirective',[function(){
+    return {
+        restrict: 'A',
+        link: function (scope,element,attributes) {
+            element.bind('click',onClick);
+            function onClick () {
+                html2canvas(element,{
+                    onrendered: function (canvas) {}
+                });
+            }
+        }
+    };
+}])
+;
 
 
 //UPDATE FLOOR PLAN
@@ -341,6 +361,38 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 				
 			})
 			
+			
+			
+			
+			//GET ICON MENU
+			$http.get("//localhost:8443/property/getIconsMenu").then(function(response){			
+				console.log(response);
+				var data = angular.fromJson(response.data);
+				console.log(data);
+				$scope.iconMenu=[];
+				var index=0;
+				 angular.forEach(data, function(item){             
+					   	var iconMenuRow=[];
+					   	iconMenuRow.push(data[index].name);
+					   
+					   	eval( 'var func = ' +data[index].funct ); //working
+					   	console.log(data[index].funct);
+					   	iconMenuRow.push(func);//working
+					   	$scope.iconMenu.push(iconMenuRow);//working
+					    // $scope.iconMenu.push([data[index]]);
+					     index++;
+					     console.log(iconMenuRow);
+					  }); 
+				 console.log("test icon menu");
+				 console.log($scope.iconMenu);
+				//console.log($scope.icons);
+				//console.log($scope.icons[0]);
+				//console.log($scope.icons[0].iconType);
+				//console.log($scope.icons[0].iconPath);
+			},function(response){
+				alert("DID NOT VIEW ICONS");
+				
+			})
 			/*
 			$scope.defaultTypes=[
 			                  {'name':'Entry','type':'./svg/entry.svg'},
@@ -353,42 +405,54 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 			                  {'name':'Unit','type':'./svg/rect.svg'}];
 			$scope.selectedDefaultType=$scope.defaultTypes[0];
 			*/
+			/*  $scope.iconMenu = [
+			                        
+			                        // null,        // Dividier
+			                         ['<img  class="svgtest" src="lights.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {
+			                             var icon=$scope.icon[0];
+			                        	 $scope.addSpecialUnitByIcon(icon);
+			                         }],
+			                  
+			                        
+			                     ];*/
     });
   
   
   $scope.menuOptions = [
                      
                        // null,        // Dividier
-                        ['Entry', function ($itemScope, $event, modelValue, text, $li) {
+                        ['<img  class="svgtest" src="./svg/entry.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {
                             $scope.specialType='./svg/entry.svg';
                             $scope.addSpecialUnit();
                         }],
                  
-                        ['Escalator', function ($itemScope, $event, modelValue, text, $li) {
+                        ['<img  class="svgtest" src="./svg/escalator.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {
                             $scope.specialType='./svg/escalator.svg';
                             $scope.addSpecialUnit();
                         }],
-                        ['Exit', function ($itemScope, $event, modelValue, text, $li) {                     
+                        ['<img  class="svgtest" src="./svg/exit.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                     
                             $scope.specialType='./svg/exit.svg';
                             $scope.addSpecialUnit();
                         }],
-                        ['Lift', function ($itemScope, $event, modelValue, text, $li) {                      
+                        ['<img  class="svgtest" src="./svg/lift.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                      
                             $scope.specialType='./svg/lift.svg';
                             $scope.addSpecialUnit();
                         }],
-                        ['Service Lift', function ($itemScope, $event, modelValue, text, $li) {                      
+                        ['<img  class="svgtest" src="./svg/servicelift.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                      
                             $scope.specialType='./svg/servicelift.svg';
                             $scope.addSpecialUnit();
                         }],
-                        ['Staircase', function ($itemScope, $event, modelValue, text, $li) {                        
+                        ['<img  class="svgtest" src="./svg/staircase.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                        
                             $scope.specialType='./svg/staircase.svg';
                             $scope.addSpecialUnit();
                         }],
-                        ['Toilet', function ($itemScope, $event, modelValue, text, $li) {                  
+                        ['<img  class="svgtest" src="./svg/toilet.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                  
                             $scope.specialType='./svg/toilet.svg';
                             $scope.addSpecialUnit();
                         }],
                     ];
+  
+
   
   
 /*
@@ -693,7 +757,52 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 		      } )
 		
 		   
-	}
+	}//END REMOVE
+	//console.log("scope test 0");
+	// console.log(   angular.element(document.getElementById('1')).scope());
+	$scope.updateUnit=function(unit){
+		 console.log("Update the unit");
+		
+		// console.log("scope test3");
+	//	 console.log(   angular.element(document.getElementById('1')).scope());
+		  var dataObj = {
+			        id: levelId,
+			        Units:{
+			          Unit:$scope.units
+			        }
+			    };
+		  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
+		    	
+		  },function(response){
+		        
+		      } ).then(function(){
+		  			
+		  			var dataObj={unit:unit,levelId:levelId};
+		  			$http.post('/property/updateUnit', JSON.stringify(dataObj)).then(function(response){
+		  				$scope.units=[];
+		  				console.log("empty");
+		  				console.log($scope.units);
+		  				 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
+		  				        console.log(response.data);
+		  				
+		  				        console.log(angular.fromJson(response.data));
+		  				      $scope.units=angular.fromJson(response.data);
+		  				  //  console.log("scope test4");
+		  					// console.log(   angular.element(document.getElementById('1')).scope());
+		  				       // $state.reload();//Can use
+		  				     
+		  				      },function(response){
+		  				        console.log("DID NOT view");
+		  				        console.log("response is "+angular.fromJson(response.data).error);
+		  				      })
+		  		},function(response){//else is not saved successfully
+		  				console.log("UNIT CANNOT BE DELETED");
+		  			alert("THERE ARE ADVANCE BOOKINGS ON THIS UNIT. UNIT CANNOT BE DELETED");
+		  		})
+		  		
+		  		
+		      } )
+	 };//END UPDATE UNIT
 //  for external event organisers
   var unitIds="";
   $scope.addToUnitIds=function(unitId){
@@ -711,7 +820,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
   
   //MODAL FOR ONE UNIT
   $scope.complexResult = null;
-	 $scope.showModal = function(unit) {
+	 $scope.showModal = function(unit,$parent) {
 		 console.log(unit);
 		    // Just provide a template url, a controller and call 'showModal'.
 		    ModalService.showModal({
@@ -725,48 +834,27 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 		    	    }).then(function(modal) {
 		    	      modal.element.modal();
 		    	      modal.close.then(function(result) {
-		    	       $scope.unit  = result.unit;
-		    	       console.log("in then");
-		    	       
+		    	      var unit  = result.unit;
+		    	      // console.log("in then");
+		    	      // console.log("scope test1");
+		    	  	// console.log(   angular.element(document.getElementById('1')).scope());
+		    	       $parent.updateUnit(unit);
+		    	      // console.log("scope test2");
+		    	  	// console.log(   angular.element(document.getElementById('1')).scope());
+		    	       //$state.reload();
 		    	      });
 		    	    });
 
-		  };
+		  };//END SHOWMODAL
 		  
 		  $scope.dismissModal = function(result) {
 			    close(result, 200); // close, but give 200ms for bootstrap to animate
-			    $scope.updateUnit();
+			    $parent.updateUnit();
 			    console.log("in dissmiss");
 			 };
 			 
 			 
-		$scope.updateUnit=function(){
-				 console.log("Update the unit");
-				 console.log($scope.unit);
-				  var dataObj = {
-				            id: levelId,
-				            Units:{
-				              Unit:$scope.units
-				            }
-				        };
-				    $http.post('//localhost:8443/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
-				    	$scope.units=[];
-				    	console.log($scope.units);
-				    	console.log("test1");
-						 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-						        console.log("pure response is "+response.data);
-						
-						        console.log(angular.fromJson(response.data));
-						        $scope.units=angular.fromJson(response.data);
-						        alert("units are saved");
-				      },function(response){
-				        console.log("DID NOT VIEW");
-				      })
-				 
-				  },function(response){
-				        console.log("DID NOT CREATE");
-			      })
-			 };
+		
 })
 
 
