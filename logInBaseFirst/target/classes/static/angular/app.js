@@ -524,6 +524,30 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
+			.state('dashboard.updateCategoryEx',{
+				url:'/updateCategoryEx',
+				templateUrl: '/views/updateCategoryEx.html',
+				controller: 'configureTicketsController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.addCategoryEx',{
+				url:'/addCategoryEx',
+				templateUrl: '/views/addCategoryEx.html',
+				controller: 'configureTicketsController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.configureTicketsEx',{
+				url:'/configureTicketsEx',
+				templateUrl: '/views/configureTicketsEx.html',
+				controller: 'configureTicketsController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
 			.state('dashboard.viewAllEventsEx',{
 				url:'/viewAllEventsEx',
 				templateUrl: '/views/viewAllEventsEx.html',
@@ -3491,6 +3515,7 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http', functi
 		})
 	};
 	
+
 	$scope.themeSelected;
 	$scope.changeTheme = function(setTheme){
 		$scope.themeSelected=setTheme;

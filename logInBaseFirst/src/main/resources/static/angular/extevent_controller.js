@@ -1,6 +1,7 @@
 //VIEW ALL EVENTS,
-app.controller('eventExternalController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
-
+app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$state','$routeParams','shareData', function ($scope, $rootScope,$http,$state, $routeParams, shareData) {
+	
+	
 	angular.element(document).ready(function () {
 
 	$scope.data = {};
@@ -41,9 +42,14 @@ $scope.passEvent = function(event){
 	shareData.addData(event);
 	console.log(event);
 }
+$scope.passEventToTix = function(event){
+	$rootScope.event = event;
+	console.log("PASSING" + $rootScope.event);
+	$state.go("dashboard.configureTicketsEx");
+}
 
 $scope.requestForTicketSales = function(event){
-	if(confirm('CONFIRM TO HAVE TICKET SALES FOR '+event.event_title+'?')){
+	if(confirm('Confirm ticket sales for '+event.event_title+'?' + " This action cannot be undone")){
 
 		var tempObj ={eventId: event.id};
 		console.log("fetch id ");
@@ -52,11 +58,12 @@ $scope.requestForTicketSales = function(event){
 		$http.post("//localhost:8443/event/requestTickets", JSON.stringify(tempObj)).then(function(response){
 			//$scope.buildings = response.data;
 			console.log("REQUEST FOR TICKET SALES");
-			alert('SUCCESS REQUEST! GOING BACK TO VIEW EVENTS...');
+			$scope.requestedTicket = true;
+			alert('Successfully set ticket sales');
 			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-			$state.go("dashboard.viewAllEventsEx");
+			$state.go($state.current, {}, {reload: true}); 
 		},function(response){
-			alert("DID NOT REQUEST");
+			alert("Did not request ticket sales. Check if the event has been approved");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)

@@ -84,6 +84,11 @@ public class Event {
 		@OneToOne
 	    @JsonIgnore
 	    private PaymentPlan paymentPlan;
+		
+		@OneToMany(cascade={CascadeType.ALL}, mappedBy="event")
+		@Column(nullable = true)
+		private Set<Category> categories = new HashSet<Category>();
+		
 		/*
 		@ManyToMany(fetch = FetchType.EAGER)
 		@JoinTable( 
@@ -103,6 +108,14 @@ public class Event {
 		@OneToMany(mappedBy ="event", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 		@JsonIgnore
 		private Set<BookingAppl> bookings = new HashSet<BookingAppl>();
+
+		public Set<Category> getCategories() {
+			return categories;
+		}
+
+		public void setCategories(Set<Category> categories) {
+			this.categories = categories;
+		}
 
 		public PaymentPlan getPaymentPlan() {
 			return paymentPlan;

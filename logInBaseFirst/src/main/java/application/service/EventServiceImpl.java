@@ -87,6 +87,13 @@ public class EventServiceImpl implements EventService {
 		}
 		return allEvents;
 	}
+	
+	@Override
+	public Set<Event> getAllEvents() {
+		// TODO Auto-generated method stub
+		return eventRepository.getAllEvents();
+	}
+
 
 
 	@Override
