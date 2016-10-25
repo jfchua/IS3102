@@ -276,7 +276,7 @@ app.directive('resizable', function () {
 
 
 //UPDATE FLOOR PLAN
-app.controller('floorPlanController', function ($scope, $http,shareData,$state) {
+app.controller('floorPlanController', function ($scope, $http,shareData,$state,ModalService) {
   //jQuery = window.jQuery;
   //console.log(jQuery);
   //console.log(jQuery.ui);
@@ -708,4 +708,102 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state) 
     shareData.addData(JSON.stringify(objToPassUnit));
     console.log(JSON.stringify(objToPassUnit));
   }
+  
+  //MODAL FOR ONE UNIT
+  $scope.complexResult = null;
+	 $scope.showModal = function(unit) {
+		 console.log(unit);
+		    // Just provide a template url, a controller and call 'showModal'.
+		    ModalService.showModal({
+		    	
+		    	      templateUrl: "views/updateUnitTemplate.html",
+		    	      controller: "updateUnitController",
+		    	      inputs: {
+		    	        title: "Update Unit",
+		    	        unit:unit
+		    	      }
+		    	    }).then(function(modal) {
+		    	      modal.element.modal();
+		    	      modal.close.then(function(result) {
+		    	       $scope.unit  = result.unit;
+		    	       console.log("in then");
+		    	       
+		    	      });
+		    	    });
+
+		  };
+		  
+		  $scope.dismissModal = function(result) {
+			    close(result, 200); // close, but give 200ms for bootstrap to animate
+			    $scope.updateUnit();
+			    console.log("in dissmiss");
+			 };
+			 
+			 
+		$scope.updateUnit=function(){
+				 console.log("Update the unit");
+				 console.log($scope.unit);
+				  var dataObj = {
+				            id: levelId,
+				            Units:{
+				              Unit:$scope.units
+				            }
+				        };
+				    $http.post('//localhost:8443/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
+				    	$scope.units=[];
+				    	console.log($scope.units);
+				    	console.log("test1");
+						 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
+						        console.log("pure response is "+response.data);
+						
+						        console.log(angular.fromJson(response.data));
+						        $scope.units=angular.fromJson(response.data);
+						        alert("units are saved");
+				      },function(response){
+				        console.log("DID NOT VIEW");
+				      })
+				 
+				  },function(response){
+				        console.log("DID NOT CREATE");
+			      })
+			 };
 })
+
+
+
+//UPDATE EVENT STATUS MODAL
+app.controller('updateUnitController', ['$scope', '$element', 'title', 'close', 'unit',
+                                                function($scope, $element, title, close,unit) {
+	
+		//UPDATE MODAL
+
+		  $scope.title = title;
+		  $scope.unit=unit;
+		  console.log(title);
+		  console.log(close);
+		  console.log($element);
+		  //  This close function doesn't need to use jQuery or bootstrap, because
+		  //  the button has the 'data-dismiss' attribute.
+		  $scope.close = function() {
+		 	  close({
+		      unit:$scope.unit
+		    }, 500); // close, but give 500ms for bootstrap to animate
+		  };
+
+		  //  This cancel function must use the bootstrap, 'modal' function because
+		  //  the doesn't have the 'data-dismiss' attribute.
+		  $scope.cancel = function() {
+
+		    //  Manually hide the modal.
+		    $element.modal('hide');
+		    
+		    //  Now call close, returning control to the caller.
+		    close({
+		    	unit:$scope.unit
+		    }, 500); // close, but give 500ms for bootstrap to animate
+		  };
+
+		
+
+	
+}])

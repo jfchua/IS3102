@@ -30,7 +30,9 @@
         <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
             id="{{unit.square.id}}"  draggable resizable  on-resize="resize(unit,$evt, $ui)" ng-mouseover=$parent.showDetails(unit) 
               ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 
-              'background-color':'{{unit.square.color}}' ,'maxHeight':{{levelWidth}}+'px','maxWidth':{{levelLength}}+'px'}" popover-placement="top" popover="Form here" popover-title="Edit Unit" ><p >{{unit.unitNumber}}<img  class="svgtest" ng-src="{{unit.square.type||unit.square.icon.iconPath}}"  alt="icon"></p> </div>
+              'background-color':'{{unit.square.color}}' ,'maxHeight':{{levelWidth}}+'px','maxWidth':{{levelLength}}+'px'}" 
+     			ng-dblclick="showModal(unit)">
+              <p >{{unit.unitNumber}}<img  class="svgtest" ng-src="{{unit.square.type||unit.square.icon.iconPath}}"  alt="icon"></p> </div>
         </div>
        <div><p> {{showDetail}}</p></div>
   </div>
