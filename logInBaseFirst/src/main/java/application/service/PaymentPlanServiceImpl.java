@@ -44,12 +44,13 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	private final UserRepository userRepository;
 	private final PaymentRepository paymentRepository;
 	private final MessageService messageService;
+	private final EmailService emailService;
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildingServiceImpl.class);
 	
 	@Autowired
 	public PaymentPlanServiceImpl(PaymentPlanRepository paymentPlanRepository, ClientOrganisationRepository clientOrganisationRepository,
 			EventRepository eventRepository, UserRepository userRepository, PaymentRepository paymentRepository,
-			MessageService messageService) {
+			MessageService messageService, EmailService emailService) {
 		//super();
 		this.paymentPlanRepository = paymentPlanRepository;
 		this.clientOrganisationRepository = clientOrganisationRepository;
@@ -57,6 +58,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		this.userRepository = userRepository;
 		this.paymentRepository = paymentRepository;
 		this.messageService =messageService;
+		this.emailService = emailService;
 	}
 	
 	@Override
@@ -156,6 +158,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		    	pay.setSubsequent(Double.valueOf(formatter.format((total-total*depositRate)/subsequentNumber)));
 		    	//System.out.println("finally!!!");
 		    	paymentPlanRepository.flush();
+		    	messageService.sendMessage(user, pay.getEvent().getEventOrg(), "Change of Payment Plan", "Your payment plan is changed, "
+		    			+ "the latest deposit rate is " + depositRate +", the latest number of subsequent number of payments are "+subsequentNumber);
 		    	return true;
 		    }
 		    else
@@ -506,29 +510,91 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		for(PaymentPlan p : pays){
 			Date due = p.getDue();
 			Calendar cal = Calendar.getInstance();
-			System.out.println("******HI*******");
+			Date notiDue = p.getNotificationDue();
+			System.out.println("******NEXT PAYMENT *******" + p.getNextPayment());
+			System.out.println("******DEPOSIT *******" + p.getDeposit());
+			System.out.println("******SUBSEQUENT *******" + p.getSubsequent());
+			//overdue deposit payment 
 			if(DateUtils.isSameDay(cal.getTime(), due)){
-			//if((cal.getTime().equals(due))&&p.getOverdue()){
 				ClientOrganisation client = p.getEvent().getEventOrg().getClientOrganisation();
-			    p.setOverdue(true);
-			    paymentPlanRepository.flush();
-			    System.out.println("OVERDUE?"+p.getOverdue());
-				Set<User> users = client.getUsers();
-				User finance = null;
-				System.out.println("HI");
-				for(User u : users){
-					Set<Role> roles = u.getRoles();
-					for(Role r : roles){
-						if(r.getName().equals("ROLE_FINANCE")){
-							finance = u;
-							break;
+				p.setOverdue(true);
+			    paymentPlanRepository.save(p);
+			    System.out.println("SAVE OVERDUE PAYMENT PLAN");
+				if((p.getNextPayment().equals(p.getDeposit()))){			    
+			    Event event = p.getEvent();
+				event.setPaymentStatus(PaymentStatus.valueOf("LATE"));
+				eventRepository.save(event);
+				System.out.println("DEPOSIT OVERDUE?"+p.getOverdue());
+					Set<User> users = client.getUsers();
+					Set<User> finance = new HashSet<User>();
+					Set<User> eventU = new HashSet<User>();
+					User admin = null;
+					System.out.println("HI");
+					for(User u : users){
+						Set<Role> roles = u.getRoles();
+						for(Role r : roles){
+							if(r.getName().equals("ROLE_FINANCE"))
+								finance.add(u);
+							
+							else if(r.getName().equals("ROLE_EVENT"))
+								eventU.add(u);
+							
+							else if(r.getName().equals("ROLE_ADMIN"))
+								admin = u;
 						}
 					}
+					System.out.println("******HI*******");
+					for(User f: finance){
+					messageService.sendMessage(admin, f, "Overdue Deposit Payment", "Overdue deposit payment plan ID is " +p.getId());
+					}
+					for(User e : eventU){
+					messageService.sendMessage(admin, e, "Overdue Deposit Payment", "Overdue deposit payment plan ID is " +p.getId());
+					}
+					emailService.sendEmail(p.getOwner(), "Overdue Deposit Payment", "You have an overdue deposit payment plan with ID " +p.getId());
+			}
+				//for overdue subsequent payment
+				//else if(p.getNextPayment().equals(p.getSubsequent())){
+				else{
+				        System.out.println("OVERDUE?"+p.getOverdue());
+						Set<User> users = client.getUsers();
+						Set<User> finance = new HashSet<User>();
+						User admin = null;
+						System.out.println("HI");
+						for(User u : users){
+							Set<Role> roles = u.getRoles();
+							for(Role r : roles){
+								if(r.getName().equals("ROLE_FINANCE"))
+									finance.add(u);
+								else if(r.getName().equals("ROLE_ADMIN"))
+									admin = u;
+							}
+						}					
+						for(User f : finance){
+						messageService.sendMessage(admin, f, "Overdue Payment", "Overdue payment plan ID is " +p.getId());
+						}
+						messageService.sendMessage(admin, p.getEvent().getEventOrg(), "Overdue Payment", "You have an overdue payment plan of ID " +p.getId());
+						System.out.println("******HI*******FINISH****");
 				}
-				System.out.println("******HI*******");
-				messageService.sendMessage(finance, finance, "Overdue Payment", "PaymentID is " +p.getId());
+			}	
+			else if(DateUtils.isSameDay(cal.getTime(), notiDue)){
+				ClientOrganisation client = p.getEvent().getEventOrg().getClientOrganisation();
+				System.out.println("NOTI DUE?"+p.getOverdue());
+					Set<User> users = client.getUsers();
+					User finance = null;
+					System.out.println("HI");
+					for(User u : users){
+						Set<Role> roles = u.getRoles();
+						for(Role r : roles){
+							if(r.getName().equals("ROLE_FINANCE")){
+								finance = u;
+								break;
+							}
+						}
+					}
+					System.out.println("******SEND NOTI*******");
+					messageService.sendMessage(finance, p.getEvent().getEventOrg(), "Reminder for due payment", "You have an upcoming payment within " 
+					+client.getPaymentPolicy().getNumOfDueDays() +" of amount "+ p.getNextPayment());
 			}
 		}
 	}
-
 }
