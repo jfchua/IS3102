@@ -1,4 +1,5 @@
 package application.service;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public interface EventExternalService {
 	
 	boolean checkAvailabilityForUpdate(ClientOrganisation client, User user,long eventId, String unitsId, Date event_start_date, Date event_end_date);
 
-	Double checkRent(ClientOrganisation client, User user, String unitsId, Date event_start_date, Date event_end_date);
+	Double checkRent(ClientOrganisation client, User user, String unitsId, Date event_start_date, Date event_end_date) throws ParseException;
 	
 	Set<BookingAppl> getBookings(ClientOrganisation client, long id);
 	
@@ -51,4 +52,5 @@ public interface EventExternalService {
 	
 	Set<Event> getEventsWithTicket(ClientOrganisation client);
 	
+	Double checkRate(ClientOrganisation client, Date date) throws ParseException;
 }

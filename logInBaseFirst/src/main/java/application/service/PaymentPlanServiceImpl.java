@@ -45,12 +45,13 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	private final PaymentRepository paymentRepository;
 	private final MessageService messageService;
 	private final EmailService emailService;
+	private final EventExternalService eventExternalService;
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildingServiceImpl.class);
 	
 	@Autowired
 	public PaymentPlanServiceImpl(PaymentPlanRepository paymentPlanRepository, ClientOrganisationRepository clientOrganisationRepository,
 			EventRepository eventRepository, UserRepository userRepository, PaymentRepository paymentRepository,
-			MessageService messageService, EmailService emailService) {
+			MessageService messageService, EmailService emailService, EventExternalService eventExternalService) {
 		//super();
 		this.paymentPlanRepository = paymentPlanRepository;
 		this.clientOrganisationRepository = clientOrganisationRepository;
@@ -59,6 +60,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		this.paymentRepository = paymentRepository;
 		this.messageService =messageService;
 		this.emailService = emailService;
+		this.eventExternalService =eventExternalService;
 	}
 	
 	@Override
@@ -313,17 +315,14 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				Event event = event1.get();
 				Date start = event.getEvent_start_date();
 				Date end = event.getEvent_end_date();
-				long diff = end.getTime() - start.getTime();
-				long duration = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
-				Double duration1 = Double.valueOf(duration);
-			    Set<BookingAppl> bookings = event.getBookings();
-			    for(BookingAppl b : bookings){
-			    	Unit u = b.getUnit();
-			    	Double rentU = u.getRent();
-			    	rent += rentU*duration1;
-			    }
+				User user = event.getEventOrg();
+				Set<BookingAppl> bookings = event.getBookings();
+				String unitsId = "";
+				for(BookingAppl b : bookings)
+					unitsId+=b.getUnit().getId();
+				 rent = eventExternalService.checkRent(client, user, unitsId, start, end);
 				}
-				return Double.valueOf(formatter.format(rent*1.07));
+				return rent*1.07;
 			}catch(Exception e){
 				return 0.00;
 				}

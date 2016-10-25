@@ -1,5 +1,9 @@
 package application.service;
 
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -9,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +31,7 @@ import application.entity.EventOrganizer;
 import application.entity.Level;
 import application.entity.MaintenanceSchedule;
 import application.entity.Role;
+import application.entity.SpecialRate;
 import application.entity.Unit;
 import application.entity.User;
 import application.enumeration.ApprovalStatus;
@@ -639,6 +645,109 @@ public class EventExternalServiceImpl implements EventExternalService {
 
 	@Override
 	public Double checkRent(ClientOrganisation client, User user, String unitsId, Date event_start_date,
+			Date event_end_date) throws ParseException {
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		boolean doesHave = false;
+		String[] units = unitsId.split(" ");
+		System.out.println(units[0]);
+		for(User u: eventOrgs){
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_EXTEVE") && u.equals(user))
+					doesHave = true;
+			}
+		}
+		if(!doesHave)
+			return 0.00;
+		Date d1 = event_start_date;
+		Date d2 = event_end_date;
+		if(d1.compareTo(d2)>0)
+			return 0.00;
+		Double rent = 0.00;
+		if(DateUtils.isSameDay(event_start_date, event_end_date)){
+		long diff = event_end_date.getTime() - event_start_date.getTime();
+		long duration = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+		Double duration1 = Double.valueOf(duration);
+		for(int i = 0; i<units.length; i ++){
+			long uId = Long.valueOf(units[i]);
+			Optional<Unit> unit1 = unitRepository.getUnitById(uId);
+			if(unit1.isPresent()){
+				Unit unit = unit1.get();
+		        Double rentU = unit.getRent();
+		        rent += duration1*rentU;
+			}
+		}
+		return rent * checkRate(client, event_start_date);
+	}
+		else{
+			Calendar date = Calendar.getInstance();
+			date.setTime(event_start_date);
+			date.set(Calendar.HOUR_OF_DAY, 0);
+			date.set(Calendar.MINUTE, 0);
+			date.set(Calendar.SECOND, 0);
+			date.set(Calendar.MILLISECOND, 0);
+			// next day
+			date.add(Calendar.DAY_OF_MONTH, 1);
+			//date.add(Calendar.DATE, 1);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(event_start_date);
+			long diff =date.getTime().getTime() - cal.getTime().getTime();
+			long duration = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+			Double duration1 = Double.valueOf(duration);
+			for(int i = 0; i<units.length; i ++){
+				long uId = Long.valueOf(units[i]);
+				Optional<Unit> unit1 = unitRepository.getUnitById(uId);
+				if(unit1.isPresent()){
+					Unit unit = unit1.get();
+			        Double rentU = unit.getRent();
+			        rent += duration1*rentU;
+				}
+			}
+			rent *= checkRate(client, event_start_date);
+			System.out.println("rent for first day " + rent);
+			//days in between
+			Double rentInBetween = 0.00;
+			while(!DateUtils.isSameDay(date.getTime(),event_end_date)){
+				for(int i = 0; i<units.length; i ++){
+					long uId = Long.valueOf(units[i]);
+					Optional<Unit> unit1 = unitRepository.getUnitById(uId);
+					if(unit1.isPresent()){
+						Unit unit = unit1.get();
+				        Double rentU = unit.getRent();
+				        rentInBetween += 24*rentU;
+					}
+				}
+				rentInBetween*=checkRate(client, date.getTime());
+				date.add(Calendar.DAY_OF_MONTH, 1);
+			}
+			System.out.println("rent for days in between " + rentInBetween);
+			rent += rentInBetween;
+			//last day
+			//date.add(Calendar.DAY_OF_MONTH, 1);
+			Calendar cal1 = Calendar.getInstance();
+			cal1.setTime(event_end_date);
+			long diff1 =cal1.getTime().getTime() - date.getTime().getTime();
+			long duration2 = TimeUnit.HOURS.convert(diff1, TimeUnit.MILLISECONDS);
+			Double duration3 = Double.valueOf(duration2);
+			Double rentFinal = 0.00;
+			for(int i = 0; i<units.length; i ++){
+				long uId = Long.valueOf(units[i]);
+				Optional<Unit> unit1 = unitRepository.getUnitById(uId);
+				if(unit1.isPresent()){
+					Unit unit = unit1.get();
+			        Double rentU = unit.getRent();
+			        rentFinal += duration3*rentU;
+				}
+			}
+			rentFinal *= checkRate(client, event_end_date);
+			System.out.println("rent for final day " + rentFinal);
+			return rent+rentFinal;
+		}
+	}
+	
+	/*
+	@Override
+	public Double checkRent(ClientOrganisation client, User user, String unitsId, Date event_start_date,
 			Date event_end_date) {
 		Set<User> eventOrgs = userRepository.getAllUsers(client);
 		boolean doesHave = false;
@@ -671,7 +780,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 			}
 		}
 		return rent;
-	}
+	}*/
 
 	@Override
 	public boolean requestTicket(ClientOrganisation client, long id) {
@@ -707,5 +816,39 @@ public class EventExternalServiceImpl implements EventExternalService {
 			}
 		}		
 		return events;
+	}
+
+	@Override
+	public Double checkRate(ClientOrganisation client, Date date) throws ParseException {
+		Double special = 1.00;
+		Set<SpecialRate> rates = client.getSpecialRates();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		System.out.println("day of week is " + dayOfWeek);
+		int month = cal.get(Calendar.MONTH);
+		System.out.println("Month in integer is " + month);
+		String monthString = new DateFormatSymbols().getMonths()[month].substring(0,3);
+		System.out.println("Month in String is " + monthString);
+		DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+		Double highest = 0.00;
+		for(SpecialRate sR : rates){
+			if((sR.getPeriod().equals(monthString.toUpperCase()))&&(sR.getRate()>=highest)){
+				highest = sR.getRate();
+				System.out.println("RATE IS " + special);
+			}
+			if ((sR.getPeriod().length()!=3)&&(sR.getPeriod().length()!=7) && DateUtils.isSameDay(sdf.parse(sR.getPeriod()),date)&&(sR.getRate()>=highest)){
+				highest = sR.getRate();
+				System.out.println("RATE IS " + special);
+			}
+			if(((dayOfWeek == Calendar.SATURDAY)||(dayOfWeek == Calendar.SUNDAY))&&(sR.getPeriod().equals("weekend"))&&(sR.getRate()>=highest)){
+				highest = sR.getRate();
+				System.out.println("RATE IS " + special);
+			}
+		}
+		if(highest.equals(0.00))
+		    return special;
+		else
+			return highest * special;
 	}
 }

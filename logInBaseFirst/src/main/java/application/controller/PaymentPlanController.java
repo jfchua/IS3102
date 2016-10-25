@@ -1,21 +1,30 @@
 package application.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import org.json.simple.JSONArray;
 //import org.hibernate.metamodel.source.annotations.xml.mocker.SchemaAware.SecondaryTableSchemaAware;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +53,8 @@ import application.service.EventOrganizerService;
 import application.service.MessageService;
 import application.service.PaymentPlanService;
 import application.service.UserService;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperRunManager;
 
 @Controller
 @RequestMapping("/payment")
@@ -705,5 +716,74 @@ public class PaymentPlanController {
 							return new ResponseEntity<String>(HttpStatus.CONFLICT);
 						}
 					}
+					
+					/*
+					@PreAuthorize("hasAnyAuthority('ROLE_FINANCE')")
+					@RequestMapping(value = "/downloadInvoice", method = RequestMethod.POST, produces = "application/pdf")
+					public void downloadInvoice(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
+						System.out.println("Enter");
+						InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/AuditLog.jasper");
+						response.setContentType("application/pdf");
+						Principal principal = request.getUserPrincipal();
+						response.setHeader("Content-disposition", "attachment; filename=AuditLog.pdf");
+						ServletOutputStream outputStream = response.getOutputStream();
+						HashMap<String,Object> parameters = new HashMap<String,Object>();
+						StringBuilder sb = new StringBuilder();
+						sb.append(" ");
+						Object obj;
+						String startDate = new String();
+						String endDate = new String();
+						String username = new String();
+						try {
+							obj = parser.parse(info);
+							JSONObject jsonObject = (JSONObject) obj;
+							username = (String)jsonObject.get("username");
+
+							startDate = (String)jsonObject.get("startDate");
+							endDate = (String)jsonObject.get("endDate");
+							sb.append("WHERE (time >= '");
+							sb.append( startDate + " 00:00:00");
+							sb.append("' AND ");
+							sb.append("time <= '");
+							sb.append(endDate + " 23:59:59");
+							sb.append( "' )");
+							if ( username != null &&  userService.getUserByEmail(username).isPresent() ){
+								sb.append("AND user_id = '" +  userService.getUserByEmail(username).get().getId()  + "'");
+							}
+							else{
+								sb.append("AND( ");
+								User curUser = userService.getUserByEmail(principal.getName()).get();
+								for ( User us : curUser.getClientOrganisation().getUsers() ){
+									sb.append("user_id =" +  us.getId() );
+									sb.append(" OR ");
+								}
+
+								sb.setLength(sb.length() - 4);
+								sb.append(")");
+							}
+							if ( (String)jsonObject.get("system") != null && (String)jsonObject.get("system") != "" ){
+								sb.append(" AND system = '" + (String)jsonObject.get("system") + "'");
+							}
+							System.err.println("Query parameter is : " + sb.toString());
+							parameters.put("criteria", sb.toString());
+							Connection conn = null;
+							try {
+								DataSource ds = (DataSource)context.getBean("dataSource");
+								conn = ds.getConnection();
+								System.out.println(conn.toString());
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+							JasperRunManager.runReportToPdfStream(jasperStream, outputStream, parameters,conn);
+							outputStream.flush();
+							outputStream.close();
+							System.out.println("FLUSHED OUT THE LOG");
+						} catch (ParseException e1) {
+							System.out.println("at /download audit log there was an error parsing the json string received");
+							e1.printStackTrace();
+						}
+
+
+					}*/
 }
 
