@@ -1,5 +1,6 @@
 package application.controller;
 
+import java.io.File;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
@@ -279,9 +280,16 @@ public class UnitController {
 						}else{//SQUARE IS WITH DEFAULT ICON
 							         System.out.println("UNIT"+unitId+" IS USING DEFAULT ICON");
 						              System.out.println("TEST:6");
-						              if(type.equals("./svg/rect.svg")){						
-							         rentable=true;
-							         System.out.println("Shape is rect: " +rentable);
+						             String[] typeName1=type.split("/");
+						             System.out.println("TEST:6 "+typeName1[typeName1.length-1]);
+						             String[] typeName2=typeName1[typeName1.length-1].split("\\.");
+						             System.out.println("TEST:6 "+typeName2);
+						             String typeName3=typeName2[typeName2.length-2];
+						             System.out.println("type "+typeName3);
+						              
+						              if(typeName3.equals("rect")){						
+						            	  rentable=true;
+						            	  System.out.println("Shape is rect: " +rentable);
                             
 						              }
                                         System.out.println("ADD NEW UNIT");

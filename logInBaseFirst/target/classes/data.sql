@@ -18,7 +18,7 @@ insert into role (name)values ("ROLE_TICKETING");
 insert into role (name)values ("ROLE_EXTEVE");
  
 INSERT INTO payment_policy(deposit_rate, interim_period, due_days, subsequent_number)
-VALUES(0.4, 2, 0, 2);
+VALUES(0.4, 2, 2, 2);
 
 insert into client_organisation (organisation_name, payment_policy_id) values ("Expo", 1);
 insert into client_organisation (organisation_name) values ("Suntec");
@@ -116,7 +116,7 @@ VALUES('coral', 100, 100, 100, './svg/rect.svg', 100, null);
 INSERT INTO unit(description, length, rent, rentable, unit_number, width, level_id, square_id)
 VALUES('123',100,100,true,'unit1',100, 1, 1);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
-VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party', 'CONCERT', null, 1, 'PAID', 12);
+VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party', 'CONCERT', null, 1, 'UNPAID', 12);
 INSERT INTO user_events(user_id, events_id)VALUES(12, 1);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-10-26 22:00:00', '2016-10-25 10:00:00', 1, 1, 1, 1);

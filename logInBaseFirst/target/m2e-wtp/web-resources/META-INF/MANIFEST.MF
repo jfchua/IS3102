@@ -1,11 +1,7 @@
 Manifest-Version: 1.0
 Implementation-Title: Spring Boot Security Example
 Implementation-Version: 1.0-SNAPSHOT
-<<<<<<< HEAD
 Built-By: Hailing
-=======
-Built-By: mingsha
->>>>>>> e357c4b1e56affdf3c81b128be469eaaa73b5a3c
 Implementation-Vendor-Id: eu.kielczewski.example
 Build-Jdk: 1.8.0_91
 Implementation-URL: http://kielczewski.eu/2014/12/spring-boot-security

@@ -162,23 +162,28 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
   $scope.downloadPlan = function () {
 	  console.log("her0");
 	  console.log(html2canvas);
-	    var canvasdiv = document.getElementById("glassbox");
+	  /*
+	   
 	    console.log("here1");
 	    html2canvas(document.body, {onrendered:function(canvas){
 	    	console.log("here2");
 	    	document.body.appendChild(canvas);
-	    }})
+	    }})*/
 	    
-//
-//	    html2canvas(canvasdiv,{
-//
-//	        onrendered: function (canvas) {
-//	            var a = document.createElement("a");
-//	            a.href = canvas.toDataURL("plan/png");
-//	            a.download ="plan.png";
-//	            a.click();
-//	        }
-//	    });
+	  var canvasdiv = document.getElementById("glassbox");
+	    html2canvas(canvasdiv,{
+	    	 allowTaint: true,
+             logging: true,
+             taintTest: true,
+	        onrendered: function (canvas) {
+	            var a = document.createElement("a");
+	            a.href = canvas.toDataURL("plan/png");
+	            a.download ="plan.png";
+	            a.click();
+	        },
+	       
+	
+	    });
 	}
   /*
    $scope.downloadPlan = function(){
@@ -279,20 +284,7 @@ app.directive('resizable', function () {
   };
 })
 
-app.directive('egDirective',[function(){
-    return {
-        restrict: 'A',
-        link: function (scope,element,attributes) {
-            element.bind('click',onClick);
-            function onClick () {
-                html2canvas(element,{
-                    onrendered: function (canvas) {}
-                });
-            }
-        }
-    };
-}])
-;
+
 
 
 //UPDATE FLOOR PLAN
@@ -338,9 +330,9 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	      $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
 	        console.log("pure response is "+response.data);
 	
-	        console.log("test anglar.fromJon"+angular.fromJson(response.data));
+	        console.log(angular.fromJson(response.data));
 	        $scope.units=angular.fromJson(response.data);
-	
+	        
 	      },function(response){
 	        console.log("DID NOT view");
 	        console.log("response is "+angular.fromJson(response.data).error);

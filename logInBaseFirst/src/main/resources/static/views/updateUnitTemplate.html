@@ -9,19 +9,20 @@
         <p></p>
         <form class="form-horizontal" role="form">
 						   		
-                        <div class="form-group">
+                        <div class="form-group" ng-show="unit.rentable">
                                <label for="exampleInput">Length (in meter)</label>
                                <input type="number" min="1" max="999" ng-model="unit.length"  class="form-control underline">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" ng-show="unit.rentable">
                                <label for="exampleInput">Width (in meter)</label>
                                <input type="number" min="1" max="999" ng-model="unit.width" class="form-control underline">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group"  ng-show="unit.rentable">
                                <label for="exampleInput">color</label>
-                               <input type="text" ng-model="unit.square.color" class="form-control underline">
+                               <color-picker ng-model="unit.square.color"></color-picker>
+                               <input type="text" ng-model="unit.square.color" class="form-control underline" disabled>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group"  ng-show="unit.rentable">
                                <label for="exampleInput">Unit Number</label>
                                <input type="text" ng-model="unit.unitNumber" class="form-control underline">
                        </div>

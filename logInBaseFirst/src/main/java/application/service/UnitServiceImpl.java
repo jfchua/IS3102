@@ -56,6 +56,7 @@ public class UnitServiceImpl implements UnitService {
 		unit.setLength(dimensionLength);
 		unit.setWidth(dimensionWidth);
 		unit.setRentable(rentable);
+		System.out.println("rentable"+rentable);
 		unit.setDescription(description);
 		unit.setRent(100.00);//hard coded rent =100, need to chagne later
 		System.out.println("UnitService"+2);
