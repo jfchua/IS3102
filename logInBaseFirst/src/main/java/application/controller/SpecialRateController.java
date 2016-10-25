@@ -123,7 +123,7 @@ public class SpecialRateController {
 				System.out.println(client.getOrganisationName());
 				Object obj = parser.parse(rateJSON);
 				JSONObject jsonObject = (JSONObject) obj;
-	            Double rate = (Double)jsonObject.get("rate");
+	            Double rate = Double.valueOf((String)jsonObject.get("rate"));
 	            System.out.println(rate);
 	            System.out.println("rate2");
 				String period = (String)jsonObject.get("period");
@@ -186,7 +186,7 @@ public class SpecialRateController {
 						Object obj = parser.parse(rateJSON);
 						JSONObject jsonObject = (JSONObject) obj;
 						long rateId = (Long)jsonObject.get("id");
-						Double rate = (Double)jsonObject.get("rate");
+						Double rate = Double.valueOf((String)jsonObject.get("rate"));
 			            System.out.println(rate);
 			            System.out.println("rate2");
 						String period = (String)jsonObject.get("period");

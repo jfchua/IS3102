@@ -434,7 +434,7 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 		//alert("SUCCESS");
 		$scope.data = {};
 		var dataObj = {
-				rate: $scope.special.rate,
+				rate: ($scope.special.rate).toString(),
 				description: $scope.special.description,
 				period: ($scope.special.period).toString(),
 		};
@@ -529,7 +529,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 		$scope.special1 = shareData.getData();
 			
 			var dataObj = {
-					rate: $scope.special1.rate,
+					rate: ($scope.special1.rate).toString(),
 					description: $scope.special1.description,
 					period: $scope.special1.period,
 			};
