@@ -1,8 +1,8 @@
 'use strict';
 
 
-app.controller('UserController', ['$scope', 'UserService','$stateParams', '$routeParams','$rootScope', '$http', '$location', 'Auth','$state', 
-                                  function($scope, UserService, $stateParams, $routeParams,$rootScope,$http, $location, Auth,$state) {
+app.controller('UserController', ['$scope', 'UserService','$stateParams', '$routeParams','$rootScope', '$http', '$location', 'Auth','$state', '$timeout', 
+                                  function($scope, UserService, $stateParams, $routeParams,$rootScope,$http, $location, Auth,$state, $timeout) {
 	var self = this;
 	self.email = '';
 	self.pass1  = '';
@@ -45,17 +45,19 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 			if (response.name) {
 				console.log("VERIFIED WITH NAME: " + response.name);
 				$rootScope.authenticated = true;
-				$location.path("/dashboard");
 				Auth.setUser(response);
-				return true;
+				//$location.path("/workspace");
+				$state.go("dashboard");
+				//return true;
 			} else {
 				console.log("NO VERIFIED");
 				$rootScope.authenticated = false;
 				if ( $location.path() != "/reset" && !$location.path().startsWith("/resetPassword/") ){
 					$location.path("/login");
 				}
-				return false;
+				//return false;
 			}
+			console.log("pre callback");
 			callback && callback();
 		}, function(response) {
 			console.log("BAD RESPONSE AUTHENTICATION");
@@ -76,11 +78,16 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 	//authenticate();
 	self.credentials = {};
 	self.login = function() {
+		console.log("preauth");
 		authenticate(self.credentials, function() {
+			console.log("got true or false from authenticate");
 			if ($rootScope.authenticated) {
-				$location.path("/dashboard");
+				//$location.path("/dashboard/workspace");
 				console.log("LOGGED IN");
 				self.error = false;
+				 $timeout(function() {
+				      $state.go('dashboard.workspace');
+				      }, 100);
 			} else {
 				console.log("NOT LOGGED IN");
 				$location.path("/login");
@@ -89,8 +96,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 			}
 		});
 	};
-
-
+	
 	/* fetchAllUsers();*/
 
 	function fetchAllUsers(){
@@ -245,15 +251,6 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 			console.log(response.data);
 			$scope.userInfo = angular.fromJson(response.data);
 			console.log("DISPLAY current user");
-			
-			if(response.data.theme){
-			$('<link>')
-			  .appendTo('head')
-			  .attr({type : 'text/css', rel : 'stylesheet'})
-			  .attr('href', 'css/styles/app-'+response.data.theme+'.css');
-			console.log("THEME IS "+response.data.theme);
-		}
-			
 		},function(response){
 			alert("did not view user info");
 		}	
@@ -261,28 +258,8 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 	}
 	
 	viewUserInfo();
-	
-	$scope.logo = "";
-	var getLogo = function getLogo(){
 
-		$http({
-			method: 'GET',
-			url: 'https://localhost:8443/getCompanyLogo'
-		}).success(function (result) {
-			if(result)
-			$scope.logo = result;
-			else
-			$scope.logo="img/ifms.png";
-			console.log(result);
-			console.log("LOGO: " + JSON.stringify(result));
-		}).error(function(result){
-			//do something
-			
-			console.log("LOGOERROR: " + JSON.stringify(result));
-		});
-	}
-	getLogo();
-	
+
 
 
 }]);
