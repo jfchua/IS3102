@@ -18,7 +18,7 @@ insert into role (name)values ("ROLE_TICKETING");
 insert into role (name)values ("ROLE_EXTEVE");
  
 INSERT INTO payment_policy(deposit_rate, interim_period, due_days, subsequent_number)
-VALUES(0.4, 2, 2, 2);
+VALUES(0.4, 2, 0, 2);
 
 insert into client_organisation (organisation_name, payment_policy_id) values ("Expo", 1);
 insert into client_organisation (organisation_name) values ("Suntec");

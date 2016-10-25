@@ -501,6 +501,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		// TODO Auto-generated method stub
 		//SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 		//LOGGER.info("The time is now {}", dateFormat.format(new Date()));
+		System.out.println("START*****");
 		Set<PaymentPlan> pays = paymentPlanRepository.getAll();
 		for(PaymentPlan p : pays){
 			Date due = p.getDue();
