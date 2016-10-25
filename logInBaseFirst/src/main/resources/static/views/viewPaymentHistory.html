@@ -1,0 +1,49 @@
+
+	<div ng-cloak ng-controller="paymentHistoryController as paymentHistoryCtrl" >
+	 <div class="clearfix">
+                            <ol class="breadcrumb no-bg no-m-t">
+                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="dashboard.viewAllOutstandingBalance">View Outstanding Balance For All Organisers</a></li>
+                                <li><a>View Payment History</a></li>
+                            </ol>
+        </div>
+      <div class="col-md-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Payment History 
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+					<table class="table table-hover">              
+                        <thead>
+                           <tr>
+                           <th><i></i> Payment ID </th>
+                            <th><i></i> Payment Date </th>
+                            <th><i></i> Payment Plan ID </th>
+                            <th><i></i> Amount </th>
+                            <th><i></i> Cheque Number </th>
+                           </tr>
+                         <tbody>
+                         <tr ng-repeat="x in payments | orderBy:'$index'">
+                            <td>{{ x.id }}</td>
+                            <td>{{ x.date }}</td>
+                            <td>{{ x.plan }}</td>
+                            <td>{{ x.amount }}</td>
+                            <td>{{ x.cheque }}</td>
+                        </tr>
+                         </tbody>
+                         </thead>
+                    </table>			
+				</div>
+			</div>
+		</div>
+	</div>
+	

@@ -525,6 +525,30 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
+			.state('dashboard.updateCategoryEx',{
+				url:'/updateCategoryEx',
+				templateUrl: '/views/updateCategoryEx.html',
+				controller: 'configureTicketsController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.addCategoryEx',{
+				url:'/addCategoryEx',
+				templateUrl: '/views/addCategoryEx.html',
+				controller: 'configureTicketsController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.configureTicketsEx',{
+				url:'/configureTicketsEx',
+				templateUrl: '/views/configureTicketsEx.html',
+				controller: 'configureTicketsController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
 			.state('dashboard.viewAllEventsEx',{
 				url:'/viewAllEventsEx',
 				templateUrl: '/views/viewAllEventsEx.html',
@@ -713,6 +737,14 @@ app.config(
 				url:'/updateOutgoingPayment',
 				templateUrl: '/views/updateOutgoingPayment.html',
 				controller: 'outgoingController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.viewPaymentHistory',{
+				url:'/viewPaymentHistory',
+				templateUrl: '/views/viewPaymentHistory.html',
+				controller: 'paymentHistoryController',
 				data:{
 					authorizedRoles:[USER_ROLES.finance]
 				}
@@ -3449,6 +3481,7 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http', functi
 		})
 	};
 	
+
 	$scope.themeSelected;
 	$scope.changeTheme = function(setTheme){
 		$scope.themeSelected=setTheme;

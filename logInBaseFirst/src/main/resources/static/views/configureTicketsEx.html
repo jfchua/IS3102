@@ -1,0 +1,69 @@
+<script src = "../angular/ConfigureTicketsController.js"></script>
+
+<div ng-cloak ng-controller="configureTicketsController as tixCtrl">
+
+	<div class="clearfix">
+		<ol class="breadcrumb no-bg no-m-t">
+			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
+			<li><a ui-sref="dashboard.viewAllEvents">View Events</a></li>
+			<li><a>Configure Tickets</a></li>
+		</ol>
+	</div>
+	<div class="col-md-9">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Ticket Categories
+					<div class="panel-control pull-right">
+
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th><i></i> ID</th>
+							<th><i></i> Category Name</th>
+							<th><i></i> Price</th>
+							<th><i></i> Max Tickets to sell</th>
+
+							<th>Action</th>
+
+						</tr>
+					</thead>
+					<tbody>
+
+						<tr ng-repeat="x in tickets">
+							<td>{{ x.id }}</td>
+							<td>{{ x.categoryName }}</td>
+							<td>{{ x.price }}</td>
+							<td>{{ x.numOfTickets }}</td>
+							<td><a ui-sref="dashboard.updateCategoryEx"
+								ng-click="passCat(x)" tooltip-placement="top"
+								tooltip="Update Category"><i class="glyphicon glyphicon-pencil"></i></a>
+								<a ng-click="deleteCat(x)"
+								tooltip-placement="top" tooltip="Delete category"><i
+									class="glyphicon glyphicon-trash"></i></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<br> <br> <br> <a ui-sref="dashboard.addCategoryEx"
+			tooltip-placement="right" tooltip="Add a new category"><button
+				type="button" class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-plus"></i>
+			</button></a>
+		<!--  	<a ui-sref="dashboard.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
+		<br> <br> <br> 
+
+	</div>
+</div>

@@ -17,8 +17,10 @@ insert into role (name)values ("ROLE_FINANCE");
 insert into role (name)values ("ROLE_TICKETING");
 insert into role (name)values ("ROLE_EXTEVE");
  
+INSERT INTO payment_policy(deposit_rate, interim_period, due_days, subsequent_number)
+VALUES(0.4, 2, 2, 2);
 
-insert into client_organisation (organisation_name) values ("Expo");
+insert into client_organisation (organisation_name, payment_policy_id) values ("Expo", 1);
 insert into client_organisation (organisation_name) values ("Suntec");
 INSERT INTO user (email, password_hash,client_organisation_id, name)
 VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1 ,'Super Admin');
@@ -43,6 +45,9 @@ INSERT INTO user (email, password_hash,client_organisation_id, name)
 VALUES ('suntecadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec Admin');
 INSERT INTO user (email, password_hash,client_organisation_id, name)
 VALUES ('suntecall@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec All roles');
+
+INSERT INTO user (email, password_hash,client_organisation_id, name)
+VALUES ('tkgs.zhao.mingsha@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'event');
 
 --Assign roles to users for testing
 INSERT into users_roles values( 1,1);
@@ -72,6 +77,11 @@ INSERT into users_roles values( 11,5);
 INSERT into users_roles values( 11,6);
 INSERT into users_roles values( 11,7);
 INSERT into users_roles values( 11,8);
+INSERT into users_roles values( 12,3);
+INSERT into users_roles values( 12,4);
+INSERT into users_roles values( 12,5);
+INSERT into users_roles values( 12,6);
+INSERT into users_roles values( 12,8);
 
 --INSERT INTO message (subject,sender,recipient,message) values('subject','1@1','1@1','test');
 --INSERT INTO message (subject,sender,recipient,message) values('pikachu','dragonite','1@1','charmander');
@@ -98,10 +108,18 @@ insert into vendor(contact, description, email, name)values("123", "good", "1@gm
 insert into vendor(contact, description, email, name)values("456", "good", "2@gmail.com", "HL");
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,2);
---INSERT INTO unit(description, length, rent, rentable, unit_number, width)
---VALUES('111',1,2,true,3,4);
---INSERT INTO unit(description, length, rent, rentable, unit_number, width)
---VALUES('123',1,2,true,5,4);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('111',123,2,80,1);
+INSERT INTO building_levels(building_id, levels_id)VALUES(1,1);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('coral', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO unit(description, length, rent, rentable, unit_number, width, level_id, square_id)
+VALUES('123',100,100,true,'unit1',100, 1, 1);
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
+VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party', 'CONCERT', null, 1, 'PAID', 12);
+INSERT INTO user_events(user_id, events_id)VALUES(12, 1);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-26 22:00:00', '2016-10-25 10:00:00', 1, 1, 1, 1);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)
 --VALUES('1123',1,2,true,6,4);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)

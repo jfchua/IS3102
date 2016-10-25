@@ -40,5 +40,7 @@ public interface EventService {
 	Optional<Event> getEventById(long id) throws EventNotFoundException;
 	
 	boolean checkEvent(ClientOrganisation client, long id) throws EventNotFoundException;
+
+	Set<Event> getAllEvents();
 		
 }

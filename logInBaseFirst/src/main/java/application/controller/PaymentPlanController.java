@@ -38,8 +38,10 @@ import application.entity.*;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
 import application.service.BookingService;
+import application.service.EmailService;
 import application.service.EventExternalService;
 import application.service.EventOrganizerService;
+import application.service.MessageService;
 import application.service.PaymentPlanService;
 import application.service.UserService;
 
@@ -50,16 +52,20 @@ public class PaymentPlanController {
 	private final EventExternalService eventExternalService;
 	private final PaymentPlanService paymentPlanService;
 	private final UserService userService;
+	private final MessageService messageService;
+	private final EmailService emailService;
 	//private final EventCreateFormValidator eventCreateFormValidator;
 	private JSONParser parser = new JSONParser();
 	
 	@Autowired
 	public PaymentPlanController(EventExternalService eventService, PaymentPlanService paymentPlanService,
-			UserService userService) {
+			UserService userService, MessageService messageService, EmailService emailService) {
 		super();
 		this.eventExternalService = eventService;
 		this.paymentPlanService = paymentPlanService;;
 		this.userService = userService;
+		this.messageService = messageService;
+		this.emailService = emailService;
 	}
 		
 		// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
@@ -129,6 +135,8 @@ public class PaymentPlanController {
 							Object obj1 = parser.parse(paymentJSON);
 							JSONObject jsonObject = (JSONObject) obj1;
 							Long eventId = (Long)jsonObject.get("eventId");
+							Event event = eventExternalService.getEventById(eventId).get();
+							User org = event.getEventOrg();
 							System.out.println(eventId);
 							Double total = Double.valueOf((String)jsonObject.get("total"));
 							System.out.println(total);
@@ -141,6 +149,13 @@ public class PaymentPlanController {
 							System.out.println("adding payment plan " + total);
 							if(!bl)
 								return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+							else{
+								String  subject = "Payment plan for event ID " + eventId + " created!";
+							    String msg = "Your event ID " + eventId + " has a new payment plan with total amount "+total+" .";			   
+							    emailService.sendEmail(org.getEmail(), subject, msg);
+							    messageService.sendMessage(user, org, subject, msg);
+							}
+								
 						}
 						catch (Exception e){
 							System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
@@ -170,6 +185,7 @@ public class PaymentPlanController {
 							Long eventId = (Long)jsonObject.get("event");				
 							Double price = paymentPlanService.checkRent(client, eventId);
 							PaymentPolicy payPol = client.getPaymentPolicy();
+						
 							NumberFormat formatter = new DecimalFormat("#0.00");     
 							//System.out.println(formatter.format(4.0));
 							JSONObject obj1 = new JSONObject();
@@ -633,6 +649,61 @@ public class PaymentPlanController {
 							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 						}
 						return new ResponseEntity<Void>(HttpStatus.OK);
-					}									
+					}
+					
+					@RequestMapping(value = "/getPaymentHistory/{id}", method = RequestMethod.GET)
+					@ResponseBody
+					public ResponseEntity<String> getPaymentHistory(@PathVariable("id") String orgId, HttpServletRequest rq) throws UserNotFoundException {
+						Principal principal = rq.getUserPrincipal();
+						Optional<User> usr = userService.getUserByEmail(principal.getName());
+						if ( !usr.isPresent() ){
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);
+						}
+						try{
+							ClientOrganisation client = usr.get().getClientOrganisation();				   
+							long id = Long.parseLong(orgId);
+							Set<Payment> payments= paymentPlanService.getPaymentsByOrgId(client, id);
+							System.out.println("There are X events and X is "+ payments.size());
+							JSONArray jArray = new JSONArray();
+								Gson gson2 = new GsonBuilder()
+										.setExclusionStrategies(new ExclusionStrategy() {
+											public boolean shouldSkipClass(Class<?> clazz) {
+												return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+											}
+											/**
+											 * Custom field exclusion goes here
+											 */
+											@Override
+											public boolean shouldSkipField(FieldAttributes f) {
+												//TODO Auto-generated method stub
+												return false;
+											}
+										})
+										/**
+										 * Use serializeNulls method if you want To serialize null values 
+										 * By default, Gson does not serialize null values
+										 */
+										.serializeNulls()
+										.create();
+								for(Payment p: payments){
+									JSONObject obj1 = new JSONObject();
+									obj1.put("id", p.getId());
+									System.out.println("payment id is "+p.getId());
+								    obj1.put("date", String.valueOf(p.getPaid()));								    
+								    obj1.put("plan",p.getPlan());
+								    System.out.println("TOTAL1");
+								    obj1.put("amount",p.getAmount());
+								    System.out.println("TOTAL2");
+								    obj1.put("cheque",p.getCheque());
+								    System.out.println("TOTAL3");
+									jArray.add(obj1);
+								}
+								 System.out.println("finishing getting list of payments");
+								return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);			
+						}
+						catch (Exception e){
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);
+						}
+					}
 }
 
