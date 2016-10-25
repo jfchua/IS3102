@@ -101,7 +101,8 @@ var app = angular.module('app', [ 'ui.router',
                                   'ui.bootstrap.contextMenu',
                                   'angularModalService',
                                   'ui.bootstrap.tabs',
-                                  'ngCsvImport'])
+                                  'ngCsvImport'
+                                  ])
 //Declaring Constants
 .constant('USER_ROLES', {
 	all: '*',
@@ -2038,6 +2039,7 @@ app.controller('calendarCtrl', function ($scope,$http) {
 			    };
 	    
 	});
+
 //FOR MOCK UP DATA VISUAL//NEED TO DELETE LATER
 app.controller('ChartCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
 	$scope.menuOptions = [
@@ -2126,43 +2128,7 @@ app.controller('ChartCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
     
 }]);
 
-app.directive('popOverForm', function($compile, $templateCache, $q, $http) {
 
-	  var getTemplate = function(contentType) {
-	    var def = $q.defer();
-
-	    var template = '';
-	    switch (contentType) {
-	      case 'user':
-	        template = $templateCache.get("views/updateUnitTemplate.html");
-	        if (typeof template === "undefined") {
-	          $http.get("views/updateUnitTemplate.html")
-	            .success(function(data) {
-	              $templateCache.put("views/updateUnitTemplate.html", data);
-	              def.resolve(data);
-	            });
-	        }else {
-	               def.resolve(template);
-	            }
-	        break;
-	    }
-	    return def.promise;
-	  }
-	  return {
-	    restrict: "A",
-	    link: function(scope, element, attrs) {
-	      getTemplate("user").then(function(popOverContent) {
-	        var options = {
-	          content: popOverContent,
-	          placement: "right",
-	          html: true,
-	          date: scope.date
-	        };
-	        $(element).popover(options);
-	      });
-	    }
-	  };
-	});
 //MESSAGE
 
 //Message

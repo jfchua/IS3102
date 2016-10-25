@@ -1,19 +1,3 @@
-$(function() { 
-    $("#download").click(function() { 
-        html2canvas($("#glassbox"), {
-            onrendered: function(canvas) {
-                theCanvas = canvas;
-                document.body.appendChild(canvas);
-
-                // Convert and download as image 
-                Canvas2Image.saveAsPNG(canvas); 
-                $("#respond").append(canvas);
-                // Clean up 
-                //document.body.removeChild(canvas);
-            }
-        });
-    });
-}); 
 
 
 /**

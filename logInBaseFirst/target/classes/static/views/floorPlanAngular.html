@@ -30,7 +30,10 @@
         <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
             id="{{unit.square.id}}"  draggable resizable  on-resize="resize(unit,$evt, $ui)" ng-mouseover=$parent.showDetails(unit) 
               ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 
-              'background-color':'{{unit.square.color}}' ,'maxHeight':{{levelWidth}}+'px','maxWidth':{{levelLength}}+'px'}" popover-placement="top" popover="Form here" popover-title="Edit Unit" ><p >{{unit.unitNumber}}<img  class="svgtest" ng-src="{{unit.square.type||unit.square.icon.iconPath}}"  alt="icon"></p> </div>
+              'background-color':'{{unit.square.color}}' ,'maxHeight':{{levelWidth}}+'px','maxWidth':{{levelLength}}+'px'}" 
+     			ng-dblclick="showModal(unit,$parent)">
+              <p >{{unit.unitNumber}}<a  ng-click="$parent.remove(unit)" tooltip-placement="top" tooltip="Delete unit"><i class="glyphicon glyphicon-trash"></i></a>
+                          <img  class="svgtest" ng-src="{{unit.square.type||unit.square.icon.iconPath}}"  alt="icon"></p> </div>
         </div>
        <div><p> {{showDetail}}</p></div>
   </div>
@@ -50,40 +53,14 @@
  </div>
 <div class="col-md-3">
 	<br>
-    <a  ng-click="addSpecialUnitByIcon(icon)" tooltip-placement="right" tooltip="Select and add a Personalised Icon"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-asterisk"></i></button></a>
-    <select ng-model="icon" ng-options="x as x.iconType for x in icons">
-    </select>  
-    <td><img  class="svgtest" src="{{icon.iconPath}}" alt="{{icon.iconPath}}" width="50px" height="50px"></td> 
+    <a  context-menu="iconMenu" tooltip-placement="right" tooltip="Select and add a Personalised Icon"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-asterisk"></i></button></a>
+   
+    
  </div>    
 <div class="col-md-3">
 <br>
   </div>
-<table>
-<th></th>
-<th>id</th>
-   <th>left</th>
-    <th>top</th>
-     <th>height</th>
-      <th>width</th>
-       <th>color</th>
-        <th>type</th>
-       <th>Unit Number</th>
-     
-        <th>Description</th>
-         
-  <tr ng-repeat="unit in units track by $index" >
-  <td><a  ng-click="remove(unit)">Delete</a> </td>
-    <td>{{ unit.id }} </td>
-     <td>{{unit.square.left}}</td>
-     <td>{{unit.square.top}}</td>
-     <td>{{unit.square.height}}</td>
-     <td>{{unit.square.width}}</td>
-        <td> {{unit.square.color }} </td>
-    <td>{{ unit.square.type }} </td>
-    <td><input type="text" name="unitNumber" ng-model="unit.unitNumber" required> </td>
-      <td> <input type="text" name="description" ng-model="unit.description" > </td>
-  </tr>
-</table>
+
 
   <div id="respond"></div>
 </div>

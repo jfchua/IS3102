@@ -362,5 +362,47 @@ public class UnitController {
 		}
 		
 		
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/updateUnit", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> updateUnit(@RequestBody String idObj,HttpServletRequest rq) {
+
+			
+			try{
+				
+				
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("levelId"));
+				long levelId = (Long)jsonObject.get("levelId");
+				JSONObject unitJson=(JSONObject)jsonObject.get("unit");	
+				long unitId = (Long)unitJson.get("id");				
+				JSONObject squareJson=(JSONObject)unitJson.get("square");		
+				int left = (int) (long) squareJson.get("left");
+				int top = (int) (long) squareJson.get("top");
+				int height = (int) (long) squareJson.get("height");
+				int width = (int) (long) squareJson.get("width");
+				String color = (String)squareJson.get("color");
+				String type = (String)squareJson.get("type");
+				String unitNumber =(String)unitJson.get("unitNumber");
+				int dimensionWidth = (int) (long) unitJson.get("width");
+				int dimensionLength = (int) (long) unitJson.get("length");
+				String description =(String)unitJson.get("description");
+				boolean rentable =(boolean)unitJson.get("rentable");
+				
+				
+				if(unitService.editUnitInfo(unitId,left,top, height,  width,  color, type, unitNumber, dimensionLength, dimensionWidth,rentable, description)){
+					System.out.println("EDITED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			
+		}
+		
 		
 }

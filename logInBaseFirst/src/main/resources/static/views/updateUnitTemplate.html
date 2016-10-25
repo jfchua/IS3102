@@ -1,34 +1,44 @@
-<a  ng-click="remove(x,$index)">Delete</a> 
- <td>id: {{ x.id }} </td>
-<td>{{x.unit.width}}</td>
-     <td>{{x.unit.length}}</td>
-      <td>{{x.square.color}}</td>
-       <td>{{x.unitNumber}}</td>
-        <td>{{x.description}}</td>
-<form >
-
+<div class="modal fade">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Update Unit</h4>
+      </div>
+      <div class="modal-body">
+        <p></p>
+        <form class="form-horizontal" role="form">
+						   		
                         <div class="form-group">
                                <label for="exampleInput">Length (in meter)</label>
-                               <input type="number" min="1" max="999" ng-model="x.unit.length" class="form-control underline">
+                               <input type="number" min="1" max="999" ng-model="unit.length"  class="form-control underline">
                         </div>
                         <div class="form-group">
                                <label for="exampleInput">Width (in meter)</label>
-                               <input type="number" min="1" max="999" ng-model="x.unit.width" class="form-control underline">
+                               <input type="number" min="1" max="999" ng-model="unit.width" class="form-control underline">
                         </div>
                         <div class="form-group">
                                <label for="exampleInput">color</label>
-                               <input type="text" ng-model="x.square.color" class="form-control underline">
+                               <input type="text" ng-model="unit.square.color" class="form-control underline">
                         </div>
                         <div class="form-group">
                                <label for="exampleInput">Unit Number</label>
-                               <input type="text" ng-model="x.unitNumber" class="form-control underline">
+                               <input type="text" ng-model="unit.unitNumber" class="form-control underline">
                        </div>
                        <div class="form-group">
                                <label for="exampleInput">Description</label>
-                               <input type="text" ng-model="x.description" class="form-control underline">
+                               <input type="text" ng-model="unit.description" class="form-control underline">
                        </div>
 
-                       
-                      <button class="progress-button primary-progress" data-style="shrink" data-horizontal>Submit</button> &nbsp;
-                       <!--   <button ng-click = "updateBuilding()"><input type="submit" value="Submit"></button>-->
-                      </form>      
+     </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal">OK</button>
+        <button type="button" ng-click="cancel()" class="btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+                   
+                     
