@@ -501,7 +501,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	  
 	  */
   $scope.addUnit = function () {  
-	    $scope.units.push({"id": 0,"unitNumber": "#unit","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "./svg/rect.svg","icon": ""}});
+	    $scope.units.push({"id": 0,"unitNumber": "#unit","length": 100,"width": 100,"description": "#","square": {"left": 0,"top": 0,"height": 100,"width": 100, "color": "coral","type": "./svg/rect.svg","icon": ""}});
 	    var dataObj = {
 	            id: levelId,
 	            Units:{
@@ -526,7 +526,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 
 	  $scope.specialType='./svg/entry.svg';
 	  $scope.addSpecialUnit = function (type) {   
-		  $scope.units.push({"levelId":levelId,"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "transparent","type": $scope.specialType,"icon": ""}});
+		  $scope.units.push({"levelId":levelId,"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 0,"top": 0,"height": 100,"width": 100, "color": "transparent","type": $scope.specialType,"icon": ""}});
 		  var dataObj = {
 			        id: levelId,
 			        Units:{
@@ -844,8 +844,21 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 			    $parent.updateUnit();
 			    console.log("in dissmiss");
 			 };
-			 
-			 
+	//GRIDSTER
+			 $scope.standardItems = [
+			                         { sizeX: 2, sizeY: 1, row: 0, col: 0 },
+			                         { sizeX: 2, sizeY: 2, row: 0, col: 2 },
+			                         { sizeX: 1, sizeY: 1, row: 0, col: 4 },
+			                         { sizeX: 1, sizeY: 1, row: 0, col: 5 },
+			                         { sizeX: 2, sizeY: 1, row: 1, col: 0 },
+			                         { sizeX: 1, sizeY: 1, row: 1, col: 4 },
+			                         { sizeX: 1, sizeY: 2, row: 1, col: 5 },
+			                         { sizeX: 1, sizeY: 1, row: 2, col: 0 },
+			                         { sizeX: 2, sizeY: 1, row: 2, col: 1 },
+			                         { sizeX: 1, sizeY: 1, row: 2, col: 3 },
+			                         { sizeX: 1, sizeY: 1, row: 2, col: 4 }
+			                       ];
+			 console.log($scope.standardItems);
 		
 })
 

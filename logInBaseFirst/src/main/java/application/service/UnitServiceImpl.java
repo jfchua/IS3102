@@ -152,7 +152,6 @@ public class UnitServiceImpl implements UnitService {
 				Unit unit=unitOpt.get();
 				unit.setLength(dimensionLength);
 				unit.setWidth(dimensionWidth);
-				unit.setRentable(rentable);
 				unit.setUnitNumber(unitNumber);
 				unit.setDescription(description);
 				System.out.println("UnitServiceImpl: start saving squares");

@@ -323,12 +323,12 @@ public class UnitController {
 				}//end for 
 				System.out.println("Test: 6");
 				//this part maybe can delete already
-				if(unitService.deleteUnitsFromLevel(unitIds,levelId)==false){
+				/*if(unitService.deleteUnitsFromLevel(unitIds,levelId)==false){
 					System.out.println("Test 61 error: cannot delete units");
 					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 				}else{
 					System.out.println("Test 61 successful: units deleted/updated");
-				}
+				}*/
 				System.out.println("Test 7");
 				}
 				catch (Exception e){
