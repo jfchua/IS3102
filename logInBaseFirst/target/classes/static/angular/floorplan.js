@@ -547,8 +547,20 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	  } )
 	 
 	  } 
-	  $scope.addSpecialUnitByIcon = function(icon){
-		  $scope.units.push({"levelId":levelId,"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 0,"top": 0,"height": 50,"width": 50, "color": "transparent","type": "","icon": {"id":$scope.icon.id,"iconType":$scope.icon.iconType,"iconPath":$scope.icon.iconPath}}});
+	  $scope.addSpecialUnitByIcon = function(iconId){
+
+			var index=0;
+			var found=false;
+			var icon;
+			 angular.forEach($scope.icons, function(item){             
+				   	if(found==false && $scope.icons[index].id==iconId){
+				   		icon=$scope.icons[index];
+				   	}else
+				   		index = index + 1;
+				  }); 
+			 console.log(iconId);
+			 console.log(icon);
+		  $scope.units.push({"levelId":levelId,"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 0,"top": 0,"height": 50,"width": 50, "color": "transparent","type": "","icon": {"id":icon.id,"iconType":icon.iconType,"iconPath":icon.iconPath}}});
 		  var dataObj = {
 			        id: levelId,
 			        Units:{

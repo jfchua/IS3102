@@ -1,4 +1,4 @@
- 
+ <link rel="stylesheet" href="bower_components/angular-gridster/dist/angular-gridster.min.css"/>
  <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
 
     <div class="row" ng-cloak ng-controller="floorPlanController as floorPlanCtrl">  
@@ -57,8 +57,26 @@
    
     
  </div>    
-<div class="col-md-3">
-<br>
+<div class="col-md-12">
+<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Floor Plan	  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+			</div> 
+			<div class="panel-body">
+<div gridster id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
+    <ul>
+        <li gridster-item="item" ng-repeat="item in standardItems"  class="ui-widget-content" 
+            id="{{unit.square.id}}"></li>
+    </ul>
+</div>
+</div>
   </div>
 
 

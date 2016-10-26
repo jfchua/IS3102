@@ -59,7 +59,7 @@
                     </div>
                     <div class="form-group">
                         <label for="unit" class="control-label">Select Unit</label> <select
-                            name="unit" ng-model="currentlySelectedUnit" ng-options="x as x.unitNumber for x in units"
+                            name="unit" ng-model="currentlySelectedUnit" ng-options="x as x.unitNumber for x in units | filter: { rentable : true }"
                             ng-change="selectUnit()" class="form-control">						
                         </select>
                         <div ng-mouseover="checkAvail()" >
