@@ -1,0 +1,72 @@
+	<div ng-cloak ng-controller="invoiceController as invoiceCtrl">
+        <div class="clearfix">
+                        <ol class="breadcrumb no-bg no-m-t">
+                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                            <li><a >Generate Audit Log</a></li>
+                        </ol>
+</div>
+		<div class="col-md-9">
+			<div class="panel panel-primary">
+
+				<div class="panel-heading">
+					<h3 class="panel-title">Generate Invoice	  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body">
+                    
+                    
+				<form>
+					<!-- <div class="form-group">
+               <label for="exampleInput">Username</label>
+               <input type="text" ng-model="audit.name" class="form-control" id="orgName" placeholder="Enter Organisation Name">
+        </div> -->
+
+
+					<div class="form-group">
+						<label for="recipient" class="control-label">User Email ( Default all selected ) </label> <select
+							name="email" ng-model="currentlySelected"
+							ng-change="selectRecipient()" class="form-control underline" required>
+							<option ng-repeat="contact in contacts">{{contact}}</option>
+						</select>
+					</div>
+					
+					<div class="form-group">
+						<label for="recipient" class="control-label">System ( Default all selected )</label> <select
+							name="email" ng-model="currentlySelectedSystem"
+							ng-change="selectSystem()" class="form-control underline" required>
+							<option>Notification</option>
+							<option>Property</option>
+							<option>User Management</option>
+						</select>
+					</div>
+					
+
+					<div class="form-group">
+						<label for="exampleInput">Start Date</label> <input type="date"
+							ng-model="audit.startDate" class="form-control" id="orgEmail"
+							placeholder="Enter Organisation IT Admin Email" required>
+					</div>
+					<div class="form-group">
+						<label for="exampleInput">End Date</label> <input type="date"
+							ng-model="audit.endDate" class="form-control" id="orgEmail"
+							placeholder="Enter Organisation IT Admin Email" required>
+					</div>
+
+					<!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
+				 <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "submit()">Submit</button> &nbsp;
+                 
+                    </form>
+                    
+                    
+                    
+                    
+				</div>
+			</div>
+        </div>
+</div>
