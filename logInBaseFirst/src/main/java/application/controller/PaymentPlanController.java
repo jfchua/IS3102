@@ -1,5 +1,6 @@
 package application.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
@@ -9,6 +10,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,6 +30,7 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,6 +63,7 @@ import net.sf.jasperreports.engine.JasperRunManager;
 @RequestMapping("/payment")
 public class PaymentPlanController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentPlanController.class);
+	private ApplicationContext context;
 	private final EventExternalService eventExternalService;
 	private final PaymentPlanService paymentPlanService;
 	private final UserService userService;
@@ -717,61 +721,61 @@ public class PaymentPlanController {
 						}
 					}
 					
-					/*
-					@PreAuthorize("hasAnyAuthority('ROLE_FINANCE')")
+					
+					
 					@RequestMapping(value = "/downloadInvoice", method = RequestMethod.POST, produces = "application/pdf")
-					public void downloadInvoice(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
+					@ResponseBody
+					public void downloadInvoice(String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
 						System.out.println("Enter");
-						InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/AuditLog.jasper");
+						InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Invoice.jasper");
 						response.setContentType("application/pdf");
 						Principal principal = request.getUserPrincipal();
-						response.setHeader("Content-disposition", "attachment; filename=AuditLog.pdf");
+						response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
 						ServletOutputStream outputStream = response.getOutputStream();
 						HashMap<String,Object> parameters = new HashMap<String,Object>();
 						StringBuilder sb = new StringBuilder();
 						sb.append(" ");
 						Object obj;
-						String startDate = new String();
-						String endDate = new String();
-						String username = new String();
 						try {
 							obj = parser.parse(info);
 							JSONObject jsonObject = (JSONObject) obj;
-							username = (String)jsonObject.get("username");
+							Long paymentId = (Long)jsonObject.get("id");
+                            PaymentPlan p = paymentPlanService.getPaymentPlanById(paymentId).get();
+                            Gson gson2 = new GsonBuilder()
+								    .setExclusionStrategies(new ExclusionStrategy() {
+								        public boolean shouldSkipClass(Class<?> clazz) {
+								            return (clazz == Event.class);
+								        }
 
-							startDate = (String)jsonObject.get("startDate");
-							endDate = (String)jsonObject.get("endDate");
-							sb.append("WHERE (time >= '");
-							sb.append( startDate + " 00:00:00");
-							sb.append("' AND ");
-							sb.append("time <= '");
-							sb.append(endDate + " 23:59:59");
-							sb.append( "' )");
-							if ( username != null &&  userService.getUserByEmail(username).isPresent() ){
-								sb.append("AND user_id = '" +  userService.getUserByEmail(username).get().getId()  + "'");
-							}
-							else{
-								sb.append("AND( ");
-								User curUser = userService.getUserByEmail(principal.getName()).get();
-								for ( User us : curUser.getClientOrganisation().getUsers() ){
-									sb.append("user_id =" +  us.getId() );
-									sb.append(" OR ");
-								}
+								        /**
+								          * Custom field exclusion goes here
+								          */
 
-								sb.setLength(sb.length() - 4);
-								sb.append(")");
-							}
-							if ( (String)jsonObject.get("system") != null && (String)jsonObject.get("system") != "" ){
-								sb.append(" AND system = '" + (String)jsonObject.get("system") + "'");
-							}
+										@Override
+										public boolean shouldSkipField(FieldAttributes f) {
+											//TODO Auto-generated method stub
+											return false;
+													//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+										}
+								     })
+								    /**
+								      * Use serializeNulls method if you want To serialize null values 
+								      * By default, Gson does not serialize null values
+								      */
+								    .serializeNulls()
+								    .create();
+							sb.append(" P.ID = ");
+							sb.append(paymentId);
 							System.err.println("Query parameter is : " + sb.toString());
 							parameters.put("criteria", sb.toString());
 							Connection conn = null;
 							try {
 								DataSource ds = (DataSource)context.getBean("dataSource");
 								conn = ds.getConnection();
+								System.out.println("************* ERROR: ");
 								System.out.println(conn.toString());
 							} catch (SQLException e) {
+								System.out.println("************* ERROR: " + e.getMessage());
 								e.printStackTrace();
 							}
 							JasperRunManager.runReportToPdfStream(jasperStream, outputStream, parameters,conn);
@@ -779,11 +783,56 @@ public class PaymentPlanController {
 							outputStream.close();
 							System.out.println("FLUSHED OUT THE LOG");
 						} catch (ParseException e1) {
-							System.out.println("at /download audit log there was an error parsing the json string received");
+							System.out.println("at /download invoice there was an error parsing the json string received");
 							e1.printStackTrace();
 						}
+					}
+					
 
-
-					}*/
+					@RequestMapping(value = "/downloadReport", method = RequestMethod.POST, produces = "application/pdf")
+					@ResponseBody
+					public void downloadReport(HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
+						System.out.println("Enter");
+						InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Invoice.jasper");
+						response.setContentType("application/pdf");
+						Principal principal = request.getUserPrincipal();
+						response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+						ServletOutputStream outputStream = response.getOutputStream();
+						HashMap<String,Object> parameters = new HashMap<String,Object>();
+						StringBuilder sb = new StringBuilder();
+						sb.append(" ");
+						Object obj;
+						Calendar cal = Calendar.getInstance();
+						cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+						Date d1 = cal.getTime();
+						System.out.println("FIRST DAY IS "+d1);
+						cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+						Date d2 = cal.getTime();
+						System.out.println("LAST DAY IS "+d2);
+					
+							sb.append("WHERE PAID >= ");
+							sb.append(d1);
+							sb.append(" AND PAID <=");
+							sb.append(d2);
+							System.err.println("Query parameter is : " + sb.toString());
+							parameters.put("criteria", sb.toString());
+							Connection conn = null;
+							try {
+								DataSource ds = (DataSource)context.getBean("dataSource");
+								conn = ds.getConnection();
+								System.out.println("************* ERROR: ");
+								System.out.println(conn.toString());
+							} catch (SQLException e) {
+								System.out.println("************* ERROR: " + e.getMessage());
+								e.printStackTrace();
+							}
+							JasperRunManager.runReportToPdfStream(jasperStream, outputStream, parameters,conn);
+							outputStream.flush();
+							outputStream.close();
+							System.out.println("FLUSHED OUT THE LOG");
+						
+					}
+					
+					
 }
 

@@ -3,7 +3,7 @@
                         <ol class="breadcrumb no-bg no-m-t">
                             <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
                             <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-                            <li><a >Generate Audit Log</a></li>
+                            <li><a >Generate Invoice</a></li>
                         </ol>
 </div>
 		<div class="col-md-9">
@@ -21,51 +21,45 @@
 				<div class="panel-body">
                     
                     
-				<form>
-					<!-- <div class="form-group">
-               <label for="exampleInput">Username</label>
-               <input type="text" ng-model="audit.name" class="form-control" id="orgName" placeholder="Enter Organisation Name">
-        </div> -->
-
-
+				<form class="form-horizontal">
 					<div class="form-group">
-						<label for="recipient" class="control-label">User Email ( Default all selected ) </label> <select
-							name="email" ng-model="currentlySelected"
-							ng-change="selectRecipient()" class="form-control underline" required>
-							<option ng-repeat="contact in contacts">{{contact}}</option>
+						<label for="plan" class="control-label">Select A Payment Plan </label> <select
+							name="plan" ng-model="currentlySelectedPlan" ng-options="x.id as x.id for x in plans"
+							ng-change="getInfo(currentlySelectedPlan)" class="form-control underline" required>
 						</select>
 					</div>
-					
-					<div class="form-group">
-						<label for="recipient" class="control-label">System ( Default all selected )</label> <select
-							name="email" ng-model="currentlySelectedSystem"
-							ng-change="selectSystem()" class="form-control underline" required>
-							<option>Notification</option>
-							<option>Property</option>
-							<option>User Management</option>
-						</select>
-					</div>
-					
-
-					<div class="form-group">
-						<label for="exampleInput">Start Date</label> <input type="date"
-							ng-model="audit.startDate" class="form-control" id="orgEmail"
-							placeholder="Enter Organisation IT Admin Email" required>
-					</div>
-					<div class="form-group">
-						<label for="exampleInput">End Date</label> <input type="date"
-							ng-model="audit.endDate" class="form-control" id="orgEmail"
-							placeholder="Enter Organisation IT Admin Email" required>
-					</div>
-
-					<!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
-				 <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "submit()">Submit</button> &nbsp;
-                 
-                    </form>
-                    
-                    
-                    
-                    
+		 <div class="form-group">
+							<label class="col-sm-2 control-label">Payment Plan ID</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.id"></p>
+							</div>
+		</div>
+		<div class="form-group">
+							<label class="col-sm-2 control-label">Total Amount</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.total"></p>
+							</div>
+		</div>
+		<div class="form-group">
+							<label class="col-sm-2 control-label">Deposit</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.deposit"></p>
+							</div>
+		</div>
+		<div class="form-group">
+							<label class="col-sm-2 control-label">Subsequent Payment</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.subsequent"></p>
+							</div>
+		</div>
+		<div class="form-group">
+							<label class="col-sm-2 control-label">Next Payment</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.nextPayment"></p>
+							</div>
+		</div>			
+    		     <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "generateInvoice()">Submit</button> &nbsp;              
+                    </form>                 
 				</div>
 			</div>
         </div>
