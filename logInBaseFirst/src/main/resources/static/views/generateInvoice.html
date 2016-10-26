@@ -1,0 +1,66 @@
+	<div ng-cloak ng-controller="invoiceController as invoiceCtrl">
+        <div class="clearfix">
+                        <ol class="breadcrumb no-bg no-m-t">
+                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                            <li><a >Generate Invoice</a></li>
+                        </ol>
+</div>
+		<div class="col-md-9">
+			<div class="panel panel-primary">
+
+				<div class="panel-heading">
+					<h3 class="panel-title">Generate Invoice	  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body">
+                    
+                    
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="plan" class="control-label">Select A Payment Plan </label> <select
+							name="plan" ng-model="currentlySelectedPlan" ng-options="x.id as x.id for x in plans"
+							ng-change="getInfo(currentlySelectedPlan)" class="form-control underline" required>
+						</select>
+					</div>
+		 <div class="form-group">
+							<label class="col-sm-2 control-label">Payment Plan ID</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.id"></p>
+							</div>
+		</div>
+		<div class="form-group">
+							<label class="col-sm-2 control-label">Total Amount</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.total"></p>
+							</div>
+		</div>
+		<div class="form-group">
+							<label class="col-sm-2 control-label">Deposit</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.deposit"></p>
+							</div>
+		</div>
+		<div class="form-group">
+							<label class="col-sm-2 control-label">Subsequent Payment</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.subsequent"></p>
+							</div>
+		</div>
+		<div class="form-group">
+							<label class="col-sm-2 control-label">Next Payment</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.nextPayment"></p>
+							</div>
+		</div>			
+    		     <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "generateInvoice()">Submit</button> &nbsp;              
+                    </form>                 
+				</div>
+			</div>
+        </div>
+</div>

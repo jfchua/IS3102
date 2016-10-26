@@ -13,7 +13,27 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 	$scope.passPaymentPlan = function(plan){
 		shareData.addData(plan);
 	}
+	$scope.generateReport = function(){
+		$scope.data = {};
 
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/payment/downloadReport',
+			responseType: 'arraybuffer'
+		});
+
+		console.log("DOWNLOADING");
+		send.success(function(data){
+			console.log(JSON.stringify(data));
+			var file = new Blob([data], {type: 'application/pdf'});
+			var fileURL = URL.createObjectURL(file);
+			window.open(fileURL);
+			alert('DOWNLOADED!');
+		});
+		send.error(function(data){
+			alert('DOWNLOAD GOT ERROR!');
+		});
+	};
 
 }]);
 
@@ -510,6 +530,75 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 		});
 	};
 
+}]);
+
+
+app.controller('invoiceController', ['$scope', '$http', function ($scope, $http) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$http.get("//localhost:8443/payment/viewAllPaymentPlans").then(function(response){
+			$scope.plans = response.data;
+			console.log("DISPLAY ALL PAYMENT PLANS");
+		},function(response){
+			alert("did not view plans");
+		}	
+		)	
+	});
+	$scope.currentlySelectedPlan;
+	$scope.selectPlan = function(){
+		$scope.selectedPlan=$scope.currentlySelectedPlan;
+	}
+	$scope.getInfo = function(id){
+		console.log("start getting info for the selected payment plan");
+		console.log(id);
+		$scope.data = {};
+		
+		$scope.url = "https://localhost:8443/payment/getPaymentPlan/"+id;
+		console.log("GETTING THE PLAN INFO")
+		var getPlan = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/payment/getPaymentPlan/'+id,
+	});
+		console.log("Getting the payment plan using the url: " + $scope.url);
+		getPlan.success(function(response){
+			$scope.paymentPlan = response;
+			console.log("RESPONSE IS");
+			console.log(JSON.stringify(response));
+		});
+		getPlan.error(function(){
+			alert('Get Payment Plan Details error!!!!!!!!!!');
+		});			
+		
+	}
+	
+	$scope.generateInvoice = function(){
+		$scope.data = {};
+		//$scope.audit.endDate.setDate($scope.audit.endDate.getDate() + 1);
+		var dataObj = {
+				id: $scope.paymentPlan.id,
+		};
+
+		console.log("REACHED HERE FOR AUDIT LOG " + JSON.stringify(dataObj));
+
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/payment/downloadInvoice',
+			data    : dataObj, 
+			responseType: 'arraybuffer'
+		});
+
+		console.log("DOWNLOADING");
+		send.success(function(data){
+			console.log(JSON.stringify(data));
+			var file = new Blob([data], {type: 'application/pdf'});
+			var fileURL = URL.createObjectURL(file);
+			window.open(fileURL);
+			alert('DOWNLOADED!');
+		});
+		send.error(function(data){
+			alert('DOWNLOAD GOT ERROR!');
+		});
+	};
 }]);
 
 
