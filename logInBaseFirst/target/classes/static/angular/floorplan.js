@@ -162,6 +162,7 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
   $scope.downloadPlan = function () {
 	  console.log("her0");
 	  console.log(html2canvas);
+	
 	  /*
 	   
 	    console.log("here1");
