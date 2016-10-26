@@ -360,7 +360,7 @@ public class IconController {
 			int index=0;
 			for(Icon icon: icons){
 				String menuOptionName="<img  class=\"svgtest\" src=\""+icon.getIconPath()+"\" alt=\""+icon.getIconPath()+"\" width=\"50px\" height=\"50px\">";
-				String menuOptionFunc=" function ($itemScope, $event, modelValue, text, $li) {var icon=$scope.icon["+index+"];$scope.addSpecialUnitByIcon(icon);}";
+				String menuOptionFunc=" function ($itemScope, $event, modelValue, text, $li) {$scope.addSpecialUnitByIcon("+icon.getId()+");}";
 				JSONObject menuOption = new JSONObject(); 
 				menuOption.put("name", menuOptionName); 
 				menuOption.put("funct", menuOptionFunc); 

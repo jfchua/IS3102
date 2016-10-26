@@ -4,7 +4,7 @@
 		<div class="clearfix">
 		                        <ol class="breadcrumb no-bg no-m-t">
 		                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-		                            <li><a href="#/dashboard">Workspace</a></li>
+		                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
 		                            <li><a ui-sref="dashboard.viewBuilding">View Buildings</a></li>
 		                             <li><a ng-click="passBuilding()" >View Levels</a></li>
 		                             <li><a>View Floor Plan</a></li>
@@ -41,7 +41,7 @@
      </div>
      <div class="col-md-3">
      <br>    
-     <a ng-click="downloadPlan()" id="download" tooltip-placement="right" tooltip="Download Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-download-alt"></i></button></a>
+     <a ng-click="downloadPlan()"  id="download" tooltip-placement="right" tooltip="Download Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-download-alt"></i></button></a>
     
     </div>         
     </div>

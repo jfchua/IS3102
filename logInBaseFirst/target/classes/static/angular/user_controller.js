@@ -87,7 +87,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 				self.error = false;
 				 $timeout(function() {
 				      $state.go('dashboard.workspace');
-				      }, 100);
+				      }, 500);
 			} else {
 				console.log("NOT LOGGED IN");
 				$location.path("/login");
