@@ -102,7 +102,8 @@ var app = angular.module('app', [ 'ui.router',
                                   'angularModalService',
                                   'ui.bootstrap.tabs',
                                   'ngCsvImport',
-                                  'color.picker'
+                                  'color.picker',
+                                  'gridster'
                                   ])
 //Declaring Constants
 .constant('USER_ROLES', {
