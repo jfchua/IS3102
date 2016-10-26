@@ -85,7 +85,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	    plan.setTotal(total);
 	    NumberFormat formatter = new DecimalFormat("#0.00"); 
 	    plan.setGst(Double.valueOf(formatter.format(total/1.07*0.07)));
-	    plan.setTotalBeforeGst(total/1.07);
+	    plan.setTotalBeforeGst(Double.valueOf(formatter.format(total/1.07)));
 	    plan.setDepositRate(payPol.getDepositRate());
 	    plan.setOverdue(false);
 	    plan.setTicketRevenue(0.00);
@@ -95,6 +95,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	    Double subsequent = 0.00;
 	    if((total > deposit)&&subsequentNumber>0)
 	    	subsequent = (total-deposit)/subsequentNumber;
+	    else
+	    	subsequent = 0.00;
 	    plan.setSubsequent(subsequent);
 	    //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	    //Date date = new Date();
@@ -214,6 +216,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			String chequeNum, Double paid) {
 		Set<User> users = userRepository.getAllUsers(client);
 		System.out.println("clientUser");
+		NumberFormat formatter = new DecimalFormat("#0.00"); 
 		PaymentPolicy payPol = client.getPaymentPolicy();
 		int period = payPol.getInterimPeriod();
 		int due = payPol.getNumOfDueDays();
@@ -252,10 +255,10 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		    	paymentRepository.save(payment);
 		    	payments.add(payment);
 		    	Double alrPaid = pay.getPaid();
-		    	pay.setPaid(paid+alrPaid);
+		    	pay.setPaid(Double.valueOf(formatter.format(paid+alrPaid)));
 		    	Double total = pay.getTotal();
 		    	System.out.println("total " + total);
-		    	pay.setPayable(total-pay.getPaid());
+		    	pay.setPayable(Double.valueOf(formatter.format(total-pay.getPaid())));
 		    	if((total-pay.getPaid()) >= subsequent)
 		    		pay.setNextPayment(subsequent);
 		    	else if (((total-pay.getPaid())<subsequent)&&((total-pay.getPaid())>0))
@@ -311,7 +314,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			Double rent = 0.00;
 			try{
 				Optional<Event> event1 = Optional.ofNullable(eventRepository.findOne(eventId));
-				 NumberFormat formatter = new DecimalFormat("#0.00"); 
+				NumberFormat formatter = new DecimalFormat("#0.00"); 
 				if(event1.isPresent()){
 				Event event = event1.get();
 				Date start = event.getEvent_start_date();
