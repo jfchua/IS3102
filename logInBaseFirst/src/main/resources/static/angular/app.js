@@ -1422,319 +1422,154 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 
 /*1. TO DO LIST*/
 app.controller('taskController', function($scope, $http, $route,Auth) {
-	//CONFIG CALENDAR
-	   $scope.uiConfig = {
-			      calendar:{
-			        width: 600,
-			        editable:false,
-			        header:{
-			          left: 'month agendaWeek agendaDay',
-			          center: 'title',
-			          right: 'today prev,next'
-			        },
-			        eventClick: $scope.alertEventOnClick,
-			        eventDrop: $scope.alertOnDrop,
-			        eventResize: $scope.alertOnResize
-			      }
-			    };
 	
 	   //RETRIEVE EVENTS
 	   //$scope.eventsFormated=[];
 	   angular.element(document).ready(function () {
+		
+		   //GET TODOS FOR TODOS IN WORKSPACE AND SIDEBAR
 			 console.log("test for ready");
-			   $scope.eventSources=[];
-			  var getEvents = function(){
-					//var buildings ={name: $scope.name, address: $scope.address};
-					$http.get("//localhost:8443/eventManager/viewAllEvents").then(function(response){
-						$scope.events = response.data;
-						//console.log("DISPLAY ALL EVENT fir event manager");
-						//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
-						//ADD EVENTS INTO EVENTSOURCES OF CALENDAR
-						
-						if($scope.events.length!=0){
-							var index=0;
-						    angular.forEach($scope.events, function() {
-						    	if($scope.events[index].approvalStatus=="APPROVED" ||$scope.events[index].approvalStatus=="SUCCESSFUL"){
-						         var event=[{start: $scope.events[index].event_start_date,
-						        	 		end: $scope.events[index].event_end_date,			         
-						        		 	title:$scope.events[index].event_title,
-						        		 	allDay: false,
-						        		 	color: 'SeaGreen'
-						         			}];
-						         
-						        $scope.eventSources.push(event);
-						        	index = index + 1;
-						    	}
-						    });
-						   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
-						    console.log( $scope.eventSources);
-							}
-					},function(response){
-						//alert(response);
-						//console.log("response is : ")+JSON.stringify(response);
-					}	
-					)	
+			 $http({
+					method: 'GET',
+					url: 'https://localhost:8443/todo/getToDoList'
+				}).success(function (result) {
+					$scope.saved = result;
 					
-				}
-			   
-			   
-			   //RETRIEVE MAINTENANCES
-			   //$scope.eventsFormated=[];
-			   var getMaints = function(){
-					//var buildings ={name: $scope.name, address: $scope.address};
-					$http.get("//localhost:8443/maintenance/viewMaintenance").then(function(response){
-						$scope.maints = response.data;
-						if($scope.maints.length!=0){
-							var index=0;
-						    angular.forEach($scope.maints, function() {
+				}).error(function(result){
+					//do something
+					console.log("ERROR GETTING TODO LIST");
+				})
+		 });
 
-						         var maint=[{start: $scope.maints[index].start,
-						        	 		end: $scope.maints[index].end,			         
-						        		 	title:$scope.maints[index].description,
-						        		 	allDay: false,
-						        		 	color: 'IndianRed'
-						         			}];
-						         
-						        $scope.eventSources.push(maint);
-						        	index = index + 1;
-						    });
-						   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
-						   // console.log( $scope.eventSources);
-							}
-					},function(response){
-						//alert(response);
-						//console.log("response is : ")+JSON.stringify(response);
-					}	
-					)	
-					
-				}
-			   
-			  
-			   
-			   //RETRIEVE EVENTS OF EXTERNAL EVENT ORGANISER
-			   //$scope.eventsFormated=[];
-			   var getExEvents = function(){
-					//var buildings ={name: $scope.name, address: $scope.address};
-					$http.get("//localhost:8443/event/viewAllEvents").then(function(response){
-						$scope.events = response.data;
-						//console.log("DISPLAY ALL EVENT fir event manager");
-						//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
-						//ADD EVENTS INTO EVENTSOURCES OF CALENDAR
-						
-						if($scope.events.length!=0){
-							var index=0;
-						    angular.forEach($scope.events, function() {
-						    	if($scope.events[index].approvalStatus=="APPROVED" ||$scope.events[index].approvalStatus=="SUCCESSFUL"){
-						         var event=[{start: $scope.events[index].event_start_date,
-						        	 		end: $scope.events[index].event_end_date,			         
-						        		 	title:$scope.events[index].event_title,
-						        		 	allDay: false,
-						        		 	color: 'SeaGreen'
-						         			}];
-						         
-						        $scope.eventSources.push(event);
-						        	index = index + 1;
-						    	}
-						    });
-						   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
-						    console.log( $scope.eventSources);
-							}
-					},function(response){
-						//alert(response);
-						//console.log("response is : ")+JSON.stringify(response);
-					}	
-					)	
-					
-				}
-			   
-			   
-			   
-				//var today = new Date();
-				//var next = new Date();
-				//next.setDate(next.getDate() + 3); 
-				//TEST FOR USING CALENDAR
-				//$scope.eventSources =[[{start:today,title:"haha"}]];
-				//$scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);
+	   	 $scope.today = new Date();
+		
+		 $scope.saved = localStorage.getItem('taskItems');
+		 $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
+			JSON.parse($scope.saved) : [ {description: "Why not add a task?", date: $scope.today, complete: false}];
+			localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+			
+			//GET TODOS
+			//$scope.todosFormated=[];
+			var getTdList = function(){$http({
+				method: 'GET',
+				url: 'https://localhost:8443/todo/getToDoList'
+			}).success(function (result) {
+				$scope.saved = result;
 				
-				// console.log($scope.eventSources);
-				 $scope.today = new Date();
+			}).error(function(result){
+				//do something
+				console.log("ERROR GETTING TODO LIST");
+			})
+			}
+			//$scope.save();
+			//FOR ALL USERS: GET TODOS	
+			//getTdList();
+
+			//$state.reload();
+			//FOR PROPERTY MANAGER: GET MAINTENANCES		
+			/*if(Auth.hasRoles('ROLE_PROPERTY')){
 				
-				 $scope.saved = localStorage.getItem('taskItems');
-				 $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
-					JSON.parse($scope.saved) : [ {description: "Why not add a task?", date: $scope.today, complete: false}];
-					localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-					
-					//GET TODOS
-					//$scope.todosFormated=[];
-					var getTdList = function(){$http({
+			}*/
+			
+			$scope.newTask = null;
+			$scope.newTaskDate = null;
+			$scope.categories = [
+			                     {name: 'Personal'},
+			                     {name: 'Work'},
+			                     {name: 'School'},
+			                     {name: 'Cleaning'},
+			                     {name: 'Other'}
+			                     ];
+			$scope.newTaskCategory = $scope.categories;
+			$scope.addNew = function (newTask,newTaskDate) {
+				//console.log(newTask);
+				//console.log(newTaskDate);
+				//console.log($scope.newTask);
+				//console.log($scope.newTaskDate);
+				//$scope.saved.push({task:newTask, date: newTaskDate});
+				$http({
+					method : "POST",
+					url : "https://localhost:8443/todo/addToDoTask",
+					data: {task:newTask, date: newTaskDate}
+				}).then(function mySuccess(response) {
+					console.log("ADDED NEW TO DO LIST");
+					$http({
 						method: 'GET',
 						url: 'https://localhost:8443/todo/getToDoList'
 					}).success(function (result) {
-						$scope.saved = result;
-						//CLEAR EVENTSOURCES OF CALENDAR
-						//$scope.eventSources.length=0;
-						//$scope.eventSources=[$scope.eventsFormated];
-						//console.log($scope.eventSources);
-						//ADD TODOS TO EVENTSOURCES OF CALENDAR
-						if($scope.saved.length!=0){
-						var index=0;
-					    angular.forEach($scope.saved, function() {
-
-					         var todo=[{start: $scope.saved[index].date,
-					        		 	title:$scope.saved[index].task,
-					        		 	className: ['newtask'],
-					        		 	editable:false,
-					        		 	color: 'SteelBlue'
-					         			}];
-					        		 
-					        $scope.eventSources.push(todo);
-					         
-					         
-					        	index = index + 1;
-					    });
-					  //  $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
-					   // console.log( $scope.eventSources);
-						}
+						//$scope.saved = result;
+						//GET TODOS	
+						
+						
+						
+						getTdList();
+						
+						//FOR PROPERTY MANAGER: GET MAINTENANCES		
+						/*if(Auth.hasRoles('ROLE_PROPERTY')){
+							
+						}*/
 						
 					}).error(function(result){
 						//do something
 						console.log("ERROR GETTING TODO LIST");
 					})
-					}
-					//$scope.save();
-					//FOR ALL USERS: GET TODOS	
-					getTdList();
-					//FOR PROPERTY,EVENT,FINANCE,TICKETING: GET EVENTS AND MAINTENANCES
-					if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')){
-						getEvents();
-						getMaints();
-						console.log("test hailing haha");
-					}else if(Auth.hasRoles('ROLE_EXTEVE')){
-						getExEvents();
-					}
-					//$state.reload();
-					//FOR PROPERTY MANAGER: GET MAINTENANCES		
-					/*if(Auth.hasRoles('ROLE_PROPERTY')){
+				
+					//$route.reload();
+					//console.log("refresh page")
+
+
+
+
+
+				}, function myError(response) {
+					alert(response);
+				});
+				$scope.newTask = '';
+				$scope.newTaskDate = '';
+				$scope.newTaskCategory = $scope.categories;
+				localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+				
+			};
+			$scope.deleteTask = function (id) {
+				$http({
+					method : "POST",
+					url : "https://localhost:8443/todo/deleteToDoTask",
+					data: id
+				}).then(function mySuccess(response) {
+					console.log("Successfully delete task with Id: " + id);
+					$scope.saved = [];
+					$http({
+						method: 'GET',
+						url: 'https://localhost:8443/todo/getToDoList'
+					}).success(function (result) {
+						//$scope.saved = result;		
 						
-					}*/
-					
-					$scope.newTask = null;
-					$scope.newTaskDate = null;
-					$scope.categories = [
-					                     {name: 'Personal'},
-					                     {name: 'Work'},
-					                     {name: 'School'},
-					                     {name: 'Cleaning'},
-					                     {name: 'Other'}
-					                     ];
-					$scope.newTaskCategory = $scope.categories;
-					$scope.addNew = function (newTask,newTaskDate) {
-						//console.log(newTask);
-						//console.log(newTaskDate);
-						//console.log($scope.newTask);
-						//console.log($scope.newTaskDate);
-						//$scope.saved.push({task:newTask, date: newTaskDate});
-						$http({
-							method : "POST",
-							url : "https://localhost:8443/todo/addToDoTask",
-							data: {task:newTask, date: newTaskDate}
-						}).then(function mySuccess(response) {
-							console.log("ADDED NEW TO DO LIST");
-							$http({
-								method: 'GET',
-								url: 'https://localhost:8443/todo/getToDoList'
-							}).success(function (result) {
-								//$scope.saved = result;
-								//GET TODOS	
-								$scope.eventSources.length=0;
-								
-								//getEvents();
-								//getTdList();
-								//getMaints();
-								//FOR ALL USERS: GET TODOS	
-								getTdList();
-								//FOR PROPERTY,EVENT,FINANCE,TICKETING: GET EVENTS AND MAINTENANCES
-								if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')){
-									getEvents();
-									getMaints();
-								}else if(Auth.hasRoles('ROLE_EXTEVE')){
-									getExEvents();
-								}
-								
-								//FOR PROPERTY MANAGER: GET MAINTENANCES		
-								/*if(Auth.hasRoles('ROLE_PROPERTY')){
-									
-								}*/
-								
-							}).error(function(result){
-								//do something
-								console.log("ERROR GETTING TODO LIST");
-							})
 						
-							//$route.reload();
-							//console.log("refresh page")
-
-
-
-
-
-						}, function myError(response) {
-							alert(response);
-						});
-						$scope.newTask = '';
-						$scope.newTaskDate = '';
-						$scope.newTaskCategory = $scope.categories;
-						localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-						
-					};
-					$scope.deleteTask = function (id) {
-						$http({
-							method : "POST",
-							url : "https://localhost:8443/todo/deleteToDoTask",
-							data: id
-						}).then(function mySuccess(response) {
-							console.log("Successfully delete task with Id: " + id);
-							$scope.saved = [];
-							$http({
-								method: 'GET',
-								url: 'https://localhost:8443/todo/getToDoList'
-							}).success(function (result) {
-								//$scope.saved = result;		
-								$scope.eventSources.length=0;
-								
-								//getEvents();
-								//getTdList();
-								//getMaints();
-								//FOR ALL USERS: GET TODOS	
-								getTdList();
-								//FOR PROPERTY,EVENT,FINANCE,TICKETING: GET EVENTS AND MAINTENANCES
-								if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')){
-									getEvents();
-									getMaints();
-								}else if(Auth.hasRoles('ROLE_EXTEVE')){
-									getExEvents();
-								}
-								
-								//FOR PROPERTY MANAGER: GET MAINTENANCES		
-								/*if(Auth.hasRoles('ROLE_PROPERTY')){
-									
-								}*/
-								
-							}).error(function(result){
-								//do something
-								console.log("ERROR GETTING TODO LIST");
-							})
-						}, function myError(response) {
-							alert(response);
-						});		
+						//getEvents();
 						//getTdList();
-					
+						//getMaints();
+						//FOR ALL USERS: GET TODOS	
+						getTdList();
+						//FOR PROPERTY,EVENT,FINANCE,TICKETING: GET EVENTS AND MAINTENANCES
 						
+						
+						//FOR PROPERTY MANAGER: GET MAINTENANCES		
+						/*if(Auth.hasRoles('ROLE_PROPERTY')){
+							
+						}*/
+						
+					}).error(function(result){
+						//do something
+						console.log("ERROR GETTING TODO LIST");
+					})
+				}, function myError(response) {
+					alert(response);
+				});		
+				//getTdList();
+			
+				
 
-					};
-		 });
-
-	 
+			};
 });
 /*
 app.controller('DemoCtrl', function ($scope, $http) {
