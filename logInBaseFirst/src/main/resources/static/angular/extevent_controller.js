@@ -7,16 +7,29 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 	$scope.data = {};
 	//var tempObj= {id:1};
 	//console.log(tempObj)
+	$http.get("//localhost:8443/tixGetFeedback").then(function(response){
+		$scope.feedbacks = response.data;
+		console.log("DISPLAY ALL EVENT");
+		console.log($scope.feedbacks);
+
+	},function(response){
+		alert("did not view all events");
+		//console.log("response is : ")+JSON.stringify(response);
+	}	
+	)
+	
 	$http.get("//localhost:8443/event/viewAllEvents").then(function(response){
 		$scope.events = response.data;
 		console.log("DISPLAY ALL EVENT");
 		console.log($scope.events);
 
 	},function(response){
-		alert("did not view all events");
+		alert("did not view all feedback");
 		//console.log("response is : ")+JSON.stringify(response);
 	}	
-	)	
+	)
+	
+	
 });
 
 $scope.viewApprovedEvents = function(){

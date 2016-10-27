@@ -15,7 +15,7 @@ import application.repository.TicketRepository;
 import application.repository.UserRepository;
 
 @Service
-public class EngagementServiceImpl {
+public class EngagementServiceImpl implements EngagementService{
 	
 	private final FeedbackRepository feedbackRepository;
 	private final UserRepository userRepository;

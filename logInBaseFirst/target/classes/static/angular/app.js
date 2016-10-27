@@ -543,6 +543,14 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
+			.state('dashboard.feedbackEx',{
+				url:'/viewFeedbackEx',
+				templateUrl: '/views/viewFeedback.html',
+				controller: 'eventExternalController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
 			.state('dashboard.addCategoryEx',{
 				url:'/addCategoryEx',
 				templateUrl: '/views/addCategoryEx.html',

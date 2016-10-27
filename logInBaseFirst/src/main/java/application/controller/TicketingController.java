@@ -2,6 +2,7 @@ package application.controller;
 
 import java.io.File;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,11 +34,13 @@ import com.google.gson.GsonBuilder;
 import application.entity.BookingAppl;
 import application.entity.Category;
 import application.entity.Event;
+import application.entity.Feedback;
 import application.entity.PaymentPlan;
 import application.entity.Ticket;
 import application.entity.User;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
+import application.repository.FeedbackRepository;
 import application.service.BookingService;
 import application.service.EngagementService;
 import application.service.EventExternalService;
@@ -56,17 +59,19 @@ public class TicketingController {
 	private final TicketingService ticketingService;
 	private final EventService eventService;
 	private final EngagementService engagementService;
+	private final FeedbackRepository feedbackRepository;
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 
 	@Autowired
-	public TicketingController(EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
+	public TicketingController(FeedbackRepository feedbackRepository,EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
 			UserService userService) {
 		super();
 		this.eventExternalService = eeventService;
 		this.bookingService = bookingService;
 		this.userService = userService;
 		this.ticketingService = ticketingService;
+		this.feedbackRepository = feedbackRepository;
 		this.eventService = eventService;
 		this.engagementService = engagementService;
 	}
@@ -401,6 +406,56 @@ public class TicketingController {
 			engagementService.setFeedback(usr.get(), feedbackCategory, feedbackMessage);
 
 			return new ResponseEntity<String>(HttpStatus.OK);
+		}
+		//catch ( EventNotFoundException e){
+		//	return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+
+		//}
+		catch (Exception e){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/tixGetFeedback",  method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<String> tixGetFeedback(HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		System.err.println("inside tix buy ticket");
+		try{
+
+			Gson gson = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == User.class);
+						}
+
+						/**
+						 * Custom field exclusion goes here
+						 */
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+							//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+						}
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();	
+			List<Feedback> list = feedbackRepository.findAll();
+
+
+			return new ResponseEntity<String>(gson.toJson(list),HttpStatus.OK);
 		}
 		//catch ( EventNotFoundException e){
 		//	return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
