@@ -134,9 +134,11 @@ app.factory('UserService', ['$http', '$q', function($http, $q){
             );
         },
      
-    resetPassword: function(userEmail){
+    resetPassword: function(userEmail, userSecurity){
+    	console.log(userSecurity);
     	console.log("POSTING TO "  + REST_SERVICE_URI + "/reset  WITH EMAIL OF " + userEmail);
-		return $http.post(REST_SERVICE_URI + "/reset", userEmail)
+    	var data = JSON.stringify({email: userEmail, security: userSecurity});
+		return $http.post(REST_SERVICE_URI + "/reset", data)
             .then(
                     function(response){
                     	return response;
