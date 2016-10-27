@@ -33,8 +33,14 @@
                  <label for="exampleInput">Period</label>
                              <input type="text" ng-model="special.period" class="form-control underline" readonly>
           </div>
-          <p>Want to changep period?: <input type="checkbox" ng-model="myVar"></p>
-          <div ng-show="myVar">
+         <p>Want to change period?: <input type="checkbox" ng-model="myVar"></p>
+         <div ng-show="myVar">
+         <select ng-model="myDropDown">   
+          <option value="period">Please Select A Period</option>     
+           <option value="month">Any Month?</option>
+           <option value="weekend">All Weekends?</option>
+           <option value="date">Any Specific Date?</option>
+        </select><br>
           <div ng-show="myDropDown=='month'" >
            <label for="month" class="control-label">Select Month</label> <select
                             name="month" ng-model="special.period" ng-options="x.month as x.name for x in months"
@@ -51,7 +57,7 @@
                <label for="exampleInput">Please Enter a date</label>
                 <input type="datetime-local" step="86400" ng-model="special.period" class="form-control underline" id="period" placeholder="Enter date">
       </div>
-    </div>
+   </div>
            <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "updateRate()">Submit</button> &nbsp;
                       <!--   <button ng-click = "updateBuilding()"><input type="submit" value="Submit"></button>-->
                        </form>      
