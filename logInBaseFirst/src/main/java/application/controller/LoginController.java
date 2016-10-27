@@ -51,6 +51,7 @@ import application.entity.ClientOrganisation;
 import application.entity.Icon;
 import application.entity.Level;
 import application.entity.PasswordResetToken;
+import application.entity.ResetData;
 import application.entity.Unit;
 import application.entity.UnitAttributeType;
 import application.entity.UnitAttributeValue;
@@ -145,16 +146,25 @@ public class LoginController {
 	}*/
 
 	@RequestMapping(value = "/user/reset", method = RequestMethod.POST)
-	public ResponseEntity<String> resetPassword(@RequestBody String userEmail) throws URISyntaxException, UserNotFoundException {
+	public ResponseEntity<String> resetPassword(@RequestBody ResetData data) throws URISyntaxException, UserNotFoundException {
+		
+		String userEmail=data.getEmail();
+		String userSecurity=data.getSecurity();
+
 		System.out.println("Received Reset Password Request from  " + userEmail);
 
-		/*		if (!userService.getUserByEmail(userEmail).isPresent() ) {
+		User userToReset = userService.getUserByEmail(userEmail).get();
+		if (!userService.getUserByEmail(userEmail).isPresent() ) {
 			System.out.println("A User with that email does not exist");
-
-		}*/
+			return new ResponseEntity<String>(geeson.toJson("A User with that email does not exist"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		if (!userService.getUserBySecurity(userToReset, userSecurity)) {
+			System.out.println("Security question mismatch!");
+			return new ResponseEntity<String>(geeson.toJson("Security Question mismatched!"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		try{
 			System.out.println("Resetting password...");
-			User userToReset = userService.getUserByEmail(userEmail).get();
+			//User userToReset = userService.getUserByEmail(userEmail).get();
 			Long userId = userToReset.getId();
 			String token = UUID.randomUUID().toString();
 			String link = "The following link will expire in 30 minutes: https://localhost:8443/#/resetPassword/" + userId + "/" +  token;
