@@ -1,5 +1,7 @@
 package application.service;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -113,17 +115,17 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 		cal1.set(Calendar.DAY_OF_MONTH, cal1.getActualMaximum(Calendar.DAY_OF_MONTH));
 		Date d2 = cal1.getTime();
 		System.out.println("Last day is " + d2);
-		
+		NumberFormat formatter = new DecimalFormat("#0.0000");
 		Set<User> users = client.getUsers();
 		for(User u: users){
-			System.out.println("111111 ");
+			//System.out.println("111111 ");
 			Set<Role> roles = u.getRoles();
 			for(Role r : roles){
-				System.out.println("22222 ");
+				//System.out.println("22222 ");
 				if(r.getName().equals("ROLE_EXTEVE")){
 					Set<Event> events = u.getEvents();
 					for(Event e : events){
-						System.out.println("3333 ");
+						//System.out.println("3333 ");
 						if(e.getPaymentPlan()!=null){
 						PaymentPlan pay = e.getPaymentPlan();
 						cal.setTime(pay.getCreated());
@@ -132,11 +134,11 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 						if(month== month1){
 						totalDe += pay.getDeposit();	
 						}
-						if(DateUtils.isSameDay(d1, pay.getCreated()))
-							begin += pay.getDeposit();
-						else if(DateUtils.isSameDay(d2, pay.getCreated()))
-							end += pay.getDeposit();
-						System.out.println("total after one round");
+						if(pay.getCreated().before(d1))
+							begin += pay.getPayable();
+						if(pay.getCreated().before(d2))
+							end += pay.getPayable();
+						//System.out.println("total after one round");
 						}
 						else
 							System.out.println("NO PAYMENT PLAN");
@@ -145,9 +147,11 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 				System.out.println("End of loop for role ");
 			}
 		}
+		System.out.println("beginning receivable is " + begin);
+		System.out.println("end receivable is " + end);
 		if(begin == 0 && end ==0)
 			return 0.00;
 		else
-		return 2*totalDe/(begin+end);
+		return Double.valueOf(formatter.format(2*totalDe/(begin+end)));
 	}
 }
