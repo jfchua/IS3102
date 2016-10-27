@@ -29,7 +29,8 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
           .antMatchers("/**","https://localhost:8443","https://localhost:8443/","/index.html", "/#/login", "/index","/user/loginVerify","/").permitAll().anyRequest()
           .authenticated().and().logout().logoutUrl("//localhost:8443/logout").and()
         .csrf()
-          .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+          .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and().csrf()
+          .ignoringAntMatchers("/registerNewUser");
     }
      /*   http
 			.authorizeRequests()

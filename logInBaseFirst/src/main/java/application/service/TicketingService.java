@@ -10,7 +10,9 @@ public interface TicketingService {
 	public boolean addCategory(Long eventId, String catName, double price, int numTix) throws EventNotFoundException;
 
 	Set<Category> getCategories(Long eventId) throws EventNotFoundException;
-	
+
 	public boolean deleteCat(Long id);
-	
+
+	public String getEventDataAsJson(Long eventId) throws EventNotFoundException;
+
 }

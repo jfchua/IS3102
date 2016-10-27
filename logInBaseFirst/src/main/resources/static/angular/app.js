@@ -204,6 +204,14 @@ app.config(
 					authorizedRoles: [USER_ROLES.property]
 				}
 			})
+			.state('dashboard.updateRent',{
+				url: '/updateRent',
+				templateUrl: '/views/updateRent.html',
+				controller: 'rentController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
 			.state('dashboard.addBuilding',{
 				url: '/addBuilding',
 				templateUrl: '/views/addBuilding.html',

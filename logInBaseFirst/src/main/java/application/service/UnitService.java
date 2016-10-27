@@ -36,7 +36,8 @@ public interface UnitService {
 		Set<Unit> getUnitsByLevelId(long levelId);
 		
 		boolean deleteUnitsFromLevel(Set<Long> unitIds, long levelId);
-	
+		
+		boolean updateRent(long unitId, Double rent);
 
 }
 
