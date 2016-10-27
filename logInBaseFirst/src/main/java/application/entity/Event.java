@@ -85,7 +85,7 @@ public class Event {
 	    @JsonIgnore
 	    private PaymentPlan paymentPlan;
 		
-		@OneToMany(cascade={CascadeType.ALL}, mappedBy="event")
+		@OneToMany(fetch = FetchType.EAGER,cascade={CascadeType.ALL}, mappedBy="event")
 		@Column(nullable = true)
 		private Set<Category> categories = new HashSet<Category>();
 		

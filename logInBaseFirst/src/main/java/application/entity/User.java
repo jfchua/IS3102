@@ -36,9 +36,16 @@ public class User {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 	
-	@OneToMany(cascade={CascadeType.ALL})
+	@OneToMany(fetch = FetchType.EAGER,cascade={CascadeType.ALL})
 	@Column(nullable = true)
 	private Set<Ticket> tickets = new HashSet<Ticket>();
+
+	public Set<Ticket> getTickets() {
+		return tickets;
+	}
+	public void setTickets(Set<Ticket> tickets) {
+		this.tickets = tickets;
+	}
 
 	@Column(name = "password_hash", nullable = false)
 	private String passwordHash;
