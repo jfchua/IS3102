@@ -206,8 +206,10 @@ public class PaymentPlanController {
 							//System.out.println(formatter.format(4.0));
 							JSONObject obj1 = new JSONObject();
 							obj1.put("id", eventId);
-						    obj1.put("total", price);
+						    obj1.put("total", formatter.format(price));
+						    obj1.put("before", formatter.format(price/1.07));
 						    obj1.put("deposit", formatter.format(payPol.getDepositRate()*price));
+						    obj1.put("subsequent", formatter.format((1-payPol.getDepositRate())*price/payPol.getSubsequentNumber()));
 						    obj1.put("subsequentNumber",payPol.getSubsequentNumber());
 							//String json = gson2.toJson(event);
 							//System.out.println("EVENT IS " + json);
@@ -295,14 +297,15 @@ public class PaymentPlanController {
 									 * By default, Gson does not serialize null values
 									 */
 									.serializeNulls()
-									.create();			
+									.create();		
+							NumberFormat formatter = new DecimalFormat("#0.00");    
 							for(User u : eventOrgs){
 								JSONObject obj1 = new JSONObject();
 								obj1.put("id", u.getId());
 								System.out.println("event org name is "+u.getName());
 							    obj1.put("name", u.getName());
 							    obj1.put("email", u.getEmail());
-							    obj1.put("outstanding",paymentPlanService.getOutstandingById(u.getId()));
+							    obj1.put("outstanding",formatter.format(paymentPlanService.getOutstandingById(u.getId())));
 								jArray.add(obj1);
 							}
 							System.out.println("finish getting all orgs oustanding amount");

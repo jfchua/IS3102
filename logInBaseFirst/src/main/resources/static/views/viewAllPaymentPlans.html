@@ -33,7 +33,7 @@
                        
                            </tr>
                          <tbody>
-                         <tr ng-repeat="x in plans | filter:paymentPlanNull">
+                         <tr ng-repeat="x in plans | filter:paymentPlanNull|orderObjectBy:order_item:order_reverse">
                             <td>{{ x.id }}</td>
                             <td>{{ x.owner }}</td>
                             <td>{{ x.total }}</td>

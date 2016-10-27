@@ -2,6 +2,8 @@
 app.controller('paymentController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
 		$http.get("//localhost:8443/payment/viewAllPaymentPlans").then(function(response){
 			$scope.plans = response.data;
 			console.log("DISPLAY ALL PAYMENT PLANS");
@@ -41,6 +43,20 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 
 }]);
 
+app.filter('orderObjectBy', function() {
+	  return function(items, field, reverse) {
+	    var filtered = [];
+	    angular.forEach(items, function(item) {
+	      filtered.push(item);
+	    });
+	    filtered.sort(function (a, b) {
+	      return (a[field] > b[field] ? 1 : -1);
+	    });
+	    if(reverse) filtered.reverse();
+	    return filtered;
+	  };
+	});
+
 
 app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
@@ -71,10 +87,7 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 		});
 		send.success(function(response){
 			$scope.plan = response;
-			$scope.totalRent = $scope.plan.total/1.07;
-			$scope.totalRentAfter = $scope.plan.total;
-			//$scope.plan.total= response*1.07;
-			console.log($scope.totalRent);
+			
 		});
 		send.error(function(response){
 			$scope.totalRent = response;
@@ -165,6 +178,8 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 app.controller('balanceController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
 		$http.get("//localhost:8443/payment/viewAllOutstandingBalance").then(function(response){
 			$scope.orgs = response.data;
 			console.log("DISPLAY ALL ORGS OUTSTANDING BALANCE");
@@ -184,6 +199,8 @@ app.controller('eventListController', ['$scope', '$http','$state','$routeParams'
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$scope.org = shareData.getData();
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
 		$scope.url = "https://localhost:8443/payment/viewListOfEvents/"+$scope.org;
 		//$scope.dataToShare = [];
 		console.log("GETTING THE EVENTS");

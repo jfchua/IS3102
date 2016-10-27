@@ -32,7 +32,7 @@
                        
                            </tr>
                          <tbody>
-                         <tr ng-repeat="x in orgs">
+                         <tr ng-repeat="x in orgs| orderObjectBy:order_item:order_reverse">
                             <td>{{ x.id }}</td>
                             <td>{{ x.name }}</td>
                             <td>{{ x.email }}</td>
