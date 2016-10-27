@@ -19,7 +19,7 @@ div.ui-widget-content {
     background:#FFF;
     border:1px solid #000;
     height:400px;
-    margin:30px auto auto auto;
+    margin:auto auto auto auto;
     position:relative;
     width:960px;
 }

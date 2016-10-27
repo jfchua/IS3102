@@ -1,4 +1,4 @@
-app.controller('viewFloorPlanController', function ($scope, $http,shareData,$state) {
+app.controller('viewFloorPlanController', function ($scope, $http,shareData,$state,ModalService) {
 
   var levelIdObj;
   var levelId;
@@ -203,9 +203,71 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
           });
   }
   */
-  
+  //MODAL FOR VIEWING ONE UNIT
+  $scope.complexResult = null;
+	 $scope.showModal = function(unit) {
+		 console.log(unit);
+		    // Just provide a template url, a controller and call 'showModal'.
+		    ModalService.showModal({
+		    	
+		    	      templateUrl: "views/viewUnitTemplate.html",
+		    	      controller: "viewUnitController",
+		    	      inputs: {
+		    	        title: "View Unit",
+		    	        unit:unit
+		    	      }
+		    	    }).then(function(modal) {
+		    	      modal.element.modal();
+		    	      modal.close.then(function(result) {
+		    	     console.log("FINISHED VIEWING UNIT");
+		    	      });
+		    	    });
+
+		  };//END SHOWMODAL
+		  
+		  $scope.dismissModal = function(result) {
+			    close(result, 200); // close, but give 200ms for bootstrap to animate
+		
+			    console.log("in dissmiss");
+			 };
 
 })
+
+//VIEW UNIT MODAL
+app.controller('viewUnitController', ['$scope', '$element', 'title', 'close', 'unit',
+                                                function($scope, $element, title, close,unit) {
+	
+
+		  $scope.title = title;
+		  $scope.unit=unit;
+		  console.log(title);
+		  console.log(close);
+		  console.log($element);
+		  //  This close function doesn't need to use jQuery or bootstrap, because
+		  //  the button has the 'data-dismiss' attribute.
+		  $scope.close = function() {
+		 	  close({
+		     
+		    }, 500); // close, but give 500ms for bootstrap to animate
+		  };
+
+		  //  This cancel function must use the bootstrap, 'modal' function because
+		  //  the doesn't have the 'data-dismiss' attribute.
+		  $scope.cancel = function() {
+
+		    //  Manually hide the modal.
+		    $element.modal('hide');
+		    
+		    //  Now call close, returning control to the caller.
+		    close({
+		    	
+		    }, 500); // close, but give 500ms for bootstrap to animate
+		  };
+
+		
+
+	
+}])
 
 
 //FLOORPLAN
@@ -859,19 +921,60 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 			 };
 	//GRIDSTER
 			 $scope.standardItems = [
-			                         { sizeX: 2, sizeY: 1, row: 0, col: 0 },
-			                         { sizeX: 2, sizeY: 2, row: 0, col: 2 },
-			                         { sizeX: 1, sizeY: 1, row: 0, col: 4 },
-			                         { sizeX: 1, sizeY: 1, row: 0, col: 5 },
-			                         { sizeX: 2, sizeY: 1, row: 1, col: 0 },
-			                         { sizeX: 1, sizeY: 1, row: 1, col: 4 },
-			                         { sizeX: 1, sizeY: 2, row: 1, col: 5 },
-			                         { sizeX: 1, sizeY: 1, row: 2, col: 0 },
-			                         { sizeX: 2, sizeY: 1, row: 2, col: 1 },
-			                         { sizeX: 1, sizeY: 1, row: 2, col: 3 },
-			                         { sizeX: 1, sizeY: 1, row: 2, col: 4 }
+			                         { sizeX: 20, sizeY: 10, row: 0, col: 200 },
+			                         { sizeX: 20, sizeY: 20, row: 0, col: 100 }
+			                        
 			                       ];
 			 console.log($scope.standardItems);
+			 console.log("gridster test ");
+			 console.log(level.length);
+			 console.log(widthForFloorPlan);
+			 $scope.gridsterOpts = {
+					 
+					 	
+					    columns: level.length, // the width of the grid, in columns
+					    pushing: false, // whether to push other items out of the way on move or resize
+					    floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
+					    swapping: false, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
+					    width: widthForFloorPlan, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
+					    colWidth: parseInt(widthForFloorPlan/level.length), // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
+					    rowHeight: 'match', // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
+					    margins: [1, 1], // the pixel distance between each widget
+					    outerMargin: true, // whether margins apply to outer edges of the grid
+					    sparse: false, // "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
+					    isMobile: false, // stacks the grid items if true
+					    mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items
+					    mobileModeEnabled: true, // whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
+					    minColumns: 1, // the minimum columns the grid must have
+					    minRows: 2, // the minimum height of the grid, in rows
+					    maxRows: level.height,
+					    defaultSizeX: 2, // the default width of a gridster item, if not specifed
+					    defaultSizeY: 1, // the default height of a gridster item, if not specified
+					    minSizeX: 1, // minimum column width of an item
+					    maxSizeX: null, // maximum column width of an item
+					    minSizeY: 1, // minumum row height of an item
+					    maxSizeY: null, // maximum row height of an item
+					    resizable: {
+					       enabled: true,
+					       handles: ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'],
+					       start: function(event, $element, widget) {}, // optional callback fired when resize is started,
+					       resize: function(event, $element, widget) {}, // optional callback fired when item is resized,
+					       stop: function(event, $element, widget) {
+					    	   console.log($scope.standardItems);
+					       } // optional callback fired when item is finished resizing
+					    },
+					    draggable: {
+					       enabled: true, // whether dragging items is supported
+					      // handle: '.my-class', // optional selector for drag handle
+					       start: function(event, $element, widget) {}, // optional callback fired when drag is started,
+					       drag: function(event, $element, widget) {
+					    	 
+					       }, // optional callback fired when item is moved,
+					       stop: function(event, $element, widget) {
+					    	   console.log($scope.standardItems);
+					       } // optional callback fired when item is finished dragging
+					    }
+					};
 		
 })
 

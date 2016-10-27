@@ -27,7 +27,7 @@
 			</div>
 			     <div id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
 			        <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
-			            id="{{unit.square.id}}"   ng-mouseover=$parent.showDetails(unit) 
+			            id="{{unit.square.id}}"   ng-mouseover=$parent.showDetails(unit)  ng-dblclick="showModal(unit)"
 			              ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 
 			              'background-color':'{{unit.square.color}}' ,'maxHeight':{{levelWidth}}+'px','maxWidth':{{levelLength}}+'px'}" ><p>{{unit.unitNumber}}<img  class="svgtest" ng-src="{{unit.square.icon.iconPath||unit.square.type}}"  alt="{{unit.square.icon.iconPath||unit.square.type}}"></p> </div>
 			        </div>

@@ -1,0 +1,52 @@
+<div class="modal fade">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">View unit: {{unit.unitNumber}}</h4>
+      </div>
+      <div class="modal-body">
+        <p></p>
+        <form class="form-horizontal" role="form">
+						 <div class="form-group" ng-show="unit.rentable">
+							<label class="col-sm-6 control-label">Length (in meter)</label>
+							<div class="col-sm-6">
+								<p class="form-control-static" ng-bind="unit.length"></p>
+							</div>
+						</div>  		
+                    
+                         <div class="form-group" ng-show="unit.rentable">
+							<label class="col-sm-6 control-label">Width (in meter)</label>
+							<div class="col-sm-6">
+								<p class="form-control-static" ng-bind="unit.width"></p>
+							</div>
+						</div>
+
+                       
+                        <div class="form-group" ng-show="unit.rentable">
+							<label class="col-sm-6 control-label">Unit Number</label>
+							<div class="col-sm-6">
+								<p class="form-control-static" ng-bind="unit.unitNumber"></p>
+							</div>
+						</div>
+                        
+                        <div class="form-group" >
+							<label class="col-sm-6 control-label">Description</label>
+							<div class="col-sm-6">
+								<p class="form-control-static" ng-bind="unit.description"></p>
+							</div>
+						</div>
+                    
+
+     </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal">OK</button>
+        <button type="button" ng-click="cancel()" class="btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+                   
+                     
