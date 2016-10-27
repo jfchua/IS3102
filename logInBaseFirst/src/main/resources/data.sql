@@ -160,6 +160,12 @@ INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Finance Syste
 INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Event Management System');
 INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Property System');
 
+insert into category values(1,'name',12,12,1)
+insert into category values(2,'namenumber2',15,15.5,1)
+
+
+
+
 
 
 
