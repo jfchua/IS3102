@@ -812,17 +812,22 @@ public class PaymentPlanController {
 						sb.append(" ");
 						Object obj;
 						Calendar cal = Calendar.getInstance();
+						DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.");
+						//DateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
 						cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
 						Date d1 = cal.getTime();
-						System.out.println("FIRST DAY IS "+d1);
+						String[] arr1 = String.valueOf(sdf.format(d1)).split(" ");
+						//System.out.println("FIRST DAY IS "+ str1);
 						cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 						Date d2 = cal.getTime();
-						System.out.println("LAST DAY IS "+d2);
+						String[] arr2 = String.valueOf(sdf.format(d2)).split(" ");
+						//System.out.println("LAST DAY IS "+ str2);
 					
-							sb.append("WHERE PAID >= ");
-							sb.append(d1);
-							sb.append(" AND PAID <=");
-							sb.append(d2);
+							sb.append("WHERE (PAID >= '");
+							sb.append(arr1[0] + " 00:00:00 ' AND PAID <= '");
+							
+							//sb.append(arr1[0] +" AND PAID <= " + arr2[0]);
+							sb.append(arr2[0] +  " 23:59:59 ')");
 							System.err.println("Query parameter is : " + sb.toString());
 							parameters.put("criteria", sb.toString());
 							Connection conn = null;
