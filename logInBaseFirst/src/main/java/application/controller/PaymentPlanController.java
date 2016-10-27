@@ -63,6 +63,7 @@ import net.sf.jasperreports.engine.JasperRunManager;
 @RequestMapping("/payment")
 public class PaymentPlanController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentPlanController.class);
+	@Autowired
 	private ApplicationContext context;
 	private final EventExternalService eventExternalService;
 	private final PaymentPlanService paymentPlanService;
@@ -724,8 +725,7 @@ public class PaymentPlanController {
 					
 					
 					@RequestMapping(value = "/downloadInvoice", method = RequestMethod.POST, produces = "application/pdf")
-					@ResponseBody
-					public void downloadInvoice(String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
+					public void downloadInvoice(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
 						System.out.println("Enter");
 						InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Invoice.jasper");
 						response.setContentType("application/pdf");
@@ -737,6 +737,15 @@ public class PaymentPlanController {
 						sb.append(" ");
 						Object obj;
 						try {
+							
+							if(info == null)
+								System.out.println("********** info is null");
+							
+							if(parser == null)
+								System.out.println("********** parser is null");
+							
+							System.out.println("********** HERE");
+							
 							obj = parser.parse(info);
 							JSONObject jsonObject = (JSONObject) obj;
 							Long paymentId = (Long)jsonObject.get("id");
@@ -793,7 +802,7 @@ public class PaymentPlanController {
 					@ResponseBody
 					public void downloadReport(HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
 						System.out.println("Enter");
-						InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Invoice.jasper");
+						InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Monthly.jasper");
 						response.setContentType("application/pdf");
 						Principal principal = request.getUserPrincipal();
 						response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
