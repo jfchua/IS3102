@@ -331,10 +331,10 @@ public class TicketingController {
 					.create();			    
 			Object obj1 = parser.parse(eventId);
 			JSONObject jsonObject = (JSONObject) obj1;
-			Long id = (Long)jsonObject.get("eventId");
-			System.err.println("gotten eventid of : "  + id);
+			String id = (String)jsonObject.get("eventId");
+			System.err.println("gotten eventid of : "  + Long.valueOf(id));
 
-			Set<Category> cats = ticketingService.getCategories(id);
+			Set<Category> cats = ticketingService.getCategories(Long.valueOf(id));
 			return new ResponseEntity<String>(gson.toJson(cats),HttpStatus.OK);
 		}
 		catch ( EventNotFoundException e){
