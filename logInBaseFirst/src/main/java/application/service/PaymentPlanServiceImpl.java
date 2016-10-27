@@ -248,6 +248,12 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		    	Payment payment = new Payment();
 		    	Calendar cal = Calendar.getInstance();
 			    payment.setPaid(cal.getTime());
+		    	//System.out.println(cal.getTime());
+			    //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.");
+			    //String[] arr1 = String.valueOf(sdf.format(cal.getTime())).split(" ");
+			    //DateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+			    //System.out.println(sdf.parse(arr1[0]));
+			    //payment.setPaid(sdf.parse(arr1[0]));
 			    System.out.println("paid time " + cal.getTime());
 		    	payment.setAmount(paid);
 		    	payment.setCheque(chequeNum);

@@ -27,6 +27,12 @@ public class ClientOrganisation {
 	private Long id;
 	@Column(name = "organisation_name",nullable = false,unique=true)
 	private String organisationName;
+	@Column(name = "address",nullable = false,unique=true)
+	private String address;
+	@Column(name = "postal",nullable = false,unique=true)
+	private String postal;
+	@Column(name = "phone",nullable = false,unique=true)
+	private String phone;
 	@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
 	private Set<Vendor> vendors = new HashSet<Vendor>();
 	@OneToMany(mappedBy="clientOrganisation", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
@@ -81,6 +87,42 @@ public class ClientOrganisation {
 
 	public Set<Building> getBuildings() {
 		return buildings;
+	}
+
+
+
+	public String getAddress() {
+		return address;
+	}
+
+
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+
+
+	public String getPostal() {
+		return postal;
+	}
+
+
+
+	public void setPostal(String postal) {
+		this.postal = postal;
+	}
+
+
+
+	public String getPhone() {
+		return phone;
+	}
+
+
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 
