@@ -36,14 +36,21 @@
 								<p class="form-control-static" ng-bind="unit.description"></p>
 							</div>
 						</div>
+						
+						<div class="form-group" ng-repeat="attribute in unit.unitAttributeValues" >
+							<label class="col-sm-6 control-label">{{attribute.unitAttributeType.attributeType}}</label>
+							<div class="col-sm-6">
+								<p class="form-control-static" ng-bind="attribute.attributeValue"></p>
+							</div>
+						</div>
                     
 
      </form>
 
       </div>
       <div class="modal-footer">
-        <button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal">OK</button>
-        <button type="button" ng-click="cancel()" class="btn">Cancel</button>
+        <button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal">Back</button>
+  
       </div>
     </div>
   </div>

@@ -921,10 +921,19 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 			 };
 	//GRIDSTER
 			 $scope.standardItems = [
-			                         { sizeX: 20, sizeY: 10, row: 0, col: 200 },
-			                         { sizeX: 20, sizeY: 20, row: 0, col: 100 }
+			                         { sizeX: 400, sizeY: 10, row: 0, col: 400 },
+			                         { sizeX: 20, sizeY: 20, row: 500, col: 100 }
 			                        
 			                       ];
+			 
+			 $scope.customItemMap = {
+					    sizeX: 'item.size.x',
+					    sizeY: 'item.size.y',
+					    row: 'item.position[0]',
+					    col: 'item.position[1]',
+					    minSizeY: 'item.minSizeY',
+					    maxSizeY: 'item.maxSizeY'
+					};
 			 console.log($scope.standardItems);
 			 console.log("gridster test ");
 			 console.log(level.length);
@@ -933,11 +942,12 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					 
 					 	
 					    columns: level.length, // the width of the grid, in columns
+					    rows:level.width,
 					    pushing: false, // whether to push other items out of the way on move or resize
 					    floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
 					    swapping: false, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
 					    width: widthForFloorPlan, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
-					    colWidth: parseInt(widthForFloorPlan/level.length), // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
+					    colWidth: auto, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
 					    rowHeight: 'match', // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
 					    margins: [1, 1], // the pixel distance between each widget
 					    outerMargin: true, // whether margins apply to outer edges of the grid
@@ -965,7 +975,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					    },
 					    draggable: {
 					       enabled: true, // whether dragging items is supported
-					      // handle: '.my-class', // optional selector for drag handle
+					       handle: '.my-class', // optional selector for drag handle
 					       start: function(event, $element, widget) {}, // optional callback fired when drag is started,
 					       drag: function(event, $element, widget) {
 					    	 

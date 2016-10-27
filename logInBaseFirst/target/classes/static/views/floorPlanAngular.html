@@ -1,6 +1,6 @@
  <link rel="stylesheet" href="bower_components/angular-gridster/dist/angular-gridster.css"/>
  <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
-
+ <link rel="stylesheet" href="../css/floorplanGrid.css" type="text/css" />
     <div class="row" ng-cloak ng-controller="floorPlanController as floorPlanCtrl">  
         
 		<div class="clearfix">
@@ -70,15 +70,16 @@
 				</div>
 			</div> 
 			<div class="panel-body">
-<div gridster="gridsterOpts" id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
+<div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
     <ul>
-        <li gridster-item="item" ng-repeat="item in standardItems"  class="ui-widget-content" 
+        <li gridster-item="item" ng-repeat="item in standardItems" style="color:blue"
             id="{{unit.square.id}}"></li>
     </ul>
 </div>
 </div>
-  </div>
 
+
+  </div>
 
   <div id="respond"></div>
 </div>

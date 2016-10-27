@@ -41,7 +41,7 @@
 						class="active"><a ui-sref="dashboard.viewUserProfile"><i
 								class="glyphicon glyphicon-user"></i>{{ 'View
 								User Profile' | translate }}</a></li>
-					<li><a href="#/login" ng-click="logout()"><i
+					<li><a ng-controller="UserController as userCtrl" href="#/login" ng-click="logout()"><i
 								class="glyphicon glyphicon-log-out"></i>{{ 'Log Out' | translate }}</a></li>
 								
 					
