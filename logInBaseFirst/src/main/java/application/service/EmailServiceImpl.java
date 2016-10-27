@@ -2,6 +2,8 @@ package application.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.io.File;
+
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +37,17 @@ public class EmailServiceImpl implements EmailService {
 
 	public boolean checkAttachments(String... attachments) throws InvalidAttachmentException{
 		for ( String currentAttachment : attachments){
-			if ( !currentAttachment.contains(".") || !currentAttachment.contains("/") ){
-				throw new InvalidAttachmentException("Invalid attachment selected");
-
+			File f = new File(currentAttachment);
+		//	String[] temp = currentAttachment.split("\\\\");
+		//	System.err.println("tmparr" + temp[0] + "  " + temp[temp.length-1]);
+		//	String currentAttachmentFilename = temp[1]; //Removes the path name, to get the file name
+			//helper.addAttachment(currentAttachmentFilename, new ClassPathResource(currentAttachment));
+			
+			if ( !f.exists() ){
+				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -48,7 +56,7 @@ public class EmailServiceImpl implements EmailService {
 	//TODO : ERROR HANDLING PAGE
 	@Async
 	public void sendEmailWithAttachment(String recipient, String subject, String body, String... attachment) throws InvalidAttachmentException {
-
+		checkAttachments(attachment);
 		try {
 			MimeMessagePreparator preparator = getContentWtihAttachementMessagePreparator(recipient,subject,body,attachment);
 			javaMailSender.send(preparator);
@@ -77,9 +85,13 @@ public class EmailServiceImpl implements EmailService {
 				helper.setText(body);
 				// Add a resource as an attachment
 				for ( String currentAttachment : attachment){
-					String[] temp = currentAttachment.split("/");
-					String currentAttachmentFilename = temp[1]; //Removes the path name, to get the file name
-					helper.addAttachment(currentAttachmentFilename, new ClassPathResource(currentAttachment));
+					File f = new File(currentAttachment);
+				//	String[] temp = currentAttachment.split("\\\\");
+				//	System.err.println("tmparr" + temp[0] + "  " + temp[temp.length-1]);
+				//	String currentAttachmentFilename = temp[1]; //Removes the path name, to get the file name
+					//helper.addAttachment(currentAttachmentFilename, new ClassPathResource(currentAttachment));
+					
+					helper.addAttachment(f.getName(), f);
 				}
 
 			}

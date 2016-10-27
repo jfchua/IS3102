@@ -1,6 +1,7 @@
 package application.controller;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
@@ -48,6 +49,7 @@ import com.google.gson.GsonBuilder;
 
 import application.entity.*;
 import application.exception.EventNotFoundException;
+import application.exception.InvalidAttachmentException;
 import application.exception.UserNotFoundException;
 import application.service.BookingService;
 import application.service.EmailService;
@@ -72,7 +74,7 @@ public class PaymentPlanController {
 	private final EmailService emailService;
 	//private final EventCreateFormValidator eventCreateFormValidator;
 	private JSONParser parser = new JSONParser();
-	
+
 	@Autowired
 	public PaymentPlanController(EventExternalService eventService, PaymentPlanService paymentPlanService,
 			UserService userService, MessageService messageService, EmailService emailService) {
@@ -669,187 +671,184 @@ public class PaymentPlanController {
 						}
 						return new ResponseEntity<Void>(HttpStatus.OK);
 					}
-					
-					@RequestMapping(value = "/getPaymentHistory/{id}", method = RequestMethod.GET)
-					@ResponseBody
-					public ResponseEntity<String> getPaymentHistory(@PathVariable("id") String orgId, HttpServletRequest rq) throws UserNotFoundException {
-						Principal principal = rq.getUserPrincipal();
-						Optional<User> usr = userService.getUserByEmail(principal.getName());
-						if ( !usr.isPresent() ){
-							return new ResponseEntity<String>(HttpStatus.CONFLICT);
+	
+	@RequestMapping(value = "/getPaymentHistory/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<String> getPaymentHistory(@PathVariable("id") String orgId, HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();				   
+			long id = Long.parseLong(orgId);
+			Set<Payment> payments= paymentPlanService.getPaymentsByOrgId(client, id);
+			System.out.println("There are X events and X is "+ payments.size());
+			JSONArray jArray = new JSONArray();
+			Gson gson2 = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 						}
-						try{
-							ClientOrganisation client = usr.get().getClientOrganisation();				   
-							long id = Long.parseLong(orgId);
-							Set<Payment> payments= paymentPlanService.getPaymentsByOrgId(client, id);
-							System.out.println("There are X events and X is "+ payments.size());
-							JSONArray jArray = new JSONArray();
-								Gson gson2 = new GsonBuilder()
-										.setExclusionStrategies(new ExclusionStrategy() {
-											public boolean shouldSkipClass(Class<?> clazz) {
-												return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
-											}
-											/**
-											 * Custom field exclusion goes here
-											 */
-											@Override
-											public boolean shouldSkipField(FieldAttributes f) {
-												//TODO Auto-generated method stub
-												return false;
-											}
-										})
-										/**
-										 * Use serializeNulls method if you want To serialize null values 
-										 * By default, Gson does not serialize null values
-										 */
-										.serializeNulls()
-										.create();
-								for(Payment p: payments){
-									JSONObject obj1 = new JSONObject();
-									obj1.put("id", p.getId());
-									System.out.println("payment id is "+p.getId());
-								    obj1.put("date", String.valueOf(p.getPaid()));								    
-								    obj1.put("plan",p.getPlan());
-								    System.out.println("TOTAL1");
-								    obj1.put("amount",p.getAmount());
-								    System.out.println("TOTAL2");
-								    obj1.put("cheque",p.getCheque());
-								    System.out.println("TOTAL3");
-									jArray.add(obj1);
-								}
-								 System.out.println("finishing getting list of payments");
-								return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);			
+						/**
+						 * Custom field exclusion goes here
+						 */
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
 						}
-						catch (Exception e){
-							return new ResponseEntity<String>(HttpStatus.CONFLICT);
-						}
-					}
-					
-					
-					
-					@RequestMapping(value = "/downloadInvoice", method = RequestMethod.POST, produces = "application/pdf")
-					public void downloadInvoice(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
-						System.out.println("Enter");
-						InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Invoice.jasper");
-						response.setContentType("application/pdf");
-						Principal principal = request.getUserPrincipal();
-						response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
-						ServletOutputStream outputStream = response.getOutputStream();
-						HashMap<String,Object> parameters = new HashMap<String,Object>();
-						StringBuilder sb = new StringBuilder();
-						sb.append(" ");
-						Object obj;
-						try {
-							
-							if(info == null)
-								System.out.println("********** info is null");
-							
-							if(parser == null)
-								System.out.println("********** parser is null");
-							
-							System.out.println("********** HERE");
-							
-							obj = parser.parse(info);
-							JSONObject jsonObject = (JSONObject) obj;
-							Long paymentId = (Long)jsonObject.get("id");
-                            PaymentPlan p = paymentPlanService.getPaymentPlanById(paymentId).get();
-                            Gson gson2 = new GsonBuilder()
-								    .setExclusionStrategies(new ExclusionStrategy() {
-								        public boolean shouldSkipClass(Class<?> clazz) {
-								            return (clazz == Event.class);
-								        }
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();
+			for(Payment p: payments){
+				JSONObject obj1 = new JSONObject();
+				obj1.put("id", p.getId());
+				System.out.println("payment id is "+p.getId());
+				obj1.put("date", String.valueOf(p.getPaid()));								    
+				obj1.put("plan",p.getPlan());
+				System.out.println("TOTAL1");
+				obj1.put("amount",p.getAmount());
+				System.out.println("TOTAL2");
+				obj1.put("cheque",p.getCheque());
+				System.out.println("TOTAL3");
+				jArray.add(obj1);
+			}
+			System.out.println("finishing getting list of payments");
+			return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);			
+		}
+		catch (Exception e){
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
+		}
+	}
 
-								        /**
-								          * Custom field exclusion goes here
-								          */
 
-										@Override
-										public boolean shouldSkipField(FieldAttributes f) {
-											//TODO Auto-generated method stub
-											return false;
-													//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
-										}
-								     })
-								    /**
-								      * Use serializeNulls method if you want To serialize null values 
-								      * By default, Gson does not serialize null values
-								      */
-								    .serializeNulls()
-								    .create();
-							sb.append(" P.ID = ");
-							sb.append(paymentId);
-							System.err.println("Query parameter is : " + sb.toString());
-							parameters.put("criteria", sb.toString());
-							Connection conn = null;
-							try {
-								DataSource ds = (DataSource)context.getBean("dataSource");
-								conn = ds.getConnection();
-								System.out.println("************* ERROR: ");
-								System.out.println(conn.toString());
-							} catch (SQLException e) {
-								System.out.println("************* ERROR: " + e.getMessage());
-								e.printStackTrace();
-							}
-							JasperRunManager.runReportToPdfStream(jasperStream, outputStream, parameters,conn);
-							outputStream.flush();
-							outputStream.close();
-							System.out.println("FLUSHED OUT THE LOG");
-						} catch (ParseException e1) {
-							System.out.println("at /download invoice there was an error parsing the json string received");
-							e1.printStackTrace();
-						}
-					}
-					
 
-					@RequestMapping(value = "/downloadReport", method = RequestMethod.POST, produces = "application/pdf")
-					@ResponseBody
-					public void downloadReport(HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
-						System.out.println("Enter");
-						InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Monthly.jasper");
-						response.setContentType("application/pdf");
-						Principal principal = request.getUserPrincipal();
-						response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
-						ServletOutputStream outputStream = response.getOutputStream();
-						HashMap<String,Object> parameters = new HashMap<String,Object>();
-						StringBuilder sb = new StringBuilder();
-						sb.append(" ");
-						Object obj;
-						Calendar cal = Calendar.getInstance();
-						DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.");
-						//DateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
-						cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
-						Date d1 = cal.getTime();
-						String[] arr1 = String.valueOf(sdf.format(d1)).split(" ");
-						//System.out.println("FIRST DAY IS "+ str1);
-						cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-						Date d2 = cal.getTime();
-						String[] arr2 = String.valueOf(sdf.format(d2)).split(" ");
-						//System.out.println("LAST DAY IS "+ str2);
-					
-							sb.append("WHERE (PAID >= '");
-							sb.append(arr1[0] + " 00:00:00 ' AND PAID <= '");
-							
-							//sb.append(arr1[0] +" AND PAID <= " + arr2[0]);
-							sb.append(arr2[0] +  " 23:59:59 ')");
-							System.err.println("Query parameter is : " + sb.toString());
-							parameters.put("criteria", sb.toString());
-							Connection conn = null;
-							try {
-								DataSource ds = (DataSource)context.getBean("dataSource");
-								conn = ds.getConnection();
-								System.out.println("************* ERROR: ");
-								System.out.println(conn.toString());
-							} catch (SQLException e) {
-								System.out.println("************* ERROR: " + e.getMessage());
-								e.printStackTrace();
-							}
-							JasperRunManager.runReportToPdfStream(jasperStream, outputStream, parameters,conn);
-							outputStream.flush();
-							outputStream.close();
-							System.out.println("FLUSHED OUT THE LOG");
-						
-					}
-					
-					
+	@RequestMapping(value = "/downloadInvoice", method = RequestMethod.POST, produces = "application/pdf")
+	public void downloadInvoice(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException, InvalidAttachmentException {
+		System.out.println("Enter");
+		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Invoice.jasper");
+		response.setContentType("application/pdf");
+		Principal principal = request.getUserPrincipal();
+		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+		//ServletOutputStream outputStream = response.getOutputStream();
+		HashMap<String,Object> parameters = new HashMap<String,Object>();
+		StringBuilder sb = new StringBuilder();
+		sb.append(" ");
+		Object obj;
+		try {
+
+			if(info == null)
+				System.out.println("********** info is null");
+
+			if(parser == null)
+				System.out.println("********** parser is null");
+
+			System.out.println("********** HERE");
+
+			obj = parser.parse(info);
+			JSONObject jsonObject = (JSONObject) obj;
+			Long paymentId = (Long)jsonObject.get("id");
+			PaymentPlan p = paymentPlanService.getPaymentPlanById(paymentId).get();
+
+			sb.append(" P.ID = ");
+			sb.append(paymentId);
+			System.err.println("Query parameter is : " + sb.toString());
+			parameters.put("criteria", sb.toString());
+			Connection conn = null;
+			try {
+				DataSource ds = (DataSource)context.getBean("dataSource");
+				conn = ds.getConnection();
+				System.out.println("************* ERROR: ");
+				System.out.println(conn.toString());
+			} catch (SQLException e) {
+				System.out.println("************* ERROR: " + e.getMessage());
+				e.printStackTrace();
+			}
+			String path = request.getSession().getServletContext().getRealPath("/");
+			System.err.println("path is " + path);
+			path += "Invoice" + paymentId + ".pdf";
+			File f = new File(path);
+			int counter = 2;
+			while ( f.exists() && !f.isDirectory() ){
+				counter++;
+				path = request.getSession().getServletContext().getRealPath("/");
+				path += "Invoice" + paymentId + "-" + counter + ".pdf";			    	
+				f = new File(path);
+			}
+
+
+			System.err.println("path is " + path);
+			FileOutputStream fileOutputStream = new FileOutputStream(path);
+			JasperRunManager.runReportToPdfStream(jasperStream, fileOutputStream, parameters,conn);
+			fileOutputStream.flush();
+			fileOutputStream.close();
+			System.out.println("FLUSHED OUT THE LOG");
+
+			emailService.sendEmailWithAttachment("kenneth1399@hotmail.com", "SUBJECT", "BODY", path);
+
+
+		} catch (ParseException e1) {
+			System.out.println("at /download invoice there was an error parsing the json string received");
+			e1.printStackTrace();
+		}
+	}
+
+
+	@RequestMapping(value = "/downloadReport", method = RequestMethod.POST, produces = "application/pdf")
+	@ResponseBody
+	public void downloadReport(HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
+		System.out.println("Enter");
+		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Monthly.jasper");
+		response.setContentType("application/pdf");
+		Principal principal = request.getUserPrincipal();
+		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+		ServletOutputStream outputStream = response.getOutputStream();
+		HashMap<String,Object> parameters = new HashMap<String,Object>();
+		StringBuilder sb = new StringBuilder();
+		sb.append(" ");
+		Object obj;
+		Calendar cal = Calendar.getInstance();
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.");
+		//DateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+		Date d1 = cal.getTime();
+		String[] arr1 = String.valueOf(sdf.format(d1)).split(" ");
+		//System.out.println("FIRST DAY IS "+ str1);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		Date d2 = cal.getTime();
+		String[] arr2 = String.valueOf(sdf.format(d2)).split(" ");
+		//System.out.println("LAST DAY IS "+ str2);
+
+		sb.append("WHERE (PAID >= '");
+		sb.append(arr1[0] + " 00:00:00 ' AND PAID <= '");
+
+		//sb.append(arr1[0] +" AND PAID <= " + arr2[0]);
+		sb.append(arr2[0] +  " 23:59:59 ')");
+		System.err.println("Query parameter is : " + sb.toString());
+		parameters.put("criteria", sb.toString());
+		Connection conn = null;
+		try {
+			DataSource ds = (DataSource)context.getBean("dataSource");
+			conn = ds.getConnection();
+			System.out.println("************* ERROR: ");
+			System.out.println(conn.toString());
+		} catch (SQLException e) {
+			System.out.println("************* ERROR: " + e.getMessage());
+			e.printStackTrace();
+		}
+		JasperRunManager.runReportToPdfStream(jasperStream, outputStream, parameters,conn);
+		outputStream.flush();
+		outputStream.close();
+		System.out.println("FLUSHED OUT THE LOG");
+
+	}
+
+
 }
 
