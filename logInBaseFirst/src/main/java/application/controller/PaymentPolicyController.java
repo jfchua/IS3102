@@ -1,6 +1,9 @@
 package application.controller;
 
 import java.security.Principal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.Optional;
 import java.util.Set;
 //import java.util.Optional;
@@ -234,6 +237,37 @@ public class PaymentPolicyController {
 						}
 						//return new ResponseEntity<Void>(HttpStatus.OK);
 					}			
-		
+
+				// Call this method using $http.get and you will get a JSON format containing an array of building objects.
+				// Each object (building) will contain... long id, collection of levels.
+				@RequestMapping(value = "/viewDays", method = RequestMethod.GET)
+				@ResponseBody
+				public ResponseEntity<String> viewDays(HttpServletRequest rq) throws UserNotFoundException {
+					Principal principal = rq.getUserPrincipal();
+					Optional<User> usr = userService.getUserByEmail(principal.getName());
+					if ( !usr.isPresent() ){
+						return new ResponseEntity<String>(HttpStatus.CONFLICT);
+					}
+					try{
+						ClientOrganisation client = usr.get().getClientOrganisation();
+					    System.out.println("start view turnover ratio");
+						Double ratio = paymentPolicyService.calculateTurnover(client);
+						//System.out.println(payment.getDepositRate());  
+						Calendar cal = Calendar.getInstance();
+						int day = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+						Double days = 1/ratio * day;
+						NumberFormat formatter = new DecimalFormat("#0.00");  
+						Gson gson2 = new Gson();
+						String json = gson2.toJson(ratio);
+					    if(ratio != null)
+						   System.out.println(json);
+					    return new ResponseEntity<String>(formatter.format(days), HttpStatus.OK);
+						}
+						catch (Exception e){
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);
+						}
+						//return new ResponseEntity<Void>(HttpStatus.OK);
+					}			
+						
 		
 }
