@@ -267,7 +267,25 @@ public class UnitServiceImpl implements UnitService {
 			}
 			return true;
 	}
-
+	
+	@Override
+	public boolean updateRent(long unitId, Double rent){
+		try{
+			Optional<Unit> unitOpt = getUnitById(unitId);
+			if (unitOpt.isPresent()){
+				Unit unit=unitOpt.get();
+				unit.setRent(rent);
+				unitRepository.saveAndFlush(unit);
+		
+			}else{
+			
+			}
+			}catch (Exception e){
+				return false;
+			}
+		return true;
+	}
+	
 	@Override
 	public Optional<Unit> getUnitById(long id) {
 		LOGGER.debug("Getting unit={}", id);

@@ -614,3 +614,178 @@ app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData
 	};	
 }])
 
+
+//VIEW RENTS, UPDATE RENT
+app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
+	
+	angular.element(document).ready(function () {
+		$scope.units =[];
+		$scope.allUnits=[];
+		//var buildings ={name: $scope.name, address: $scope.address};
+		$http.get("//localhost:8443/property/getAllUnits").then(function(response){
+			$scope.units = response.data;
+			$scope.allUnits= response.data;
+			console.log("DISPLAY ALL UNITS OF CLIENT");
+			console.log(angular.fromJson(response.data));
+
+
+		},function(response){
+			alert("DID NOT VIEW UNITS");
+			//console.log("response is : ")+JSON.stringify(response);
+		}	
+		)
+		console.log($scope.units);
+		var getBuild = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/building/viewBuildings',
+		});
+		console.log("GETTING THE BUILDINGS");
+		getBuild.success(function(response){
+			$scope.buildings = response;
+			$scope.selectedBuilding;
+			console.log("RESPONSE IS" + JSON.stringify(response));
+
+			console.log('Buildings Gotten');
+		});
+		getBuild.error(function(){
+			alert('Get building error!!!!!!!!!!');
+		});
+		$scope.currentlySelectedBuilding;
+		$scope.selectBuild = function(){
+			$scope.selectedBuilding=$scope.currentlySelectedBuilding;
+		}
+		console.log("finish selecting building");
+
+		$scope.getLevel = function(id){
+			$scope.dataToShare = [];
+			//var id = $scope.currentlySelected;
+			$scope.url = "https://localhost:8443/level/viewLevels/"+id;
+			//$scope.dataToShare = [];
+			console.log("GETTING THE ALL LEVELS INFO")
+			var getLevels = $http({
+				method  : 'GET',
+				url     : 'https://localhost:8443/level/viewLevels/'+id,
+		});
+			console.log("Getting the levels using the url: " + $scope.url);
+			getLevels.success(function(response){
+				$scope.levels = response;
+				$scope.selectedLevel;
+				console.log("RESPONSE IS" + JSON.stringify(response));
+
+				console.log('Levels Gotten');
+			});
+			getLevels.error(function(){
+				alert('Get levels error!!!!!!!!!!');
+			});		
+			$scope.currentlySelectedLevel;
+			$scope.selectLevel = function(){
+				$scope.selectedLevel=$scope.currentlySelectedLevel;
+			}
+			console.log("finish selecting level");		
+		}
+		
+		$scope.getUnit = function(levelId){
+			//$scope.url = "https://localhost:8443/property/viewUnits/";
+			
+			$scope.levelID = levelId; 
+			var dataObj = {id: $scope.levelID};
+			console.log("GETTING THE ALL UNITS INFO")
+			var getUnits = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/property/viewUnits/',
+				data    : dataObj,
+		});
+			console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
+			getUnits.success(function(response){
+				$scope.units = response;
+				console.log("RESPONSE IS" + JSON.stringify(response));
+				console.log($scope.units);
+			});
+			getUnits.error(function(){
+				alert('Get units error!!!!!!!!!!');
+			});		
+			
+			$scope.currentlySelectedUnit;
+			$scope.selectUnit = function(){
+				
+				var duplicate = false;
+				var index = 0;
+			    angular.forEach($scope.selectedUnits, function() {
+			        if(duplicate==false&&$scope.currentlySelectedUnit.id == $scope.selectedUnits[index].id)
+			        	duplicate = true;
+			        else
+			        	index = index + 1;
+			    });
+			    console.log(duplicate);
+				if(!duplicate){
+					$scope.selectedUnits.push($scope.currentlySelectedUnit);
+				}
+				
+				
+				
+				console.log("Hailing test:");
+				console.log($scope.currentlySelectedUnit);
+				console.log($scope.selectedUnits);
+			}
+
+			$scope.deleteUnit = function(unit){
+				var index = $scope.selectedUnits.indexOf(unit);
+				$scope.selectedUnits.splice(index, 1);  
+			}
+			console.log("finish selecting units");	
+			
+			$scope.checkAvail = function(){
+				console.log("start checking availability");
+				$scope.data = {};
+
+				var dataObj = {
+						units: $scope.selectedUnits,
+						event_start_date: ($scope.event.event_start_date).toString(),
+						event_end_date: ($scope.event.event_end_date).toString(),
+				};
+				console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+				var send = $http({
+					method  : 'POST',
+					url     : 'https://localhost:8443/event/checkAvailability',
+					data    : dataObj //forms user object
+				});
+				$scope.avail = "";
+				send.success(function(){
+					$scope.avail = "AVAILABLE!";
+					console.log($scope.avail);
+				});
+				send.error(function(){
+					$scope.avail = "NOT AVAILABLE!";
+					console.log($scope.avail);
+				});
+			}
+		}
+	});
+	$scope.viewAllUnits=function(){
+		$scope.units=$scope.allUnits;
+	}
+	$scope.save = function(unit){
+		unit.editable=false;
+		if(confirm('CONFIRM TO EDIT RENT OF '+unit.unitNumber+'?')){
+		
+			var tempObj ={unit:unit};
+		
+			$http.post("//localhost:8443/property/updateRent", JSON.stringify(tempObj)).then(function(response){
+				alert('RENT IS UPDATED');
+				
+			},function(response){
+				alert("DID NOT UPDATE RENT OF UNIT "+unit.unitNumber);
+
+			}	
+			)
+		}
+		
+	};	
+	
+	$scope.edit = function(unit){
+		unit.editable=true;
+		
+	};	
+}])
+
+

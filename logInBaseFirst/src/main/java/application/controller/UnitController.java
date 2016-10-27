@@ -30,8 +30,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import application.entity.*;
+import application.exception.UserNotFoundException;
 import application.service.LevelService;
 import application.service.UnitService;
+import application.service.UserService;
 
 @Controller
 @RequestMapping("/property")
@@ -39,12 +41,14 @@ public class UnitController {
 	@Autowired
 	private final UnitService unitService;
 	private final LevelService levelService;
+	private final UserService userService;
 	private JSONParser parser = new JSONParser();
 
 	@Autowired
-	public UnitController(UnitService unitService,LevelService levelService) {
+	public UnitController(UnitService unitService,LevelService levelService,UserService userService) {
 		this.unitService = unitService;
 		this.levelService=levelService;
+		this.userService=userService;
 	}
 	
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
@@ -412,5 +416,75 @@ public class UnitController {
 			
 		}
 		
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/getAllUnits", method = RequestMethod.GET)
+		@ResponseBody
+		public ResponseEntity<Set<Unit>> getAllUnits( HttpServletRequest rq) throws UserNotFoundException  {
+			
+			Principal principal = rq.getUserPrincipal();
+			Optional<User> usr = userService.getUserByEmail(principal.getName());
+			if ( !usr.isPresent() ){
+
+				return new ResponseEntity<Set<Unit>>(HttpStatus.CONFLICT);
+			}
+			try{
+				ClientOrganisation client = usr.get().getClientOrganisation();
+				//Set<Icon> icons = iconService.getAllIconFromClientOrganisation(client);	
+				Set<Building> buildings = client.getBuildings();
+				Set<Unit> units=new HashSet<Unit>();
+				for(Building building:buildings){
+					Set<Level> levels=building.getLevels();
+					for(Level level:levels){
+						Set<Unit> unitsOfLevel=level.getUnits();
+						for(Unit unitOfLevel:unitsOfLevel){
+							unitOfLevel.getLevel().getBuilding().setLevels(null);
+							unitOfLevel.getLevel().setUnits(null);;
+							unitOfLevel.setBookings(null);
+							unitOfLevel.setMaintenanceSchedule(null);
+							unitOfLevel.setSquare(null);
+							unitOfLevel.setUnitAttributeValues(null);
+						}
+						units.addAll(unitsOfLevel);
+						}
+					
+				}
+	
+			
+				return new ResponseEntity<Set<Unit>>(units,HttpStatus.OK);
+			}
+			catch (Exception e){
+
+				return new ResponseEntity<Set<Unit>>(HttpStatus.CONFLICT);
+			}
+			
+}           
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/updateRent", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> updateRent(@RequestBody String unitObj,HttpServletRequest rq) {
+
+			
+			try{
+				
+				
+				Object obj = parser.parse(unitObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				JSONObject unitJson=(JSONObject)jsonObject.get("unit");	
+				long unitId = (Long)unitJson.get("id");				
+				System.out.println("test rent");
+				Double rent =Double.parseDouble((String)unitJson.get("rent"));
+				System.out.println(rent);
+				if(unitService.updateRent(unitId,rent)){
+					System.out.println("RENT UPDATED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			
+		}
 		
 }
