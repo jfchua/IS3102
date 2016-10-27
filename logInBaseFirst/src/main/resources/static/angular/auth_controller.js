@@ -17,7 +17,10 @@ app.factory('Auth', function($window, $localStorage){
 				  localStorage.setItem('user', JSON.stringify(user));
 				  //console.log(localStorage.getItem('user'));
 				  console.log("token is set");
-				  
+				  for (i = 0; i<user.authorities.length;i++) {
+						userRoles [i] = user.authorities[i].authority;
+						console.log("Authority present is " + userRoles[i]);
+					}
 				  //var token = jwt.sign(user, secret, { expiresInMinutes: 60*5 });
 
 
@@ -52,10 +55,7 @@ app.factory('Auth', function($window, $localStorage){
 					console.log("User is not logged in!");
 					return false;
 				}
-				for (i = 0; i<user.authorities.length;i++) {
-					userRoles [i] = user.authorities[i].authority;
-					console.log("Authority present is " + userRoles[i]);
-				}
+				
 				if ( authService.hasRoles(authorizedRoles)){
 					return true;
 				}
