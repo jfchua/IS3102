@@ -74,7 +74,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		// does the user belong to client organization and does the user have role of "external event organizer"
 		Set<User> users = userRepository.getAllUsers(client);
 		PaymentPolicy payPol = client.getPaymentPolicy();
-		int dueDays = payPol.getNumOfDueDays();
+		int dueDays = (payPol.getNumOfDueDays())/2;
 		boolean doesHave = false;
 		for(User u: users){
 			Set<Role> roles = u.getRoles();
@@ -223,7 +223,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		NumberFormat formatter = new DecimalFormat("#0.00"); 
 		PaymentPolicy payPol = client.getPaymentPolicy();
 		int period = payPol.getInterimPeriod();
-		int due = payPol.getNumOfDueDays();
+		int due = (payPol.getNumOfDueDays())/2;
 		boolean doesHave = false;
 		for(User u: users){
 			Set<Role> roles = u.getRoles();
@@ -245,7 +245,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				Event event = pay.getEvent();
 				Double subsequent = pay.getSubsequent();
 				System.out.println("subsequent " + subsequent);
-				Date previousDue = pay.getNotificationDue();
+				Date previousDue = pay.getDue();
 				System.out.println("before if");	    	
 				if(payable < paid)
 					return false;
@@ -279,10 +279,10 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				cal1.setTime(previousDue);
 				cal1.add(Calendar.DATE, period);
 				System.out.println("period " + period);
-				pay.setNotificationDue(cal1.getTime());
-				cal1.add(Calendar.DATE, due);
-				System.out.println("due " + due);
 				pay.setDue(cal1.getTime());
+				cal1.add(Calendar.DATE, -due);
+				System.out.println("due " + due);
+				pay.setNotificationDue(cal1.getTime());
 				if(payment.getPaid().before(pay.getDue()))
 					event.setPaymentStatus(PaymentStatus.valueOf("PAID"));
 
