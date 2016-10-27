@@ -115,27 +115,37 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 				}
 		);
 	}
-	function resetPassword(userEmail){
-		UserService.resetPassword(userEmail)
+	function resetPassword(userEmail, userSecurity){
+		UserService.resetPassword(userEmail, userSecurity)
 		.then(
 				function(response) {
 					alert("Password reset link has been sent to your email:" + response.data);
 				},
 				function(errResponse){
 					console.log(errResponse);
-					alert("This email does not exist!" + errResponse.data);
+						alert("The email or the security question is incorrect!");			
+						
 				}
 		);
 	}
 	function submitResetPass() {
+		console.log($scope.ctrl.security);
 		if($scope.ctrl.email==null || $scope.ctrl.email == ''){
-			console.log("Not Resetted password");
+			alert("Please input your email for Password Reset");
+			console.log("Not Resetted password due to no email");
 			reset();
-		}else{
+		}
+		else if ($scope.ctrl.security==null || $scope.ctrl.security == '') {
+			alert("Please input your security question for Password Reset");
+			console.log("Not Resetted password due to no security");
+			reset();
+		}
+		else{
 			console.log("Resetting... password for email: " + $scope.ctrl.email);
-			resetPassword($scope.ctrl.email);
+			resetPassword($scope.ctrl.email, $scope.ctrl.security);
 			console.log("Resetted password for email: " + $scope.ctrl.email);
 			$scope.ctrl.email = '';
+			$scope.ctrl.security = '';
 		}
 
 	}

@@ -840,7 +840,7 @@ public class PaymentPlanController {
 			File f = new File(path);
 			int counter = 1;
 			if ( !f.exists()){
-				parameters.put("number", paymentId);
+				parameters.put("number", String.valueOf(paymentId));
 			}
 			else{
 				while ( f.exists() && !f.isDirectory() ){
@@ -863,7 +863,7 @@ public class PaymentPlanController {
 			User usr = userService.getUserByEmail(principal.getName()).get();
 			ClientOrganisation client = usr.getClientOrganisation();
 			PaymentPolicy paypol = client.getPaymentPolicy();
-            String email = "Please pay the amount stated in the invoice within "+2*paypol.getNumOfDueDays() +
+            String email = "Please pay the amount stated in the invoice within "+ paypol.getNumOfDueDays() +
             		" days.";
 			emailService.sendEmailWithAttachment(user.getEmail(), "Invoice for payment plan id "+paymentId, email , path);
 
