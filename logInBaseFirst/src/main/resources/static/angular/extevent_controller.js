@@ -970,7 +970,16 @@ app.controller('paymentExController', ['$scope', '$http','$state','$routeParams'
 		},function(response){
 			alert("did not view plans");
 		}	
-		)	
+		)
+		
+		$http.get("//localhost:8443/event/getTotal").then(function(response){
+			$scope.totalAmount = response.data;
+			console.log("DISPLAY TOTAL BALANCE");
+			console.log($scope.totalAmount);
+		},function(response){
+			alert("did not view plans");
+		}	
+		)
 	});
 	$scope.paymentPlanNull = function(paymentPlan){
 		  return !(paymentPlan === null)

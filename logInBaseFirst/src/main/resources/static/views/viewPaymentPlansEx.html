@@ -42,12 +42,13 @@
                             <!-- <td>{{ x.due }}</td>-->
                             <td>{{ x.status }}</td>
                             <td>
-                            <a  ui-sref="dashboard.viewPaymentDetailsEx" ng-click="passPaymentPlan(x.payment)" tooltip-placement="top" tooltip="Update Payment Plan"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a  ui-sref="dashboard.viewPaymentDetailsEx" ng-click="passPaymentPlan(x.payment)" tooltip-placement="top" tooltip="View Payment Plan Details"><i class="glyphicon glyphicon-eye-open"></i></a>
                            </td>
                         </tr>
                          </tbody>
                          </thead>
-                    </table>			
+                    </table>
+                    <p>Total outstanding is : {{totalAmount}}</p>				
 				</div>
 			</div>
 		</div>
@@ -55,7 +56,7 @@
 		<br>
 		<br>
 		<br>
-		 <a ui-sref="dashboard.viewPaymentHistoryEx" tooltip-placement="right" tooltip="View Payment History"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>   			
+		 <a ui-sref="dashboard.viewPaymentHistoryEx" tooltip-placement="right" tooltip="View Payment History"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-list"></i></button></a>   			
 			</div>
 	</div>
 	
