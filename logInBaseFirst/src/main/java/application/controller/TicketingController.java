@@ -470,9 +470,11 @@ public class TicketingController {
 	
 	
 	
-	/*@RequestMapping(value = "/tixGetTix",  method = RequestMethod.GET)
+	
+	
+	@RequestMapping(value = "/tixGetTix",  method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<String> tixGetTix(@RequestBody String , HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> tixGetTix(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -481,21 +483,30 @@ public class TicketingController {
 		System.err.println("inside tix buy ticket");
 		try{
 
-			Gson gson = new Gson();
-			System.err.println("before wrapt");
-			System.err.println(ticketsJSON);
-			
-			Object obj1 = parser.parse(ticketsJSON);
-			JSONObject jsonObject = (JSONObject) obj1;
-			JSONArray id = (JSONArray)jsonObject.get("ticketsJSON");
-			String paymentId = (String) jsonObject.get("paymentId");
-			for ( Object j : id){
-				JSONObject ticketInfo = (JSONObject) j;
-				Long numTickets = (Long)ticketInfo.get("numTickets");
-				Long categoryId = (Long)ticketInfo.get("categoryId");
-				ticketingService.generateTicket(usr.get(), paymentId, numTickets.intValue(), categoryId);
-			}
-			return new ResponseEntity<String>(HttpStatus.OK);
+			Gson gson = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == Category.class);
+						}
+
+						/**
+						 * Custom field exclusion goes here
+						 */
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+							//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+						}
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();	
+			System.err.println("return tix: " + gson.toJson(usr.get().getTickets()));
+			return new ResponseEntity<String>(gson.toJson(usr.get().getTickets()),HttpStatus.OK);
 		}
 		//catch ( EventNotFoundException e){
 		//	return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -507,7 +518,7 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	*/
+	
 	
 	/*
 

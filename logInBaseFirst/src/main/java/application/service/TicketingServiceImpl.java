@@ -187,6 +187,7 @@ public class TicketingServiceImpl implements TicketingService {
 				t.setPurchase_date(new Date());
 				t.setEnd_date(c.getEvent().getEvent_end_date());
 				t.setStart_date(c.getEvent().getEvent_start_date());
+				t.setTicketDetails(c.getEvent().getEvent_title() + ":" + c.getCategoryName());
 
 				SecureRandom random = new SecureRandom();
 				String toUuid = new BigInteger(130,random).toString(32);

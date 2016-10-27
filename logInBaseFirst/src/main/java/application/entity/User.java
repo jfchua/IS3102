@@ -38,6 +38,7 @@ public class User {
 	
 	@OneToMany(fetch = FetchType.EAGER,cascade={CascadeType.ALL})
 	@Column(nullable = true)
+	@JsonIgnore
 	private Set<Ticket> tickets = new HashSet<Ticket>();
 
 	public Set<Ticket> getTickets() {

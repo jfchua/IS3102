@@ -37,6 +37,18 @@ public class Ticket {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "purchase_date", nullable = false)
 	private Date purchase_date;
+	
+	private String ticketDetails;
+
+
+	public String getTicketDetails() {
+		return ticketDetails;
+	}
+
+
+	public void setTicketDetails(String ticketDetails) {
+		this.ticketDetails = ticketDetails;
+	}
 
 
 	@ManyToOne
