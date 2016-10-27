@@ -346,11 +346,14 @@ public class TicketingController {
 		if ( !usr.isPresent() ){
 			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
+		System.err.println("inside tix buy ticket");
 		try{
 
 			Gson gson = new Gson();
+			System.err.println("before wrapt");
+			System.err.println(ticketsJSON);
 			Wrapper[] arr = gson.fromJson(ticketsJSON, Wrapper[].class);
+			System.err.println("after wrapt");
 
 			for ( Wrapper w : arr){
 				System.out.println("Printing ticket info " + w.getNumTickets() + w.getCategoryId());
@@ -363,6 +366,7 @@ public class TicketingController {
 
 		//}
 		catch (Exception e){
+			System.err.println(e.getMessage());
 			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
