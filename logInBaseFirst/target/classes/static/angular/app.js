@@ -759,6 +759,14 @@ app.config(
 					authorizedRoles:[USER_ROLES.finance]
 				}
 			})
+			.state('dashboard.generateInvoice',{
+				url:'/generateInvoice',
+				templateUrl: '/views/generateInvoice.html',
+				controller: 'invoiceController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
 			.state('/401',{
 				url:'/401',
 				templateUrl: '/views/401.html',

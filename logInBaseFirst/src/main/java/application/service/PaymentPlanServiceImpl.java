@@ -251,14 +251,15 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		    	payment.setPlan(paymentPlanId);
 		    	paymentRepository.save(payment);
 		    	payments.add(payment);
-		    	pay.setPaid(paid);
+		    	Double alrPaid = pay.getPaid();
+		    	pay.setPaid(paid+alrPaid);
 		    	Double total = pay.getTotal();
 		    	System.out.println("total " + total);
-		    	pay.setPayable(total-paid);
-		    	if((total-paid) >= subsequent)
+		    	pay.setPayable(total-pay.getPaid());
+		    	if((total-pay.getPaid()) >= subsequent)
 		    		pay.setNextPayment(subsequent);
-		    	else if (((total-paid)<subsequent)&&((total-paid)>0))
-		    		pay.setNextPayment(total-paid);
+		    	else if (((total-pay.getPaid())<subsequent)&&((total-pay.getPaid())>0))
+		    		pay.setNextPayment(total-pay.getPaid());
 		    	Calendar cal1 = Calendar.getInstance();
 		        cal1.setTime(previousDue);
 		        cal1.add(Calendar.DATE, period);
@@ -270,7 +271,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		        if(payment.getPaid().before(pay.getDue()))
 		        	event.setPaymentStatus(PaymentStatus.valueOf("PAID"));
 		        
-		    	paymentPlanRepository.flush();
+		    	paymentPlanRepository.save(pay);
 		    	return true;
 		    }
 		    else
