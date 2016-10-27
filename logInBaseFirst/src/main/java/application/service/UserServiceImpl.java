@@ -27,6 +27,7 @@ import application.exception.PasswordResetTokenNotFoundException;
 import application.exception.UserNotFoundException;
 import application.repository.ClientOrganisationRepository;
 import application.repository.PasswordResetTokenRepository;
+import application.repository.RoleRepository;
 import application.repository.UserRepository;
 
 @Service
@@ -36,15 +37,19 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final ClientOrganisationRepository clientOrganisationRepository;
 	private final EmailService emailService;
-	PasswordResetTokenRepository passwordResetTokenRepository;
+	private final PasswordResetTokenRepository passwordResetTokenRepository;
+	private final RoleRepository roleRepository; 
+	
+
 	// private final MessageRepository messageRepository = null;
 
 	@Autowired
-	public UserServiceImpl(ClientOrganisationRepository clientOrganisationRepository, EmailService emailService, UserRepository userRepository,PasswordResetTokenRepository passwordResetTokenRepository ) {
+	public UserServiceImpl(RoleRepository roleRepository, ClientOrganisationRepository clientOrganisationRepository, EmailService emailService, UserRepository userRepository,PasswordResetTokenRepository passwordResetTokenRepository ) {
 		this.userRepository = userRepository;
 		this.passwordResetTokenRepository = passwordResetTokenRepository;
 		this.emailService = emailService;
 		this.clientOrganisationRepository = clientOrganisationRepository;
+		this.roleRepository = roleRepository;
 	}
 
 	/* public UserServiceImpl(MessageRepository messageRepository) {
@@ -305,5 +310,54 @@ public class UserServiceImpl implements UserService {
 
 
 	}
+	
+	public boolean registerNewUser(String name, String userEmail, String password) throws EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException{
+		Pattern pat = Pattern.compile("^.+@.+\\..+$");
+		Matcher get = pat.matcher(userEmail);		
+		if(!get.matches()){
+			System.err.println("Invalid email exception");
+			throw new InvalidEmailException("The email " + userEmail + " is invalid");
+			//return false;
+		}
+		try{
+			if ( this.getUserByEmail(userEmail).isPresent() ){
+				System.err.println("User already exists!");
+				throw new EmailAlreadyExistsException("User with email " + userEmail + " already exists");
+			}
+		}
+		catch ( UserNotFoundException e ){			
+		}
+		try{
+			//CREATE USER START
+			User user = new User();
+			user.setName(name);
+			Role r = roleRepository.getRoleByName("ROLE_EVEGOER");
+			Set<Role> roles = new HashSet<Role>();
+			roles.add(r);
+			user.setRoles(roles);
+			user.setEmail(userEmail);
+			user.setClientOrganisation(null);
+
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			String hashedPassword = encoder.encode(password);
+			user.setPasswordHash(hashedPassword); //add salt?
+			//Send created password to the new user's email
+
+			//REPOSITORY SAVING
+
+			userRepository.save(user);
+			System.out.println("Saved user");
+			emailService.sendEmail(userEmail, "Algattas account signup", "Thank you for signing up for a new account. You may now log in with your new account.");
+
+		}
+		catch ( Exception e){
+			System.err.println("Exception at register new user "  + e.toString());
+			return false;
+		}
+		return true;
+
+
+	}
+
 
 }

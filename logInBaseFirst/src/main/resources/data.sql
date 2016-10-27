@@ -16,6 +16,7 @@ insert into role (name)values ("ROLE_PROPERTY");
 insert into role (name)values ("ROLE_FINANCE");
 insert into role (name)values ("ROLE_TICKETING");
 insert into role (name)values ("ROLE_EXTEVE");
+insert into role (name)values ("ROLE_EVEGOER");
  
 INSERT INTO payment_policy(deposit_rate, interim_period, due_days, subsequent_number)
 VALUES(0.4, 2, 2, 2);

@@ -13,15 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,12 +30,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import application.entity.AuditLog;
+import application.entity.Building;
 import application.entity.ClientOrganisation;
+import application.entity.Icon;
 import application.entity.Message;
+import application.entity.PaymentPolicy;
 import application.entity.Role;
+import application.entity.SpecialRate;
+import application.entity.Ticket;
 import application.entity.ToDoTask;
+import application.entity.UnitAttributeType;
 import application.entity.User;
-import application.entity.UserCreateFormValidator;
 import application.entity.Vendor;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
@@ -120,7 +121,7 @@ public class UserController {
  			userRolesToAddIn2.add(roleRepository.getRoleByName("ROLE_USER"));
  			userService.createNewUser(userService.getUserByEmail(email).get().getClientOrganisation(), "chuajinfa@gmail.com", userRolesToAddIn2);
  			System.out.println("CREATED USER FOR CHUAJINFA with client org" + userService.getUserByEmail(email).get().getClientOrganisation().getOrganisationName());*/
-			
+
 
 		}
 		catch ( InvalidEmailException e ){
@@ -134,7 +135,7 @@ public class UserController {
 			String json = g.toJson(e.getMessage());
 			System.out.println("EEPTOIN" + json);
 			return new ResponseEntity<String>(json,HttpStatus.INTERNAL_SERVER_ERROR);
-			
+
 		}
 		catch ( OrganisationNameAlreadyExistsException e){
 			Gson g = new Gson();
@@ -154,7 +155,7 @@ public class UserController {
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+
 	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
 	@RequestMapping(value = "user/viewClientOrgs", method = RequestMethod.GET)
 	@ResponseBody //RESPONSE ENTITY TO RETURN A USER BUT NO JACKSON
@@ -221,7 +222,7 @@ public class UserController {
 					.setExclusionStrategies(new ExclusionStrategy() {
 						//No Vendors or users inside the organisation should be returned
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == User.class  || clazz == Vendor.class);
+							return (clazz == PaymentPolicy.class  ||clazz == SpecialRate.class  ||clazz == Building.class  ||clazz == UnitAttributeType.class  ||clazz == Icon.class  ||clazz == User.class  || clazz == Vendor.class);
 						}
 
 						/**
@@ -344,8 +345,8 @@ public class UserController {
 		Gson gson = new Gson();
 		//Assume client org has ClientOrg name, One admin user which is to be created.
 		try{
-			
-			
+
+
 
 			/*		JSONParser parser = new JSONParser();
 
@@ -385,7 +386,7 @@ public class UserController {
 			if ( !userService.createNewUser(currUser.getClientOrganisation(), name,email, userRolesToAddIn) ) return new ResponseEntity<String>(gson.toJson("Error creating new user"),HttpStatus.INTERNAL_SERVER_ERROR);
 			//if ( !u.createNewClientOrganisation(name, email) ) return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			//System.out.println( "CREATED CLIENT ORGANISATION : " + userService.getUserByEmail(email).get().getClientOrganisation().getOrganisationName() );
-			
+
 			AuditLog al = new AuditLog();
 			al.setTimeToNow();
 			al.setSystem("User Management");
@@ -430,7 +431,7 @@ public class UserController {
 					.setExclusionStrategies(new ExclusionStrategy() {
 
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == Message.class || clazz == ClientOrganisation.class || clazz == ToDoTask.class);
+							return (clazz == Ticket.class) || (clazz == Message.class || clazz == ClientOrganisation.class || clazz == ToDoTask.class);
 						}
 
 						/**
@@ -455,7 +456,7 @@ public class UserController {
 			System.out.println("Exception caught at UserController @ viewAllUsers" + e.toString());
 		}
 		Gson gson = new Gson();
-	    String json = gson.toJson("NOT OK");
+		String json = gson.toJson("NOT OK");
 		return gson.toJson(json);
 	}
 
@@ -475,11 +476,11 @@ public class UserController {
 			User userToDelete = (User)userService.getUserByEmail(email).get();
 			System.out.println("USER TO BE DELETED: " + userToDelete.getEmail());
 			//userRepository.delete(userToDelete);
-			
+
 			auditLogRepository.deleteAuditLogsOfUserId(userToDelete.getId());
 			userService.deleteUser(userToDelete);
 			System.err.println("Deleted");
-			
+
 			AuditLog al = new AuditLog();
 			al.setTimeToNow();
 			al.setSystem("User Management");
@@ -507,7 +508,7 @@ public class UserController {
 		try{
 			Principal principal = rq.getUserPrincipal();
 			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-			
+
 			Object obj = parser.parse(userJSON);
 			JSONObject jsonObject = (JSONObject) obj;
 			//email to find user
@@ -542,7 +543,7 @@ public class UserController {
 			//userToEdit.setName(name);
 			//userRepository.saveAndFlush(userToEdit);
 			//userToEdit.setRoles(userRolesToAddIn);
-		  //  userRepository.saveAndFlush(userToEdit);
+			//  userRepository.saveAndFlush(userToEdit);
 			//System.err.println("set " + userToEdit.getName());
 			//System.err.println(userToEdit.getName());
 
@@ -553,7 +554,7 @@ public class UserController {
 
 			System.out.println("USER TO BE EDITED: " + userToEdit + "   " +email);
 			//userToEdit.setRoles(roles);
-			
+
 			AuditLog al = new AuditLog();
 			al.setTimeToNow();
 			al.setSystem("User Management");
@@ -576,7 +577,7 @@ public class UserController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 
 	}
-	
+
 	@RequestMapping(value = "user/editUserProfile", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> editUserProfile(@RequestBody String userJSON, HttpServletRequest rq) {
@@ -623,7 +624,7 @@ public class UserController {
 			//String hashedPassword = encoder.encode(pass);
 			//currUser.setPasswordHash(hashedPassword); //add salt?
 			////userRepository.saveAndFlush(currUser);
-			
+
 			AuditLog al = new AuditLog();
 			al.setTimeToNow();
 			al.setSystem("User Management");
@@ -684,7 +685,7 @@ public class UserController {
 		}catch(Exception e){
 			System.out.println("ERROR IN GETTING PROFILE" + e.getMessage());
 			Gson gson = new Gson();
-		    String json = gson.toJson("ERROR");
+			String json = gson.toJson("ERROR");
 			return gson.toJson(json);
 		}
 
@@ -748,7 +749,7 @@ public class UserController {
 				System.out.println("start view");
 				Set<Role> roles=usr.getRoles();
 				JSONArray rolsArray = new JSONArray();
-				
+
 				String userName=principal.getName();
 				String name=usr.getName();
 				String roleString="";
@@ -773,8 +774,8 @@ public class UserController {
 						}else if(roleString1.equals("exteve")){
 							roleString1="organising events";
 						}
-					roleJson.put("role", roleString1);
-					rolsArray.add(roleJson);
+						roleJson.put("role", roleString1);
+						rolsArray.add(roleJson);
 					}
 				}
 				JSONObject bd = new JSONObject(); 
@@ -804,6 +805,47 @@ public class UserController {
 		}
 
 
+	}
+
+
+	/*
+	 * Mobile app register new user;
+	 * 
+	 */
+	@RequestMapping(value = "/registerNewUser",  method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> registerNewUser(@RequestBody String userJSON) {
+		Gson gson = new Gson();
+		System.out.println("enter r new user" + userJSON);
+		try{
+			Object obj = parser.parse(userJSON);
+			
+			JSONObject jsonObject = (JSONObject) obj;
+			String email = (String)jsonObject.get("username");
+			String name = (String)jsonObject.get("name");
+			String password = (String)jsonObject.get("password");
+			System.out.println("user of email and name is signging up for new account :" +  email + "  "  +name + " " + password);
+			if ( !userService.registerNewUser(name, email, password) ) return new ResponseEntity<String>(gson.toJson("Error creating new user"),HttpStatus.INTERNAL_SERVER_ERROR);
+
+
+		}
+		catch ( InvalidEmailException e ){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(gson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( EmailAlreadyExistsException e){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(gson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( MailException e ){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(gson.toJson("Server error in sending email to the new user"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch (Exception e){
+			System.out.println("ERROR " + e.toString() + "   " + e.getMessage());
+			return new ResponseEntity<String>(gson.toJson("Server error in adding new user"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 

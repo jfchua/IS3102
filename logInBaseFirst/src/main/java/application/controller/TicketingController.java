@@ -1,12 +1,15 @@
 package application.controller;
 
+import java.io.File;
 import java.security.Principal;
 import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
 //import org.hibernate.metamodel.source.annotations.xml.mocker.SchemaAware.SecondaryTableSchemaAware;
+//import org.json.JSONObject;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -26,14 +29,11 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import application.entity.Area;
 import application.entity.BookingAppl;
 import application.entity.Category;
-import application.entity.ClientOrganisation;
 import application.entity.Event;
-import application.entity.Level;
 import application.entity.PaymentPlan;
-import application.entity.Unit;
+import application.entity.Ticket;
 import application.entity.User;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
@@ -185,19 +185,30 @@ public class TicketingController {
 			return new ResponseEntity<String>("User not found!", HttpStatus.INTERNAL_SERVER_ERROR); 
 		}
 		try{
-		Object obj1 = parser.parse(category);
-		JSONObject jsonObject = (JSONObject) obj1;
-		Long id = (Long)jsonObject.get("eventId");
-		System.err.println("deleting id of : "  + id);
-		ticketingService.deleteCat(id);
-		return new ResponseEntity<String>(HttpStatus.OK);
+			Object obj1 = parser.parse(category);
+			JSONObject jsonObject = (JSONObject) obj1;
+			Long id = (Long)jsonObject.get("eventId");
+			System.err.println("deleting id of : "  + id);
+			ticketingService.deleteCat(id);
+			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		catch ( Exception e){
 			return new ResponseEntity<String>(geeson.toJson("Server error in deleting categories"),HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
 	}
-	
+
+	/*
+	 * 
+	 *			JSONArray obj = new JSONArray();
+	 *				
+	 *			for ( Event e : events ){
+	 *				JSONObject list = new JSONObject();
+	 *				list.put("id", e.getId());
+	 *				list.put("title", e.getEvent_title());
+	 *				obj.put(list);
+	 *			}
+	 */
 	@RequestMapping(value = "/tixViewAllEvents",  method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> viewAllEvents(HttpServletRequest rq) throws UserNotFoundException {
@@ -207,9 +218,8 @@ public class TicketingController {
 			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		try{
-			ClientOrganisation client = usr.get().getClientOrganisation();
 			System.out.println("start view");
-			Set<Event> events = eventService.getAllEvents(client);
+			Set<Event> events = eventService.getAllEvents();
 			System.err.println("There are " + events.size() + " events");
 
 			//Gson gson = new Gson();
@@ -239,9 +249,9 @@ public class TicketingController {
 					 */
 					.serializeNulls()
 					.create();			    
-			String json = gson2.toJson(eventService.getAllEvents());
+			String json = gson2.toJson(events);
 			String json2 = gson2.toJson("Server error in getting all the events");
-			System.out.println("Gotten events as: " + json);
+			System.out.println(json);
 			return new ResponseEntity<String>(json,HttpStatus.OK);
 		}
 		catch (Exception e){
@@ -249,5 +259,96 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/tixViewEvent",  method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> viewEvent(@RequestBody String eventId,HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		try{
+			Object obj1 = parser.parse(eventId);
+			JSONObject jsonObject = (JSONObject) obj1;
+			Long id = (Long)jsonObject.get("eventId");
+			System.err.println("gotten eventid of : "  + id);
+	
+			String eventDetails = ticketingService.getEventDataAsJson(id);
+			return new ResponseEntity<String>(eventDetails,HttpStatus.OK);
+		}
+		catch ( EventNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+
+		}
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/tixViewEventCat",  method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> viewEventCat(@RequestBody String eventId,HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		try{
+			Gson gson = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == Event.class)||(clazz == Ticket.class)||(clazz == BookingAppl.class);
+						}
+
+						/**
+						 * Custom field exclusion goes here
+						 */
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+							//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+						}
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();			    
+			Object obj1 = parser.parse(eventId);
+			JSONObject jsonObject = (JSONObject) obj1;
+			Long id = (Long)jsonObject.get("eventId");
+			System.err.println("gotten eventid of : "  + id);
+	
+			Set<Category> cats = ticketingService.getCategories(id);
+			return new ResponseEntity<String>(gson.toJson(cats),HttpStatus.OK);
+		}
+		catch ( EventNotFoundException e){
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+
+		}
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+/*	
+ * SCHEDULE TASK IN DELETING EVERYTHING OF FILE TYPE...
+	System.out.println(rq.getSession().getServletContext().getRealPath("/"));
+	File dir = new File(rq.getSession().getServletContext().getRealPath("/"));
+	File[] directoryListing = dir.listFiles();
+	if (directoryListing != null) {
+	    for (File child : directoryListing) {
+	      System.err.println("file is " + child.getAbsolutePath() + " " + child.getName() + child.lastModified());
+	    }
+	  } else {
+	    System.err.println("not a dir");
+	  }*/
 }
 
