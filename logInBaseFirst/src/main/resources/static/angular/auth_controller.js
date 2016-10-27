@@ -14,24 +14,19 @@ app.factory('Auth', function($window, $localStorage){
 			authService.setUser = function(aUser){
 				user = aUser;
 				//console.log("User " + user.name +" is set");
-				$window.localStorage.setItem('user', JSON.stringify(user));
-				//console.log("User " + user.name +" is set in localstorage");
+				  localStorage.setItem('user', JSON.stringify(user));
+				  //console.log(localStorage.getItem('user'));
+				  console.log("token is set");
+				  
+				  //var token = jwt.sign(user, secret, { expiresInMinutes: 60*5 });
+
 
 			},
 			
 			authService.getUser = function() {
-				  if (this.currentUser) {
-				      return this.currentUser;
-				  }
-				  var storageUser = $window.localStorage.getItem('user');
-				  if (storageUser) {
-				    try {
-				      this.user = JSON.parse(storageUser);
-				    } catch (e) {
-				      $window.localStorage.removeItem('user');
-				    }
-				  }
-				  return this.currentUser;
+				  
+				  return user;
+				  
 				}
 			authService.remove= function() {
 			    $window.localStorage.removeItem('user');

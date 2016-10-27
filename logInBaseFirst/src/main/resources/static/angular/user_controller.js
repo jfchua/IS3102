@@ -31,11 +31,6 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 		//alert(JSON.stringify(headers));
 		var headerJson = JSON.stringify(headers);
 		console.log("REACHED HERE BEFORE HTTP GET " +  JSON.stringify(headers));
-
-
-
-
-
 		$http.get('//localhost:8443/user/loginVerify', {headers: headers}).success(function(response) {
 		//	$http.get('//172.20.10.3:8443/user/loginVerify', {headers: headers}).success(function(response) {
 				
@@ -87,7 +82,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 				self.error = false;
 				 $timeout(function() {
 				      $state.go('dashboard.workspace');
-				      }, 500);
+				      }, 1000);
 			} else {
 				console.log("NOT LOGGED IN");
 				$location.path("/login");
