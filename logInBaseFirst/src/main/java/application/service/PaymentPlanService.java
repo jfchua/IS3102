@@ -43,4 +43,6 @@ public interface PaymentPlanService {
 	Set<Payment> getPaymentsByOrgId(ClientOrganisation client, long id);
 	
 	void alertForOverduePayment() throws UserNotFoundException;
+
+	void deleteOldPdfs();
 }

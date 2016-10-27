@@ -259,7 +259,7 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/tixViewEvent",  method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> viewEvent(@RequestBody String eventId,HttpServletRequest rq) throws UserNotFoundException {
@@ -274,7 +274,7 @@ public class TicketingController {
 			JSONObject jsonObject = (JSONObject) obj1;
 			Long id = (Long)jsonObject.get("eventId");
 			System.err.println("gotten eventid of : "  + id);
-	
+
 			String eventDetails = ticketingService.getEventDataAsJson(id);
 			return new ResponseEntity<String>(eventDetails,HttpStatus.OK);
 		}
@@ -287,7 +287,7 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/tixViewEventCat",  method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> viewEventCat(@RequestBody String eventId,HttpServletRequest rq) throws UserNotFoundException {
@@ -324,7 +324,7 @@ public class TicketingController {
 			JSONObject jsonObject = (JSONObject) obj1;
 			Long id = (Long)jsonObject.get("eventId");
 			System.err.println("gotten eventid of : "  + id);
-	
+
 			Set<Category> cats = ticketingService.getCategories(id);
 			return new ResponseEntity<String>(gson.toJson(cats),HttpStatus.OK);
 		}
@@ -337,9 +337,63 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
-/*	
- * SCHEDULE TASK IN DELETING EVERYTHING OF FILE TYPE...
+
+	@RequestMapping(value = "/tixBuyTicket",  method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> tixBuyTicket(@RequestBody String ticketsJSON, HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		try{
+
+			Gson gson = new Gson();
+			Wrapper[] arr = gson.fromJson(ticketsJSON, Wrapper[].class);
+
+			for ( Wrapper w : arr){
+				System.out.println("Printing ticket info " + w.getNumTickets() + w.getCategoryId());
+			}
+
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}
+		//catch ( EventNotFoundException e){
+		//	return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+
+		//}
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	/*
+	 * SCHEDULE TASK IN DELETING EVERYTHING OF FILE TYPE...
+	System.out.println(rq.getSession().getServletContext().getRealPath("/"));
+@@ -350,5 +383,22 @@ public class TicketingController {
+	  } else {
+	    System.err.println("not a dir");
+	  }*/
+	private class Wrapper{
+		int numTickets;
+		Long categoryId;
+		public int getNumTickets() {
+			return numTickets;
+		}
+		public void setNumTickets(int numTickets) {
+			this.numTickets = numTickets;
+		}
+		public Long getCategoryId() {
+			return categoryId;
+		}
+		public void setCategoryId(Long categoryId) {
+			this.categoryId = categoryId;
+		}
+	}
+
+
+	/*	
+	 * SCHEDULE TASK IN DELETING EVERYTHING OF FILE TYPE...
 	System.out.println(rq.getSession().getServletContext().getRealPath("/"));
 	File dir = new File(rq.getSession().getServletContext().getRealPath("/"));
 	File[] directoryListing = dir.listFiles();
