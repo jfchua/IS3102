@@ -105,14 +105,7 @@ public class BookingAppl {
 		return id;
 	}
 	
-	 public Set<Area> getArea() {
-			return area;
-	}
-
-
-	public void setArea(Set<Area> area) {
-			this.area = area;
-	}
+	
 	
 	public Long getRoom() {
 		return room;

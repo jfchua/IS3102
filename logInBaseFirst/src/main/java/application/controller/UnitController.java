@@ -487,4 +487,92 @@ public class UnitController {
 			
 		}
 		
+
+		
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY','ROLE_EXTEVE')")
+		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
+		@RequestMapping(value = "/viewUnitsWithBookings", method = RequestMethod.POST)
+		@ResponseBody
+		public String viewUnitsWithBookings( @RequestBody String level, HttpServletRequest rq)  {
+			System.out.println("level json"+level);
+			try{
+			
+				Object obj = parser.parse(level);
+				System.out.println("Level obj "+obj);
+				JSONObject jsonObject = (JSONObject) obj;
+				
+				System.out.println("Level jsonObject "+jsonObject);
+				long levelId = (Long)jsonObject.get("id");
+			
+				System.out.println("Level id "+levelId);
+				//long levelId = Long.parseLong(level);
+				Set<Unit> units = unitService.getUnitsByLevelId(levelId);
+				for(Unit unit:units){	
+					System.out.println("********** unit: " + unit.getUnitNumber());
+					Set<UnitAttributeValue> values = unit.getUnitAttributeValues();
+					for(UnitAttributeValue value:values){
+						value.setUnits(null);
+						value.getUnitAttributeType().setUnitAttributeValues(null);
+					}
+					Set<BookingAppl> bookings = unit.getBookings();
+					for(BookingAppl booking:bookings){
+						booking.setUnit(null);
+						booking.setAreas(null);
+						booking.setEvent(null);
+						booking.setOwner(null);
+						
+					}
+					Set<MaintenanceSchedule> maints = unit.getMaintenanceSchedule();
+					for(MaintenanceSchedule maint:maints){
+						maint.setUnit(null);
+						maint.setMaintenance(null);
+					}
+					}
+				System.out.println("Level units "+units);
+				Gson gson2 = new GsonBuilder()
+					    .setExclusionStrategies(new ExclusionStrategy() {
+					        public boolean shouldSkipClass(Class<?> clazz) {
+					            return (clazz == Level.class);
+					        }
+
+					        /**
+					          * Custom field exclusion goes here
+					          */
+
+							@Override
+							public boolean shouldSkipField(FieldAttributes f) {
+								//TODO Auto-generated method stub
+								return false;
+							}
+
+					     })
+					    /**
+					      * Use serializeNulls method if you want To serialize null values 
+					      * By default, Gson does not serialize null values
+					      */
+					    .serializeNulls()
+					    .create();
+					
+			
+			    
+			    String json = gson2.toJson(units);
+			    System.out.println(json);
+			    return json;
+				}
+				catch (Exception e){
+					
+					System.out.println("************* ERROR: " + e.getMessage());
+					e.printStackTrace();
+					
+					JSONObject bd = new JSONObject(); 
+					bd.put("error", "cannot fetch"); 
+					
+				    System.out.println("Returning building id : " + bd.toString());
+					return bd.toString();
+				}
+		
+			
+}           
+
+		
 }

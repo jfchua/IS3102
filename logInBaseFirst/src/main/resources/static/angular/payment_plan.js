@@ -5,11 +5,15 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 		$http.get("//localhost:8443/payment/viewAllPaymentPlans").then(function(response){
 			$scope.plans = response.data;
 			console.log("DISPLAY ALL PAYMENT PLANS");
+			console.log($scope.plans);
 		},function(response){
 			alert("did not view plans");
 		}	
 		)	
 	});
+	$scope.paymentPlanNull = function(paymentPlan){
+		  return !(paymentPlan === null)
+	}
 	$scope.passPaymentPlan = function(plan){
 		shareData.addData(plan);
 	}
