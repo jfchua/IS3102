@@ -879,10 +879,10 @@ public class PaymentPlanController {
 	@ResponseBody
 	public void downloadReport(HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
 		System.out.println("Enter");
-		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Monthly.jasper");
+		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/payment.jasper");
 		response.setContentType("application/pdf");
 		Principal principal = request.getUserPrincipal();
-		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+		response.setHeader("Content-disposition", "attachment; filename=payment.pdf");
 		ServletOutputStream outputStream = response.getOutputStream();
 		HashMap<String,Object> parameters = new HashMap<String,Object>();
 		StringBuilder sb = new StringBuilder();

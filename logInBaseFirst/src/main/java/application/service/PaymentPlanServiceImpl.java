@@ -280,9 +280,11 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				cal1.add(Calendar.DATE, period);
 				System.out.println("period " + period);
 				pay.setDue(cal1.getTime());
+				System.out.println(cal1.getTime());
 				cal1.add(Calendar.DATE, -due);
 				System.out.println("due " + due);
 				pay.setNotificationDue(cal1.getTime());
+				System.out.println(cal1.getTime());
 				if(payment.getPaid().before(pay.getDue()))
 					event.setPaymentStatus(PaymentStatus.valueOf("PAID"));
 
@@ -561,12 +563,12 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 					}
 					System.out.println("******HI*******");
 					for(User f: finance){
-						messageService.sendMessage(admin, f, "Overdue Deposit Payment", "Overdue deposit payment plan ID is " +p.getId());
+						messageService.sendMessage(admin, f, "Finance-Overdue Deposit Payment", "Overdue deposit payment plan ID is " +p.getId());
 					}
 					for(User e : eventU){
-						messageService.sendMessage(admin, e, "Overdue Deposit Payment", "Overdue deposit payment plan ID is " +p.getId());
+						messageService.sendMessage(admin, e, "Event-Overdue Deposit Payment", "Overdue deposit payment plan ID is " +p.getId());
 					}
-					emailService.sendEmail(p.getOwner(), "Overdue Deposit Payment", "You have an overdue deposit payment plan with ID " +p.getId());
+					emailService.sendEmail(p.getOwner(), "Overdue Deposit Payment", "You have an overdue deposit payment plan with ID " +p.getId()+" of "+p.getDeposit()+" SGD.");
 				}
 				//for overdue subsequent payment
 				//else if(p.getNextPayment().equals(p.getSubsequent())){
@@ -586,13 +588,13 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 						}
 					}					
 					for(User f : finance){
-						messageService.sendMessage(admin, f, "Overdue Payment", "Overdue payment plan ID is " +p.getId());
+						messageService.sendMessage(admin, f, "Finance-Overdue Payment", "Overdue payment plan ID is " +p.getId());
 					}
-					messageService.sendMessage(admin, p.getEvent().getEventOrg(), "Overdue Payment", "You have an overdue payment plan of ID " +p.getId());
+					messageService.sendMessage(admin, p.getEvent().getEventOrg(), "Event Organiser-Overdue Payment", "You have an overdue payment plan of ID " +p.getId());
 					System.out.println("******HI*******FINISH****");
 				}
 			}	
-			else if(DateUtils.isSameDay(cal.getTime(), notiDue)){
+			if(DateUtils.isSameDay(cal.getTime(), notiDue)){
 				ClientOrganisation client = p.getEvent().getEventOrg().getClientOrganisation();
 				System.out.println("NOTI DUE?"+p.getOverdue());
 				Set<User> users = client.getUsers();
