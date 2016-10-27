@@ -273,6 +273,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 					pay.setNextPayment(subsequent);
 				else if (((total-pay.getPaid())<subsequent)&&((total-pay.getPaid())>0))
 					pay.setNextPayment(total-pay.getPaid());
+				else if(pay.getTotal()==pay.getPaid())
+					pay.setNextPayment(0.00);
 				Calendar cal1 = Calendar.getInstance();
 				cal1.setTime(previousDue);
 				cal1.add(Calendar.DATE, period);

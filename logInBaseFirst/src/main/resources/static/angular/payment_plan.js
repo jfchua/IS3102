@@ -61,7 +61,7 @@ app.filter('orderObjectBy', function() {
 app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
-		$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
+		$http.get("//localhost:8443/payment/viewApprovedEvents").then(function(response){
 			$scope.events = response.data;
 			console.log("DISPLAY ALL PAYMENT PLANS");
 		},function(response){
@@ -299,6 +299,8 @@ app.controller('receivedPController', ['$scope', '$http','$state','$routeParams'
 app.controller('eventWithTicketController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
 		$http.get("//localhost:8443/payment/viewAllEventsWithTicket").then(function(response){
 			$scope.events = response.data;
 			console.log("DISPLAY ALL EVENTS");
@@ -422,6 +424,8 @@ app.controller('paymentHistoryController', ['$scope', '$http','$state','$routePa
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$scope.org = shareData.getData();
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
 		$scope.url = "https://localhost:8443/payment/getPaymentHistory/"+$scope.org;
 		console.log("GETTING THE EVENTS");
 		var getPayments = $http({

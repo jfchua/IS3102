@@ -25,10 +25,10 @@
 					<form class="form-horizontal">
         <div class="form-group">
 					<label for="plan" class="control-label">Select a payment plan</label> <select
-						name="plan" ng-model="currentlySelectedPlan" ng-options="x.id as x.id for x in plans"
+						name="plan" ng-change="getPlan(currentlySelectedPlan)"
+						ng-model="currentlySelectedPlan" ng-options="x.id as x.id for x in plans"
 						class="form-control underline">
 					</select>
-		<button ng-click="getPlan(currentlySelectedPlan)">Apply</button>
 		</div>
        <div class="form-group">
 							<label class="col-sm-2 control-label">Payment Plan ID</label>
