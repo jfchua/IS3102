@@ -591,6 +591,30 @@ app.config(
  					authorizedRoles:[USER_ROLES.organiser]
  				}
  			})
+ 			.state('dashboard.viewPaymentPlansEx',{
+ 				url:'/viewPaymentPlansEx',
+ 				templateUrl: '/views/viewPaymentPlansEx.html',
+ 				controller: 'paymentExController',
+ 				data:{
+ 					authorizedRoles:[USER_ROLES.organiser]
+ 				}
+ 			})
+ 			.state('dashboard.viewPaymentHistoryEx',{
+ 				url:'/viewPaymentHistoryEx',
+ 				templateUrl: '/views/viewPaymentHistoryEx.html',
+ 				controller: 'paymentHistoryExController',
+ 				data:{
+ 					authorizedRoles:[USER_ROLES.organiser]
+ 				}
+ 			})
+ 			.state('dashboard.viewPaymentDetailsEx',{
+ 				url:'/viewPaymentDetailsEx',
+ 				templateUrl: '/views/viewPaymentDetailsEx.html',
+ 				controller: 'paymentDetailsExController',
+ 				data:{
+ 					authorizedRoles:[USER_ROLES.organiser]
+ 				}
+ 			})
 			.state('dashboard.viewNotifications',{
 				url:'/viewNotifications',
 				templateUrl: '/views/viewNotifications.html',
@@ -1421,155 +1445,9 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 
 
 /*1. TO DO LIST*/
-app.controller('taskController', function($scope, $http, $route,Auth) {
+app.controller('taskController', function($scope, $http, $route,$state) {
 	
-	   //RETRIEVE EVENTS
-	   //$scope.eventsFormated=[];
-	   angular.element(document).ready(function () {
-		
-		   //GET TODOS FOR TODOS IN WORKSPACE AND SIDEBAR
-			 console.log("test for ready");
-			 $http({
-					method: 'GET',
-					url: 'https://localhost:8443/todo/getToDoList'
-				}).success(function (result) {
-					$scope.saved = result;
-					
-				}).error(function(result){
-					//do something
-					console.log("ERROR GETTING TODO LIST");
-				})
-		 });
-
-	   	 $scope.today = new Date();
-		
-		 $scope.saved = localStorage.getItem('taskItems');
-		 $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
-			JSON.parse($scope.saved) : [ {description: "Why not add a task?", date: $scope.today, complete: false}];
-			localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-			
-			//GET TODOS
-			//$scope.todosFormated=[];
-			var getTdList = function(){$http({
-				method: 'GET',
-				url: 'https://localhost:8443/todo/getToDoList'
-			}).success(function (result) {
-				$scope.saved = result;
-				
-			}).error(function(result){
-				//do something
-				console.log("ERROR GETTING TODO LIST");
-			})
-			}
-			//$scope.save();
-			//FOR ALL USERS: GET TODOS	
-			//getTdList();
-
-			//$state.reload();
-			//FOR PROPERTY MANAGER: GET MAINTENANCES		
-			/*if(Auth.hasRoles('ROLE_PROPERTY')){
-				
-			}*/
-			
-			$scope.newTask = null;
-			$scope.newTaskDate = null;
-			$scope.categories = [
-			                     {name: 'Personal'},
-			                     {name: 'Work'},
-			                     {name: 'School'},
-			                     {name: 'Cleaning'},
-			                     {name: 'Other'}
-			                     ];
-			$scope.newTaskCategory = $scope.categories;
-			$scope.addNew = function (newTask,newTaskDate) {
-				//console.log(newTask);
-				//console.log(newTaskDate);
-				//console.log($scope.newTask);
-				//console.log($scope.newTaskDate);
-				//$scope.saved.push({task:newTask, date: newTaskDate});
-				$http({
-					method : "POST",
-					url : "https://localhost:8443/todo/addToDoTask",
-					data: {task:newTask, date: newTaskDate}
-				}).then(function mySuccess(response) {
-					console.log("ADDED NEW TO DO LIST");
-					$http({
-						method: 'GET',
-						url: 'https://localhost:8443/todo/getToDoList'
-					}).success(function (result) {
-						//$scope.saved = result;
-						//GET TODOS	
-						
-						
-						
-						getTdList();
-						
-						//FOR PROPERTY MANAGER: GET MAINTENANCES		
-						/*if(Auth.hasRoles('ROLE_PROPERTY')){
-							
-						}*/
-						
-					}).error(function(result){
-						//do something
-						console.log("ERROR GETTING TODO LIST");
-					})
-				
-					//$route.reload();
-					//console.log("refresh page")
-
-
-
-
-
-				}, function myError(response) {
-					alert(response);
-				});
-				$scope.newTask = '';
-				$scope.newTaskDate = '';
-				$scope.newTaskCategory = $scope.categories;
-				localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-				
-			};
-			$scope.deleteTask = function (id) {
-				$http({
-					method : "POST",
-					url : "https://localhost:8443/todo/deleteToDoTask",
-					data: id
-				}).then(function mySuccess(response) {
-					console.log("Successfully delete task with Id: " + id);
-					$scope.saved = [];
-					$http({
-						method: 'GET',
-						url: 'https://localhost:8443/todo/getToDoList'
-					}).success(function (result) {
-						//$scope.saved = result;		
-						
-						
-						//getEvents();
-						//getTdList();
-						//getMaints();
-						//FOR ALL USERS: GET TODOS	
-						getTdList();
-						//FOR PROPERTY,EVENT,FINANCE,TICKETING: GET EVENTS AND MAINTENANCES
-						
-						
-						//FOR PROPERTY MANAGER: GET MAINTENANCES		
-						/*if(Auth.hasRoles('ROLE_PROPERTY')){
-							
-						}*/
-						
-					}).error(function(result){
-						//do something
-						console.log("ERROR GETTING TODO LIST");
-					})
-				}, function myError(response) {
-					alert(response);
-				});		
-				//getTdList();
-			
-				
-
-			};
+	  
 });
 /*
 app.controller('DemoCtrl', function ($scope, $http) {

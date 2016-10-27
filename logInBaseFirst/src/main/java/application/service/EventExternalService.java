@@ -11,6 +11,8 @@ import application.entity.Event;
 import application.entity.EventCreateForm;
 import application.entity.EventOrganizer;
 import application.entity.Message;
+import application.entity.Payment;
+import application.entity.PaymentPlan;
 import application.entity.SendMessageForm;
 import application.entity.User;
 
@@ -53,4 +55,8 @@ public interface EventExternalService {
 	Set<Event> getEventsWithTicket(ClientOrganisation client);
 	
 	Double checkRate(ClientOrganisation client, Date date) throws ParseException;
+	
+	Set<Payment> getPayments(ClientOrganisation client, User user);
+	
+	Set<PaymentPlan> viewAllPaymentPlan(ClientOrganisation client, User user);
 }

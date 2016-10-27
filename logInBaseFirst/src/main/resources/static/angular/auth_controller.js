@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('Auth', function($window, $localStorage){
+app.factory('Auth', function($window, $sessionStorage){
 			var user;
 			var storageUser; 
 			var authenticated;
@@ -14,10 +14,13 @@ app.factory('Auth', function($window, $localStorage){
 			authService.setUser = function(aUser){
 				user = aUser;
 				//console.log("User " + user.name +" is set");
-				  localStorage.setItem('user', JSON.stringify(user));
-				  //console.log(localStorage.getItem('user'));
+				  sessionStorage.setItem('user', JSON.stringify(user));
+				  //console.log(sessionStorage.getItem('user'));
 				  console.log("token is set");
-				  
+				  for (i = 0; i<user.authorities.length;i++) {
+						userRoles [i] = user.authorities[i].authority;
+						console.log("Authority present is " + userRoles[i]);
+					}
 				  //var token = jwt.sign(user, secret, { expiresInMinutes: 60*5 });
 
 
@@ -29,7 +32,7 @@ app.factory('Auth', function($window, $localStorage){
 				  
 				}
 			authService.remove= function() {
-			    $window.localStorage.removeItem('user');
+			    $window.sessionStorage.clear();
 			    this.user = null;
 			},
 			authService.isAuthenticated = function(){
@@ -52,10 +55,7 @@ app.factory('Auth', function($window, $localStorage){
 					console.log("User is not logged in!");
 					return false;
 				}
-				for (i = 0; i<user.authorities.length;i++) {
-					userRoles [i] = user.authorities[i].authority;
-					console.log("Authority present is " + userRoles[i]);
-				}
+				
 				if ( authService.hasRoles(authorizedRoles)){
 					return true;
 				}
