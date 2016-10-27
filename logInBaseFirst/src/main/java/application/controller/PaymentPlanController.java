@@ -55,6 +55,7 @@ import application.service.BookingService;
 import application.service.EmailService;
 import application.service.EventExternalService;
 import application.service.EventOrganizerService;
+import application.service.EventService;
 import application.service.MessageService;
 import application.service.PaymentPlanService;
 import application.service.UserService;
@@ -70,20 +71,22 @@ public class PaymentPlanController {
 	private final EventExternalService eventExternalService;
 	private final PaymentPlanService paymentPlanService;
 	private final UserService userService;
+	private final EventService eventService;
 	private final MessageService messageService;
 	private final EmailService emailService;
 	//private final EventCreateFormValidator eventCreateFormValidator;
 	private JSONParser parser = new JSONParser();
-
+	private Gson geeson = new Gson();
 	@Autowired
-	public PaymentPlanController(EventExternalService eventService, PaymentPlanService paymentPlanService,
-			UserService userService, MessageService messageService, EmailService emailService) {
+	public PaymentPlanController(EventExternalService eventExternalService, PaymentPlanService paymentPlanService,
+			UserService userService, MessageService messageService, EmailService emailService, EventService eventService) {
 		super();
-		this.eventExternalService = eventService;
+		this.eventExternalService = eventExternalService;
 		this.paymentPlanService = paymentPlanService;;
 		this.userService = userService;
 		this.messageService = messageService;
 		this.emailService = emailService;
+		this.eventService = eventService;
 	}
 
 	// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
@@ -208,8 +211,10 @@ public class PaymentPlanController {
 			//System.out.println(formatter.format(4.0));
 			JSONObject obj1 = new JSONObject();
 			obj1.put("id", eventId);
-			obj1.put("total", price);
+			obj1.put("total", formatter.format(price));
+			obj1.put("before", formatter.format(price/1.07));
 			obj1.put("deposit", formatter.format(payPol.getDepositRate()*price));
+			obj1.put("subsequent", formatter.format((1-payPol.getDepositRate())*price/payPol.getSubsequentNumber()));
 			obj1.put("subsequentNumber",payPol.getSubsequentNumber());
 			//String json = gson2.toJson(event);
 			//System.out.println("EVENT IS " + json);
@@ -258,6 +263,64 @@ public class PaymentPlanController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
 
+	    // Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
+		// Each object (building) will contain... long id, .
+		@RequestMapping(value = "/viewApprovedEvents",  method = RequestMethod.GET)
+		@ResponseBody
+		public ResponseEntity<String> viewApprovedEvents(HttpServletRequest rq) throws UserNotFoundException {
+			Principal principal = rq.getUserPrincipal();
+			Optional<User> usr = userService.getUserByEmail(principal.getName());
+			if ( !usr.isPresent() ){
+				return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);		}
+			try{
+				ClientOrganisation client = usr.get().getClientOrganisation();
+				Set<Event> events = eventService.getAllApprovedEvents(client);
+				System.err.println("There are " + events.size() + " approved events");
+                
+				//Gson gson = new Gson();
+				//String json = gson.toJson(levels);
+				//System.out.println("Returning levels with json of : " + json);
+				//return json;
+
+				Gson gson2 = new GsonBuilder()
+						.setExclusionStrategies(new ExclusionStrategy() {
+							public boolean shouldSkipClass(Class<?> clazz) {
+								return (clazz == Category.class)|| (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+							}
+
+							/**
+							 * Custom field exclusion goes here
+							 */
+
+							@Override
+							public boolean shouldSkipField(FieldAttributes f) {
+								//TODO Auto-generated method stub
+								return false;
+								//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+							}
+
+						})
+						/**
+						 * Use serializeNulls method if you want To serialize null values 
+						 * By default, Gson does not serialize null values
+						 */
+						.serializeNulls()
+						.create();	
+				Set<Event> eventsR = new HashSet<Event>();
+				for(Event e: events){
+					if(e.getPaymentPlan()==null)
+						eventsR.add(e);
+				}
+				String json = gson2.toJson(eventsR);
+				System.out.println(json);
+				return new ResponseEntity<String>(json,HttpStatus.OK);
+			}
+			catch (Exception e){
+				return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			//return new ResponseEntity<Void>(HttpStatus.OK);
+		}
+	
 	@RequestMapping(value = "/viewAllOutstandingBalance", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> viewAllOustandingBalance(HttpServletRequest rq) throws UserNotFoundException {
@@ -297,14 +360,15 @@ public class PaymentPlanController {
 					 * By default, Gson does not serialize null values
 					 */
 					.serializeNulls()
-					.create();			
+					.create();		
+			NumberFormat formatter = new DecimalFormat("#0.00");    
 			for(User u : eventOrgs){
 				JSONObject obj1 = new JSONObject();
 				obj1.put("id", u.getId());
 				System.out.println("event org name is "+u.getName());
 				obj1.put("name", u.getName());
 				obj1.put("email", u.getEmail());
-				obj1.put("outstanding",paymentPlanService.getOutstandingById(u.getId()));
+				obj1.put("outstanding",formatter.format(paymentPlanService.getOutstandingById(u.getId())));
 				jArray.add(obj1);
 			}
 			System.out.println("finish getting all orgs oustanding amount");
@@ -416,6 +480,7 @@ public class PaymentPlanController {
 					.create();
 			for(Event ev : events){
 				PaymentPlan p = ev.getPaymentPlan();
+				if(!p.getPayable().equals(0.00))
 				payments.add(p);
 			}
 			System.out.println("finishing getting list of events");
@@ -757,6 +822,7 @@ public class PaymentPlanController {
 			sb.append(paymentId);
 			System.err.println("Query parameter is : " + sb.toString());
 			parameters.put("criteria", sb.toString());
+
 			Connection conn = null;
 			try {
 				DataSource ds = (DataSource)context.getBean("dataSource");
@@ -771,12 +837,19 @@ public class PaymentPlanController {
 			System.err.println("path is " + path);
 			path += "Invoice" + paymentId + ".pdf";
 			File f = new File(path);
-			int counter = 2;
-			while ( f.exists() && !f.isDirectory() ){
-				counter++;
-				path = request.getSession().getServletContext().getRealPath("/");
-				path += "Invoice" + paymentId + "-" + counter + ".pdf";			    	
-				f = new File(path);
+			int counter = 1;
+			if ( !f.exists()){
+				parameters.put("number", paymentId);
+			}
+			else{
+				while ( f.exists() && !f.isDirectory() ){
+					counter++;
+					path = request.getSession().getServletContext().getRealPath("/");
+					path += "Invoice" + paymentId + "-" + counter + ".pdf";		
+
+					f = new File(path);
+				}
+				parameters.put("number", paymentId+ "-" + counter );
 			}
 
 

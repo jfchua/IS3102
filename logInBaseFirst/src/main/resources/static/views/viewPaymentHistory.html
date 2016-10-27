@@ -32,7 +32,7 @@
                             <th><i></i> Cheque Number </th>
                            </tr>
                          <tbody>
-                         <tr ng-repeat="x in payments | orderBy:'$index'">
+                         <tr ng-repeat="x in payments | orderObjectBy:order_item:order_reverse">
                             <td>{{ x.id }}</td>
                             <td>{{ x.date }}</td>
                             <td>{{ x.plan }}</td>

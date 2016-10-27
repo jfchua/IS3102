@@ -32,7 +32,7 @@
                        
                            </tr>
                          <tbody>
-                         <tr ng-repeat="x in events">
+                         <tr ng-repeat="x in events | orderObjectBy:order_item:order_reverse">
                             <td>{{ x.id }}</td>
                             <td>{{ x.email }}</td>
                             <td>{{ x.ticket }}</td>
