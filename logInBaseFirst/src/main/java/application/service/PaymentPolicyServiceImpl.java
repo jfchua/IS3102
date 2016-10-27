@@ -105,23 +105,30 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 		Double totalDe = 0.00;
 		Double begin = 0.00;
 		Double end = 0.00;
-		
+		System.out.println("this month is "+ month);
 		Calendar cal1 = Calendar.getInstance();
 		cal1.set(Calendar.DAY_OF_MONTH, cal1.getActualMinimum(Calendar.DAY_OF_MONTH));
 		Date d1 = cal1.getTime();
+		System.out.println("First day is " + d1);
 		cal1.set(Calendar.DAY_OF_MONTH, cal1.getActualMaximum(Calendar.DAY_OF_MONTH));
 		Date d2 = cal1.getTime();
+		System.out.println("Last day is " + d2);
 		
 		Set<User> users = client.getUsers();
 		for(User u: users){
+			System.out.println("111111 ");
 			Set<Role> roles = u.getRoles();
 			for(Role r : roles){
+				System.out.println("22222 ");
 				if(r.getName().equals("ROLE_EXTEVE")){
 					Set<Event> events = u.getEvents();
 					for(Event e : events){
+						System.out.println("3333 ");
+						if(e.getPaymentPlan()!=null){
 						PaymentPlan pay = e.getPaymentPlan();
 						cal.setTime(pay.getCreated());
 						int month1 = cal.get(Calendar.MONTH);
+						System.out.println("This month where the payment is made is " + month1);
 						if(month== month1){
 						totalDe += pay.getDeposit();	
 						}
@@ -129,10 +136,18 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 							begin += pay.getDeposit();
 						else if(DateUtils.isSameDay(d2, pay.getCreated()))
 							end += pay.getDeposit();
+						System.out.println("total after one round");
+						}
+						else
+							System.out.println("NO PAYMENT PLAN");
 					}
 				}
+				System.out.println("End of loop for role ");
 			}
 		}
+		if(begin == 0 && end ==0)
+			return 0.00;
+		else
 		return 2*totalDe/(begin+end);
 	}
 }

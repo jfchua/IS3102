@@ -503,8 +503,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	}
 
 	@Override
-	@Scheduled(fixedRate = 60000)
-	//@Scheduled(fixedRate = 86400000)
+	//@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedRate = 86400000)
 	public void alertForOverduePayment() throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		//SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
