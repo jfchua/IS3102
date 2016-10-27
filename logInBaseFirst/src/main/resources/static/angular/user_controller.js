@@ -211,13 +211,14 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 
 	$scope.logout = function() {
 		$http.post('https://localhost:8443/logout', {}).finally(function() {
+			Auth.remove();
 			console.log("LOGGED OUT BY QUERYING POST TO LOGOUT");
 			$rootScope.authenticated = false;
 			//I added these 2 lines
 			credentials.password = '';
 			credentials.username ='';
-			Auth.remove();
-			$location.path("/login");
+			
+			//$location.path("/login");
 		});
 	}
 

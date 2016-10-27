@@ -929,5 +929,84 @@ $scope.deleteBooking = function(id){
 }
 }])
 
+app.controller('paymentHistoryExController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		//$scope.org = shareData.getData();
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
+		$scope.url = "https://localhost:8443/event/getPaymentHistory/";
+		console.log("GETTING THE PAYMENT HISTORY");
+		var getPayments = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/event/getPaymentHistory/',
+
+		});
+		console.log("Getting the payments using the url: " + $scope.url);
+		getPayments.success(function(response){
+			console.log('GET PAYMENTS SUCCESS! ');
+			console.log(JSON.stringify(response));
+			console.log(response);
+			$scope.payments = response;
+		});
+		getPayments.error(function(response){
+			$state.go("dashboard.viewPaymentPlansEx");
+			console.log('GET PAYMENTS FAILED! ');
+		});
+	});
+}]);
+
+
+app.controller('paymentExController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
+		console.log("START:):):):)");
+		$http.get("//localhost:8443/event/viewAllPayments").then(function(response){
+			$scope.plans = response.data;
+			console.log("DISPLAY ALL PAYMENT PLANS");
+			console.log($scope.plans);
+		},function(response){
+			alert("did not view plans");
+		}	
+		)	
+	});
+	$scope.paymentPlanNull = function(paymentPlan){
+		  return !(paymentPlan === null)
+	}
+	$scope.passPaymentPlan = function(plan){
+		shareData.addData(plan);
+	}
+
+}]);
+
+app.controller('paymentDetailsExController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};
+		$scope.plan= shareData.getData();
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
+		$scope.url = "https://localhost:8443/event/viewPaymentDetails/"+$scope.plan;
+		console.log("GETTING THE EVENTS");
+		var getPayments = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/event/viewPaymentDetails/' + $scope.plan,
+
+		});
+		console.log("Getting the payments using the url: " + $scope.url);
+		getPayments.success(function(response){
+			console.log('GET PAYMENTS SUCCESS! ');
+			console.log(JSON.stringify(response));
+			console.log(response);
+			$scope.paymentPlan = response;
+		});
+		getPayments.error(function(response){
+			$state.go("dashboard.viewPaymentPlansEx");
+			console.log('GET PAYMENTS FAILED! ');
+		});		
+	});
+	
+}]);
 
 

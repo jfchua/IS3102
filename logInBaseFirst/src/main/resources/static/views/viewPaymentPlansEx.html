@@ -1,0 +1,61 @@
+
+	<div ng-cloak ng-controller="paymentExController as paymentExCtrl" >
+	 <div class="clearfix">
+                            <ol class="breadcrumb no-bg no-m-t">
+                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a>View The List Of Payment Plans</a></li>
+                            </ol>
+        </div>
+      <div class="col-md-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Payment Plans  
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+					<table class="table table-hover">              
+                        <thead>
+                           <tr>
+                            <th><i></i> Event ID </th>
+                            <th><i></i> Payment Plan ID </th>
+                            <th><i></i> Amount Outstanding </th>
+                            <<!-- th><i></i> Next Payment </th>-->
+                            <!-- <th><i></i> Due Date </th>-->
+                            <th><i></i> Status </th>                         
+                           <th>Actions</th>
+                       
+                           </tr>
+                         <tbody>
+                         <tr ng-repeat="x in plans | filter:paymentPlanNull|orderObjectBy:order_item:order_reverse">
+                            <td>{{ x.id }}</td>
+                            <td>{{ x.payment }}</td>
+                            <td>{{ x.outstanding }}</td>
+                            <!-- <td>{{ x.next }}</td>-->
+                            <!-- <td>{{ x.due }}</td>-->
+                            <td>{{ x.status }}</td>
+                            <td>
+                            <a  ui-sref="dashboard.viewPaymentDetailsEx" ng-click="passPaymentPlan(x.payment)" tooltip-placement="top" tooltip="Update Payment Plan"><i class="glyphicon glyphicon-pencil"></i></a>
+                           </td>
+                        </tr>
+                         </tbody>
+                         </thead>
+                    </table>			
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+		<br>
+		<br>
+		<br>
+		 <a ui-sref="dashboard.viewPaymentHistoryEx" tooltip-placement="right" tooltip="View Payment History"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>   			
+			</div>
+	</div>
+	

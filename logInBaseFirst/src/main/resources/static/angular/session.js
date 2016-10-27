@@ -1,14 +1,13 @@
-app.run(['$rootScope', 'AUTH_EVENTS', 'Auth' ,'$location','$window', '$localStorage', function ($rootScope, AUTH_EVENTS, Auth, $location, $window , $localStorage) {
+app.run(['$rootScope', 'AUTH_EVENTS', 'Auth' ,'$location','$window', '$sessionStorage', function ($rootScope, AUTH_EVENTS, Auth, $location, $window , $sessionStorage) {
 
 			$rootScope.$on('$stateChangeStart', function (event, next) {
 			//	
 				var authorizedRoles = next.data.authorizedRoles;
 				console.log("Next authorized roles are " + authorizedRoles);
 				//no idea how to put multiple conditions together, && and || doesnt seem to work
-				if (localStorage.getItem('user') !== null) {
-					console.log('statechange localstorage get item is not null');					
-					Auth.setUser(JSON.parse(localStorage.getItem('user')));
-					
+				if (sessionStorage.getItem('user') !== null) {
+					console.log('statechange sessionStorage get item is not null');					
+					Auth.setUser(JSON.parse(sessionStorage.getItem('user')));
 				}
 					
 					if ($location.path() != '/login'){

@@ -30,6 +30,8 @@ import application.entity.EventCreateForm;
 import application.entity.EventOrganizer;
 import application.entity.Level;
 import application.entity.MaintenanceSchedule;
+import application.entity.Payment;
+import application.entity.PaymentPlan;
 import application.entity.Role;
 import application.entity.SpecialRate;
 import application.entity.Unit;
@@ -850,5 +852,36 @@ public class EventExternalServiceImpl implements EventExternalService {
 		    return special;
 		else
 			return highest * special;
+	}
+
+	@Override
+	public Set<Payment> getPayments(ClientOrganisation client, User user) {
+		if(!client.getUsers().contains(user))
+		return null;
+		else{
+			Set<Event> events = user.getEvents();
+			Set<Payment> payments = new HashSet<Payment>();
+			for(Event e : events){
+				PaymentPlan p = e.getPaymentPlan();
+				Set<Payment> pays = p.getPayments();
+				for(Payment p1 : pays)
+					payments.add(p1);
+			}
+			return payments;
+		}
+	}
+	
+	@Override
+	public Set<PaymentPlan> viewAllPaymentPlan(ClientOrganisation client, User user) {
+		if(!client.getUsers().contains(user))
+		return null;
+		else{
+			Set<Event> events = user.getEvents();
+			Set<PaymentPlan> payments = new HashSet<PaymentPlan>();
+			for(Event e : events){
+				payments.add(e.getPaymentPlan());			
+			}
+			return payments;
+		}
 	}
 }
