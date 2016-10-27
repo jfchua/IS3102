@@ -469,6 +469,15 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 		}	
 		)
 		
+		$http.get("//localhost:8443/policy/viewDays").then(function(response){
+			$scope.days = response.data;
+			console.log("DISPLAY DSO");
+			console.log($scope.days);
+		},function(response){
+			alert("did not view DSO");
+		}	
+		)
+		
 	});
 	$scope.passPaymentPolicy = function(policy){
 		shareData.addData(policy);
