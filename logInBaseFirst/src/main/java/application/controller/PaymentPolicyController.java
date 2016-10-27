@@ -208,7 +208,32 @@ public class PaymentPolicyController {
 					}
 					return new ResponseEntity<Void>(HttpStatus.OK);
 				}
-				
+				// Call this method using $http.get and you will get a JSON format containing an array of building objects.
+				// Each object (building) will contain... long id, collection of levels.
+				@RequestMapping(value = "/viewTurnover", method = RequestMethod.GET)
+				@ResponseBody
+				public ResponseEntity<String> viewTurnover(HttpServletRequest rq) throws UserNotFoundException {
+					Principal principal = rq.getUserPrincipal();
+					Optional<User> usr = userService.getUserByEmail(principal.getName());
+					if ( !usr.isPresent() ){
+						return new ResponseEntity<String>(HttpStatus.CONFLICT);
+					}
+					try{
+						ClientOrganisation client = usr.get().getClientOrganisation();
+					    System.out.println("start view turnover ratio");
+						Double ratio = paymentPolicyService.calculateTurnover(client);
+						//System.out.println(payment.getDepositRate());   
+						Gson gson2 = new Gson();
+						String json = gson2.toJson(ratio);
+					    if(ratio != null)
+						   System.out.println(json);
+					    return new ResponseEntity<String>(String.valueOf(ratio), HttpStatus.OK);
+						}
+						catch (Exception e){
+							return new ResponseEntity<String>(HttpStatus.CONFLICT);
+						}
+						//return new ResponseEntity<Void>(HttpStatus.OK);
+					}			
 		
 		
 }

@@ -13,4 +13,6 @@ public interface PaymentPolicyService {
 	boolean updatePaymentPolicy(ClientOrganisation client, long id, Double rate, int num, int due, int period);
 	
 	Optional<PaymentPolicy> getPaymentPolicy(long id);
+	
+	Double calculateTurnover(ClientOrganisation client);
 }

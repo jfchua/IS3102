@@ -433,7 +433,17 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 		},function(response){
 			alert("did not view plans");
 		}	
-		)	
+		)
+		
+		$http.get("//localhost:8443/policy/viewTurnover").then(function(response){
+			$scope.turnover = response.data;
+			console.log("DISPLAY TURNOVER RATIO");
+			console.log($scope.turnover);
+		},function(response){
+			alert("did not view turnover ratio");
+		}	
+		)
+		
 	});
 	$scope.passPaymentPolicy = function(policy){
 		shareData.addData(policy);
