@@ -19,6 +19,8 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 	)
 	
 	$http.get("//localhost:8443/event/viewAllEvents").then(function(response){
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
 		$scope.events = response.data;
 		console.log("DISPLAY ALL EVENT");
 		console.log($scope.events);
