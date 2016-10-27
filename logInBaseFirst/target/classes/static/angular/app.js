@@ -591,6 +591,30 @@ app.config(
  					authorizedRoles:[USER_ROLES.organiser]
  				}
  			})
+ 			.state('dashboard.viewPaymentPlansEx',{
+ 				url:'/viewPaymentPlansEx',
+ 				templateUrl: '/views/viewPaymentPlansEx.html',
+ 				controller: 'paymentExController',
+ 				data:{
+ 					authorizedRoles:[USER_ROLES.organiser]
+ 				}
+ 			})
+ 			.state('dashboard.viewPaymentHistoryEx',{
+ 				url:'/viewPaymentHistoryEx',
+ 				templateUrl: '/views/viewPaymentHistoryEx.html',
+ 				controller: 'paymentHistoryExController',
+ 				data:{
+ 					authorizedRoles:[USER_ROLES.organiser]
+ 				}
+ 			})
+ 			.state('dashboard.viewPaymentDetailsEx',{
+ 				url:'/viewPaymentDetailsEx',
+ 				templateUrl: '/views/viewPaymentDetailsEx.html',
+ 				controller: 'paymentDetailsExController',
+ 				data:{
+ 					authorizedRoles:[USER_ROLES.organiser]
+ 				}
+ 			})
 			.state('dashboard.viewNotifications',{
 				url:'/viewNotifications',
 				templateUrl: '/views/viewNotifications.html',

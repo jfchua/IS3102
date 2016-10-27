@@ -1,0 +1,55 @@
+
+	<div ng-cloak ng-controller="paymentDetailsExController as paymentDetailsExCtrl" >
+	 <div class="clearfix">
+                            <ol class="breadcrumb no-bg no-m-t">
+                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="dashboard.viewPaymentPlanEx">View PaymentPlans</a></li>
+                                <li><a>Update Payment Plan Details</a></li>
+                            </ol>
+        </div>
+      <div class="col-md-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Update Payment Plan Details
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+					<form class="form-horizontal">
+       <div class="form-group">
+							<label class="col-sm-2 control-label">Payment Plan ID</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.id"></p>
+							</div>
+		</div>
+		<div class="form-group">
+							<label class="col-sm-2 control-label">Total Amount</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.total"></p>
+							</div>
+		</div>
+		<div class="form-group">
+							<label class="col-sm-2 control-label">Next Payment</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.nextPayment"></p>
+							</div>
+		</div>
+		<div class="form-group">
+							<label class="col-sm-2 control-label">Due Date</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" ng-bind="paymentPlan.due"></p>
+							</div>
+		</div>
+      </form>	
+				</div>
+			</div>
+		</div>
+	</div>
+	

@@ -817,7 +817,8 @@ public class PaymentPlanController {
 			JSONObject jsonObject = (JSONObject) obj;
 			Long paymentId = (Long)jsonObject.get("id");
 			PaymentPlan p = paymentPlanService.getPaymentPlanById(paymentId).get();
-
+            Event event = p.getEvent();
+            User user = event.getEventOrg();
 			sb.append(" P.ID = ");
 			sb.append(paymentId);
 			System.err.println("Query parameter is : " + sb.toString());
@@ -859,8 +860,12 @@ public class PaymentPlanController {
 			fileOutputStream.flush();
 			fileOutputStream.close();
 			System.out.println("FLUSHED OUT THE LOG");
-
-			emailService.sendEmailWithAttachment("kenneth1399@hotmail.com", "SUBJECT", "BODY", path);
+			User usr = userService.getUserByEmail(principal.getName()).get();
+			ClientOrganisation client = usr.getClientOrganisation();
+			PaymentPolicy paypol = client.getPaymentPolicy();
+            String email = "Please pay the amount stated in the invoice within "+2*paypol.getNumOfDueDays() +
+            		" days.";
+			emailService.sendEmailWithAttachment(user.getEmail(), "Invoice for payment plan id "+paymentId, email , path);
 
 
 		} catch (ParseException e1) {
