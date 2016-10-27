@@ -21,6 +21,8 @@ public interface UserService {
 
 	Optional<User> getUserByEmail(String email) throws UserNotFoundException;
 
+	boolean getUserBySecurity(User user, String security) throws UserNotFoundException;
+	
 	Collection<User> getAllUsers();
 
 	// User create(UserCreateForm form);

@@ -75,7 +75,16 @@ public class UserServiceImpl implements UserService {
 		}
 		return us;
 	}
-
+	
+	@Override
+	public boolean getUserBySecurity(User user, String security) {
+		System.out.println(user.getSecurity() + "is the userserviceimpl");
+		if (user.getSecurity().equals(security)) {
+		return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public Collection<User> getAllUsers() {
 		LOGGER.debug("Getting all users");
