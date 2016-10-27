@@ -557,7 +557,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 		//$scope.building = JSON.parse(shareData.getData());
 		var dataObj = {					
 				id: $scope.special.id,
-				rate: $scope.special.rate,
+				rate: ($scope.special.rate).toString(),
 				description: $scope.special.description,
 				period: ($scope.special.period).toString(),
 		};		
