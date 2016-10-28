@@ -171,7 +171,7 @@ public class EventExternalController {
 	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 		@RequestMapping(value = "/checkAvailabilityForUpdate", method = RequestMethod.POST)
 		@ResponseBody
-		public ResponseEntity<Void> checkAvailabilityForUpdate(@RequestBody String eventJSON,
+		public ResponseEntity<Void> checkAvailabilityForUpdate( String eventJSON,
 				HttpServletRequest rq) throws UserNotFoundException {
 			System.out.println("start check availability for events");
 			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");

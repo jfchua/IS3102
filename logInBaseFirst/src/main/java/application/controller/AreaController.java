@@ -1,4 +1,5 @@
 package application.controller;
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -28,83 +30,94 @@ import com.google.gson.GsonBuilder;
 
 import application.entity.Area;
 import application.entity.BookingAppl;
+import application.entity.Category;
+import application.entity.ClientOrganisation;
 import application.entity.Event;
 import application.entity.Maintenance;
+import application.entity.PaymentPlan;
 import application.entity.Square;
+import application.entity.User;
+import application.exception.UserNotFoundException;
 import application.service.AreaService;
 import application.service.EventService;
+import application.service.UserService;
 
 
 @Controller
-@RequestMapping("/event")
+@RequestMapping("/area")
 
 public class AreaController {
 
 	@Autowired
 	private final AreaService areaService;
 	private final EventService eventService;
+	private final UserService userService;
+	
 	private JSONParser parser = new JSONParser();
-
+	private Gson geeson = new Gson();
+	
 	@Autowired
-	public AreaController(AreaService areaService,EventService eventService) {
+	public AreaController(AreaService areaService,EventService eventService,UserService userService) {
 		this.areaService = areaService;
 		this.eventService=eventService;
+		this.userService=userService;
 	}
 	
 	
 	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 		//for view only, call view areas; for load and edit, call viewAreas first and then call saves areas;
-		@RequestMapping(value = "/viewAreas", method = RequestMethod.POST)
+		@RequestMapping(value = "/viewArea", method = RequestMethod.POST)
 		@ResponseBody
-		public String viewAreas( @RequestBody String booking, HttpServletRequest rq)  {
-			System.out.println("event json"+booking);
+		public String viewAreas(@RequestBody String booking, HttpServletRequest rq) {
+		System.out.println("AreaController: Start Viewing Areas");
+	
 			try{
-			
+				
+				
 				Object obj = parser.parse(booking);
-				System.out.println("Event obj "+obj);
+				
 				JSONObject jsonObject = (JSONObject) obj;
 				
 				System.out.println("Event jsonObject "+jsonObject);
 				long bookingId = (Long)jsonObject.get("id");
-			
+				System.out.println(bookingId);
+				
 				System.out.println("bookingId id "+bookingId);
 				//long eventId = Long.parseLong(event);
 				Set<Area> areas = areaService.getAreasByBookingId(bookingId);
-				System.out.println("Event areas "+areas);
+				for(Area area: areas){
+					area.setBooking(null);
+				}
+				
 				Gson gson2 = new GsonBuilder()
-					    .setExclusionStrategies(new ExclusionStrategy() {
-					        public boolean shouldSkipClass(Class<?> clazz) {
-					            return (clazz == BookingAppl.class);
-					        }
+						.setExclusionStrategies(new ExclusionStrategy() {
+							public boolean shouldSkipClass(Class<?> clazz) {
+								return false;
+							}
 
-					        /**
-					          * Custom field exclusion goes here
-					          */
-
+							/**
+							 * Custom field exclusion goes here
+							 */
 							@Override
 							public boolean shouldSkipField(FieldAttributes f) {
 								//TODO Auto-generated method stub
 								return false;
+								//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
 							}
-
-					     })
-					    /**
-					      * Use serializeNulls method if you want To serialize null values 
-					      * By default, Gson does not serialize null values
-					      */
-					    .serializeNulls()
-					    .create();
-					
-			
-			    
-			    String json = gson2.toJson(areas);
-			    System.out.println(json);
-			    return json;
+						})
+						/**
+						 * Use serializeNulls method if you want To serialize null values 
+						 * By default, Gson does not serialize null values
+						 */
+						.serializeNulls()
+						.create();			    
+				String json = gson2.toJson(areas);
+				//String json2 = gson2.toJson("Server error in getting all the events");
+			return json;	
 				}
 				catch (Exception e){
-					String message="{\"error\":\"cannot fetch\"}";
-					Gson gson = new Gson();
-					return gson.toJson(message);
+					
+					return "";
 				}			
 }           
 		

@@ -1043,3 +1043,136 @@ app.controller('paymentDetailsExController', ['$scope', '$http','$state','$route
 }]);
 
 
+
+//Unit Plan of Event used by event organiser
+app.controller('areaPlanController', function ($scope, $http,shareData) {
+
+	
+	var bookingId;
+	angular.element(document).ready(function () {
+		var obj=shareData.getData();
+		$scope.booking=obj.booking;
+		$scope.event=obj.event;
+		console.log($scope.booking);
+		console.log($scope.event);
+		
+		//get event id from previous page
+	
+		  			var dataObj={id:$scope.booking.id};
+		  			
+		  			var getAreas= $http({
+		  				method  : 'POST',
+		  				url     : 'https://localhost:8443/area/viewAreas/',
+		  				data    : dataObj,
+		  		});
+		  			console.log("REACHED HERE FOR VIEWING AREAS " + JSON.stringify(dataObj));
+		  			getAreas.success(function(response){
+		  				console.log(response);
+		  				$scope.areas = response;
+		  				
+		  			});
+		  			getAreas.error(function(){
+		  				
+		  			});		
+		  		
+	});
+	
+	
+	$scope.passEvent=function(){
+		shareData.addData($scope.event);
+	}
+
+
+
+	$scope.viewArea=function(){
+		
+
+
+	}
+
+	$scope.addArea = function () {  
+		
+		$scope.areas.push({"id": 0,"areaName": "#area","description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "rect"}});
+		console.log("test "+JSON.stringify($scope.areas));
+
+	} 
+
+	$scope.saveAreas = function () {   
+
+		console.log("Test: start saving areas");
+		var saveAreas=$scope.areas;
+		var areasString=angular.toJson(saveAreas);
+		console.log(areasString);
+
+		var dataObj = {
+				id: $scope.booking.id,
+				Areas:{
+					Area:saveAreas
+				}
+		};
+
+		console.log(dataObj);
+
+		$http.post('/event/saveArea', JSON.stringify(dataObj)).then(function(response){
+			console.log("pure response is "+JSON.stringify(response.data));
+	
+
+		},function(response){//else is not saved successfully
+			console.log("DID NOT SAVE");
+			console.log("response is "+JSON.stringify(response.data));
+		})
+
+
+	} //END SAVE AREAS
+
+	$scope.remove = function(area) { 
+		var index = $scope.areas.indexOf(area);
+		$scope.areas.splice(index, 1);     
+	}
+
+	$scope.showDetails= function (thisArea) {   
+		//console.log(thisArea.id); 
+
+		$scope.showDetail="id: "+ thisArea.id+", areaName: " + thisArea.areaName+", description: " + thisArea.description+"left: " + thisArea.square.left + ", top: " +  thisArea.square.top+ ", height: " + thisArea.square.height + ", width: " + thisArea.square.width;    
+
+	} 
+	$scope.resize = function(area,evt,ui) {
+
+		console.log("resize");
+
+		area.square.width = evt.size.width;//working restrict A
+		area.square.height = evt.size.height;
+		area.square.left = parseInt(evt.position.left);
+		area.square.top = parseInt(evt.position.top);
+	}
+	$scope.drag = function(area,evt,ui) {
+
+		console.log(evt);
+		console.log("DRAGGING");
+		area.square.left = parseInt(evt.position.left);
+		area.square.top = parseInt(evt.position.top);
+		area.square.width = evt.helper.context.clientWidth;
+		area.square.height = evt.helper.context.clientHeight;
+	}
+
+
+
+	/*
+	    var areaIds="";
+	    $scope.addToAreaIds=function(areaId){
+	        areaIds+=(areaId+" ");
+	        console.log(areaIds);
+	    }
+
+	    $scope.passAreaIds=function(){
+	    	var stringToPassArea=areaIds.substring(0,areaIds.length-1);
+	    	console.log(stringToPassArea);
+	    	var objToPassArea={'areas':stringToPassArea};
+	    	shareData.addData(JSON.stringify(objToPassArea));
+	    	console.log(JSON.stringify(objToPassArea));
+	    }
+	 */
+
+})
+
+

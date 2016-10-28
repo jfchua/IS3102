@@ -53,7 +53,7 @@ public class BookingAppl {
      
      @OneToMany(mappedBy ="booking", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
      @JsonIgnore
-	 private Set<Area> area = new HashSet<Area>();
+	 private Set<Area> areas = new HashSet<Area>();
      
      public BookingAppl() {
  		//super();
@@ -61,11 +61,11 @@ public class BookingAppl {
 
      
      public Set<Area> getAreas() {
-		return area;
+		return areas;
 	}
 
-	public void setAreas(Set<Area> area) {
-		this.area = area;
+	public void setAreas(Set<Area> areas) {
+		this.areas = areas;
 	}
 
 	

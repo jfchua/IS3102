@@ -32,4 +32,6 @@ public interface AreaService {
 		Set<Area> getAreasByBookingId(long bookingId);
 		
 		boolean deleteAreasFromBooking(Set<Long> areaIds, long bookingId);
+		
+		boolean checkEventOrganiserByID(long requestPersonId, long bookingId);
 }

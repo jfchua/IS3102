@@ -121,7 +121,7 @@ public class AreaServiceImpl implements AreaService {
 				square.setLeft(left);
 				square.setTop(top);
 				square.setHeight(height);
-				square.setWidth(width);		
+				square.setWidth(width);
 				square.setColor(color);	
 				square.setType(type);	
 				squareRepository.saveAndFlush(square);
@@ -223,6 +223,14 @@ public class AreaServiceImpl implements AreaService {
 		
 	System.out.println("AreaServiceTest: finish deleting");
 		return true;
+	}
+
+	@Override
+	public boolean checkEventOrganiserByID(long requestPersonId, long bookingId) {
+		BookingAppl booking = bookingRepository.findOne(bookingId);
+		long bookingOwnerId=booking.getEvent().getEventOrg().getId();
+		System.out.println(requestPersonId==bookingOwnerId );
+		return requestPersonId==bookingOwnerId;
 	}
 
 }

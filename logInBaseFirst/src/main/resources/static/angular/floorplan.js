@@ -925,11 +925,11 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 			    console.log("in dissmiss");
 			 };
 	//GRIDSTER
-			 $scope.standardItems = [
+			 /*$scope.standardItems = [
 			                         { sizeX: 100, sizeY: 50, row: 0, col: 0 ,haha:"haha",test:"test"},
 			                         { sizeX: 20, sizeY: 20, row: 50, col: 50 ,haha:"hoho",test:"hoho"}
 			                        
-			                       ];
+			                       ];*/
 			
 			 console.log($scope.standardItems);
 			 console.log("gridster test ");
@@ -964,8 +964,11 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					       handles: ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'],
 					       start: function(event, $element, widget) {}, // optional callback fired when resize is started,
 					       resize: function(event, $element, widget) {}, // optional callback fired when item is resized,
-					       stop: function(event, $element, widget) {
-					    	   console.log($scope.standardItems);
+					       stop: function(event, $element, unit) {
+					    	   
+					    	   //console.log($element);
+					    	 //  console.log(unit);
+					    	   $scope.updateUnit(unit);
 					       } // optional callback fired when item is finished resizing
 					    },
 					    draggable: {
@@ -975,8 +978,10 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					       drag: function(event, $element, widget) {
 					    	 
 					       }, // optional callback fired when item is moved,
-					       stop: function(event, $element, widget) {
-					    	   console.log($scope.standardItems);
+					       stop: function(event, $element, unit) {
+					    	   //console.log($element);
+					    	   //console.log(unit);
+					    	   $scope.updateUnit(unit);
 					       } // optional callback fired when item is finished dragging
 					    }
 					};

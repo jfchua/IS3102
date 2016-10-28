@@ -6,7 +6,7 @@
 		<div class="clearfix">
 		                        <ol class="breadcrumb no-bg no-m-t">
 		                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-		                            <li><a href="#/dashboard">Workspace</a></li>
+		                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
 		                            <li><a ui-sref="dashboard.viewBuilding">View Buildings</a></li>
 		                             <li><a ui-sref="dashboard.viewLevels" ng-click="passBuilding()" >View Levels</a></li>
 		                             <li><a ui-sref="dashboard.viewFloorPlan" ng-click="viewFloorPlan()">View Floor Plan</a></li>
@@ -26,16 +26,14 @@
 				</div>
 			</div>    
   
-    <div id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
-        <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
-            id="{{unit.square.id}}"  draggable resizable  on-resize="resize(unit,$evt, $ui)" ng-mouseover=$parent.showDetails(unit) 
-              ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 
-              'background-color':'{{unit.square.color}}' ,'maxHeight':{{levelWidth}}+'px','maxWidth':{{levelLength}}+'px'}" 
-     			 ng-dblclick="showModal(unit,$parent)">
-              <p >{{unit.unitNumber}}<a  ng-click="$parent.remove(unit)" tooltip-placement="top" tooltip="Delete unit"><i class="glyphicon glyphicon-trash"></i></a>
-                          <img  class="svgtest" ng-src="{{unit.square.type||unit.square.icon.iconPath}}"  alt="icon"></p> </div>
-        </div>
-       <div><p> {{showDetail}}</p></div>
+    <div class="panel-body" id="panelheadGrid">
+<div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{levelWidthGrid}} + 'px', width: {{levelLengthGrid}} + 'px'}">
+    <ul>
+        <li gridster-item="unit"  id="{{unit.square.id}}"  ng-repeat="unit in units"  ng-dblclick="showModal(unit,$parent)"  ng-style="{'background-color':'{{unit.square.color}}'}" ><p> {{unit.unitNumber}}<a  ng-click="$parent.remove(unit)" tooltip-placement="top" tooltip="Delete unit"><i class="glyphicon glyphicon-trash"></i></a>
+                          <img  class="svgtest" ng-src="{{unit.square.type||unit.square.icon.iconPath}}"  alt="icon"></p></li>
+    </ul>
+</div>
+</div>
   </div>
 <div class="col-md-3">
 <br>
@@ -69,13 +67,7 @@
 					</h3>
 				</div>
 			</div> 
-			<div class="panel-body" id="panelheadGrid">
-<div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{levelWidthGrid}} + 'px', width: {{levelLengthGrid}} + 'px'}">
-    <ul>
-        <li gridster-item="item" ng-repeat="item in standardItems">{{item.haha}}</li>
-    </ul>
-</div>
-</div>
+			
 
 
   </div>

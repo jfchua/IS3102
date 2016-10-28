@@ -59,8 +59,8 @@ public class EventServiceTest extends AbstractTest {
 			levelId = l.getId();
 		}
 
-		Unit u = unitService.createUnitOnLevel(levelId,10, 10, 10, 10, "red", "type", "#123", 10, 10, false, "desc");
-		Unit u2 = unitService.createUnitOnLevel(levelId,101, 110, 110, 110, "red", "type", "#1213", 110, 110, false, "desc");
+		Unit u = unitService.createUnitOnLevel(levelId,10, 10, 10, 10, "red", "type", "#123", 10, 10, 10,10, false, "desc");
+		Unit u2 = unitService.createUnitOnLevel(levelId,101, 110, 110, 110, "red", "type", "#1213", 110, 110,110,110, false, "desc");
 
 		unitId = u.getId();
 		unitId2 = u2.getId();

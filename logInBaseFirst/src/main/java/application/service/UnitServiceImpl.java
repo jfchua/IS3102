@@ -48,13 +48,15 @@ public class UnitServiceImpl implements UnitService {
 	}*/
 	@Override
 	public Unit createUnitOnLevel(long levelId, int left, int top, int height, int width, String color, String type,
-			String unitNumber, int dimensionLength, int dimensionWidth, Boolean rentable, String description) {
+			String unitNumber, int col, int row,int  sizex,int sizey,Boolean rentable, String description) {
 		Square square=createSquare(left,top,height,width,color,type);
 		Unit unit = new Unit();
 		System.out.println("UnitService"+1);
 		unit.setUnitNumber(unitNumber);
-		unit.setLength(dimensionLength);
-		unit.setWidth(dimensionWidth);
+		unit.setCol(col);
+		unit.setRow(row);
+		unit.setSizex(sizex);
+		unit.setSizey(sizey);
 		unit.setRentable(rentable);
 		System.out.println("rentable"+rentable);
 		unit.setDescription(description);
@@ -84,13 +86,15 @@ public class UnitServiceImpl implements UnitService {
 	}
 	@Override
 	public Unit createUnitOnLevelWithIcon(long levelId,long iconId, int left, int top, int height, int width, String color, String type,
-			String unitNumber, int dimensionLength, int dimensionWidth, Boolean rentable, String description) {
+			String unitNumber, int col, int row,int  sizex,int sizey, Boolean rentable, String description) {
 		Square square=createSquareWithIcon(iconId,left,top,height,width,color,type);
 		Unit unit = new Unit();
 		System.out.println("UnitService"+1);
 		unit.setUnitNumber(unitNumber);
-		unit.setLength(dimensionLength);
-		unit.setWidth(dimensionWidth);
+		unit.setCol(col);
+		unit.setRow(row);
+		unit.setSizex(sizex);
+		unit.setSizey(sizey);
 		unit.setRentable(rentable);
 		unit.setDescription(description);
 		unit.setRent(100.00);//hard coded rent =100, need to chagne later
@@ -144,14 +148,16 @@ public class UnitServiceImpl implements UnitService {
 		return square;
 	}
 	@Override
-	public boolean editUnitInfo(long id,int left,int top, int height, int width, String color, String type,String unitNumber, int dimensionLength, int dimensionWidth,boolean rentable,String description) {
+	public boolean editUnitInfo(long id,int left,int top, int height, int width, String color, String type,String unitNumber, int col, int row,int  sizex,int sizey,boolean rentable,String description) {
 		try{
 			Optional<Unit> unitOpt = getUnitById(id);
 			if (unitOpt.isPresent()){
 				
 				Unit unit=unitOpt.get();
-				unit.setLength(dimensionLength);
-				unit.setWidth(dimensionWidth);
+				unit.setCol(col);
+				unit.setRow(row);
+				unit.setSizex(sizex);
+				unit.setSizey(sizey);
 				unit.setUnitNumber(unitNumber);
 				unit.setDescription(description);
 				System.out.println("UnitServiceImpl: start saving squares");

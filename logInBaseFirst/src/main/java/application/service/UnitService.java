@@ -12,14 +12,14 @@ public interface UnitService {
 			String unitNumber, int dimensionLength, int dimensionWidth, Boolean rentable, String description);*/
 	
 		Unit createUnitOnLevel(long levelId, int left, int top, int height, int width, String color, String type,String unitNumber,
-				int dimensionLength, int dimensionWidth, Boolean rentable, String description);	
+				int col, int row,int  sizex,int sizey, Boolean rentable, String description);	
 		Unit createUnitOnLevelWithIcon(long levelId,long iconId, int left, int top, int height, int width, String color, String type,String unitNumber,
-				int dimensionLength, int dimensionWidth, Boolean rentable, String description);	
+				int col, int row,int  sizex,int sizey, Boolean rentable, String description);	
 		
 		Square createSquare( int left, int top, int height, int width, String color, String type);
 		Square createSquareWithIcon( long iconId,int left, int top, int height, int width, String color, String type);
 		
-		boolean editUnitInfo(long id,int left,int top, int height, int width, String color, String type,String unitNumber, int dimensionLength, int dimensionWidth,boolean rentable,String description);
+		boolean editUnitInfo(long id,int left,int top, int height, int width, String color, String type,String unitNumber, int col, int row,int  sizex,int sizey,boolean rentable,String description);
 		
 		boolean editSquareInfo(long id,int left, int top, int height,int width, String color,String type);
 		
