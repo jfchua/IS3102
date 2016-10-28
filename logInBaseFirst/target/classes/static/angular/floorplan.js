@@ -35,7 +35,7 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 		    console.log(widthForFloorPlan);
 		    $scope.levelLength=800;
 		    $scope.levelWidth=parseInt((level.width)*800/(level.length));
-		    
+		   
 		    //GET UNITS FROM levelIdObj
 		    levelId=level.id;
 		    levelIdObj={
@@ -362,6 +362,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
   $scope.units=[];
   var widthForFloorPlan;
   var obj;
+  var meter;
   angular.element(document).ready(function () {
 	  
 	    	//GET LEVEL
@@ -381,10 +382,14 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	      }
 	      
 	      //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
-	      widthForFloorPlan= document.getElementById('widthForFloorPlan').clientWidth;
+	      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;
 	      $scope.levelLength=800;
 	      $scope.levelWidth=parseInt((level.width)*800/(level.length));
-	     
+	      
+	      meter=parseInt((widthForFloorPlan-12)/(level.length));
+	      $scope.levelLengthGrid=meter*(level.length);
+		    $scope.levelWidthGrid=meter*(level.width);	
+		    console.log( $scope.levelLengthGrid+" "+$scope.levelWidthGrid);
 	      //GET UNITS
 	      levelId=level.id;
 	      levelIdObj={
@@ -921,43 +926,33 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 			 };
 	//GRIDSTER
 			 $scope.standardItems = [
-			                         { sizeX: 400, sizeY: 10, row: 0, col: 400 },
-			                         { sizeX: 20, sizeY: 20, row: 500, col: 100 }
+			                         { sizeX: 100, sizeY: 50, row: 0, col: 0 ,haha:"haha",test:"test"},
+			                         { sizeX: 20, sizeY: 20, row: 50, col: 50 ,haha:"hoho",test:"hoho"}
 			                        
 			                       ];
-			 
-			 $scope.customItemMap = {
-					    sizeX: 'item.size.x',
-					    sizeY: 'item.size.y',
-					    row: 'item.position[0]',
-					    col: 'item.position[1]',
-					    minSizeY: 'item.minSizeY',
-					    maxSizeY: 'item.maxSizeY'
-					};
+			
 			 console.log($scope.standardItems);
 			 console.log("gridster test ");
-			 console.log(level.length);
-			 console.log(widthForFloorPlan);
+			 console.log(meter);
 			 $scope.gridsterOpts = {
 					 
 					 	
 					    columns: level.length, // the width of the grid, in columns
-					    rows:level.width,
 					    pushing: false, // whether to push other items out of the way on move or resize
 					    floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
 					    swapping: false, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
-					    width: widthForFloorPlan, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
-					    colWidth: auto, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
-					    rowHeight: 'match', // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
-					    margins: [1, 1], // the pixel distance between each widget
-					    outerMargin: true, // whether margins apply to outer edges of the grid
+					    width:$scope.levelLengthGrid, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
+					    colWidth: meter, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
+					    rowHeight: meter, // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
+					    margins: [0, 0], // the pixel distance between each widget
+					    outerMargin: false, // whether margins apply to outer edges of the grid
 					    sparse: false, // "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
 					    isMobile: false, // stacks the grid items if true
 					    mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items
-					    mobileModeEnabled: true, // whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
-					    minColumns: 1, // the minimum columns the grid must have
-					    minRows: 2, // the minimum height of the grid, in rows
-					    maxRows: level.height,
+					    mobileModeEnabled: false, // whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
+					    minColumns: level.length, // the minimum columns the grid must have
+					    minRows: level.width, // the minimum height of the grid, in rows
+					    maxRows: level.width,
 					    defaultSizeX: 2, // the default width of a gridster item, if not specifed
 					    defaultSizeY: 1, // the default height of a gridster item, if not specified
 					    minSizeX: 1, // minimum column width of an item
@@ -975,7 +970,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					    },
 					    draggable: {
 					       enabled: true, // whether dragging items is supported
-					       handle: '.my-class', // optional selector for drag handle
+					       //handle: '.my-class', // optional selector for drag handle
 					       start: function(event, $element, widget) {}, // optional callback fired when drag is started,
 					       drag: function(event, $element, widget) {
 					    	 
@@ -986,6 +981,10 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					    }
 					};
 		
+			 console.log("test opts");
+			 console.log($scope.gridsterOpts.colWidth);
+			 console.log($scope.gridsterOpts.maxRows);
+			 console.log($scope.gridsterOpts.columns);
 })
 
 

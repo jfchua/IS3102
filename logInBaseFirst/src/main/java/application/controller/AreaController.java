@@ -55,20 +55,20 @@ public class AreaController {
 		//for view only, call view areas; for load and edit, call viewAreas first and then call saves areas;
 		@RequestMapping(value = "/viewAreas", method = RequestMethod.POST)
 		@ResponseBody
-		public String viewAreas( @RequestBody String event, HttpServletRequest rq)  {
-			System.out.println("event json"+event);
+		public String viewAreas( @RequestBody String booking, HttpServletRequest rq)  {
+			System.out.println("event json"+booking);
 			try{
 			
-				Object obj = parser.parse(event);
+				Object obj = parser.parse(booking);
 				System.out.println("Event obj "+obj);
 				JSONObject jsonObject = (JSONObject) obj;
 				
 				System.out.println("Event jsonObject "+jsonObject);
-				long eventId = (Long)jsonObject.get("id");
+				long bookingId = (Long)jsonObject.get("id");
 			
-				System.out.println("Event id "+eventId);
+				System.out.println("bookingId id "+bookingId);
 				//long eventId = Long.parseLong(event);
-				Set<Area> areas = areaService.getAreasByEventId(eventId);
+				Set<Area> areas = areaService.getAreasByBookingId(bookingId);
 				System.out.println("Event areas "+areas);
 				Gson gson2 = new GsonBuilder()
 					    .setExclusionStrategies(new ExclusionStrategy() {
@@ -163,7 +163,7 @@ public class AreaController {
 				
 				if (areaId==0){
 					System.out.println("Add new area");
-					Area area=areaService.createAreaOnEvent(eventId,left, top, height,  width,  color,  type,areaName,description);
+					Area area=areaService.createAreaOnBooking(eventId,left, top, height,  width,  color,  type,areaName,description);
 					areaIds.add(area.getId());
 					System.out.println("AreaController Test: added new area, id "+area.getId());
 				}else if((areaService.editAreaInfo(areaId,left, top, height,  width,  color,  type,areaName,description))==true){
@@ -176,7 +176,7 @@ public class AreaController {
 						
 				}//end for 
 				System.out.println("Test: 6");
-				if(areaService.deleteAreasFromEvent(areaIds,eventId)==false){
+				if(areaService.deleteAreasFromBooking(areaIds,eventId)==false){
 					System.out.println("Test 61 error: cannot delete areas");
 					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 				}else{

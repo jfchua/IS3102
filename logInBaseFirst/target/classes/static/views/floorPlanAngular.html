@@ -57,9 +57,9 @@
    
     
  </div>    
-<div class="col-md-9">
+<div class="col-md-9" >
 <div class="panel panel-primary">
-				<div class="panel-heading">
+				<div class="panel-heading" >
 					<h3 class="panel-title">Floor Plan	  
 						<div class="panel-control pull-right">
 							<a class="panelButton"><i class="fa fa-refresh"></i></a>
@@ -69,11 +69,10 @@
 					</h3>
 				</div>
 			</div> 
-			<div class="panel-body">
-<div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
+			<div class="panel-body" id="panelheadGrid">
+<div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{levelWidthGrid}} + 'px', width: {{levelLengthGrid}} + 'px'}">
     <ul>
-        <li gridster-item="item" ng-repeat="item in standardItems" style="color:blue"
-            id="{{unit.square.id}}"></li>
+        <li gridster-item="item" ng-repeat="item in standardItems">{{item.haha}}</li>
     </ul>
 </div>
 </div>

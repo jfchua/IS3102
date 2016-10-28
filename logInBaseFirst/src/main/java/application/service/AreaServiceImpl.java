@@ -14,13 +14,13 @@ import application.repository.*;
 @Service
 public class AreaServiceImpl implements AreaService {
 	private final AreaRepository areaRepository;
-	private final EventRepository eventRepository;
+	private final BookingApplRepository bookingRepository;
 	private final SquareRepository squareRepository;
 	private static final Logger LOGGER = LoggerFactory.getLogger(LevelServiceImpl.class);
 	
 	@Autowired
-	public AreaServiceImpl(EventRepository eventRepository,AreaRepository areaRepository, SquareRepository squareRepository) {
-		this.eventRepository =eventRepository;
+	public AreaServiceImpl(BookingApplRepository bookingRepository,AreaRepository areaRepository, SquareRepository squareRepository) {
+		this.bookingRepository =bookingRepository;
 		this.areaRepository = areaRepository;
 		this.squareRepository=squareRepository;
 		
@@ -44,7 +44,7 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	@Override
-	public Area createAreaOnEvent(long eventId, int left, int top, int height, int width, String color, String type,
+	public Area createAreaOnBooking(long bookingId, int left, int top, int height, int width, String color, String type,
 			String areaName, String description) {
 		Square square=createSquare(left,top,height,width,color,type);
 		Area area = new Area();
@@ -56,17 +56,15 @@ public class AreaServiceImpl implements AreaService {
 		area.setSquare(square);
 		areaRepository.saveAndFlush(area);
 	
-		Event event=eventRepository.findOne(eventId); 
-		Set<BookingAppl> bookings = event.getBookings();
-		BookingAppl b1 = bookings.iterator().next();
-		Set<Area> areas=b1.getAreas();
+		BookingAppl booking=bookingRepository.findOne(bookingId); 
+		Set<Area> areas = booking.getAreas();
 		
 		areas.add(area);
-		b1.setAreas(areas);
+		booking.setAreas(areas);
 		
-		eventRepository.saveAndFlush(event);
+		bookingRepository.saveAndFlush(booking);
 		
-		b1.setEvent(event);
+
 		
 		areaRepository.saveAndFlush(area);
 		
@@ -135,21 +133,20 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	@Override
-	public boolean deleteArea(long id, long eventId) {
+	public boolean deleteArea(long id, long bookingId) {
 		try{
 			Optional<Area> areaOpt = getAreaById(id);
-			Event event = eventRepository.findOne(eventId);
+			BookingAppl booking = bookingRepository.findOne(bookingId);
 		
 			if(areaOpt.isPresent()){
 				Area area= areaOpt.get();
 				Square square=area.getSquare();
 				area.setSquare(null);
-				Set<BookingAppl> bookings = event.getBookings();
-				BookingAppl b1 = bookings.iterator().next();
-				Set<Area> areas=b1.getAreas();
+				
+				Set<Area> areas=booking.getAreas();
 				areas.remove(area);
-				b1.setAreas(areas);
-				eventRepository.saveAndFlush(event);
+				booking.setAreas(areas);
+				bookingRepository.saveAndFlush(booking);
 				
 				areaRepository.delete(area);
 				areaRepository.flush();
@@ -189,18 +186,17 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	@Override
-	public Set<Area> getAreasByEventId(long eventId) {
-		System.out.println("AreaServiceTest: getAreas of event "+eventId);
-		LOGGER.debug("Getting all areas by Id"+eventId);
-		Event event=eventRepository.getOne(eventId);  
-		Set<BookingAppl> bookings = event.getBookings();
-		BookingAppl b1 = bookings.iterator().next();
-		return  b1.getAreas();
+	public Set<Area> getAreasByBookingId(long bookingId) {
+		System.out.println("AreaServiceTest: getAreas of booking "+bookingId);
+		LOGGER.debug("Getting all areas by Id"+bookingId);
+		BookingAppl booking=bookingRepository.getOne(bookingId);  
+		Set<Area> areas = booking.getAreas();
+		return  areas;
 	}
 
 	@Override
-	public boolean deleteAreasFromEvent(Set<Long> areaIds, long eventId) {
-		Set<Area> areas=getAreasByEventId(eventId);
+	public boolean deleteAreasFromBooking(Set<Long> areaIds, long bookingId) {
+		Set<Area> areas=getAreasByBookingId(bookingId);
 	
 		//get a set of existing areas ids
 		Set<Long> existingAreaIds=new HashSet<Long>();
@@ -214,7 +210,7 @@ public class AreaServiceImpl implements AreaService {
 			if(areaIds.contains(existId)){
 				System.out.println("AreaServiceTest: area "+existId+" exists.");
 			}else{
-				if(deleteArea(existId,eventId)){
+				if(deleteArea(existId,bookingId)){
 					System.out.println("Test: area "+existId+" is deleted.");
 					
 				}else{

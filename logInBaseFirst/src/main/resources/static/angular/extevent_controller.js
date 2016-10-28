@@ -927,6 +927,15 @@ $scope.deleteBooking = function(id){
 	}	
 	)*/
 }
+
+$scope.passBooking=function(booking){
+	console.log(booking);
+	var obj={
+			event:$scope.event,
+			booking:booking
+			};
+	shareData.addData(obj);
+}
 }])
 
 app.controller('paymentHistoryExController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {

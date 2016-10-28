@@ -5,6 +5,8 @@ div.gridster li.gridster-item {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     color: #004756;
     background: #ffffff;
+        position:absolute;
+            cursor:move;
     padding: 10px;
 }
 
@@ -12,7 +14,7 @@ div.gridster li.gridster-item {
     background:#FFF;
     border:1px solid #000;
     height:400px;
-    margin:auto auto auto auto;
+    margin:0 0 0 0;
     position:relative;
     width:960px;
 }

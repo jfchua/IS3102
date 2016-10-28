@@ -2652,47 +2652,61 @@ $scope.deleteBooking = function(id){
 
 
 //=======End of test===========
+//FLOORPLAN
+
 
 
 //Unit Plan of Event used by event organiser
 app.controller('areaPlanController', function ($scope, $http,shareData) {
-	jQuery = window.jQuery;
-	console.log(jQuery);
-	console.log(jQuery.ui);
-
-
-	var eventIdObj;
-	var eventId;
+	//jQuery = window.jQuery;
+	//console.log(jQuery);
+	//console.log(jQuery.ui);
 	$scope.areas=[];
-	$scope.viewArea=function(){
-		$scope.areas=[];
-		alert("viewing existing areas");
-		var event = JSON.parse(shareData.getData());
-		console.log("test hailing");
-		console.log(event.id);
-		eventId=event.id;
+	var bookingId;
+	angular.element(document).ready(function () {
+		var obj=shareData.getData();
+		$scope.booking=obj.booking;
+		$scope.event=obj.event;
+		console.log($scope.booking);
+		console.log($scope.event);
+		
+		
+		
+	
+
+	
+		bookingId=$scope.booking.id;
 
 		//get event id from previous page
-		eventIdObj={
-				id:eventId
+		bookingIdObj={
+				id:bookingId
 		}
 		//retrieve areas when page loaded
-		$http.post('//localhost:8443/event/viewAreas', JSON.stringify(eventIdObj)).then(function(response){
+		$http.post('//localhost:8443/event/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){
 			console.log("pure response is "+response.data);
 
-			console.log("test anglar.fromJon"+angular.fromJson(response.data));
+			console.log(angular.fromJson(response.data));
 			$scope.areas=angular.fromJson(response.data);
 
 		},function(response){
 			console.log("DID NOT view");
 			console.log("response is "+angularfromJson(response.data).error);
 		})
+	})
+	$scope.passEvent=function(){
+		shareData.addData($scope.event);
+	}
+
+
+
+	$scope.viewArea=function(){
+		
 
 
 	}
 
 	$scope.addArea = function () {  
-		alert("Please edit information of the new area in the table below.");
+		
 		$scope.areas.push({"id": 0,"areaName": "#area","description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "rect"}});
 		console.log("test "+JSON.stringify($scope.areas));
 
@@ -2706,7 +2720,7 @@ app.controller('areaPlanController', function ($scope, $http,shareData) {
 		console.log(areasString);
 
 		var dataObj = {
-				id: eventId,
+				id: bookingId,
 				Areas:{
 					Area:saveAreas
 				}
@@ -2716,7 +2730,7 @@ app.controller('areaPlanController', function ($scope, $http,shareData) {
 
 		$http.post('/event/saveAreas', JSON.stringify(dataObj)).then(function(response){
 			console.log("pure response is "+JSON.stringify(response.data));
-			alert("Saved. Please click on \"Start\" button to view.");
+	
 
 		},function(response){//else is not saved successfully
 			console.log("DID NOT SAVE");
