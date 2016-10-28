@@ -1,7 +1,10 @@
 package application.service;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -18,11 +21,14 @@ import application.entity.Building;
 import application.entity.Category;
 import application.entity.Event;
 import application.entity.Level;
+import application.entity.Ticket;
 import application.entity.Unit;
+import application.entity.User;
 import application.exception.EventNotFoundException;
 import application.repository.AuditLogRepository;
 import application.repository.CategoryRepository;
 import application.repository.EventRepository;
+import application.repository.TicketRepository;
 import application.repository.UserRepository;
 
 @Service
@@ -33,15 +39,17 @@ public class TicketingServiceImpl implements TicketingService {
 	private final AuditLogRepository auditLogRepository;
 	private final EventRepository eventRepository;
 	private final CategoryRepository categoryRepository;
+	private final TicketRepository ticketRepository;
 
 	@Autowired
-	public TicketingServiceImpl(CategoryRepository categoryRepository, EventRepository eventRepository, EventService eventService,AuditLogRepository auditLogRepository, UserRepository userRepository) {
+	public TicketingServiceImpl(TicketRepository ticketRepository, CategoryRepository categoryRepository, EventRepository eventRepository, EventService eventService,AuditLogRepository auditLogRepository, UserRepository userRepository) {
 		super();
 		this.auditLogRepository = auditLogRepository;
 		this.userRepository = userRepository;
 		this.eventService = eventService;
 		this.eventRepository = eventRepository;
 		this.categoryRepository = categoryRepository;
+		this.ticketRepository = ticketRepository;
 	}
 
 	@Override
@@ -122,14 +130,14 @@ public class TicketingServiceImpl implements TicketingService {
 		Set<Building> buildings = new HashSet<>();
 		Set<Level> levels = new HashSet<>();
 		Set<Unit> units = new HashSet<>();
-		
+
 		for ( BookingAppl book : bookings){
 			buildings.add(book.getUnit().getLevel().getBuilding());
 			levels.add(book.getUnit().getLevel());
 			units.add(book.getUnit());
 		}
-		
-				
+
+
 		for ( BookingAppl book : bookings){
 			Boolean addBuilding = true;
 			Unit u = book.getUnit();
@@ -145,18 +153,74 @@ public class TicketingServiceImpl implements TicketingService {
 			if ( addBuilding ){
 				addresses.add(t);
 			}
-			
+
 			if ( for  )
 
 		}*/
-		
+
 
 		//bd.put("roles", roles); 
 		System.out.println("Returning event info : " + bd.toString());
 		return bd.toString();
 	}
+
+	public boolean generateTicket(User user, String paymentId, int numTickets, Long categoryId){
+		try{
+			Category c = categoryRepository.findOne(categoryId);
+			/*if ( c.getTickets() != null ){
+				System.err.println("!=null");
+				Set<Ticket> tickets = c.getTickets();
+				if ( tickets.isEmpty() && ( (tickets.size() + numTickets) ) > c.getNumOfTickets()   ){
+					return false;
+				}
+			}
+			else{
+				System.err.println("new hash set");
+				Set<Ticket> tickets = new HashSet<Ticket>();
+			}
+			Set<Ticket> tickets = c.getTickets();*/
+
+			for ( int i = 0; i < numTickets;i++){
+				Ticket t = new Ticket();
+				t.setCategory(c);
+				t.setPaymentId(paymentId);
+				t.setPurchase_date(new Date());
+				t.setEnd_date(c.getEvent().getEvent_end_date());
+				t.setStart_date(c.getEvent().getEvent_start_date());
+				t.setTicketDetails(c.getEvent().getEvent_title() + ":" + c.getCategoryName());
+
+				SecureRandom random = new SecureRandom();
+				String toUuid = new BigInteger(130,random).toString(32);
+				String uuid =  toUuid.substring(0,10);		
+				t.setTicketUUID(uuid);
+				System.err.println(t.getTicketUUID());
+
+				//tickets.add(t);
+				//c.setTickets(tickets);
+				c.addTicket(t);
 	
-/*	private class tempAddressObject{
+				Set<Ticket> ticketsUser = user.getTickets();
+	
+				ticketsUser.add(t);
+		
+				user.setTickets(ticketsUser);
+				ticketRepository.save(t);
+		
+
+				//categoryRepository.save(c);
+				//userRepository.save(user);
+			}
+		}
+		catch ( Exception e){
+			System.err.println("Error at tix generation");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+
+	}
+
+	/*	private class tempAddressObject{
 
 		private Building building;
 		private String levelNum;

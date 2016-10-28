@@ -7,16 +7,31 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 	$scope.data = {};
 	//var tempObj= {id:1};
 	//console.log(tempObj)
-	$http.get("//localhost:8443/event/viewAllEvents").then(function(response){
-		$scope.events = response.data;
+	$http.get("//localhost:8443/tixGetFeedback").then(function(response){
+		$scope.feedbacks = response.data;
 		console.log("DISPLAY ALL EVENT");
-		console.log($scope.events);
+		console.log($scope.feedbacks);
 
 	},function(response){
 		alert("did not view all events");
 		//console.log("response is : ")+JSON.stringify(response);
 	}	
-	)	
+	)
+	
+	$http.get("//localhost:8443/event/viewAllEvents").then(function(response){
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
+		$scope.events = response.data;
+		console.log("DISPLAY ALL EVENT");
+		console.log($scope.events);
+
+	},function(response){
+		alert("did not view all feedback");
+		//console.log("response is : ")+JSON.stringify(response);
+	}	
+	)
+	
+	
 });
 
 $scope.viewApprovedEvents = function(){
@@ -979,7 +994,16 @@ app.controller('paymentExController', ['$scope', '$http','$state','$routeParams'
 		},function(response){
 			alert("did not view plans");
 		}	
-		)	
+		)
+		
+		$http.get("//localhost:8443/event/getTotal").then(function(response){
+			$scope.totalAmount = response.data;
+			console.log("DISPLAY TOTAL BALANCE");
+			console.log($scope.totalAmount);
+		},function(response){
+			alert("did not view plans");
+		}	
+		)
 	});
 	$scope.paymentPlanNull = function(paymentPlan){
 		  return !(paymentPlan === null)

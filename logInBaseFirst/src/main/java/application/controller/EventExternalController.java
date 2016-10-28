@@ -613,8 +613,9 @@ public class EventExternalController {
 							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 						}
 						return new ResponseEntity<Void>(HttpStatus.OK);
-					}					
-					
+					}		
+	              
+	              @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 	              @RequestMapping(value = "/getPaymentHistory", method = RequestMethod.GET)
 	          	@ResponseBody
 	          	public ResponseEntity<String> getPaymentHistory(HttpServletRequest rq) throws UserNotFoundException {
@@ -671,7 +672,8 @@ public class EventExternalController {
 	              
 	           // Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
 	          	// Each object (building) will contain... long id, .
-	          	@RequestMapping(value = "/viewAllPayments",  method = RequestMethod.GET)
+	           @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	            @RequestMapping(value = "/viewAllPayments",  method = RequestMethod.GET)
 	          	@ResponseBody
 	          	public ResponseEntity<String> viewAllPayments(HttpServletRequest rq) throws UserNotFoundException {
 	          		System.out.println("start view");
@@ -721,11 +723,11 @@ public class EventExternalController {
 	          				System.out.println("TOTAL1");
 	          				obj1.put("outstanding",p.getPayable());
 	          				System.out.println("TOTAL2");
-	          				obj1.put("status",p.getEvent().getPaymentStatus());          				
+	          				obj1.put("status",String.valueOf(p.getEvent().getPaymentStatus()));          				
 	          				System.out.println("TOTAL3");
 	          				jArray.add(obj1);
 	          			}
-	          			return new ResponseEntity<String>(HttpStatus.OK);
+	          			return new ResponseEntity<String>(jArray.toString(), HttpStatus.OK);
 	          		}
 	          		catch (Exception e){
 	          			System.out.println("HERE");
@@ -735,13 +737,14 @@ public class EventExternalController {
 	          	
 	         // Call this method using $http.get and you will get a JSON format containing an array of event objects.
 	        	// Each object (building) will contain... long id, collection of levels.
-	        	@RequestMapping(value = "/viewPaymentDetails/{id}", method = RequestMethod.GET)
+	           @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	           @RequestMapping(value = "/viewPaymentDetails/{id}", method = RequestMethod.GET)
 	        	@ResponseBody
-	        	public ResponseEntity<PaymentPlan> viewListOfEvents(@PathVariable("id") String orgId, HttpServletRequest rq) throws UserNotFoundException {
+	        	public ResponseEntity<String> viewListOfEvents(@PathVariable("id") String orgId, HttpServletRequest rq) throws UserNotFoundException {
 	        		Principal principal = rq.getUserPrincipal();
 	        		Optional<User> usr = userService.getUserByEmail(principal.getName());
 	        		if ( !usr.isPresent() ){
-	        			return new ResponseEntity<PaymentPlan>(HttpStatus.CONFLICT);
+	        			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 	        		}
 	        		try{
 	        			ClientOrganisation client = usr.get().getClientOrganisation();	
@@ -768,13 +771,79 @@ public class EventExternalController {
 	        					.serializeNulls()
 	        					.create();
 	        
+	        			JSONObject obj1 = new JSONObject();
+          				obj1.put("id", p.getId());
+          				System.out.println("payment id is "+p.getId());
+          				obj1.put("total", p.getTotal());	
+          				System.out.println("TOTAL1");
+          				obj1.put("nextPayment",p.getNextPayment());
+          				System.out.println("TOTAL2");
+          				obj1.put("due",String.valueOf(p.getDue()));          				
+          				System.out.println("TOTAL3");
 	        			System.out.println("finishing getting list of events");
-	        			return new ResponseEntity<PaymentPlan>(p,HttpStatus.OK);			
+	        			return new ResponseEntity<String>(obj1.toString(),HttpStatus.OK);			
 	        		}
 	        		catch (Exception e){
-	        			return new ResponseEntity<PaymentPlan>(HttpStatus.CONFLICT);
+	        			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 	        		}
-	        	}	          	
+	        	}	
+	           
+	           // Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
+	          	// Each object (building) will contain... long id, .
+	           @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	            @RequestMapping(value = "/getTotal",  method = RequestMethod.GET)
+	          	@ResponseBody
+	          	public ResponseEntity<String> getTotal(HttpServletRequest rq) throws UserNotFoundException {
+	          		System.out.println("start view");
+	          		Principal principal = rq.getUserPrincipal();
+	          		Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+	          		if ( !eventOrg1.isPresent() ){
+	          			return new ResponseEntity<String>(HttpStatus.CONFLICT);
+	          		}
+	          		try{	
+	          			User user = eventOrg1.get();
+	          			ClientOrganisation client = user.getClientOrganisation();
+	          			System.out.println(user.getId());
+	          			//long id = Long.parseLong(bId);
+	          			Set<PaymentPlan> plans = eventExternalService.viewAllPaymentPlan(client, user);	
+	          			System.out.println("There are " + plans.size() + " plans under this event org");
+	          			JSONArray jArray = new JSONArray();
+	          			Gson gson2 = new GsonBuilder()
+	          					.setExclusionStrategies(new ExclusionStrategy() {
+	          						public boolean shouldSkipClass(Class<?> clazz) {
+	          							return (clazz == Event.class);
+	          						}
+
+	          						/**
+	          						 * Custom field exclusion goes here
+	          						 */
+
+	          						@Override
+	          						public boolean shouldSkipField(FieldAttributes f) {
+	          							//TODO Auto-generated method stub
+	          							return false;
+	          							//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+	          						}
+	          					})
+	          					/**
+	          					 * Use serializeNulls method if you want To serialize null values 
+	          					 * By default, Gson does not serialize null values
+	          					 */
+	          					.serializeNulls()
+	          					.create();			    
+	          			String json = gson2.toJson(plans);
+	          			System.out.println(json);
+	          			Double total = 0.00;
+	          			for(PaymentPlan p: plans){
+	          				total+= p.getPayable();
+	          			}
+	          			return new ResponseEntity<String>(String.valueOf(total), HttpStatus.OK);
+	          		}
+	          		catch (Exception e){
+	          			System.out.println("HERE");
+	          			return new ResponseEntity<String>(HttpStatus.CONFLICT);
+	          		}
+	          	}	
 	              
 }
 

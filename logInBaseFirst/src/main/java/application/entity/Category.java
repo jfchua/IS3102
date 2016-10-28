@@ -37,6 +37,14 @@ public class Category {
 		@Column(nullable = true)
 		private Set<Ticket> tickets = new HashSet<Ticket>();
 
+		public Set<Ticket> getTickets() {
+			return tickets;
+		}
+
+		public void setTickets(Set<Ticket> tickets) {
+			this.tickets = tickets;
+		}
+
 		public Long getId() {
 			return id;
 		}
@@ -76,6 +84,8 @@ public class Category {
 		public void setEvent(Event event) {
 			this.event = event;
 		}
-	    
+	    public void addTicket(Ticket t){
+	    	this.tickets.add(t);
+	    }
 	    
 }

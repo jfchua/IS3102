@@ -36,14 +36,23 @@ public class User {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 	
-	@OneToMany(cascade={CascadeType.ALL})
+	@OneToMany(fetch = FetchType.EAGER,cascade={CascadeType.ALL})
 	@Column(nullable = true)
+	@JsonIgnore
 	private Set<Ticket> tickets = new HashSet<Ticket>();
 
+	public Set<Ticket> getTickets() {
+		return tickets;
+	}
+	public void setTickets(Set<Ticket> tickets) {
+		this.tickets = tickets;
+	}
 	@Column(name = "password_hash", nullable = false)
 	private String passwordHash;
 
-
+	@Column(name = "security", nullable = false)
+	private String security;
+	
 	//// CREATE NEW USER//////////////	
 	@Column(name = "name", nullable = false, updatable = true)
 	private String name;
@@ -229,5 +238,12 @@ public class User {
 				", passwordHash='" + passwordHash.substring(0, 10) +
 				'}';
 
+	}
+	public String getSecurity() {
+		return security;
+	}
+
+	public void setSecurity(String security) {
+		this.security = security;
 	}
 }

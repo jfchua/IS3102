@@ -840,7 +840,7 @@ public class PaymentPlanController {
 			File f = new File(path);
 			int counter = 1;
 			if ( !f.exists()){
-				parameters.put("number", paymentId);
+				parameters.put("number", String.valueOf(paymentId));
 			}
 			else{
 				while ( f.exists() && !f.isDirectory() ){
@@ -863,7 +863,7 @@ public class PaymentPlanController {
 			User usr = userService.getUserByEmail(principal.getName()).get();
 			ClientOrganisation client = usr.getClientOrganisation();
 			PaymentPolicy paypol = client.getPaymentPolicy();
-            String email = "Please pay the amount stated in the invoice within "+2*paypol.getNumOfDueDays() +
+            String email = "Please pay the amount stated in the invoice within "+ paypol.getNumOfDueDays() +
             		" days.";
 			emailService.sendEmailWithAttachment(user.getEmail(), "Invoice for payment plan id "+paymentId, email , path);
 
@@ -879,10 +879,10 @@ public class PaymentPlanController {
 	@ResponseBody
 	public void downloadReport(HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
 		System.out.println("Enter");
-		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Monthly.jasper");
+		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/payment.jasper");
 		response.setContentType("application/pdf");
 		Principal principal = request.getUserPrincipal();
-		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+		response.setHeader("Content-disposition", "attachment; filename=payment.pdf");
 		ServletOutputStream outputStream = response.getOutputStream();
 		HashMap<String,Object> parameters = new HashMap<String,Object>();
 		StringBuilder sb = new StringBuilder();
