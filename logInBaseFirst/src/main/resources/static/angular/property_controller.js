@@ -31,6 +31,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 
 		console.log("SAVING THE BUILDING");
 		send.success(function(){
+			console.log("save building ok");
 			$state.go("dashboard.viewBuilding");
 			ModalService.showModal({
 
@@ -53,7 +54,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 			};
 			//END SHOWMODAL
 
-			
+
 
 		});
 		send.error(function(data){
@@ -293,14 +294,18 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 					console.log("OK");
 				});
 			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
 
+				console.log("in dissmiss");
+			};
 			//END SHOWMODAL
 		});
 	};	
 }])
 
 //DELETE BUILDING
-app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
+app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','shareData','$state','ModalService', function ($scope,  $timeout,$http ,shareData,$state,ModalService) {
 
 	angular.element(document).ready(function () {
 
@@ -310,26 +315,69 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 	});
 
 	$scope.deleteBuilding = function(){
-		if(confirm('CONFIRM TO DELETE BUILDING '+$scope.building.name+'?')){
-			console.log("START DELETE");
-			$scope.data = {};
-			var tempObj ={id:$scope.building.id};
-			console.log("fetch id "+ tempObj);
 
-			$http.post("//localhost:8443/building/deleteBuilding", JSON.stringify(tempObj)).then(function(response){
-				//$scope.buildings = response.data;
-				console.log("Delete the BUILDING");
-				alert('Building successfully delete. Going back to view buildings...');
-				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				//$location.path("/viewBuilding");
-				$state.go("dashboard.viewBuilding");
 
-			},function(response){
-				alert("Error, " + response);
-				//console.log("response is : ")+JSON.stringify(response);
-			}	
-			)
-		}
+		ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: "Do you wish to delete " +$scope.building.name+'?',
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					console.log("START DELETE");
+					$scope.data = {};
+					var tempObj ={id:$scope.building.id};
+					console.log("fetch id "+ tempObj);
+
+					$http.post("//localhost:8443/building/deleteBuilding", JSON.stringify(tempObj)).then(function(response){
+						//$scope.buildings = response.data;
+						console.log("Delete the BUILDING");
+						$state.go("dashboard.viewBuilding");
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Building successfully deleted',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+						//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
+						//$location.path("/viewBuilding");
+						
+
+					},function(response){
+						alert("Error, " + response);
+						//console.log("response is : ")+JSON.stringify(response);
+					}	
+					)
+				}
+			});
+		});
+
+		$scope.dismissModal = function(result) {
+			close(result, 200); // close, but give 200ms for bootstrap to animate
+
+			console.log("in dissmiss");
+		};
+
+		//END SHOWMODAL
+
+
+
 
 	};	
 }])

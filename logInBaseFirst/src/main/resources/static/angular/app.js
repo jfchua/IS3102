@@ -106,797 +106,797 @@ var app = angular.module('app', [ 'ui.router',
                                   'gridster'
                                   ])
 
-//Declaring Constants
-.constant('USER_ROLES', {
-	all: '*',
-	admin: 'ROLE_ADMIN',
-	event : 'ROLE_EVENT',
-	user: 'ROLE_USER',
-	superadmin: 'ROLE_SUPERADMIN',
-	finance: 'ROLE_FINANCE',
-	ticket: 'ROLE_TICKET',
-	property: 'ROLE_PROPERTY',
-	organiser: 'ROLE_EXTEVE'
-})
+//                                Declaring Constants
+                                  .constant('USER_ROLES', {
+                                	  all: '*',
+                                	  admin: 'ROLE_ADMIN',
+                                	  event : 'ROLE_EVENT',
+                                	  user: 'ROLE_USER',
+                                	  superadmin: 'ROLE_SUPERADMIN',
+                                	  finance: 'ROLE_FINANCE',
+                                	  ticket: 'ROLE_TICKET',
+                                	  property: 'ROLE_PROPERTY',
+                                	  organiser: 'ROLE_EXTEVE'
+                                  })
 
-.constant('AUTH_EVENTS', {
-	loginSuccess: 'auth-login-success',
-	loginFailed: 'auth-login-failed',
-	logoutSuccess: 'auth-logout-success',
-	sessionTimeout: 'auth-session-timeout',
-	notAuthenticated: 'auth-not-authenticated',
-	notAuthorized: 'auth-not-authorized'
-})
-//All UIRouters
-app.config(
-		function($stateProvider, $urlRouterProvider, $httpProvider, USER_ROLES) { 
+                                  .constant('AUTH_EVENTS', {
+                                	  loginSuccess: 'auth-login-success',
+                                	  loginFailed: 'auth-login-failed',
+                                	  logoutSuccess: 'auth-logout-success',
+                                	  sessionTimeout: 'auth-session-timeout',
+                                	  notAuthenticated: 'auth-not-authenticated',
+                                	  notAuthorized: 'auth-not-authorized'
+                                  })
+//                                All UIRouters
+                                  app.config(
+                                		  function($stateProvider, $urlRouterProvider, $httpProvider, USER_ROLES) { 
 
-			$stateProvider
-			.state('/login',{
-				url:'/login',
-				templateUrl: '/views/mainlogin.html',
-				controller: 'passController',
-				data: {
-					authorizedRoles: [USER_ROLES.all],
-				}
+                                			  $stateProvider
+                                			  .state('/login',{
+                                				  url:'/login',
+                                				  templateUrl: '/views/mainlogin.html',
+                                				  controller: 'passController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.all],
+                                				  }
 
-			})
-			.state('/reset',{
-				url:'/reset',
-				templateUrl: '/views/resetPassword.html',
-				controller: 'passController',
-				data: {
-					authorizedRoles: [USER_ROLES.all]
-				}
-			})
-			.state('/resetPassword',{
-				url:'/resetPassword/:id/:token',
-				templateUrl: '/views/resetChangePass.html',
-				controller: 'passController',
-				data: {
-					authorizedRoles: [USER_ROLES.all]
-				}
-			})
-			.state('dashboard',{
-				url:'/dashboard',
-				templateUrl: 'views/index.html',
-				controller: 'passController',
-				data: {
-					authorizedRoles: [USER_ROLES.user]
-				}
-			})
-			.state('dashboard.workspace',{
-				url:'/workspace',
-				templateUrl: 'views/workspace.html',
-				controller: 'workspaceController',
-				data: {
-					authorizedRoles: [USER_ROLES.user]
-				}
-			})
-			.state('dashboard.viewIcon',{
-				url: '/viewIcon',
-				templateUrl: '/views/viewIcon.html',
-				controller: 'iconController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.addIcon',{
-				url: '/addIcon',
-				templateUrl: '/views/addIcon.html',
-				controller: 'addIconController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.updateIcon',{
-				url: '/updateIcon',
-				templateUrl: '/views/updateIcon.html',
-				controller: 'updateIconController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.uploadCSV',{
-				url: '/uploadCSV',
-				templateUrl: '/views/uploadCSV.html',
-				controller: 'csvController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.updateRent',{
-				url: '/updateRent',
-				templateUrl: '/views/updateRent.html',
-				controller: 'rentController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.addBuilding',{
-				url: '/addBuilding',
-				templateUrl: '/views/addBuilding.html',
-				controller: 'buildingController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.viewBuilding',{
-				url: '/viewBuilding',
-				templateUrl: '/views/viewBuilding.html',
-				controller: 'buildingController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.updateBuilding',{
-				url: '/updateBuilding',		
-				templateUrl: '/views/updateBuilding.html',
-				controller: 'updateBuildingController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.deleteBuilding',{
-				url: '/deleteBuilding',
-				templateUrl: '/views/deleteBuilding.html',
-				controller: 'deleteBuildingController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.viewLevels',{
-				url: '/viewLevels',
-				templateUrl: '/views/viewLevels.html',
-				controller: 'viewLevelController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.addLevel',{
-				url: '/addLevel',
-				templateUrl: '/views/addLevel.html',
-				controller: 'addLevelController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.updateLevel',{
-				url: '/updateLevel',
-				templateUrl: '/views/updateLevel.html',
-				controller: 'levelController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.deleteLevel',{
-				url: '/deleteLevel',
-				templateUrl: '/views/deleteLevel.html',
-				controller: 'levelController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-            .state('dashboard.addSpecialRate',{
-				url: '/addSpecialRate',
-				templateUrl: '/views/addSpecialRate.html',
-				controller: 'rateController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.viewAllRates',{
-				url: '/viewAllRates',
-				templateUrl: '/views/viewAllRates.html',
-				controller: 'rateController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.updateSpecialRate',{
-				url: '/updateSpecialRate',		
-				templateUrl: '/views/updateSpecialRate.html',
-				controller: 'updateRateController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.deleteSpecialRate',{
-				url: '/deleteSpecialRate',
-				templateUrl: '/views/deleteSpecialRate.html',
-				controller: 'deleteRateController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.addEvent',{
-				url:'/addEvent',
-				templateUrl: '/views/addEvent.html',
-				controller: 'eventController',
-				data: {
-					authorizedRoles: [USER_ROLES.event]
-				}
-			})
-			.state('dashboard.uploadCompanyLogo',{
-				url:'/uploadCompanyLogo',
-				templateUrl: '/views/uploadCompanyLogo.html',
-				controller: 'logoController',
-				data: {
-					authorizedRoles: [USER_ROLES.admin]
-				}
-			})
+                                			  })
+                                			  .state('/reset',{
+                                				  url:'/reset',
+                                				  templateUrl: '/views/resetPassword.html',
+                                				  controller: 'passController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.all]
+                                				  }
+                                			  })
+                                			  .state('/resetPassword',{
+                                				  url:'/resetPassword/:id/:token',
+                                				  templateUrl: '/views/resetChangePass.html',
+                                				  controller: 'passController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.all]
+                                				  }
+                                			  })
+                                			  .state('dashboard',{
+                                				  url:'/dashboard',
+                                				  templateUrl: 'views/index.html',
+                                				  controller: 'passController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.user]
+                                				  }
+                                			  })
+                                			  .state('dashboard.workspace',{
+                                				  url:'/workspace',
+                                				  templateUrl: 'views/workspace.html',
+                                				  controller: 'workspaceController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.user]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewIcon',{
+                                				  url: '/viewIcon',
+                                				  templateUrl: '/views/viewIcon.html',
+                                				  controller: 'iconController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addIcon',{
+                                				  url: '/addIcon',
+                                				  templateUrl: '/views/addIcon.html',
+                                				  controller: 'addIconController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateIcon',{
+                                				  url: '/updateIcon',
+                                				  templateUrl: '/views/updateIcon.html',
+                                				  controller: 'updateIconController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.uploadCSV',{
+                                				  url: '/uploadCSV',
+                                				  templateUrl: '/views/uploadCSV.html',
+                                				  controller: 'csvController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateRent',{
+                                				  url: '/updateRent',
+                                				  templateUrl: '/views/updateRent.html',
+                                				  controller: 'rentController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addBuilding',{
+                                				  url: '/addBuilding',
+                                				  templateUrl: '/views/addBuilding.html',
+                                				  controller: 'buildingController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewBuilding',{
+                                				  url: '/viewBuilding',
+                                				  templateUrl: '/views/viewBuilding.html',
+                                				  controller: 'buildingController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateBuilding',{
+                                				  url: '/updateBuilding',		
+                                				  templateUrl: '/views/updateBuilding.html',
+                                				  controller: 'updateBuildingController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.deleteBuilding',{
+                                				  url: '/deleteBuilding',
+                                				  templateUrl: '/views/deleteBuilding.html',
+                                				  controller: 'deleteBuildingController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewLevels',{
+                                				  url: '/viewLevels',
+                                				  templateUrl: '/views/viewLevels.html',
+                                				  controller: 'viewLevelController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addLevel',{
+                                				  url: '/addLevel',
+                                				  templateUrl: '/views/addLevel.html',
+                                				  controller: 'addLevelController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateLevel',{
+                                				  url: '/updateLevel',
+                                				  templateUrl: '/views/updateLevel.html',
+                                				  controller: 'levelController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.deleteLevel',{
+                                				  url: '/deleteLevel',
+                                				  templateUrl: '/views/deleteLevel.html',
+                                				  controller: 'levelController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addSpecialRate',{
+                                				  url: '/addSpecialRate',
+                                				  templateUrl: '/views/addSpecialRate.html',
+                                				  controller: 'rateController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewAllRates',{
+                                				  url: '/viewAllRates',
+                                				  templateUrl: '/views/viewAllRates.html',
+                                				  controller: 'rateController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateSpecialRate',{
+                                				  url: '/updateSpecialRate',		
+                                				  templateUrl: '/views/updateSpecialRate.html',
+                                				  controller: 'updateRateController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.deleteSpecialRate',{
+                                				  url: '/deleteSpecialRate',
+                                				  templateUrl: '/views/deleteSpecialRate.html',
+                                				  controller: 'deleteRateController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addEvent',{
+                                				  url:'/addEvent',
+                                				  templateUrl: '/views/addEvent.html',
+                                				  controller: 'eventController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.uploadCompanyLogo',{
+                                				  url:'/uploadCompanyLogo',
+                                				  templateUrl: '/views/uploadCompanyLogo.html',
+                                				  controller: 'logoController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.admin]
+                                				  }
+                                			  })
 
-			.state('dashboard.messageList',{
-				url:'/messageList',
-				templateUrl: '/message/message.html',
-				controller: 'ListController',
-				data: {
-					authorizedRoles: [USER_ROLES.user]
-				}
-			})
-			.state('dashboard.view/:id',{
-				url:'/view/:id',
-				templateUrl: '/message/detail.html',
-				controller: 'DetailController',
-				data: {
-					authorizedRoles: [USER_ROLES.user]
-				}
-			})
-			.state('dashboard.new',{
-				url:'/new',
-				templateUrl: '/message/new.html',
-				controller: 'NewMailController',
-				data: {
-					authorizedRoles: [USER_ROLES.user]
-				}
-			})
-			.state('dashboard.addClientOrg',{
-				url:'/addClientOrg',
-				templateUrl: '/views/addClientOrg.html',
-				controller: 'clientOrgController',
-				data: {
-					authorizedRoles: [USER_ROLES.superadmin]
-				}
-			})	
-			.state('dashboard.viewClientOrgs',{
-				url:'/viewClientOrgs',
-				templateUrl: '/views/viewClientOrgs.html',
-				controller: 'viewClientOrgs',
-				data: {
-					authorizedRoles: [USER_ROLES.superadmin]
-				}
-			})
-			.state('dashboard.viewDataVisual',{
-				url:'/viewDataVisual',
-				templateUrl: '/views/viewDataVisual.html',
-				controller: 'ChartCtrl',
-				data: {
-					authorizedRoles: [USER_ROLES.user]
-				}
-			})
-			.state('dashboard.createFloorPlan',{
-				url:'/createFloorPlan',
-				templateUrl: '/views/floorPlanAngular.html',
-				controller: 'floorPlanController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})	
-			.state('dashboard.viewFloorPlan',{
- 			url:'/viewFloorPlan',
- 				templateUrl: '/views/viewFloorPlan.html',
- 				controller: 'viewFloorPlanController',
- 				data: {
- 					authorizedRoles: [USER_ROLES.property]
- 				}
- 		})
-			.state('dashboard.viewMaintenance',{
-				url:'/viewMaintenance',	
-				templateUrl: '/views/viewMaintenance.html',
-				controller: 'maintenanceController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.viewBuildingMtn',{
-				url:'/viewBuildingMtn',
-				templateUrl: '/views/viewBuildingMtn.html',
-				controller: 'buildingController',
-				data:{
-					authorizedRoles:[USER_ROLES.property]
-				}
-			})
-			.state('dashboard.viewLevelsMtn',{
-				url:'/viewLevelsMtn',
-				templateUrl: '/views/viewLevelsMtn.html',
-				controller: 'buildingController',
-				data:{
-					authorizedRoles:[USER_ROLES.property]
-				}
-			})
-			.state('dashboard.viewFloorPlanMtn',{
-				url:'/viewFloorPlanMtn',
-				templateUrl: '/views/viewFloorPlanMtn.html',
-				controller: 'floorPlanController',//hailing test hahahahha
-				data:{
-					authorizedRoles:[USER_ROLES.property]
-				}
-			})
-			.state('dashboard.addMaintenance',{
-				url:'/addMaintenance',	
-				templateUrl: '/views/addMaintenance.html',
-				controller: 'addMaintenanceController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.updateMaintenance',{
-				url:'/updateMaintenance',
-				templateUrl: '/views/updateMaintenance.html',
-				controller: 'updateMaintenanceController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.deleteMaintenance',{
-				url:'/deleteMaintenance',
-				templateUrl: '/views/deleteMaintenance.html',
-				controller: 'deleteMaintenanceController',
-				data:{
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.viewAllVendors',{
-				url:'/viewAllVendors',
-				templateUrl: '/views/viewAllVendors.html',
-				controller: 'vendorController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.addVendor',{
-				url:'/addVendor',	
-				templateUrl: '/views/addVendor.html',
-				controller: 'vendorController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.updateVendor',{
-				url:'/updateVendor',
-				templateUrl: '/views/updateVendor.html',
-				controller: 'updateVendorController',
-				data: {
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.deleteVendor',{
-				url:'/deleteVendor',
-				templateUrl: '/views/deleteVendor.html',
-				controller: 'updateVendorController',
-				data:{
-					authorizedRoles: [USER_ROLES.property]
-				}
-			})
-			.state('dashboard.addEventEx',{
-				url:'/addEventEx',
-				templateUrl: '/views/addEventEx.html',
-				//controller: 'eventExternalController',
-				controller: 'addEController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.viewBuildingEx',{
-				url:'/viewBuildingEx',
-				templateUrl: '/views/viewBuildingEx.html',
-				controller: 'buildingController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.viewLevelsEx',{
-				url:'/viewLevelsEx',
-				templateUrl: '/views/viewLevelsEx.html',
-				controller: 'buildingController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.viewFloorPlanEx',{
-				url:'/viewFloorPlanEx',
-				templateUrl: '/views/viewFloorPlanEx.html',
-				controller: 'floorPlanController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.createUnitPlanEx',{
-				url:'/createUnitPlanEx',
-				templateUrl: '/views/createUnitPlanEx.html',
-				controller: 'areaPlanController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.updateEventEx',{
-				url:'/updateEventEx',
-				templateUrl: '/views/updateEventEx.html',
-				//controller: 'eventExternalController',
-				controller: 'updateEController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.cancelEventEx',{
-				url:'/cancelEventEx',
-				templateUrl: '/views/cancelEventEx.html',
-				controller: 'deleteEventExController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.updateCategoryEx',{
-				url:'/updateCategoryEx',
-				templateUrl: '/views/updateCategoryEx.html',
-				controller: 'configureTicketsController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.feedbackEx',{
-				url:'/viewFeedbackEx',
-				templateUrl: '/views/viewFeedback.html',
-				controller: 'eventExternalController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.addCategoryEx',{
-				url:'/addCategoryEx',
-				templateUrl: '/views/addCategoryEx.html',
-				controller: 'configureTicketsController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.configureTicketsEx',{
-				url:'/configureTicketsEx',
-				templateUrl: '/views/configureTicketsEx.html',
-				controller: 'configureTicketsController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.viewAllEventsEx',{
-				url:'/viewAllEventsEx',
-				templateUrl: '/views/viewAllEventsEx.html',
-				controller: 'eventExternalController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.viewApprovedEventsEx',{
-				url:'/viewApprovedEventsEx',
-				templateUrl: '/views/viewApprovedEventsEx.html',
-				controller: 'viewApprovedEventsController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.viewToBeApprovedEvents',{
-				url:'/viewToBeApprovedEvents',
-				templateUrl: '/views/viewToBeApprovedEvents.html',
-				controller: 'viewToBeApprovedEventController',
-				data:{
-					authorizedRoles:[USER_ROLES.event]
-				}
-			})
-			.state('dashboard.viewBookingEx',{
- 				url:'/viewBookingEx',
- 				templateUrl: '/views/viewBookingEx.html',
- 				controller: 'bookingController',
- 				data:{
- 					authorizedRoles:[USER_ROLES.organiser]
- 				}
- 			})
- 			.state('dashboard.viewPaymentPlansEx',{
- 				url:'/viewPaymentPlansEx',
- 				templateUrl: '/views/viewPaymentPlansEx.html',
- 				controller: 'paymentExController',
- 				data:{
- 					authorizedRoles:[USER_ROLES.organiser]
- 				}
- 			})
- 			.state('dashboard.viewPaymentHistoryEx',{
- 				url:'/viewPaymentHistoryEx',
- 				templateUrl: '/views/viewPaymentHistoryEx.html',
- 				controller: 'paymentHistoryExController',
- 				data:{
- 					authorizedRoles:[USER_ROLES.organiser]
- 				}
- 			})
- 			.state('dashboard.viewPaymentDetailsEx',{
- 				url:'/viewPaymentDetailsEx',
- 				templateUrl: '/views/viewPaymentDetailsEx.html',
- 				controller: 'paymentDetailsExController',
- 				data:{
- 					authorizedRoles:[USER_ROLES.organiser]
- 				}
- 			})
- 			.state('dashboard.viewTicketSalesEx',{
-				url:'/viewTicketSalesEx',
-				templateUrl: '/views/viewTicketSalesEx.html',
-				controller: 'ticketSaleExController',
-				data:{
-					authorizedRoles:[USER_ROLES.organiser]
-				}
-			})
-			.state('dashboard.viewNotifications',{
-				url:'/viewNotifications',
-				templateUrl: '/views/viewNotifications.html',
-				controller: 'notificationController',
-				data: {
-					authorizedRoles: [USER_ROLES.event]
-				}
-			})
-			.state('dashboard.updateEventStatus',{
-				url:'/updateEventStatus',
-				templateUrl: '/views/updateEventStatus.html',
-				controller: 'viewEventDetailsController',
-				data:{
-					authorizedRoles:[USER_ROLES.event]
-				}
-			})
-			.state('dashboard.deleteEvent',{
-				url:'/deleteEvent',
-				templateUrl: '/views/deleteEvent.html',
-				controller: 'deleteEventController',
-				data:{
-					authorizedRoles:[USER_ROLES.event]
-				}
-			})
-			.state('dashboard.viewAllEvents',{
-				url:'/viewAllEvents',
-				templateUrl: '/views/viewAllEvents.html',
-				controller: 'eventController',
-				data:{
-					authorizedRoles:[USER_ROLES.event]
-				}
-			})
-			.state('dashboard.viewApprovedEvents',{
-				url:'/viewApprovedEvents',
-				templateUrl: '/views/viewApprovedEvents.html',
-				controller: 'viewApprovedEventController',
-				data:{
-					authorizedRoles:[USER_ROLES.event]
-				}
-			})
-			.state('dashboard.viewEventDetails',{
-				url:'/viewEventDetails',
-				templateUrl: '/views/viewEventDetails.html',
-				controller: 'viewEventDetailsController',
-				data:{
-					authorizedRoles:[USER_ROLES.event]
-				}
-			})
-			.state('dashboard.viewEventDetailsApproved',{
-				url:'/viewEventDetailsApproved',
-				templateUrl: '/views/viewEventDetailsApproved.html',
-				controller: 'viewEventDetailsController',
-				data:{
-					authorizedRoles:[USER_ROLES.event]
-				}
-			})
-			.state('dashboard.viewEventOrganizers',{
-				url:'/viewEventOrganizers',
-				templateUrl: '/views/viewEventOrganizers.html',
-				controller: 'viewEventOrganiserController',
-				data:{
-					authorizedRoles:[USER_ROLES.event]
-				}
-			})
-			.state('dashboard.viewTicketSales',{
-				url:'/viewTicketSales',
-				templateUrl: '/views/viewTicketSales.html',
-				controller: 'ticketSalesController',
-				data:{
-					authorizedRoles:[USER_ROLES.event]
-				}
-			})
-			.state('dashboard.viewTicketSaleDetailsEvent',{
-				url:'/viewTicketSaleDetailsEvent',
-				templateUrl: '/views/viewTicketSaleDetailsEvent.html',
-				controller: 'ticketSaleDetailsController',
-				data:{
-					authorizedRoles:[USER_ROLES.event]
-				}
-			})
-			.state('dashboard.viewAllPaymentPlans',{
-				url:'/viewAllPaymentPlans',
-				templateUrl: '/views/viewAllPaymentPlans.html',
-				controller: 'paymentController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.addPaymentPlan',{
-				url:'/addPaymentPlan',
-				templateUrl: '/views/addPaymentPlan.html',
-				controller: 'addPaymentController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.updatePaymentPlan',{
-				url:'/updatePaymentPlan',
-				templateUrl: '/views/updatePaymentPlan.html',
-				controller: 'updatePaymentController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.viewPaymentPolicy',{
-				url:'/viewPaymentPolicy',
-				templateUrl: '/views/viewPaymentPolicy.html',
-				controller: 'policyController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.addPaymentPolicy',{
-				url:'/addPaymentPolicy',
-				templateUrl: '/views/addPaymentPolicy.html',
-				controller: 'policyController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.updatePaymentPolicy',{
-				url:'/updatePaymentPolicy',
-				templateUrl: '/views/updatePaymentPolicy.html',
-				controller: 'updatePolicyController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.viewAllOutstandingBalance',{
-				url:'/viewAllOutstandingBalance',
-				templateUrl: '/views/viewAllOutstandingBalance.html',
-				controller: 'balanceController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.viewListOfEvents',{
-				url:'/viewListOfEvents',
-				templateUrl: '/views/viewListOfEvents.html',
-				controller: 'eventListController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-            .state('dashboard.updateReceivedPayment',{
-				url:'/updateReceivedPayment',
-				templateUrl: '/views/updateReceivedPayment.html',
-				controller: 'receivedPController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.viewEventsWithTicketSales',{
-				url:'/viewEventsWithTicketSales',
-				templateUrl: '/views/viewEventsWithTicketSales.html',
-				controller: 'eventWithTicketController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.updateTicketRevenue',{
-				url:'/updateTicketRevenue',
-				templateUrl: '/views/updateTicketRevenue.html',
-				controller: 'ticketRController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.updateOutgoingPayment',{
-				url:'/updateOutgoingPayment',
-				templateUrl: '/views/updateOutgoingPayment.html',
-				controller: 'outgoingController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.viewPaymentHistory',{
-				url:'/viewPaymentHistory',
-				templateUrl: '/views/viewPaymentHistory.html',
-				controller: 'paymentHistoryController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('dashboard.generateInvoice',{
-				url:'/generateInvoice',
-				templateUrl: '/views/generateInvoice.html',
-				controller: 'invoiceController',
-				data:{
-					authorizedRoles:[USER_ROLES.finance]
-				}
-			})
-			.state('/401',{
-				url:'/401',
-				templateUrl: '/views/401.html',
-				controller: 'passController',
-				data: {
-					authorizedRoles: [USER_ROLES.all]
-				}
-			})	
-			.state('dashboard.createNewUser',{
-				url:'/createNewUser',
-				templateUrl: '/views/createUser.html',
-				controller: 'createNewUserController',
-				data: {
-					authorizedRoles: [USER_ROLES.user]
-				}
-			})	
-			.state('dashboard.viewUserList',{
-				url:'/viewUserList',
-				templateUrl: '/views/viewUserList.html',
-				controller: 'viewUserList',
-				data: {
-					authorizedRoles: [USER_ROLES.admin]
-				}
-			})	
-			.state('dashboard.viewAuditLog',{
-				url:'/viewAuditLog',
-				templateUrl: '/views/viewAuditLog.html',
-				controller: 'auditLogController',
-				data: {
-					authorizedRoles: [USER_ROLES.admin]
-				}
-			})
-			.state('dashboard.viewUserProfile',{
-				url:'/viewUserProfile',
-				templateUrl: '/views/viewUserProfile.html',
-				controller: 'userProfileController',
-				data: {
-					authorizedRoles: [USER_ROLES.user]
-				}
-			})
-			.state('dashboard.editUserProfile',{
-				url:'/editUserProfile',
-				templateUrl: '/views/editUserProfile.html',
-				controller: 'userProfileController',
-				data: {
-					authorizedRoles: [USER_ROLES.user]
-				}
-			})
+                                			  .state('dashboard.messageList',{
+                                				  url:'/messageList',
+                                				  templateUrl: '/message/message.html',
+                                				  controller: 'ListController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.user]
+                                				  }
+                                			  })
+                                			  .state('dashboard.view/:id',{
+                                				  url:'/view/:id',
+                                				  templateUrl: '/message/detail.html',
+                                				  controller: 'DetailController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.user]
+                                				  }
+                                			  })
+                                			  .state('dashboard.new',{
+                                				  url:'/new',
+                                				  templateUrl: '/message/new.html',
+                                				  controller: 'NewMailController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.user]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addClientOrg',{
+                                				  url:'/addClientOrg',
+                                				  templateUrl: '/views/addClientOrg.html',
+                                				  controller: 'clientOrgController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.superadmin]
+                                				  }
+                                			  })	
+                                			  .state('dashboard.viewClientOrgs',{
+                                				  url:'/viewClientOrgs',
+                                				  templateUrl: '/views/viewClientOrgs.html',
+                                				  controller: 'viewClientOrgs',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.superadmin]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewDataVisual',{
+                                				  url:'/viewDataVisual',
+                                				  templateUrl: '/views/viewDataVisual.html',
+                                				  controller: 'ChartCtrl',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.user]
+                                				  }
+                                			  })
+                                			  .state('dashboard.createFloorPlan',{
+                                				  url:'/createFloorPlan',
+                                				  templateUrl: '/views/floorPlanAngular.html',
+                                				  controller: 'floorPlanController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })	
+                                			  .state('dashboard.viewFloorPlan',{
+                                				  url:'/viewFloorPlan',
+                                				  templateUrl: '/views/viewFloorPlan.html',
+                                				  controller: 'viewFloorPlanController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewMaintenance',{
+                                				  url:'/viewMaintenance',	
+                                				  templateUrl: '/views/viewMaintenance.html',
+                                				  controller: 'maintenanceController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewBuildingMtn',{
+                                				  url:'/viewBuildingMtn',
+                                				  templateUrl: '/views/viewBuildingMtn.html',
+                                				  controller: 'buildingController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewLevelsMtn',{
+                                				  url:'/viewLevelsMtn',
+                                				  templateUrl: '/views/viewLevelsMtn.html',
+                                				  controller: 'buildingController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewFloorPlanMtn',{
+                                				  url:'/viewFloorPlanMtn',
+                                				  templateUrl: '/views/viewFloorPlanMtn.html',
+                                				  controller: 'floorPlanController',//hailing test hahahahha
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addMaintenance',{
+                                				  url:'/addMaintenance',	
+                                				  templateUrl: '/views/addMaintenance.html',
+                                				  controller: 'addMaintenanceController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateMaintenance',{
+                                				  url:'/updateMaintenance',
+                                				  templateUrl: '/views/updateMaintenance.html',
+                                				  controller: 'updateMaintenanceController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.deleteMaintenance',{
+                                				  url:'/deleteMaintenance',
+                                				  templateUrl: '/views/deleteMaintenance.html',
+                                				  controller: 'deleteMaintenanceController',
+                                				  data:{
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewAllVendors',{
+                                				  url:'/viewAllVendors',
+                                				  templateUrl: '/views/viewAllVendors.html',
+                                				  controller: 'vendorController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addVendor',{
+                                				  url:'/addVendor',	
+                                				  templateUrl: '/views/addVendor.html',
+                                				  controller: 'vendorController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateVendor',{
+                                				  url:'/updateVendor',
+                                				  templateUrl: '/views/updateVendor.html',
+                                				  controller: 'updateVendorController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.deleteVendor',{
+                                				  url:'/deleteVendor',
+                                				  templateUrl: '/views/deleteVendor.html',
+                                				  controller: 'updateVendorController',
+                                				  data:{
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addEventEx',{
+                                				  url:'/addEventEx',
+                                				  templateUrl: '/views/addEventEx.html',
+                                				  //controller: 'eventExternalController',
+                                				  controller: 'addEController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewBuildingEx',{
+                                				  url:'/viewBuildingEx',
+                                				  templateUrl: '/views/viewBuildingEx.html',
+                                				  controller: 'buildingController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewLevelsEx',{
+                                				  url:'/viewLevelsEx',
+                                				  templateUrl: '/views/viewLevelsEx.html',
+                                				  controller: 'buildingController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewFloorPlanEx',{
+                                				  url:'/viewFloorPlanEx',
+                                				  templateUrl: '/views/viewFloorPlanEx.html',
+                                				  controller: 'floorPlanController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.createUnitPlanEx',{
+                                				  url:'/createUnitPlanEx',
+                                				  templateUrl: '/views/createUnitPlanEx.html',
+                                				  controller: 'areaPlanController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateEventEx',{
+                                				  url:'/updateEventEx',
+                                				  templateUrl: '/views/updateEventEx.html',
+                                				  //controller: 'eventExternalController',
+                                				  controller: 'updateEController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.cancelEventEx',{
+                                				  url:'/cancelEventEx',
+                                				  templateUrl: '/views/cancelEventEx.html',
+                                				  controller: 'deleteEventExController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateCategoryEx',{
+                                				  url:'/updateCategoryEx',
+                                				  templateUrl: '/views/updateCategoryEx.html',
+                                				  controller: 'configureTicketsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.feedbackEx',{
+                                				  url:'/viewFeedbackEx',
+                                				  templateUrl: '/views/viewFeedback.html',
+                                				  controller: 'eventExternalController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addCategoryEx',{
+                                				  url:'/addCategoryEx',
+                                				  templateUrl: '/views/addCategoryEx.html',
+                                				  controller: 'configureTicketsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.configureTicketsEx',{
+                                				  url:'/configureTicketsEx',
+                                				  templateUrl: '/views/configureTicketsEx.html',
+                                				  controller: 'configureTicketsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewAllEventsEx',{
+                                				  url:'/viewAllEventsEx',
+                                				  templateUrl: '/views/viewAllEventsEx.html',
+                                				  controller: 'eventExternalController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewApprovedEventsEx',{
+                                				  url:'/viewApprovedEventsEx',
+                                				  templateUrl: '/views/viewApprovedEventsEx.html',
+                                				  controller: 'viewApprovedEventsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewToBeApprovedEvents',{
+                                				  url:'/viewToBeApprovedEvents',
+                                				  templateUrl: '/views/viewToBeApprovedEvents.html',
+                                				  controller: 'viewToBeApprovedEventController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewBookingEx',{
+                                				  url:'/viewBookingEx',
+                                				  templateUrl: '/views/viewBookingEx.html',
+                                				  controller: 'bookingController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewPaymentPlansEx',{
+                                				  url:'/viewPaymentPlansEx',
+                                				  templateUrl: '/views/viewPaymentPlansEx.html',
+                                				  controller: 'paymentExController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewPaymentHistoryEx',{
+                                				  url:'/viewPaymentHistoryEx',
+                                				  templateUrl: '/views/viewPaymentHistoryEx.html',
+                                				  controller: 'paymentHistoryExController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewPaymentDetailsEx',{
+                                				  url:'/viewPaymentDetailsEx',
+                                				  templateUrl: '/views/viewPaymentDetailsEx.html',
+                                				  controller: 'paymentDetailsExController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewTicketSalesEx',{
+                                				  url:'/viewTicketSalesEx',
+                                				  templateUrl: '/views/viewTicketSalesEx.html',
+                                				  controller: 'ticketSaleExController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewNotifications',{
+                                				  url:'/viewNotifications',
+                                				  templateUrl: '/views/viewNotifications.html',
+                                				  controller: 'notificationController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateEventStatus',{
+                                				  url:'/updateEventStatus',
+                                				  templateUrl: '/views/updateEventStatus.html',
+                                				  controller: 'viewEventDetailsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.deleteEvent',{
+                                				  url:'/deleteEvent',
+                                				  templateUrl: '/views/deleteEvent.html',
+                                				  controller: 'deleteEventController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewAllEvents',{
+                                				  url:'/viewAllEvents',
+                                				  templateUrl: '/views/viewAllEvents.html',
+                                				  controller: 'eventController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewApprovedEvents',{
+                                				  url:'/viewApprovedEvents',
+                                				  templateUrl: '/views/viewApprovedEvents.html',
+                                				  controller: 'viewApprovedEventController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewEventDetails',{
+                                				  url:'/viewEventDetails',
+                                				  templateUrl: '/views/viewEventDetails.html',
+                                				  controller: 'viewEventDetailsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewEventDetailsApproved',{
+                                				  url:'/viewEventDetailsApproved',
+                                				  templateUrl: '/views/viewEventDetailsApproved.html',
+                                				  controller: 'viewEventDetailsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewEventOrganizers',{
+                                				  url:'/viewEventOrganizers',
+                                				  templateUrl: '/views/viewEventOrganizers.html',
+                                				  controller: 'viewEventOrganiserController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewTicketSales',{
+                                				  url:'/viewTicketSales',
+                                				  templateUrl: '/views/viewTicketSales.html',
+                                				  controller: 'ticketSalesController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewTicketSaleDetailsEvent',{
+                                				  url:'/viewTicketSaleDetailsEvent',
+                                				  templateUrl: '/views/viewTicketSaleDetailsEvent.html',
+                                				  controller: 'ticketSaleDetailsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.event]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewAllPaymentPlans',{
+                                				  url:'/viewAllPaymentPlans',
+                                				  templateUrl: '/views/viewAllPaymentPlans.html',
+                                				  controller: 'paymentController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addPaymentPlan',{
+                                				  url:'/addPaymentPlan',
+                                				  templateUrl: '/views/addPaymentPlan.html',
+                                				  controller: 'addPaymentController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updatePaymentPlan',{
+                                				  url:'/updatePaymentPlan',
+                                				  templateUrl: '/views/updatePaymentPlan.html',
+                                				  controller: 'updatePaymentController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewPaymentPolicy',{
+                                				  url:'/viewPaymentPolicy',
+                                				  templateUrl: '/views/viewPaymentPolicy.html',
+                                				  controller: 'policyController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addPaymentPolicy',{
+                                				  url:'/addPaymentPolicy',
+                                				  templateUrl: '/views/addPaymentPolicy.html',
+                                				  controller: 'policyController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updatePaymentPolicy',{
+                                				  url:'/updatePaymentPolicy',
+                                				  templateUrl: '/views/updatePaymentPolicy.html',
+                                				  controller: 'updatePolicyController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewAllOutstandingBalance',{
+                                				  url:'/viewAllOutstandingBalance',
+                                				  templateUrl: '/views/viewAllOutstandingBalance.html',
+                                				  controller: 'balanceController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewListOfEvents',{
+                                				  url:'/viewListOfEvents',
+                                				  templateUrl: '/views/viewListOfEvents.html',
+                                				  controller: 'eventListController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateReceivedPayment',{
+                                				  url:'/updateReceivedPayment',
+                                				  templateUrl: '/views/updateReceivedPayment.html',
+                                				  controller: 'receivedPController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewEventsWithTicketSales',{
+                                				  url:'/viewEventsWithTicketSales',
+                                				  templateUrl: '/views/viewEventsWithTicketSales.html',
+                                				  controller: 'eventWithTicketController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateTicketRevenue',{
+                                				  url:'/updateTicketRevenue',
+                                				  templateUrl: '/views/updateTicketRevenue.html',
+                                				  controller: 'ticketRController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateOutgoingPayment',{
+                                				  url:'/updateOutgoingPayment',
+                                				  templateUrl: '/views/updateOutgoingPayment.html',
+                                				  controller: 'outgoingController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewPaymentHistory',{
+                                				  url:'/viewPaymentHistory',
+                                				  templateUrl: '/views/viewPaymentHistory.html',
+                                				  controller: 'paymentHistoryController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('dashboard.generateInvoice',{
+                                				  url:'/generateInvoice',
+                                				  templateUrl: '/views/generateInvoice.html',
+                                				  controller: 'invoiceController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.finance]
+                                				  }
+                                			  })
+                                			  .state('/401',{
+                                				  url:'/401',
+                                				  templateUrl: '/views/401.html',
+                                				  controller: 'passController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.all]
+                                				  }
+                                			  })	
+                                			  .state('dashboard.createNewUser',{
+                                				  url:'/createNewUser',
+                                				  templateUrl: '/views/createUser.html',
+                                				  controller: 'createNewUserController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.user]
+                                				  }
+                                			  })	
+                                			  .state('dashboard.viewUserList',{
+                                				  url:'/viewUserList',
+                                				  templateUrl: '/views/viewUserList.html',
+                                				  controller: 'viewUserList',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.admin]
+                                				  }
+                                			  })	
+                                			  .state('dashboard.viewAuditLog',{
+                                				  url:'/viewAuditLog',
+                                				  templateUrl: '/views/viewAuditLog.html',
+                                				  controller: 'auditLogController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.admin]
+                                				  }
+                                			  })
+                                			  .state('dashboard.viewUserProfile',{
+                                				  url:'/viewUserProfile',
+                                				  templateUrl: '/views/viewUserProfile.html',
+                                				  controller: 'userProfileController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.user]
+                                				  }
+                                			  })
+                                			  .state('dashboard.editUserProfile',{
+                                				  url:'/editUserProfile',
+                                				  templateUrl: '/views/editUserProfile.html',
+                                				  controller: 'userProfileController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.user]
+                                				  }
+                                			  })
 
-			$urlRouterProvider.otherwise('/login');
+                                			  $urlRouterProvider.otherwise('/login');
 
 
-			/*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
-		})
-app.factory('httpAuthInterceptor', function ($q) {
-		return {
-		'response': function(response) {
-		                    return response;
-		                 },
-		  'responseError': function (response) {
-		    // NOTE: detect error because of unauthenticated user
-		    if ([401, 403].indexOf(response.status) >= 0) {
-		      // redirecting to login page
-		  	  event.preventDefault();
-		  	  $location.path("/login");
-		  	  alert("Session Timeout!");
-		  	  $window.location.reload();
-		      return response;
-		    } else {
-		      return $q.reject(response);
-		    }
-		  }
-		};
+                                			  /*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
+                                		  })
+                                		  app.factory('httpAuthInterceptor', function ($q) {
+                                			  return {
+                                				  'response': function(response) {
+                                					  return response;
+                                				  },
+                                				  'responseError': function (response) {
+                                					  // NOTE: detect error because of unauthenticated user
+                                					  if ([401, 403].indexOf(response.status) >= 0) {
+                                						  // redirecting to login page
+                                						  event.preventDefault();
+                                						  $location.path("/login");
+                                						  alert("Session Timeout!");
+                                						  $window.location.reload();
+                                						  return response;
+                                					  } else {
+                                						  return $q.reject(response);
+                                					  }
+                                				  }
+                                			  };
 
 
                                 			  $urlRouterProvider.otherwise('/login');
@@ -1182,10 +1182,44 @@ app.controller('createNewUserController', function($scope, $http){
 			data    :  dataObj//forms user object
 		});
 		create.success(function(){
-			alert("Create New User SUCCESS   "  + JSON.stringify(dataObj))
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'New user successfully created',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		create.error(function(data){
-			alert("Error, " + data);
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	}
 });
@@ -1324,12 +1358,46 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 		console.log("fetching the user list......." + JSON.stringify(Edit));
 		toEdit.success(function(response){
 
-			alert('Successfully updated the user');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'User successfully updated',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 			$scope.send();
 
 		});
 		toEdit.error(function(response){
-			alert('Error, ');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Server error in updating user",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 
 
@@ -1365,10 +1433,44 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 		console.log("fetching the user list.......");
 		del.success(function(response){
 			//$scope.Profiles = response;
-			alert('Succesfully deleted the user');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'User deleted successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		del.error(function(response){
-			alert('Error deleting user, ' + response);
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: response,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 
 
@@ -1414,10 +1516,44 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 
 		console.log("SAVING THE USER PROFILE");
 		send.success(function(){
-			alert('User profile successfully changed');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'User profile successfully updated',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		send.error(function(data){
-			alert('Error, ' + data);
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -1441,10 +1577,44 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 
 		console.log("SAVING THE USER PROFILE");
 		send.success(function(){
-			alert('You have successfully changed your password');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Password successfully updated',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		send.error(function(data){
-			alert('Error, ' + data);
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -1983,7 +2153,24 @@ app.controller('NewMailController', function($scope, $state, $http){
 		console.log('Senders Gotten');
 	});
 	getMsg.error(function(data){
-		alert(data);
+		ModalService.showModal({
+
+			templateUrl: "views/errorMessageTemplate.html",
+			controller: "errorMessageModalController",
+			inputs: {
+				message: data,
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				console.log("OK");
+			});
+		});
+		$scope.dismissModal = function(result) {
+			close(result, 200); // close, but give 200ms for bootstrap to animate
+
+			console.log("in dissmiss");
+		};
 	});
 
 	$scope.currentlySelected = null;
@@ -2012,7 +2199,24 @@ app.controller('NewMailController', function($scope, $state, $http){
 	$scope.send = function(){
 
 		if ( $scope.selectedContacts < 1 ){
-			alert("Please select at least 1 user to send a message to."); 
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Please select at least 1 user to send a message to',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			}; 
 			return;
 		}
 		var dataObj = {
@@ -3096,8 +3300,8 @@ app.controller('UsersIndexController', ['$scope','$http', function($scope,$http)
 //END TODOLIST CALENDAR//
 
 //ERROR MESSAGE MODAL TEMPLATE:
-app.controller('errorMessageModalController', ['$scope','message',
-                                             function($scope, message) {
+app.controller('errorMessageModalController', ['$scope','message','close',
+                                               function($scope, message,close) {
 	$scope.message = message;
 	$scope.close = function() {
 		close({
@@ -3122,6 +3326,14 @@ app.controller('errorMessageModalController', ['$scope','message',
 
 }
 ])
+
+app.controller('YesNoController', ['$scope', 'close','message', function($scope, close,message) {
+	$scope.message = message;
+	$scope.close = function(result) {
+		close(result, 500); // close, but give 500ms for bootstrap to animate
+	};
+
+}])
 
 ///////
 
