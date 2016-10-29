@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import application.entity.BookingAppl;
 import application.entity.Building;
+import application.entity.Category;
 import application.entity.ClientOrganisation;
 import application.entity.Event;
 import application.entity.EventCreateForm;
@@ -34,6 +35,7 @@ import application.entity.Payment;
 import application.entity.PaymentPlan;
 import application.entity.Role;
 import application.entity.SpecialRate;
+import application.entity.Ticket;
 import application.entity.Unit;
 import application.entity.User;
 import application.enumeration.ApprovalStatus;
@@ -882,6 +884,21 @@ public class EventExternalServiceImpl implements EventExternalService {
 				payments.add(e.getPaymentPlan());			
 			}
 			return payments;
+		}
+	}
+
+	@Override
+	public Double getTicketRevenue(ClientOrganisation client, long eventId) {
+		if(!checkEvent(client, eventId))
+			return 0.00;
+		else{
+			Double revenue = 0.00;
+			Set<Category> cats = getEventById(eventId).get().getCategories();
+			for(Category c : cats){
+				Set<Ticket> tics = c.getTickets();
+				revenue += c.getPrice()*tics.size();
+			}
+			return revenue;
 		}
 	}
 }

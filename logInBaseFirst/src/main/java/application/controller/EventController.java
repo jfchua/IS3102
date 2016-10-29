@@ -90,6 +90,7 @@ public class EventController {
 	@RequestMapping(value = "/getEvent/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> getEvent(@PathVariable("id") String eventId, HttpServletRequest rq) throws UserNotFoundException {
+		System.out.println("WHAT IS WRONG??");
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -122,9 +123,37 @@ public class EventController {
 						 */
 						.serializeNulls()
 						.create();
-				String json = gson2.toJson(event);
+				JSONObject obj = new JSONObject();
+				NumberFormat formatter = new DecimalFormat("#0.00");   
+				obj.put("id", event.getId());
+				System.out.println("********"+event.getId());
+			    obj.put("event_title", event.getEvent_title());
+			    System.out.println("*****");
+			    obj.put("event_type", String.valueOf(event.getEventType()));
+			    System.out.println("*****1");
+			    obj.put("event_description", event.getEvent_description());
+			    System.out.println("*****2");
+			    obj.put("event_approval_status", String.valueOf(event.getApprovalStatus()));
+			    System.out.println("*****3");
+			    obj.put("event_start_date", String.valueOf(event.getEvent_start_date()));
+			    System.out.println("*****4");
+			    obj.put("event_end_date", String.valueOf(event.getEvent_end_date()));
+			    System.out.println("*****5");
+			    Double revenue = 0.00;
+			    if(!event.getCategories().isEmpty()){
+				Set<Category> cats = event.getCategories();
+				for(Category c : cats){
+					Set<Ticket> tics = c.getTickets();
+					revenue += c.getPrice()*tics.size();
+				}
+			    }
+			    obj.put("revenue", formatter.format(revenue));
+			    System.out.println("*****6");
+			    obj.put("filePath", event.getFilePath());
+				return new ResponseEntity<String>(obj.toString(),HttpStatus.OK);
+				/*String json = gson2.toJson(event);
 				System.out.println("EVENT IS " + json);
-				return new ResponseEntity<String>(json,HttpStatus.OK);
+				return new ResponseEntity<String>(json,HttpStatus.OK);*/
 			}else
 				return new ResponseEntity<String>(geeson.toJson("Server error in getting event"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
