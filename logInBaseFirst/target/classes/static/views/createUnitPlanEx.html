@@ -1,70 +1,56 @@
-<!DOCTYPE html >
-<html lang="en" ng-app="app">
-<head>
-<meta charset="utf-8">
-
-<title>IFMS</title>
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
- <!--   <script src="../js/jquery-1.12.4.min.js"></script>-->
- <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>-->
- <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/themes/smoothness/jquery-ui.css">-->
-    <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
+<link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
 
 
-</head>
-
-<body >
-
-	<!-- MAIN BODY -->
-	
-
-        <h1>Unit Plan</h1>
-        
-       
        <div ng-controller="areaPlanController as areaCtrl">    
-    <div id="respond"></div>
+           
+<div class="clearfix">
+		                        <ol class="breadcrumb no-bg no-m-t">
+		                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+		                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+		                            <li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
+		                             <li><a ui-sref="dashboard.viewBookingEx" ng-click="passEvent()" >View Bookings</a></li>
+		                             
+		                             <li><a>Update Unit Plan</a></li>
+		                        </ol>
+		</div> 
+           
+           <div class="col-md-9" id="widthForFloorPlan">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Unit Plan	  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+			</div>    
+               
+           <div id="respond"></div>
     <div id="glassbox">
         <div ng-repeat="area in areas track by $index" class="ui-widget-content" 
             id="{{area.areaName}}" ng-mouseover=showDetails(area)  draggable resizable  on-resize="resize(area,$evt, $ui)"
               ng-style="{height: {{area.square.height}} + 'px', width: {{area.square.width}} + 'px', 'left':{{area.square.left}}+'px','top':{{area.square.top}}+'px', 'background-color':'{{area.square.color}}' }" ><p>{{area.id}}</p> </div>
         </div>
-        
-  <button ng-click="viewArea()">Start</button>
-  <button ng-click="addArea()">Add an Area</button>
-  <button ng-click="saveAreas()">Save Unit Plan</button>
- <a href="/#/viewAllEventsEx"><button>Back to View Events</button></a>
- <div><p id="display" >{{showDetail}}</p></div>
-  <div><p >Please click on "Start" button before adding or editing areas. Please drag before resizing.</p></div>
-<table>
-<th></th>
-<th>id</th>
-   <th>left</th>
-    <th>top</th>
-     <th>height</th>
-      <th>width</th>
-       <th>color</th>
-        <th>type</th>
-       <th>Area Purpose</th>
-        <th>Description</th>
-         
-  <tr ng-repeat="x in areas track by $index" >
-  <td><a class="btn" ng-click="remove(x)">Delete</a> </td>
-    <td>{{ x.id }} </td>
-     <td><input type="number" name="left" ng-model="x.square.left" required></td>
-     <td><input type="number" name="top" ng-model="x.square.top" required> </td>
-         <td><input type="number" name="height" ng-model="x.square.height" required></td>
-     <td><input type="number" name="width" ng-model="x.square.width" required></td>
-    <td>{{ x.square.color }} </td>
-    <td>{{ x.square.type }} </td>
-    <td><input type="text" name="areaName" ng-model="x.areaName" required> </td>
-      <td> <input type="text" name="description" ng-model="x.description" > </td>
-  </tr>
-</table>
-  
+       <div><p> {{showDetail}}</p></div>
+  </div>
+<div class="col-md-3">
+<br>
+<br>
+<br>
+    <a ng-click="addArea()" tooltip-placement="right" tooltip="Add an Area"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>
 </div>
-       
-   
-		
-		<!--main content end-->
-</body>
-</html>
+
+<div class="col-md-3">
+<br>
+    <a ng-click="saveAreas()" tooltip-placement="right" tooltip="Save Unit Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-floppy-disk"></i></button></a>
+ </div>
+  
+            <div class="col-md-3">
+     <br>    
+     <a ng-click="downloadPlan()"  id="download" tooltip-placement="right" tooltip="Download Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-download-alt"></i></button></a>
+    
+    </div>  
+         </div>
+           

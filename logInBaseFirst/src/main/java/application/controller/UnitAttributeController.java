@@ -164,7 +164,7 @@ public class UnitAttributeController {
 						return new ResponseEntity<String>(geeson.toJson("Level Number was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
 						
 					}else{//width of square== (800/levelLength)*dimensionLength of unit; height of square ==(800/levelLength)*dimensionWidth of unit
-						unit=unitService.createUnitOnLevel(levelId, left, top, (int)(800*dimensionWidth/levelLength), (int)(800*dimensionLength/levelLength), "coral", "./svg/rect.svg", unitNumber, dimensionLength, dimensionWidth, true, description);
+						unit=unitService.createUnitOnLevel(levelId, left, top, (int)(800*dimensionWidth/levelLength), (int)(800*dimensionLength/levelLength), "coral", "./svg/rect.svg", unitNumber,  left,  top,  dimensionWidth, dimensionLength, true, description);
 						//ADD OVERLAPPING CHECK IN UNIT SERVICE
 					}
 					//READ VALUE OF CUSTOMISED TYPES

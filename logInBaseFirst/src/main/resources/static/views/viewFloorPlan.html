@@ -1,5 +1,6 @@
+ <link rel="stylesheet" href="bower_components/angular-gridster/dist/angular-gridster.css"/>
  <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
- 
+ <link rel="stylesheet" href="../css/floorplanGrid.css" type="text/css" />
  <div class="row" ng-controller="viewFloorPlanController as viewFloorPlanCtrl">   
 		<div class="clearfix">
 		                        <ol class="breadcrumb no-bg no-m-t">
@@ -25,13 +26,16 @@
 					</h3>
 				</div>
 			</div>
-			     <div id="glassbox" ng-style="{height: {{levelWidth}} + 'px', width: {{levelLength}} + 'px'}">
-			        <div ng-repeat="unit in units track by $index" class="ui-widget-content" 
-			            id="{{unit.square.id}}"   ng-mouseover=$parent.showDetails(unit)  ng-dblclick="showModal(unit)"
-			              ng-style="{height: {{unit.square.height}} + 'px', width: {{unit.square.width}} + 'px', 'left':{{unit.square.left}}+'px','top':{{unit.square.top}}+'px', 
-			              'background-color':'{{unit.square.color}}' ,'maxHeight':{{levelWidth}}+'px','maxWidth':{{levelLength}}+'px'}" ><p>{{unit.unitNumber}}<img  class="svgtest" ng-src="{{unit.square.icon.iconPath||unit.square.type}}"  alt="{{unit.square.icon.iconPath||unit.square.type}}"></p> </div>
-			        </div>
-			    <div><p> {{showDetail}}</p></div>
+			
+<div class="panel-body" id="panelheadGrid">
+<div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{levelWidthGrid}} + 'px', width: {{levelLengthGrid}} + 'px'}">
+    <ul>
+        <li gridster-item="unit"  id="{{unit.square.id}}"  ng-repeat="unit in units"  ng-dblclick="showModal(unit,$parent)"  ng-style="{'background-color':'{{unit.square.color}}'}" ><p tooltip-placement="top" tooltip="Double click to view details of unit {{unit.unitNumber}}"> {{unit.unitNumber}}
+                          <img  class="svgtest" ng-src="{{unit.square.type||unit.square.icon.iconPath}}"  alt="icon"></p></li>
+    </ul>
+</div>
+</div>
+			   
 		</div>
      <div class="col-md-3">
      <br>

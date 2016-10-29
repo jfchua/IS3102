@@ -141,11 +141,16 @@ public class BookingController {
 						//String json = gson.toJson(levels);
 					    //System.out.println("Returning levels with json of : " + json);
 						//return json;
-
+						for(BookingAppl booking:bookings){
+							booking.getEvent().setBookings(null);
+							booking.getEvent().setCategories(null);
+							booking.getEvent().setEventOrg(null);
+							booking.getEvent().setPaymentPlan(null);
+						}
 						Gson gson2 = new GsonBuilder()
 							    .setExclusionStrategies(new ExclusionStrategy() {
 							        public boolean shouldSkipClass(Class<?> clazz) {
-							            return (clazz == Event.class)||(clazz == Area.class)||(clazz == Unit.class)||(clazz == MaintenanceSchedule.class)||(clazz == UnitAttributeValue.class);
+							            return (clazz == Area.class)||(clazz == Unit.class)||(clazz == MaintenanceSchedule.class)||(clazz == UnitAttributeValue.class);
 							        }
 
 							        /**

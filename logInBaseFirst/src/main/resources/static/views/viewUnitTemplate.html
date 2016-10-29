@@ -9,16 +9,16 @@
         <p></p>
         <form class="form-horizontal" role="form">
 						 <div class="form-group" ng-show="unit.rentable">
-							<label class="col-sm-6 control-label">Length (in meter)</label>
+							<label class="col-sm-6 control-label">Length</label>
 							<div class="col-sm-6">
-								<p class="form-control-static" ng-bind="unit.length"></p>
+								<p class="form-control-static">{{unit.sizeX}}m</p>
 							</div>
 						</div>  		
                     
                          <div class="form-group" ng-show="unit.rentable">
-							<label class="col-sm-6 control-label">Width (in meter)</label>
+							<label class="col-sm-6 control-label">Width</label>
 							<div class="col-sm-6">
-								<p class="form-control-static" ng-bind="unit.width"></p>
+								<p class="form-control-static" >{{unit.sizeY}}m</p>
 							</div>
 						</div>
 
@@ -36,14 +36,21 @@
 								<p class="form-control-static" ng-bind="unit.description"></p>
 							</div>
 						</div>
+						
+						<div class="form-group" ng-repeat="attribute in unit.unitAttributeValues" >
+							<label class="col-sm-6 control-label">{{attribute.unitAttributeType.attributeType}}</label>
+							<div class="col-sm-6">
+								<p class="form-control-static" ng-bind="attribute.attributeValue"></p>
+							</div>
+						</div>
                     
 
      </form>
 
       </div>
       <div class="modal-footer">
-        <button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal">OK</button>
-        <button type="button" ng-click="cancel()" class="btn">Cancel</button>
+        <button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal">Back</button>
+  
       </div>
     </div>
   </div>

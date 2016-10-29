@@ -4,7 +4,7 @@
  */
 .gridster {
   position: relative;
-  margin: auto;
+  margin: 0;
   height: 0;
 }
 .gridster > ul {

@@ -48,13 +48,15 @@ public class UnitServiceImpl implements UnitService {
 	}*/
 	@Override
 	public Unit createUnitOnLevel(long levelId, int left, int top, int height, int width, String color, String type,
-			String unitNumber, int dimensionLength, int dimensionWidth, Boolean rentable, String description) {
+			String unitNumber, int col, int row,int  sizex,int sizey,Boolean rentable, String description) {
 		Square square=createSquare(left,top,height,width,color,type);
 		Unit unit = new Unit();
 		System.out.println("UnitService"+1);
 		unit.setUnitNumber(unitNumber);
-		unit.setLength(dimensionLength);
-		unit.setWidth(dimensionWidth);
+		unit.setCol(col);
+		unit.setRow(row);
+		unit.setSizex(sizex);
+		unit.setSizey(sizey);
 		unit.setRentable(rentable);
 		System.out.println("rentable"+rentable);
 		unit.setDescription(description);
@@ -82,15 +84,209 @@ public class UnitServiceImpl implements UnitService {
 		System.out.println("UnitService"+9);
 		return unit;
 	}
+	
+	@Override
+	public boolean addUnitOnLevel(long levelId) {
+		//GET LEVEL
+		Level level=levelRepository.getOne(levelId);
+		//GET DIMENSION AND POSITION THAT WILL NOT OVERLAP WIHT EXISTING UNITS ON THE LEVEL
+		int levelLength=level.getLength();
+		int levelWidth=level.getWidth();
+		int sizex=levelLength/10;
+		int sizey=levelWidth/10;
+		int col=0;
+		int row=0;
+		Unit unitTemp=new Unit();
+		boolean keepChecking=true;
+		do{
+			unitTemp.setSizex(sizex);
+			unitTemp.setSizey(sizey);
+			unitTemp.setCol(col);
+			unitTemp.setRow(row);
+			if(passOverlapCheckWithExistingUnits(levelId,unitTemp)){
+				keepChecking=false;
+			}else{
+				sizex=1 + (int)(Math.random() * sizex);
+				sizey=1 +(int)(Math.random() * sizey);
+				col=0 + (int)(Math.random() * (levelLength-sizex));
+				row=0 + (int)(Math.random() * (levelWidth-sizey));
+			}
+		}while(keepChecking);
+		
+		
+	
+		
+		Square square=createSquare(100,100,100,100,"coral","./svg/rect.svg");
+		
+		System.out.println("UnitService"+1);
+		unitTemp.setUnitNumber("# There is not unit number yet");
+		unitTemp.setRentable(true);
+		System.out.println("test124");
+		unitTemp.setDescription("# There is not description yet");
+		unitTemp.setRent(100.00);//hard coded rent =100, need to change later
+		System.out.println("127");
+		unitRepository.saveAndFlush(unitTemp);
+		unitTemp.setSquare(square);
+		unitRepository.saveAndFlush(unitTemp);
+		System.out.println("test131");
+		//unit.setSquare(square);
+		//unitRepository.save(unit);
+		//System.out.println("Test:Get level:"+level);
+		System.out.println("teset135");
+		Set<Unit> units=level.getUnits();
+		System.out.println("test137");
+		units.add(unitTemp);
+		level.setUnits(units);
+		System.out.println("140");
+		levelRepository.saveAndFlush(level);
+		System.out.println("test142");
+		unitTemp.setLevel(level);
+		System.out.println("144");
+		unitRepository.saveAndFlush(unitTemp);
+		System.out.println("UnitService"+9);
+		return true;
+	}
+	
+	@Override
+	public boolean addDefaultIconOnLevel(long levelId,String type) {
+		//GET LEVEL
+		Level level=levelRepository.getOne(levelId);
+		//GET DIMENSION AND POSITION THAT WILL NOT OVERLAP WIHT EXISTING UNITS ON THE LEVEL
+		int levelLength=level.getLength();
+		int levelWidth=level.getWidth();
+		int sizex=Math.min(levelLength/20, levelWidth/20);
+		int sizey=Math.min(levelLength/20+1, levelWidth/20+1);
+		int col=0;
+		int row=0;
+		Unit unitTemp=new Unit();
+		boolean keepChecking=true;
+		do{
+			unitTemp.setSizex(sizex);
+			unitTemp.setSizey(sizey);
+			unitTemp.setCol(col);
+			unitTemp.setRow(row);
+			if(passOverlapCheckWithExistingUnits(levelId,unitTemp)){
+				keepChecking=false;
+			}else{
+				col=0 + (int)(Math.random() * (levelLength-sizex));
+				row=0 + (int)(Math.random() * (levelWidth-sizey));
+			}
+		}while(keepChecking);
+		Square square=createSquare(100,100,100,100,"transparent",type);
+		unitTemp.setUnitNumber("");
+		unitTemp.setRentable(false);
+		unitTemp.setDescription("# There is not description yet");
+		unitRepository.saveAndFlush(unitTemp);
+		unitTemp.setSquare(square);
+		unitRepository.saveAndFlush(unitTemp);
+		Set<Unit> units=level.getUnits();
+		units.add(unitTemp);
+		level.setUnits(units);
+		levelRepository.saveAndFlush(level);
+		unitTemp.setLevel(level);
+		unitRepository.saveAndFlush(unitTemp);	
+		return true;
+	}
+	
+	
+	@Override
+	public boolean addCustIconOnLevel(long levelId,long iconId) {
+		//GET LEVEL
+		Level level=levelRepository.getOne(levelId);
+		//GET DIMENSION AND POSITION THAT WILL NOT OVERLAP WIHT EXISTING UNITS ON THE LEVEL
+		int levelLength=level.getLength();
+		int levelWidth=level.getWidth();
+		int sizex=Math.min(levelLength/15, levelWidth/15);
+		int sizey=Math.min(levelLength/15+1, levelWidth/15+1);
+		int col=0;
+		int row=0;
+		Unit unitTemp=new Unit();
+		boolean keepChecking=true;
+		do{
+			unitTemp.setSizex(sizex);
+			unitTemp.setSizey(sizey);
+			unitTemp.setCol(col);
+			unitTemp.setRow(row);
+			if(passOverlapCheckWithExistingUnits(levelId,unitTemp)){
+				keepChecking=false;
+			}else{
+				col=0 + (int)(Math.random() * (levelLength-sizex));
+				row=0 + (int)(Math.random() * (levelWidth-sizey));
+			}
+		}while(keepChecking);
+		Square square=createSquareWithIcon(iconId,100,100,100,100,"transparent","");
+		unitTemp.setUnitNumber("");
+		unitTemp.setRentable(false);
+		//hahahaha
+		unitTemp.setDescription("# There is not description yet");
+		unitRepository.saveAndFlush(unitTemp);
+		unitTemp.setSquare(square);
+		unitRepository.saveAndFlush(unitTemp);
+		Set<Unit> units=level.getUnits();
+		units.add(unitTemp);
+		level.setUnits(units);
+		levelRepository.saveAndFlush(level);
+		unitTemp.setLevel(level);
+		unitRepository.saveAndFlush(unitTemp);	
+		return true;
+	}
+	
+	@Override
+	public  boolean passOverlapCheckWithExistingUnits(long levelId, Unit unit) {
+		//GET LEVEL
+		Level level=levelRepository.getOne(levelId);
+		Set<Unit> units=level.getUnits();
+		for (Unit oneExistUnit:units){
+			if(!passOverlapCheckTwoUnits(unit,oneExistUnit)){
+				return false;
+			}
+		} //END FOR LOOP FOR ALL EXISTING UNITS ON LEVEL
+		return true;
+	}
+	
+	@Override
+	public boolean passOverlapCheckTwoUnits(Unit unit1,Unit unit2) {
+		if(passOverlapCheckTwoUnitsOneWay(unit1,unit2)&&passOverlapCheckTwoUnitsOneWay(unit2,unit1)){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+	
+	@Override
+	public boolean passOverlapCheckTwoUnitsOneWay(Unit unit1,Unit unit2) {
+		int col1=unit1.getCol();
+		int row1=unit1.getRow();
+		int sizeX1=unit1.getSizex();
+		int sizeY1=unit1.getSizey();
+		
+		int col2=unit2.getCol();
+		int row2=unit2.getRow();
+		int sizeX2=unit2.getSizex();
+		int sizeY2=unit2.getSizey();
+		
+		if( ((col1+sizeX1>=col2)&&(row1+sizeY1>=row2))&&((col1<=col2+sizeX2)&&(row1<=row2+sizeY2))){
+			return false;
+		}else if (((col1<=col2+sizeX2)&&(row1+sizeY1>=row2))&&((col1+sizeX1>=col2)&&(row1<=row2+sizeY2))){
+			return false;
+		}else{
+			return true;
+		}
+		
+	}
+	
 	@Override
 	public Unit createUnitOnLevelWithIcon(long levelId,long iconId, int left, int top, int height, int width, String color, String type,
-			String unitNumber, int dimensionLength, int dimensionWidth, Boolean rentable, String description) {
+			String unitNumber, int col, int row,int  sizex,int sizey, Boolean rentable, String description) {
 		Square square=createSquareWithIcon(iconId,left,top,height,width,color,type);
 		Unit unit = new Unit();
 		System.out.println("UnitService"+1);
 		unit.setUnitNumber(unitNumber);
-		unit.setLength(dimensionLength);
-		unit.setWidth(dimensionWidth);
+		unit.setCol(col);
+		unit.setRow(row);
+		unit.setSizex(sizex);
+		unit.setSizey(sizey);
 		unit.setRentable(rentable);
 		unit.setDescription(description);
 		unit.setRent(100.00);//hard coded rent =100, need to chagne later
@@ -144,14 +340,16 @@ public class UnitServiceImpl implements UnitService {
 		return square;
 	}
 	@Override
-	public boolean editUnitInfo(long id,int left,int top, int height, int width, String color, String type,String unitNumber, int dimensionLength, int dimensionWidth,boolean rentable,String description) {
+	public boolean editUnitInfo(long id,int left,int top, int height, int width, String color, String type,String unitNumber, int col, int row,int  sizex,int sizey,boolean rentable,String description) {
 		try{
 			Optional<Unit> unitOpt = getUnitById(id);
 			if (unitOpt.isPresent()){
 				
 				Unit unit=unitOpt.get();
-				unit.setLength(dimensionLength);
-				unit.setWidth(dimensionWidth);
+				unit.setCol(col);
+				unit.setRow(row);
+				unit.setSizex(sizex);
+				unit.setSizey(sizey);
 				unit.setUnitNumber(unitNumber);
 				unit.setDescription(description);
 				System.out.println("UnitServiceImpl: start saving squares");

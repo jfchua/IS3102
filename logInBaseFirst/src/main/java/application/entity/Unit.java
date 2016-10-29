@@ -32,12 +32,18 @@ public class Unit {
 	@OneToOne(fetch = FetchType.EAGER)
 	private Square square;
 
-	@Column(name = "length", nullable = false)
-	private int length;
+	@Column(name = "sizex", nullable = false)
+	private int sizeX;
 
-	@Column(name = "width", nullable = false)
-	private int width;
+	@Column(name = "sizey", nullable = false)
+	private int sizeY;
+	
+	@Column(name = "row", nullable = false)
+	private int row;
 
+	@Column(name = "col", nullable = false)
+	private int col;
+	
 	@Column(name = "rentable", nullable = false)
 	private Boolean rentable;
 
@@ -125,20 +131,46 @@ public class Unit {
 	public void setSquare(Square square) {
 		this.square = square;
 	}
-	public int getLength() {
-		return length;
+	
+
+	public int getSizex() {
+		return sizeX;
 	}
 
-	public void setLength(int length) {
-		this.length = length;
+	public void setSizex(int sizex) {
+		this.sizeX = sizex;
 	}
 
-	public int getWidth() {
-		return width;
+	public int getSizey() {
+		return sizeY;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
+	public void setSizey(int sizey) {
+		this.sizeY = sizey;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public void setRow(int row) {
+		this.row = row;
+	}
+
+	public int getCol() {
+		return col;
+	}
+
+	public void setCol(int col) {
+		this.col = col;
+	}
+
+	public Set<MaintenanceSchedule> getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(Set<MaintenanceSchedule> schedule) {
+		this.schedule = schedule;
 	}
 
 	public Boolean getRentable() {
@@ -156,7 +188,7 @@ public class Unit {
 		this.rent = rent;
 	}
 	public int getDimension() {
-		return this.width*this.length;
+		return this.sizeX*this.sizeY;
 	}
 
 	public String getDescription() {
@@ -203,9 +235,10 @@ public class Unit {
 
 	@Override
 	public String toString() {
-		return "Unit [id=" + id + ", unitNumber=" + unitNumber + ", square=" + square.getId() + ", length=" + length
-				+ ", width=" + width + ", rentable=" + rentable + ", rent=" + rent + ", description=" + description
-				+ ", level=" + level + "]";
+		return "Unit [id=" + id + ", unitNumber=" + unitNumber + ", square=" + square + ", sizex=" + sizeX + ", sizey="
+				+ sizeY + ", row=" + row + ", col=" + col + ", rentable=" + rentable + ", rent=" + rent
+				+ ", description=" + description + ", level=" + level + ", bookings=" + bookings
+				+ ", unitAttributeValues=" + unitAttributeValues + ", schedule=" + schedule + "]";
 	}
 
 

@@ -28,7 +28,7 @@ public class Area {
 	    private String description;
 	   
 	   
-	    @OneToOne//(cascade=CascadeType.ALL)
+	    @ManyToOne//(cascade=CascadeType.ALL)
 	    private BookingAppl booking;
 
 

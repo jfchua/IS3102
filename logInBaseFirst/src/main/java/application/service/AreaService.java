@@ -10,7 +10,7 @@ public interface AreaService {
 		Area createArea(int left, int top, int height, int width, String color, String type,
 				String areaName, String description);
 	
-		Area createAreaOnEvent(long eventId, int left, int top, int height, int width, String color, String type,String areaName,
+		Area createAreaOnBooking(long bookingId, int left, int top, int height, int width, String color, String type,String areaName,
 				String description);	
 		
 		Square createSquare( int left, int top, int height, int width, String color, String type);
@@ -19,7 +19,7 @@ public interface AreaService {
 		
 		boolean editSquareInfo(long id,int left, int top, int height,int width, String color,String type);
 		
-		boolean deleteArea(long id, long eventId);
+		boolean deleteArea(long id, long bookingId);
 		
 		Optional<Area> getAreaById(long id);
 		
@@ -29,7 +29,9 @@ public interface AreaService {
 		
 		Set<Square> getAllSquares();
 		
-		Set<Area> getAreasByEventId(long eventId);
+		Set<Area> getAreasByBookingId(long bookingId);
 		
-		boolean deleteAreasFromEvent(Set<Long> areaIds, long eventId);
+		boolean deleteAreasFromBooking(Set<Long> areaIds, long bookingId);
+		
+		boolean checkEventOrganiserByID(long requestPersonId, long bookingId);
 }

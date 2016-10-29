@@ -50,7 +50,7 @@ public class UnitController {
 		this.levelService=levelService;
 		this.userService=userService;
 	}
-	
+	/*
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 		//Security filters for inputs needs to be added
 		//This method takes in a string which contains the attributes of the building to be added.
@@ -69,8 +69,10 @@ public class UnitController {
 				long levelId = (Long)unitObj.get("levelId");	
 				long unitId = (Long)unitObj.get("id");	
 				String unitNumber =(String)unitObj.get("unitNumber");
-				int dimensionLength = (int) (long) unitObj.get("length");
-				int dimensionWidth = (int) (long) unitObj.get("width");
+				int col = (int) (long) unitObj.get("col");
+				int row = (int) (long) unitObj.get("row");
+				int sizex = (int) (long) unitObj.get("sizeX");
+				int sizey = (int) (long) unitObj.get("sizeY");
 				String description =(String)unitObj.get("description");
 				
 				JSONObject squareJson=(JSONObject)unitObj.get("square");			
@@ -95,7 +97,7 @@ public class UnitController {
 						rentable=true;
 						System.out.println("Customised shape is rect: rentable" +rentable);
 					}
-					Unit unit=unitService.createUnitOnLevelWithIcon(levelId,iconId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);					
+					Unit unit=unitService.createUnitOnLevelWithIcon(levelId,iconId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description);					
 					System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
 				}else{
 					System.out.println("UNIT IS USING DEFAULT ICON");
@@ -103,7 +105,7 @@ public class UnitController {
 						rentable=true;
 						System.out.println("Shape is rect: rentable:" +rentable);
 					}
-					Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);
+					Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description);
 					System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
 					
 				}		
@@ -114,6 +116,8 @@ public class UnitController {
 			}
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}	
+		
+		*/
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
 				@RequestMapping(value = "/getUnitsId", method = RequestMethod.POST)
@@ -249,8 +253,11 @@ public class UnitController {
 						int width = (int) (long) squareJson.get("width");
 						String color = (String)squareJson.get("color");
 						String unitNumber =(String)unitObj.get("unitNumber");
-						int dimensionWidth = (int) (long) unitObj.get("width");
-						int dimensionLength = (int) (long) unitObj.get("length");
+						int col = (int) (long) unitObj.get("col");
+						int row = (int) (long) unitObj.get("row");
+						int sizex = (int) (long) unitObj.get("sizeX");
+						int sizey = (int) (long) unitObj.get("sizeY");
+						
 						String description =(String)unitObj.get("description");
 						
 						//boolean defaultIcon=true;
@@ -277,7 +284,7 @@ public class UnitController {
                                                 System.out.println("Customised shape is rect: " +rentable);
                                             }
 						                  System.out.println("ADD NEW UNIT WITH ICON");
-                                        Unit unit=unitService.createUnitOnLevelWithIcon(levelId,iconId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);
+                                        Unit unit=unitService.createUnitOnLevelWithIcon(levelId,iconId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description);
                                         unitIds.add(unit.getId());
                                         System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
 						
@@ -297,7 +304,7 @@ public class UnitController {
                             
 						              }
                                         System.out.println("ADD NEW UNIT");
-                                        Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description);
+                                        Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description);
                                         unitIds.add(unit.getId());
                                         System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
 					
@@ -309,7 +316,7 @@ public class UnitController {
 							
 						}else{//EDIT EXISTING UNIT
 							
-								if(unitService.editUnitInfo(unitId,left, top, height,  width,  color,  type,unitNumber,dimensionLength,dimensionWidth,rentable,description)==true){
+								if(unitService.editUnitInfo(unitId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description)==true){
 									unitIds.add(unitId);		
 									System.out.println("UNITCONTROLLER: UNIT IS EDITED. UNIT ID:"+unitId);
 								}else{
@@ -397,14 +404,107 @@ public class UnitController {
 				String color = (String)squareJson.get("color");
 				String type = (String)squareJson.get("type");
 				String unitNumber =(String)unitJson.get("unitNumber");
-				int dimensionWidth = (int) (long) unitJson.get("width");
-				int dimensionLength = (int) (long) unitJson.get("length");
+				int col = (int) (long) unitJson.get("col");
+				int row = (int) (long) unitJson.get("row");
+				int sizex = (int) (long) unitJson.get("sizeX");
+				int sizey = (int) (long) unitJson.get("sizeY");
 				String description =(String)unitJson.get("description");
 				boolean rentable =(boolean)unitJson.get("rentable");
 				
 				
-				if(unitService.editUnitInfo(unitId,left,top, height,  width,  color, type, unitNumber, dimensionLength, dimensionWidth,rentable, description)){
+				if(unitService.editUnitInfo(unitId,left,top, height,  width,  color, type, unitNumber, col,  row,  sizex, sizey,rentable, description)){
 					System.out.println("EDITED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			
+		}
+		
+		
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/addUnit", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> addUnit(@RequestBody String idObj,HttpServletRequest rq) {
+
+			
+			try{
+				
+				
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("levelId"));
+				long levelId = (Long)jsonObject.get("levelId");
+				
+				
+				
+				
+				if(unitService.addUnitOnLevel(levelId) ){
+					System.out.println("CREATED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			
+		}
+		
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/addDefaultIcon", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> addDefaultIcon(@RequestBody String idObj,HttpServletRequest rq) {
+
+			
+			try{
+				
+				
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("levelId"));
+				long levelId = (Long)jsonObject.get("levelId");
+				String type = (String)jsonObject.get("type");
+				
+				
+				
+				if(unitService.addDefaultIconOnLevel(levelId,type) ){
+					System.out.println("CREATED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			
+		}
+		
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/addCustIcon", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> addCustIcon(@RequestBody String idObj,HttpServletRequest rq) {
+
+			
+			try{
+				
+				
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("levelId"));
+				long levelId = (Long)jsonObject.get("levelId");
+				long iconId = (Long)jsonObject.get("iconId");
+				
+				
+				
+				if(unitService.addCustIconOnLevel(levelId,iconId) ){
+					System.out.println("CREATED");
 					return new ResponseEntity<Void>(HttpStatus.OK);
 				}else{
 					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
