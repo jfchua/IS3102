@@ -2,6 +2,8 @@ package application.controller;
 
 import java.security.Principal;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
@@ -258,10 +260,8 @@ public class EventExternalController {
 			}		
 		}	
 
-
+       /*
 	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
-	// Call this method using $http.get and you will get a JSON format containing an array of event objects.
-	// Each object (building) will contain... long id, collection of levels.
 		@RequestMapping(value = "/getEvent/{id}", method = RequestMethod.GET)
 		@ResponseBody
 		public String getEvent(@PathVariable("id") String eventId, HttpServletRequest rq) {
@@ -274,19 +274,14 @@ public class EventExternalController {
 							public boolean shouldSkipClass(Class<?> clazz) {
 								return (clazz == Category.class) || (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 							}
-							/**
-							 * Custom field exclusion goes here
-							 */
+							
 							@Override
 							public boolean shouldSkipField(FieldAttributes f) {
 								//TODO Auto-generated method stub
 								return false;
 							}
 						})
-						/**
-						 * Use serializeNulls method if you want To serialize null values 
-						 * By default, Gson does not serialize null values
-						 */
+						
 						.serializeNulls()
 						.create();
 				String json = gson2.toJson(event);
@@ -297,7 +292,7 @@ public class EventExternalController {
 			catch (Exception e){
 				return "cannot fetch";
 			}
-		}	
+		}	*/
 	
 		
 	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
@@ -339,17 +334,20 @@ public class EventExternalController {
 							.serializeNulls()
 							.create();
 					JSONObject obj = new JSONObject();
+					NumberFormat formatter = new DecimalFormat("#0.00");   
 					obj.put("id", event.getId());
 					System.out.println(event.getId());
 					String unit = eventExternalService.getUnitsId(id);
 					obj.put("units", unit);
 					System.out.println(unit);
 				    obj.put("event_title", event.getEvent_title());
-				    obj.put("event_content", event.getEventType());
+				    obj.put("event_type", String.valueOf(event.getEventType()));
 				    obj.put("event_description", event.getEvent_description());
-				    obj.put("event_approval_status", event.getApprovalStatus());
+				    obj.put("event_approval_status", String.valueOf(event.getApprovalStatus()));
 				    obj.put("event_start_date", String.valueOf(event.getEvent_start_date()));
 				    obj.put("event_end_date", String.valueOf(event.getEvent_end_date()));
+				    obj.put("revenue", formatter.format(eventExternalService.getTicketRevenue(client, id)));
+				    obj.put("total", eventExternalService.getTicketNum(client, id));
 				    obj.put("filePath", event.getFilePath());
 					//String json = gson2.toJson(event);
 					//System.out.println("EVENT IS " + json);
@@ -843,7 +841,69 @@ public class EventExternalController {
 	          			System.out.println("HERE");
 	          			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 	          		}
-	          	}	
-	              
+	          	}
+	           
+	           @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	           @RequestMapping(value = "/getTicketSales/{id}", method = RequestMethod.GET)
+	       	@ResponseBody
+	       	public ResponseEntity<String> getTicketSales(@PathVariable("id") String eventId, HttpServletRequest rq) throws UserNotFoundException {
+	       		Principal principal = rq.getUserPrincipal();
+	       		Optional<User> usr = userService.getUserByEmail(principal.getName());
+	       		if ( !usr.isPresent() ){
+	       			return new ResponseEntity<String>("Server error, user was not found",HttpStatus.INTERNAL_SERVER_ERROR);
+	       		}
+	       		try{
+	       			ClientOrganisation client = usr.get().getClientOrganisation();				   
+	       			long id = Long.parseLong(eventId);
+	       			Event event= eventExternalService.getEventById(id).get();
+	       			boolean bl = eventExternalService.checkEvent(client, id);
+	       			if(bl){
+	       				Gson gson2 = new GsonBuilder()
+	       						.setExclusionStrategies(new ExclusionStrategy() {
+	       							public boolean shouldSkipClass(Class<?> clazz) {
+	       								return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == Category.class)
+	                              ||(clazz == PaymentPlan.class);
+	       							}
+	       							/**
+	       							 * Custom field exclusion goes here
+	       							 */
+	       							@Override
+	       							public boolean shouldSkipField(FieldAttributes f) {
+	       								//TODO Auto-generated method stub
+	       								return false;
+	       							}
+	       						})
+	       						/**
+	       						 * Use serializeNulls method if you want To serialize null values 
+	       						 * By default, Gson does not serialize null values
+	       						 */
+	       						.serializeNulls()
+	       						.create();
+	       				JSONArray jArray = new JSONArray();
+	       				NumberFormat formatter = new DecimalFormat("#0.00");   
+	       				Set<Category> cats = event.getCategories();
+	       				for(Category c : cats){
+	       					JSONObject obj1 = new JSONObject();
+	       					obj1.put("cat", c.getCategoryName());
+	       					System.out.println("category name is "+ c.getCategoryName());
+	       					Set<Ticket> tics = c.getTickets();
+	       					obj1.put("num", tics.size());
+	       					System.out.println("number of tickets sold are "+ tics.size());
+	       					obj1.put("price", formatter.format(c.getPrice()));
+	       					System.out.println("price per ticket "+ c.getPrice());
+	       					obj1.put("revenue", formatter.format(c.getPrice()*tics.size()));
+	       					System.out.println("revenue "+ c.getPrice()*tics.size());
+	       					jArray.add(obj1);
+	       				}
+	       				//String json = gson2.toJson(event);
+	       				//System.out.println("EVENT IS " + json);
+	       				return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);
+	       			}else
+	       				return new ResponseEntity<String>("Server error in getting event",HttpStatus.INTERNAL_SERVER_ERROR);
+	       		}
+	       		catch (Exception e){
+	       			return new ResponseEntity<String>("Server error in getting event",HttpStatus.INTERNAL_SERVER_ERROR);
+	       		}
+	       	}	           
 }
 

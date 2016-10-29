@@ -57,8 +57,13 @@
 								tooltip-placement="top" tooltip="Request Ticket Sales"><i
 									class="glyphicon glyphicon-shopping-cart"></i></a> <a
 								ng-show=x.hasTicket ng-click="passEventToTix(x)"
-								tooltip-placement="top" tooltip="Configure tickets"><i
-									class="glyphicon glyphicon-shopping-cart"></i></a></td>
+								tooltip-placement="top" tooltip="Configure Tickets"><i
+									class="glyphicon glyphicon-shopping-cart"></i></a><a
+								ui-sref="dashboard.viewTicketSalesEx"
+								ng-show=x.hasTicket ng-click="passEventToViewTix(x.id)"
+								tooltip-placement="top" tooltip="View Ticket Sales"><i
+									class="glyphicon glyphicon-list"></i></a>
+									</td>
 						</tr>
 					</tbody>
 				</table>
