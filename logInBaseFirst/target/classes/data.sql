@@ -50,7 +50,7 @@ INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('suntecall@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec All roles', '5');
 
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('tkgs.zhao.mingsha@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'event', '5');
+VALUES ('tkgs.zhao.mingsha@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Mingsha ZHAO', '5');
 
 --Assign roles to users for testing
 INSERT into users_roles values( 1,1);

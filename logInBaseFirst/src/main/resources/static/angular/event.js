@@ -538,10 +538,24 @@ app.controller('notificationController', ['$scope', '$http','shareData','$state'
 			getNotifications.error(function(response){
 				$state.go("dashboard.viewEventOrganizers");
 				console.log('GET NOTIFICATIONS FAILED! ' + JSON.stringify(response));
-			});
-			
-		
+			});		
 	})
+}]);
 
-
+app.controller('ticketSalesController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
+		$http.get("//localhost:8443/payment/viewAllEventsWithTicket").then(function(response){
+			$scope.events = response.data;
+			console.log("DISPLAY ALL EVENTS");
+		},function(response){
+			alert("did not view events");
+		}	
+		)	
+	});
+	$scope.passEvent = function(id){
+		shareData.addData(id);
+	}
 }]);

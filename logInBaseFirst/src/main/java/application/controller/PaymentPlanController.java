@@ -605,15 +605,31 @@ public class PaymentPlanController {
 					 */
 					.serializeNulls()
 					.create();
+			NumberFormat formatter = new DecimalFormat("#0.00");   
 			for(Event ev : events){
 				JSONObject obj1 = new JSONObject();
 				obj1.put("id", ev.getId());
 				System.out.println("event title is "+ev.getEvent_title());
 				obj1.put("email", ev.getEventOrg().getEmail());
 				System.out.println(ev.getEventOrg().getEmail());
-				PaymentPlan pay= ev.getPaymentPlan();
-				obj1.put("ticket",pay.getTicketRevenue());
+				obj1.put("title", ev.getEvent_title());
+				System.out.println(ev.getEvent_title());
+				obj1.put("name", ev.getEventOrg().getName());
+				System.out.println(ev.getEventOrg().getName());
+				Set<Category> cats = ev.getCategories();
+				Double revenue = 0.00;
+				int numTotal = 0;
+				if(!cats.isEmpty()){
+				for(Category c : cats){
+					revenue += c.getPrice()*c.getNumOfTickets();
+					numTotal += c.getNumOfTickets();
+				}
+				}
+				obj1.put("ticket",formatter.format(revenue));
 				System.out.println("TOTAL2");
+				obj1.put("number",String.valueOf(numTotal));
+				System.out.println("TOTAL2");
+				PaymentPlan pay = ev.getPaymentPlan();
 				Double balance = pay.getPayable();
 				obj1.put("outstanding",balance);
 				System.out.println("TOTAL3" + balance);
