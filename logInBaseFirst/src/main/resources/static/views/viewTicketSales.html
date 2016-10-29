@@ -1,0 +1,53 @@
+
+	<div ng-cloak ng-controller="ticketSalesController as ticketSalesCtrl" >
+	 <div class="clearfix">
+                            <ol class="breadcrumb no-bg no-m-t">
+                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a>View Ticket Sales</a></li>
+                            </ol>
+        </div>
+      <div class="col-md-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Ticket Sales
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+					<table class="table table-hover">              
+                        <thead>
+                           <tr>
+                           <th><i></i> Event ID </th>
+                           <th><i></i> Event Title </th>
+                            <th><i></i> Organiser Name </th>
+                            <th><i></i> Ticket revenue </th>
+                            <th><i></i> Number of Tickets Sold </th>
+                           <th>Actions</th>
+                       
+                           </tr>
+                         <tbody>
+                         <tr ng-repeat="x in events | orderObjectBy:order_item:order_reverse">
+                            <td>{{ x.id }}</td>
+                            <td>{{ x.title }}</td>
+                            <td>{{ x.name }}</td>
+                            <td>{{ x.ticket }}</td>
+                            <td>{{ x.number }}</td>
+                            <td>
+                            <a  ui-sref="dashboard.viewTicketDetails" ng-click="passEvent(x.id)" tooltip-placement="top" tooltip="View Ticket Sale Details"><i class="glyphicon glyphicon-eye-open"></i></a>
+                            </td>
+                        </tr>
+                         </tbody>
+                         </thead>
+                    </table>			
+				</div>
+			</div>
+		</div>
+	</div>
+	

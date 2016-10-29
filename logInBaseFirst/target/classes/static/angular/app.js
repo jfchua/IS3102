@@ -687,6 +687,14 @@ app.config(
 					authorizedRoles:[USER_ROLES.event]
 				}
 			})
+			.state('dashboard.viewTicketSales',{
+				url:'/viewTicketSales',
+				templateUrl: '/views/viewTicketSales.html',
+				controller: 'ticketSalesController',
+				data:{
+					authorizedRoles:[USER_ROLES.event]
+				}
+			})
 			.state('dashboard.viewAllPaymentPlans',{
 				url:'/viewAllPaymentPlans',
 				templateUrl: '/views/viewAllPaymentPlans.html',
