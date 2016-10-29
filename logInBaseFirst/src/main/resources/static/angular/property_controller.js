@@ -32,7 +32,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 		console.log("SAVING THE BUILDING");
 		send.success(function(){
 			console.log("save building ok");
-			
+
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
@@ -259,7 +259,7 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 
 		console.log("UPDATING THE BUILDING");
 		send.success(function(){
-			
+
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
@@ -359,7 +359,7 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 						//END SHOWMODAL
 						//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
 						//$location.path("/viewBuilding");
-						
+
 
 					},function(response){
 						alert("Error, " + response);
@@ -386,7 +386,7 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 
 
 //VIEW LEVELS
-app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$state','shareData',function ($scope, Upload, $timeout,$http,$state ,shareData) {
+app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$state','shareData','ModalService',function ($scope, Upload, $timeout,$http,$state ,shareData,ModalService) {
 	var building;
 	//VIEW LEVELS WHEN PAGE LOADED
 	angular.element(document).ready(function () {
@@ -434,7 +434,7 @@ app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$
 }])
 
 //ADD A LEVEL,UPDATE A LEVEL
-app.controller('addLevelController', ['$scope', '$http','shareData','$state', function ($scope, $http, shareData,$state) {
+app.controller('addLevelController', ['$scope', '$http','shareData','$state','ModalService', function ($scope, $http, shareData,$state,ModalService) {
 	$scope.addLevel = function(){
 		//alert("SUCCESS");
 		console.log("start adding");
@@ -460,7 +460,24 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state', fu
 
 		console.log("SAVING THE LEVEL");
 		send.success(function(){
-			alert('LEVEL IS SAVED!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Level successfully saved',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
 			$state.go("dashboard.viewBuilding");
 
@@ -476,7 +493,7 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state', fu
 }])
 
 //DELETE A LEVEL,UPDATE A LEVEL
-app.controller('levelController', ['$scope', '$http','shareData','$state', function ($scope, $http, shareData,$state) {
+app.controller('levelController', ['$scope', '$http','shareData','$state','ModalService', function ($scope, $http, shareData,$state,ModalService) {
 	var building;
 
 	//VIEW LEVELS WHEN PAGE LOADED
@@ -531,12 +548,47 @@ app.controller('levelController', ['$scope', '$http','shareData','$state', funct
 		console.log("UPDATING THE LEVEL");
 		send.success(function(){
 			shareData.addData(building); 
-			alert('LEVEL '+$scope.level.levelNum+' IS UPDATED! GOING BACK TO VIEW LEVELS');
-			$state.go("dashboard.viewLevels");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Level '+$scope.level.levelNum+' successfully updated! Going back to view levels'
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewLevels");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+
 			//add go back to view levels when ready
 		});
 		send.error(function(){
-			alert('UPDATING LEVEL GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Error in updating level'
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	}
 
@@ -554,10 +606,46 @@ app.controller('levelController', ['$scope', '$http','shareData','$state', funct
 				console.log("Delete the LEVEL");
 				shareData.addData(building); 
 				console.log(building);
-				alert('LEVEL '+$scope.level.levelNum+' IS DELETED! GOING BACK TO VIEW LEVELS');
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Level '+$scope.level.levelNum+' deleted successfully! Going back to view levels'
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+						$state.go("dashboard.viewLevels");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 				$state.go("dashboard.viewLevels");
 			},function(response){
-				alert("DID NOT DELETE LEVEL");
+				ModalService.showModal({
+
+					templateUrl: "views/errorMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Error in deleting level'
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+						$state.go("dashboard.viewLevels");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 				//console.log("response is : ")+JSON.stringify(response);
 			}	
 			)
@@ -569,7 +657,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$state', funct
 }]);	
 
 
-app.controller('rateController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData){
+app.controller('rateController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService){
 	$scope.myDropDown = 'period';
 
 	$scope.months = [{'name':'JANUARY','month':'JAN'},{'name':'FEBRUARY','month':'FEB'},
@@ -600,7 +688,25 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 
 		console.log("SAVING THE RATE");
 		send.success(function(){
-			alert('RATE IS SAVED! GOING BACK TO VIEW RATES');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Rate saved successfully. Going back to view rates'
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewLevels");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 			$state.go("dashboard.viewAllRates");
 
 		});
@@ -673,7 +779,7 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 	}
 }]);
 
-app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
+app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData','$state','ModalService', function ($scope,  $timeout,$http ,shareData,$state,ModalService) {
 
 	angular.element(document).ready(function () {
 
@@ -722,7 +828,25 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 
 		console.log("UPDATING THE RATE");
 		send.success(function(){
-			alert('RATE IS SAVED!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Rate updated successfully!'
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewLevels");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 			$state.go("dashboard.viewAllRates");
 		});
 		send.error(function(){
@@ -732,7 +856,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 }])
 
 //DELETE BUILDING
-app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
+app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData','$state','ModalService', function ($scope,  $timeout,$http ,shareData,$state,ModalService) {
 
 	angular.element(document).ready(function () {
 
@@ -751,7 +875,25 @@ app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData
 			$http.post("//localhost:8443/rate/deleteRate", JSON.stringify(tempObj)).then(function(response){
 				//$scope.buildings = response.data;
 				console.log("Delete the RATE");
-				alert('SPECIAL RATE IS DELETED! GOING BACK TO VIEW ALL RATES...');
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Special rate deleted successfully!'
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+						$state.go("dashboard.viewLevels");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
 				$state.go("dashboard.viewAllRates");
 
@@ -767,7 +909,7 @@ app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData
 
 
 //VIEW RENTS, UPDATE RENT
-app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
+app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$state','ModalService', function ($scope,  $timeout,$http ,shareData,$state,ModalService) {
 
 	angular.element(document).ready(function () {
 		$scope.units =[];
@@ -922,10 +1064,46 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 			var tempObj ={unit:unit};
 
 			$http.post("//localhost:8443/property/updateRent", JSON.stringify(tempObj)).then(function(response){
-				alert('RENT IS UPDATED');
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Rent updated successfully!'
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+						$state.go("dashboard.viewLevels");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 
 			},function(response){
-				alert("DID NOT UPDATE RENT OF UNIT "+unit.unitNumber);
+				ModalService.showModal({
+
+					templateUrl: "views/errorMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: "DID NOT UPDATE RENT OF UNIT "+unit.unitNumber
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+						$state.go("dashboard.viewLevels");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 
 			}	
 			)

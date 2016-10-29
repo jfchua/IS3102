@@ -1,76 +1,83 @@
-   <div class="clearfix">
-                            <ol class="breadcrumb no-bg no-m-t">
-                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-                                <li><a ui-sref="dashboard.viewUserProfile">View Profile</a></li>
-                                 <li><a>Edit Profile</a></li>
-                            </ol>
-    </div>
-<div ng-cloak ng-controller="userProfileController as userProfileCtrl"
-		>         
-<div class="col-md-6">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">Edit profile	  
-						<div class="panel-control pull-right">
-						
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-							
-						</div>
-					</h3>
-				</div>
-				<div class="panel-body" >
-					<form>
+
+<div class="clearfix">
+	<ol class="breadcrumb no-bg no-m-t">
+		<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+		<li><a ui-sref="dashboard.workspace">Workspace</a></li>
+		<li><a ui-sref="dashboard.viewUserProfile">View Profile</a></li>
+		<li><a>Edit Profile</a></li>
+	</ol>
+</div>
+<div ng-cloak ng-controller="userProfileController as userProfileCtrl">
+	<div class="col-md-6">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Edit profile
+					<div class="panel-control pull-right">
+
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<form>
 					<div class="form-group">
-						<label for="exampleInput">Your Name</label> <input
-							type="text" ng-model="userProfile.name" class="form-control"
+						<label for="exampleInput">Your Name</label> <input type="text"
+							ng-model="userProfile.name" class="form-control"
 							id="userProfileName" placeholder="{{data.name}}" required>
 					</div>
 					<!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
-					<button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "submit()">Submit</button> &nbsp;
+					<button class="progress-button primary-progress"
+						data-style="shrink" data-horizontal ng-click="submit()">Submit</button>
+					&nbsp;
 				</form>
-				</div>
 			</div>
 		</div>
-    </div>
-	<div ng-cloak ng-controller="userProfileController as userProfileCtrl"
-		ng-submit="submitChangePass()">
+	</div>
+</div>
+<div ng-cloak ng-controller="userProfileController as userProfileCtrl2">
 	<div class="col-md-6">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">Change password	  
-						<div class="panel-control pull-right">
-						
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-							
-						</div>
-					</h3>
-				</div>
-				<div class="panel-body" >
-					<form>
-				<div class="form-group">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Change password
+					<div class="panel-control pull-right">
+
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<form>
+					<div class="form-group">
 						<label for="exampleInput">Enter your old password</label> <input
-							type="password" ng-model="userProfile.password0" class="form-control"
-							id="password0" placeholder="Enter new password" required>
+							type="password" ng-model="userProfile.password0"
+							class="form-control" id="password0"
+							placeholder="Enter new password" required>
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">Enter new password</label> <input
-							type="password" ng-model="userProfile.password1" class="form-control"
-							id="password1" placeholder="Enter new password" required>
+							type="password" ng-model="userProfile.password1"
+							class="form-control" id="password1"
+							placeholder="Enter new password" required>
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">Enter password again</label> <input
-							type="password" ng-model="userProfile.password2" class="form-control"
-							id="password2" placeholder="Enter new password again" required>
+							type="password" ng-model="userProfile.password2"
+							class="form-control" id="password2"
+							placeholder="Enter new password again" required>
 					</div>
 					<!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
-					 <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "submit()">Submit</button> &nbsp;
+					<button class="progress-button primary-progress"
+						data-style="shrink" data-horizontal ng-click="submitChangePass()">Submit</button>
+					&nbsp;
 				</form>
-				</div>
 			</div>
 		</div>
-            
+	</div>

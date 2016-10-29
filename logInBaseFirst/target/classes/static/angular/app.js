@@ -891,22 +891,22 @@ var app = angular.module('app', [ 'ui.router',
                                 						  $location.path("/login");
                                 						  ModalService.showModal({
 
-                                								templateUrl: "views/errorMessageTemplate.html",
-                                								controller: "errorMessageModalController",
-                                								inputs: {
-                                									message: 'Session timeout!',
-                                								}
-                                							}).then(function(modal) {
-                                								modal.element.modal();
-                                								modal.close.then(function(result) {
-                                									console.log("OK");
-                                								});
-                                							});
-                                							$scope.dismissModal = function(result) {
-                                								close(result, 200); // close, but give 200ms for bootstrap to animate
+                                							  templateUrl: "views/errorMessageTemplate.html",
+                                							  controller: "errorMessageModalController",
+                                							  inputs: {
+                                								  message: 'Session timeout!',
+                                							  }
+                                						  }).then(function(modal) {
+                                							  modal.element.modal();
+                                							  modal.close.then(function(result) {
+                                								  console.log("OK");
+                                							  });
+                                						  });
+                                						  $scope.dismissModal = function(result) {
+                                							  close(result, 200); // close, but give 200ms for bootstrap to animate
 
-                                								console.log("in dissmiss");
-                                							};
+                                							  console.log("in dissmiss");
+                                						  };
                                 						  $window.location.reload();
                                 						  return response;
                                 					  } else {
@@ -934,22 +934,22 @@ var app = angular.module('app', [ 'ui.router',
                                 						  $location.path("/login");
                                 						  ModalService.showModal({
 
-                                								templateUrl: "views/errorMessageTemplate.html",
-                                								controller: "errorMessageModalController",
-                                								inputs: {
-                                									message: 'Session timeout!',
-                                								}
-                                							}).then(function(modal) {
-                                								modal.element.modal();
-                                								modal.close.then(function(result) {
-                                									console.log("OK");
-                                								});
-                                							});
-                                							$scope.dismissModal = function(result) {
-                                								close(result, 200); // close, but give 200ms for bootstrap to animate
+                                							  templateUrl: "views/errorMessageTemplate.html",
+                                							  controller: "errorMessageModalController",
+                                							  inputs: {
+                                								  message: 'Session timeout!',
+                                							  }
+                                						  }).then(function(modal) {
+                                							  modal.element.modal();
+                                							  modal.close.then(function(result) {
+                                								  console.log("OK");
+                                							  });
+                                						  });
+                                						  $scope.dismissModal = function(result) {
+                                							  close(result, 200); // close, but give 200ms for bootstrap to animate
 
-                                								console.log("in dissmiss");
-                                							};
+                                							  console.log("in dissmiss");
+                                						  };
                                 						  $window.location.reload();
                                 						  return response;
                                 					  } else {
@@ -1105,7 +1105,7 @@ app.controller('MyController',['$scope','$http','ModalService', function ($scope
 
 app.controller("userCtrl",['$scope','ModalService',
 
-		function userCtrl($scope,ModalService) {
+                           function userCtrl($scope,ModalService) {
 
 
 
@@ -1614,61 +1614,62 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 			};
 			return;
 		}
-		var dataObj = {
-				password: $scope.userProfile.password1,
-				oldpassword: $scope.userProfile.password0,
+		else{
+			var dataObj = {
+					password: $scope.userProfile.password1,
+					oldpassword: $scope.userProfile.password0,
+			};
+			console.log("** Passing data object of " + dataObj);
+
+			var send = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/user/changePassword',
+				data    : dataObj //forms user object
+			});
+
+			console.log("SAVING THE USER PROFILE");
+			send.success(function(){
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Password successfully updated',
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
+			});
+			send.error(function(data){
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: data,
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
+			});
 		};
-		console.log("** Passing data object of " + dataObj);
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/user/changePassword',
-			data    : dataObj //forms user object
-		});
-
-		console.log("SAVING THE USER PROFILE");
-		send.success(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Password successfully updated',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-		send.error(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: data,
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-	};
-
+	}
 	$scope.getUserProfileRoles = function(){
 		//alert("SUCCESS");
 
