@@ -10,7 +10,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 			return;
 		}
 
-		
+
 
 		var dataObj = {
 				name: $scope.building.name,
@@ -31,8 +31,29 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 
 		console.log("SAVING THE BUILDING");
 		send.success(function(){
-			alert('Building has been saved successfully');
 			$state.go("dashboard.viewBuilding");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Building has been saved successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+
+			
 
 		});
 		send.error(function(data){
@@ -46,7 +67,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 			}).then(function(modal) {
 				modal.element.modal();
 				modal.close.then(function(result) {
-					console.log("FINISHED adding");
+					console.log("OK");
 				});
 			});
 
@@ -72,7 +93,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 			console.log( $scope.buildings);
 
 		},function(response){
-			alert("did not view");
+			alert("did not view buildings, server error");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
@@ -174,7 +195,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 }]);
 
 //UPDATE BUILDING
-app.controller('updateBuildingController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
+app.controller('updateBuildingController', ['$scope',  '$timeout','$http','shareData','$state','ModalService', function ($scope,  $timeout,$http ,shareData,$state,ModalService) {
 
 	angular.element(document).ready(function () {
 
@@ -197,6 +218,24 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 	});
 
 	$scope.updateBuilding = function(){
+
+		if ( $scope.building.address == null || $scope.building.name == null || $scope.building.numFloor == null || $scope.building.city == null || $scope.building.postalCode == null){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Please make sure you have entered all fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			return;
+		}
+
 		$scope.data = {};
 		//$scope.building = JSON.parse(shareData.getData());
 		var dataObj = {					
@@ -218,12 +257,44 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 
 		console.log("UPDATING THE BUILDING");
 		send.success(function(){
-			alert('Building successfully updated');
-
 			$state.go('dashboard.viewBuilding');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Building successfully updated',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
 		});
 		send.error(function(data){
-			alert('Error, ' + data);
+
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
 		});
 	};	
 }])
