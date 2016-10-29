@@ -623,6 +623,14 @@ app.config(
  					authorizedRoles:[USER_ROLES.organiser]
  				}
  			})
+ 			.state('dashboard.viewTicketSalesEx',{
+				url:'/viewTicketSalesEx',
+				templateUrl: '/views/viewTicketSalesEx.html',
+				controller: 'ticketSaleExController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
 			.state('dashboard.viewNotifications',{
 				url:'/viewNotifications',
 				templateUrl: '/views/viewNotifications.html',

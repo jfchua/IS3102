@@ -62,6 +62,9 @@ $scope.passEventToTix = function(event){
 	console.log("PASSING" + $rootScope.event);
 	$state.go("dashboard.configureTicketsEx");
 }
+$scope.passEventToViewTix = function(id){
+	shareData.addData(id);
+}
 
 $scope.requestForTicketSales = function(event){
 	if(confirm('Confirm ticket sales for '+event.event_title+'?' + " This action cannot be undone")){
@@ -1363,5 +1366,58 @@ app.controller('areaPlanController', function ($scope, $http,shareData) {
 	 console.log($scope.gridsterOpts.maxRows);
 	 console.log($scope.gridsterOpts.columns);
 })
+
+app.controller('ticketSaleExController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	$scope.payment={};
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$scope.eventId = shareData.getData();
+		$scope.url = "https://localhost:8443/event/getEvent1/"+$scope.eventId;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE Event");
+		var getEvent = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/event/getEvent1/' + $scope.eventId,
+
+		});
+		console.log("Getting the event using the url: " + $scope.url);
+		getEvent.success(function(response){
+			console.log('GET PAYMENT PLAN SUCCESS! ');
+			console.log(response);
+			$scope.event = response;
+		});
+		getEvent.error(function(response){
+			$state.go("dashboard.viewTicketSales");
+			console.log('GET PAYMENT FAILED! ');
+		});
+		
+		
+		$scope.order_item = "cat";
+		$scope.order_reverse = false;
+		$scope.url1 = "https://localhost:8443/event/getTicketSales/"+$scope.eventId;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE EVENTS");
+		var getSales = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/event/getTicketSales/' + $scope.eventId,
+
+		});
+		console.log("Getting the events using the url: " + $scope.url1);
+		getSales.success(function(response){
+			console.log('GET EVENTS SUCCESS! ');
+			console.log(JSON.stringify(response));
+			console.log(response);
+			$scope.sales = response;
+		});
+		getSales.error(function(response){
+			$state.go("dashboard.viewAllEventsEx");
+			console.log('GET EVENTS FAILED! ');
+		});
+		
+		
+	});
+	
+}]);
+
 
 

@@ -1,11 +1,11 @@
 
-	<div ng-cloak ng-controller="ticketSaleDetailsController as ticketSaleDetailsCtrl" >
+	<div ng-cloak ng-controller="ticketSaleExController as ticketSaleExCtrl" >
 
 	 <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
                                 <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-                                <li><a ui-sref="dashboard.viewTicketSales">View Ticket Sales</a></li>
+                                <li><a ui-sref="dashboard.viewAllEventsEx">View All Events</a></li>
                                 <li><a>View Ticket Sale Details </a></li>
                             </ol>
         </div>
@@ -65,12 +65,19 @@
 								<p class="form-control-static" ng-bind="event.event_description"></p>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-sm-4 control-label">Total Revenue</label>
+				<div class="form-group">
+							<label class="col-sm-4 control-label">Total Ticket Revenue</label>
 							<div class="col-sm-8">
 								<p class="form-control-static" ng-bind="event.revenue"></p>
 							</div>
 						</div>
+				<div class="form-group">
+							<label class="col-sm-4 control-label">Total Number Of Tickets Sold</label>
+							<div class="col-sm-8">
+								<p class="form-control-static" ng-bind="event.total"></p>
+							</div>
+						</div>		
+						
                </form> 	
 					<table class="table table-hover">              
                         <thead>
@@ -89,7 +96,7 @@
                        </tr>
                          </tbody>
                          </thead>
-                    </table>			
+                    </table>		
 				</div>
 			</div>
 		</div>
