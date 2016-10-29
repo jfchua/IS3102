@@ -2340,7 +2340,7 @@ app.service('shareData', function($window) {
 //========Test================
 
 //========Event================
-app.controller('addEController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
+app.controller('addEController', ['$scope', '$http','$location','$routeParams','shareData','ModalService', function ($scope, $http,$location, $routeParams, shareData,ModalService){
 	console.log("start selecting venue");
 	var getBuild = $http({
 		method  : 'GET',
@@ -2460,7 +2460,7 @@ app.controller('addEController', ['$scope', '$http','$location','$routeParams','
 
 }]);
 
-app.controller('updateEController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
+app.controller('updateEController', ['$scope', '$http','$location','$routeParams','shareData','ModalService', function ($scope, $http,$location, $routeParams, shareData,ModalService){
 	$scope.init= function(){
 		$scope.event1 = JSON.parse(shareData.getData());
 		$scope.event1.event_start_date = new Date($scope.event1.event_start_date);
@@ -2698,7 +2698,7 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 });
 
 
-app.controller('eventExternalController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('eventExternalController', ['$scope', '$http','$location','$routeParams','shareData', 'ModalService',function ($scope, $http,$location, $routeParams, shareData,ModalService) {
 
 
 	$scope.viewEvents = function(){
@@ -2850,7 +2850,7 @@ app.controller('eventExternalController', ['$scope', '$http','$location','$route
 }]);
 
 
-app.controller('bookingController', ['$scope','$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+app.controller('bookingController', ['$scope','$http','$location','$routeParams','shareData','ModalService', function ($scope, $http,$location, $routeParams, shareData,ModalService) {
 	$scope.viewBookings = function(){
 		$scope.data = {};
 		//var tempObj= {id:1};
@@ -2928,7 +2928,7 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 //===========================================================================
 //6. Create client organisation.
 //===========================================================================
-app.controller('clientOrgController', ['$scope', '$http','$location', function ($scope, $http, $location) {
+app.controller('clientOrgController', ['$scope', '$http','$location','ModalService', function ($scope, $http, $location,ModalService) {
 	$scope.genders=['Property System','Event Management System','Finance System'];
 	$scope.selection=[];
 
@@ -2993,8 +2993,8 @@ app.controller('clientOrgController', ['$scope', '$http','$location', function (
 
 //////////VIEW CLIENT ORGS//////////
 
-app.controller('viewClientOrgs', ['$scope','$http', '$location',
-                                  function($scope, $http,$location) {
+app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
+                                  function($scope, $http,$location,ModalService) {
 
 	$scope.genders=['Property System','Event Management System','Finance System'];
 	$scope.selection=[];
@@ -3174,7 +3174,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location',
 //===========================================================================
 //7. Audit Logs
 //===========================================================================
-app.controller('auditLogController', ['$scope', '$http', function ($scope, $http) {
+app.controller('auditLogController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
 	$scope.submit = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -3241,7 +3241,7 @@ app.controller('auditLogController', ['$scope', '$http', function ($scope, $http
 
 //TODOLIST CALENDAR////
 
-app.controller('UsersIndexController', ['$scope','$http', function($scope,$http) {
+app.controller('UsersIndexController', ['$scope','$http','ModalService', function($scope,$http,ModalService) {
 	// ... code omitted ...
 	// Dates can be passed as strings or Date objects 
 	$scope.events = [];
