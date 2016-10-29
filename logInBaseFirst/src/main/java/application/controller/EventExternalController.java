@@ -341,9 +341,9 @@ public class EventExternalController {
 					obj.put("units", unit);
 					System.out.println(unit);
 				    obj.put("event_title", event.getEvent_title());
-				    obj.put("event_content", event.getEventType());
+				    obj.put("event_type", String.valueOf(event.getEventType()));
 				    obj.put("event_description", event.getEvent_description());
-				    obj.put("event_approval_status", event.getApprovalStatus());
+				    obj.put("event_approval_status", String.valueOf(event.getApprovalStatus()));
 				    obj.put("event_start_date", String.valueOf(event.getEvent_start_date()));
 				    obj.put("event_end_date", String.valueOf(event.getEvent_end_date()));
 				    obj.put("revenue", formatter.format(eventExternalService.getTicketRevenue(client, id)));

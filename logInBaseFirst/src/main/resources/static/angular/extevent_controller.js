@@ -62,6 +62,9 @@ $scope.passEventToTix = function(event){
 	console.log("PASSING" + $rootScope.event);
 	$state.go("dashboard.configureTicketsEx");
 }
+$scope.passEventToViewTix = function(id){
+	shareData.addData(id);
+}
 
 $scope.requestForTicketSales = function(event){
 	if(confirm('Confirm ticket sales for '+event.event_title+'?' + " This action cannot be undone")){
