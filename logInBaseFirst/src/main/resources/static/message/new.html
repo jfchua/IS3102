@@ -1,69 +1,71 @@
-	<div ng-cloak ng-controller="NewMailController">
-    <div class="clearfix">
-                        <ol class="breadcrumb no-bg no-m-t">
-                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-                             <li><a>Add Message</a></li>
-                        </ol>
-        </div>
-    <div class="col-md-9">
-			<div class="panel panel-primary">
 
-				<div class="panel-heading">
-					<h3 class="panel-title">Add message		  
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
+<div ng-cloak ng-controller="NewMailController">
+	<div class="clearfix">
+		<ol class="breadcrumb no-bg no-m-t">
+			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
+			<li><a>Add Message</a></li>
+		</ol>
+	</div>
+	<div class="col-md-9">
+		<div class="panel panel-primary">
+
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Add message
+					<div class="panel-control pull-right">
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body">
+
+				<form class="form-horizontal" ng-submit="send()">
+
+					<fieldset>
+						<div class="form-group">
+							<label for="subject" class="control-label">Subject</label> <input
+								type="text" class="form-control" ng-model="mail.subject"
+								ng-binding="newSubject" required />
 						</div>
-					</h3>
-				</div>
-                <div class="panel-body">
-                    
-                    <form class="form-horizontal" ng-submit="send()">
 
-			<fieldset>
-				<div class="form-group">
-					<label for="subject" class="control-label">Subject</label> <input
-						type="text" class="form-control" ng-model="mail.subject"
-						ng-binding="newSubject" required />
-				</div>
+						<div class="form-group">
+							<ul class="list-group" name="recipients">
+								<li ng-repeat="contact in selectedContacts"
+									class="list-group-item" style="display: inline;">{{contact}}
+									<button ng-click="deleteRecipient(contact)">
+										<i class="glyphicon glyphicon-trash"></i>
+									</button>
+								</li>
+							</ul>
+						</div>
 
-				<div class="form-group">
-					<ul class="list-group" name="recipients">
-						<li ng-repeat="contact in selectedContacts"
-							class="list-group-item" style="display: inline;">{{contact}}
-							<button ng-click="deleteRecipient(contact)">
-								<i class="glyphicon glyphicon-trash"></i>
-							</button>
-						</li>
-					</ul>
-				</div>
+						<div class="form-group">
+							<label for="recipient" class="control-label">To</label> <select
+								required name="recipient" ng-model="currentlySelected"
+								ng-change="selectRecipient()" class="form-control">
+								<option ng-repeat="contact in contacts">{{contact}}</option>
+							</select>
+						</div>
 
-				<div class="form-group">
-					<label for="recipient" class="control-label">To</label> <select
-						name="recipient" ng-model="currentlySelected"
-						ng-change="selectRecipient()" class="form-control">
-						<option ng-repeat="contact in contacts">{{contact}}</option>
-					</select>
-				</div>
+						<div class="form-group">
+							<label for="message">Message</label>
+							<textarea required name="message" ng-model="message" class="form-control"
+								rows="5"></textarea>
+						</div>
 
-				<div class="form-group">
-					<label for="message">Message</label>
-					<textarea name="message" ng-model="message" class="form-control"
-						rows="5"></textarea>
-				</div>
+						<div class="form-group">
+							<button class="btn btn-primary">Send</button>
+						</div>
 
-				<div class="form-group">
-					<button class="btn btn-primary">Send</button>
-				</div>
+					</fieldset>
+				</form>
 
-			</fieldset>
-		</form>
-                    
-                    
-                </div>
-        </div>
-        </div>
-		
+
+			</div>
+		</div>
+	</div>
+
 </div>

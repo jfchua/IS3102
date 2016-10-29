@@ -1,10 +1,17 @@
 /*       4. BUILDING         */
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //VIEW BUILDINGS, ADD A BUILDING
-app.controller('buildingController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('buildingController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService) {
 	$scope.submit1 = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
+
+		if ( !angular.isDefined($scope.building) ){
+			return;
+		}
+
+		
+
 		var dataObj = {
 				name: $scope.building.name,
 				numFloor: $scope.building.numFloor,
@@ -26,10 +33,32 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 		send.success(function(){
 			alert('Building has been saved successfully');
 			$state.go("dashboard.viewBuilding");
-			
+
 		});
 		send.error(function(data){
-			alert('Error, ' + data);
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("FINISHED adding");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+
+
 		});
 	};
 	angular.element(document).ready(function () {
@@ -49,14 +78,14 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 		)
 	});
 	$scope.updateBuilding = function(building){
-		
+
 		shareData.addData(building);
 	}
-	
+
 	$scope.deleteBuilding = function(building) { 
 		shareData.addData(building);		   
 	}
-	
+
 	$scope.passBuilding = function(building){
 		shareData.addData(building);	
 	}
@@ -67,7 +96,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 
 		$scope.dataToShare = [];
 
-		
+
 		//populate levels from a building of the specific ID
 		$scope.url = "https://localhost:8443/level/viewLevels/"+id;
 		//$scope.dataToShare = [];
@@ -94,7 +123,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 			console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
 		});
 	};	
-/*
+	/*
 	$scope.getBuilding = function(id){		
 		$scope.dataToShare = [];	  
 		$scope.url = "https://localhost:8443/building/getBuilding/"+id;
@@ -120,7 +149,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 
 	}
 
-*/
+	 */
 	$scope.getBuildingById= function(){
 
 		//var buildings ={name: $scope.name, address: $scope.address};
@@ -139,31 +168,31 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 		console.log("BUILDING DATA ARE OF THE FOLLOWING: " + $scope.building);
 	}
 
-	
+
 
 
 }]);
 
 //UPDATE BUILDING
 app.controller('updateBuildingController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
-	
+
 	angular.element(document).ready(function () {
 
 		$scope.building1 = shareData.getData();
-			
-			var dataObj = {
-					name: $scope.building1.name,
-					numFloor: $scope.building1.numFloor,
-					address: $scope.building1.address,
-					city: $scope.building1.city,
-					postalCode: $scope.building1.postalCode,
-					filePath: $scope.building1.filePath
-			};
-			$scope.building = angular.copy($scope.building1)
-			var url = "https://localhost:8443/building/updateBuilding";
-			console.log("BUILDING DATA ARE OF THE FOLLOWING: " + $scope.building);
 
-	
+		var dataObj = {
+				name: $scope.building1.name,
+				numFloor: $scope.building1.numFloor,
+				address: $scope.building1.address,
+				city: $scope.building1.city,
+				postalCode: $scope.building1.postalCode,
+				filePath: $scope.building1.filePath
+		};
+		$scope.building = angular.copy($scope.building1)
+		var url = "https://localhost:8443/building/updateBuilding";
+		console.log("BUILDING DATA ARE OF THE FOLLOWING: " + $scope.building);
+
+
 
 	});
 
@@ -190,7 +219,7 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 		console.log("UPDATING THE BUILDING");
 		send.success(function(){
 			alert('Building successfully updated');
-			
+
 			$state.go('dashboard.viewBuilding');
 		});
 		send.error(function(data){
@@ -201,7 +230,7 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 
 //DELETE BUILDING
 app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
-	
+
 	angular.element(document).ready(function () {
 
 		$scope.building = shareData.getData();
@@ -215,22 +244,22 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 			$scope.data = {};
 			var tempObj ={id:$scope.building.id};
 			console.log("fetch id "+ tempObj);
-		
+
 			$http.post("//localhost:8443/building/deleteBuilding", JSON.stringify(tempObj)).then(function(response){
 				//$scope.buildings = response.data;
 				console.log("Delete the BUILDING");
 				alert('Building successfully delete. Going back to view buildings...');
 				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
 				//$location.path("/viewBuilding");
-				 $state.go("dashboard.viewBuilding");
-				
+				$state.go("dashboard.viewBuilding");
+
 			},function(response){
 				alert("Error, " + response);
 				//console.log("response is : ")+JSON.stringify(response);
 			}	
 			)
 		}
-		
+
 	};	
 }])
 
@@ -278,7 +307,7 @@ app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$
 	$scope.passLevel = function(level){
 		var obj={building:building,
 				level:level
-				}
+		}
 		shareData.addData(obj);
 	}
 }])
@@ -312,8 +341,8 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state', fu
 		send.success(function(){
 			alert('LEVEL IS SAVED!');
 			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-			      $state.go("dashboard.viewBuilding");
-			
+			$state.go("dashboard.viewBuilding");
+
 		});
 		send.error(function(){
 			$scope.addLevelFail={status:true};
@@ -327,36 +356,36 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state', fu
 
 //DELETE A LEVEL,UPDATE A LEVEL
 app.controller('levelController', ['$scope', '$http','shareData','$state', function ($scope, $http, shareData,$state) {
-		var building;
-	
+	var building;
+
 	//VIEW LEVELS WHEN PAGE LOADED
 	angular.element(document).ready(function () {
 		$scope.obj = shareData.getData();
 		obj=shareData.getData();
-  		$scope.level=obj.level
-  		building=obj.buliding;
+		$scope.level=obj.level
+		building=obj.buliding;
 		var url = "https://localhost:8443/level/updateLevel";
 		console.log("LEVEL DATA ARE OF THE FOLLOWING: " + $scope.level);
-		
+
 		//$scope.getBuilding;
-		   
-		   var levelIdObj={id:$scope.level.id}
-		    //get building from levelId
-		    $http.post('/level/getBuilding', JSON.stringify(levelIdObj)).then(function(response){
-		      console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
-		     building=response.data;
-		      console.log(building);
-		      console.log("Building ID IS " + building.id);
-		    },function(response){
-		      console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
-		    });	
+
+		var levelIdObj={id:$scope.level.id}
+		//get building from levelId
+		$http.post('/level/getBuilding', JSON.stringify(levelIdObj)).then(function(response){
+			console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
+			building=response.data;
+			console.log(building);
+			console.log("Building ID IS " + building.id);
+		},function(response){
+			console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
+		});	
 		console.log(building);
 	});
-	
-	  $scope.passBuilding = function(){
-		  shareData.addData(building);
-	  }
-	 
+
+	$scope.passBuilding = function(){
+		shareData.addData(building);
+	}
+
 	$scope.updateLevel = function(){
 		console.log("Start updating");
 		$scope.data = {};
@@ -412,7 +441,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$state', funct
 			}	
 			)
 		}
-		
+
 
 	}
 
@@ -421,16 +450,16 @@ app.controller('levelController', ['$scope', '$http','shareData','$state', funct
 
 app.controller('rateController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData){
 	$scope.myDropDown = 'period';
-	
+
 	$scope.months = [{'name':'JANUARY','month':'JAN'},{'name':'FEBRUARY','month':'FEB'},
 	                 {'name':'MARCH', 'month':'MAR'},{'name':'APRIL','month':'APR'},
 	                 {'name':'MAY','month':'MAY'},{'name':'JUNE','month':'JUN'},
 	                 {'name':'JULY','month':'JUL'},{'name':'AUGUST','month':'AUG'},
 	                 {'name':'SEPTEMBER','month':'SEP'},{'name':'OCTOBER','month':'OCT'}, 
 	                 {'name':'NOVEMBER','month':'NOV'}, {'name':'DECEMBER','month':'DEC'}];
-	
+
 	$scope.weekends = [{'name':'yes', 'weekend':'weekend'}];
-	
+
 	$scope.addRate = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -439,9 +468,9 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 				description: $scope.special.description,
 				period: ($scope.special.period).toString(),
 		};
-        console.log("period is" + $scope.special.period);
+		console.log("period is" + $scope.special.period);
 		console.log("REACHED HERE FOR SUBMIT RATE " + JSON.stringify(dataObj));
-		
+
 		var send = $http({
 			method  : 'POST',
 			url     : 'https://localhost:8443/rate/addSpecialRate',
@@ -452,13 +481,13 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 		send.success(function(){
 			alert('RATE IS SAVED! GOING BACK TO VIEW RATES');
 			$state.go("dashboard.viewAllRates");
-			
+
 		});
 		send.error(function(){
 			alert('SAVING RATE GOT ERROR!');
 		});
 	};
-	
+
 	angular.element(document).ready(function () {
 		//retrieve buildings when page loaded
 		$scope.data = {};
@@ -473,19 +502,19 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 		}	
 		)
 	});
-$scope.updateSpecialRate = function(rate){
-		
+	$scope.updateSpecialRate = function(rate){
+
 		shareData.addData(rate);
 	}
-	
+
 	$scope.deleteSpecialRate = function(rate) { 
 		shareData.addData(rate);		   
 	}
-	
+
 	$scope.passRate = function(rate){
 		shareData.addData(rate);	
 	}
-	
+
 	$scope.getRate = function(id){		
 		$scope.dataToShare = [];	  
 		$scope.url = "https://localhost:8443/rate/getRate/"+id;
@@ -524,35 +553,35 @@ $scope.updateSpecialRate = function(rate){
 }]);
 
 app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
-	
+
 	angular.element(document).ready(function () {
 
 		$scope.special1 = shareData.getData();
-			
-			var dataObj = {
-					rate: ($scope.special1.rate).toString(),
-					description: $scope.special1.description,
-					period: $scope.special1.period,
-			};
-			$scope.special = angular.copy($scope.special1)
-			var url = "https://localhost:8443/rate/updateRate";
-			console.log("RATE DATA ARE OF THE FOLLOWING: " + $scope.special);
 
-	
+		var dataObj = {
+				rate: ($scope.special1.rate).toString(),
+				description: $scope.special1.description,
+				period: $scope.special1.period,
+		};
+		$scope.special = angular.copy($scope.special1)
+		var url = "https://localhost:8443/rate/updateRate";
+		console.log("RATE DATA ARE OF THE FOLLOWING: " + $scope.special);
+
+
 
 	});
 
-     $scope.myDropDown = 'period';
-	
+	$scope.myDropDown = 'period';
+
 	$scope.months = [{'name':'JANUARY','month':'JAN'},{'name':'FEBRUARY','month':'FEB'},
 	                 {'name':'MARCH', 'month':'MAR'},{'name':'APRIL','month':'APR'},
 	                 {'name':'MAY','month':'MAY'},{'name':'JUNE','month':'JUN'},
 	                 {'name':'JULY','month':'JUL'},{'name':'AUGUST','month':'AUG'},
 	                 {'name':'SEPTEMBER','month':'SEP'},{'name':'OCTOBER','month':'OCT'}, 
 	                 {'name':'NOVEMBER','month':'NOV'}, {'name':'DECEMBER','month':'DEC'}];
-	
+
 	$scope.weekends = [{'name':'yes', 'weekend':'weekend'}];
-	
+
 	$scope.updateRate = function(){
 		$scope.data = {};
 		//$scope.building = JSON.parse(shareData.getData());
@@ -583,7 +612,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 
 //DELETE BUILDING
 app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
-	
+
 	angular.element(document).ready(function () {
 
 		$scope.special = shareData.getData();
@@ -597,28 +626,28 @@ app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData
 			$scope.data = {};
 			var tempObj ={id:$scope.special.id};
 			console.log("fetch id "+ tempObj);
-		
+
 			$http.post("//localhost:8443/rate/deleteRate", JSON.stringify(tempObj)).then(function(response){
 				//$scope.buildings = response.data;
 				console.log("Delete the RATE");
 				alert('SPECIAL RATE IS DELETED! GOING BACK TO VIEW ALL RATES...');
 				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
 				$state.go("dashboard.viewAllRates");
-				
+
 			},function(response){
 				alert("DID NOT DELETE");
 				//console.log("response is : ")+JSON.stringify(response);
 			}	
 			)
 		}
-		
+
 	};	
 }])
 
 
 //VIEW RENTS, UPDATE RENT
 app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
-	
+
 	angular.element(document).ready(function () {
 		$scope.units =[];
 		$scope.allUnits=[];
@@ -666,7 +695,7 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 			var getLevels = $http({
 				method  : 'GET',
 				url     : 'https://localhost:8443/level/viewLevels/'+id,
-		});
+			});
 			console.log("Getting the levels using the url: " + $scope.url);
 			getLevels.success(function(response){
 				$scope.levels = response;
@@ -684,10 +713,10 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 			}
 			console.log("finish selecting level");		
 		}
-		
+
 		$scope.getUnit = function(levelId){
 			//$scope.url = "https://localhost:8443/property/viewUnits/";
-			
+
 			$scope.levelID = levelId; 
 			var dataObj = {id: $scope.levelID};
 			console.log("GETTING THE ALL UNITS INFO")
@@ -695,7 +724,7 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 				method  : 'POST',
 				url     : 'https://localhost:8443/property/viewUnits/',
 				data    : dataObj,
-		});
+			});
 			console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
 			getUnits.success(function(response){
 				$scope.units = response;
@@ -705,25 +734,25 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 			getUnits.error(function(){
 				alert('Get units error!!!!!!!!!!');
 			});		
-			
+
 			$scope.currentlySelectedUnit;
 			$scope.selectUnit = function(){
-				
+
 				var duplicate = false;
 				var index = 0;
-			    angular.forEach($scope.selectedUnits, function() {
-			        if(duplicate==false&&$scope.currentlySelectedUnit.id == $scope.selectedUnits[index].id)
-			        	duplicate = true;
-			        else
-			        	index = index + 1;
-			    });
-			    console.log(duplicate);
+				angular.forEach($scope.selectedUnits, function() {
+					if(duplicate==false&&$scope.currentlySelectedUnit.id == $scope.selectedUnits[index].id)
+						duplicate = true;
+					else
+						index = index + 1;
+				});
+				console.log(duplicate);
 				if(!duplicate){
 					$scope.selectedUnits.push($scope.currentlySelectedUnit);
 				}
-				
-				
-				
+
+
+
 				console.log("Hailing test:");
 				console.log($scope.currentlySelectedUnit);
 				console.log($scope.selectedUnits);
@@ -734,7 +763,7 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 				$scope.selectedUnits.splice(index, 1);  
 			}
 			console.log("finish selecting units");	
-			
+
 			$scope.checkAvail = function(){
 				console.log("start checking availability");
 				$scope.data = {};
@@ -768,24 +797,24 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 	$scope.save = function(unit){
 		unit.editable=false;
 		if(confirm('CONFIRM TO EDIT RENT OF '+unit.unitNumber+'?')){
-		
+
 			var tempObj ={unit:unit};
-		
+
 			$http.post("//localhost:8443/property/updateRent", JSON.stringify(tempObj)).then(function(response){
 				alert('RENT IS UPDATED');
-				
+
 			},function(response){
 				alert("DID NOT UPDATE RENT OF UNIT "+unit.unitNumber);
 
 			}	
 			)
 		}
-		
+
 	};	
-	
+
 	$scope.edit = function(unit){
 		unit.editable=true;
-		
+
 	};	
 }])
 
