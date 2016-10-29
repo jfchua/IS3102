@@ -471,6 +471,7 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state','Mo
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
+					$state.go("dashboard.viewBuilding");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -479,7 +480,7 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state','Mo
 				console.log("in dissmiss");
 			};
 			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-			$state.go("dashboard.viewBuilding");
+
 
 		});
 		send.error(function(){

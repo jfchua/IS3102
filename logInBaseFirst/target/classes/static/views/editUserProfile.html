@@ -38,8 +38,7 @@
 		</div>
 	</div>
 </div>
-<div ng-cloak ng-controller="userProfileController as userProfileCtrl2"
-	ng-submit="submitChangePass()">
+<div ng-cloak ng-controller="userProfileController as userProfileCtrl2">
 	<div class="col-md-6">
 		<div class="panel panel-primary">
 			<div class="panel-heading">
@@ -76,7 +75,7 @@
 					</div>
 					<!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
 					<button class="progress-button primary-progress"
-						data-style="shrink" data-horizontal >Submit</button>
+						data-style="shrink" data-horizontal ng-click="submitChangePass()">Submit</button>
 					&nbsp;
 				</form>
 			</div>
