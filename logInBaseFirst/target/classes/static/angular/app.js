@@ -889,7 +889,24 @@ var app = angular.module('app', [ 'ui.router',
                                 						  // redirecting to login page
                                 						  event.preventDefault();
                                 						  $location.path("/login");
-                                						  alert("Session Timeout!");
+                                						  ModalService.showModal({
+
+                                								templateUrl: "views/errorMessageTemplate.html",
+                                								controller: "errorMessageModalController",
+                                								inputs: {
+                                									message: 'Session timeout!',
+                                								}
+                                							}).then(function(modal) {
+                                								modal.element.modal();
+                                								modal.close.then(function(result) {
+                                									console.log("OK");
+                                								});
+                                							});
+                                							$scope.dismissModal = function(result) {
+                                								close(result, 200); // close, but give 200ms for bootstrap to animate
+
+                                								console.log("in dissmiss");
+                                							};
                                 						  $window.location.reload();
                                 						  return response;
                                 					  } else {
@@ -915,7 +932,24 @@ var app = angular.module('app', [ 'ui.router',
                                 						  // redirecting to login page
                                 						  event.preventDefault();
                                 						  $location.path("/login");
-                                						  alert("Session Timeout!");
+                                						  ModalService.showModal({
+
+                                								templateUrl: "views/errorMessageTemplate.html",
+                                								controller: "errorMessageModalController",
+                                								inputs: {
+                                									message: 'Session timeout!',
+                                								}
+                                							}).then(function(modal) {
+                                								modal.element.modal();
+                                								modal.close.then(function(result) {
+                                									console.log("OK");
+                                								});
+                                							});
+                                							$scope.dismissModal = function(result) {
+                                								close(result, 200); // close, but give 200ms for bootstrap to animate
+
+                                								console.log("in dissmiss");
+                                							};
                                 						  $window.location.reload();
                                 						  return response;
                                 					  } else {
@@ -1000,7 +1034,7 @@ app.controller('ApplicationController', function ($scope,
 
 
 /*dashboard*/
-app.controller('MyController', function ($scope, $http) {
+app.controller('MyController',['$scope','$http','ModalService', function ($scope, $http,ModalService) {
 	var urlBase = "https://localhost:8443/user";
 	function findAllNotifications() {
 		//get all notifications to display
@@ -1042,7 +1076,7 @@ app.controller('MyController', function ($scope, $http) {
 		Name: 'IS3102',
 		Selected: false
 	}];*/
-});
+}]);
 
 /* Precontent
  * CREATE NEW USER
@@ -1069,9 +1103,9 @@ app.controller('MyController', function ($scope, $http) {
  */
 //CREATING USER VERSION 2
 
-app.controller("userCtrl",
+app.controller("userCtrl",['$scope','ModalService',
 
-		function userCtrl($scope) {
+		function userCtrl($scope,ModalService) {
 
 
 
@@ -1137,7 +1171,7 @@ app.controller("userCtrl",
 	$scope.reset = function () {
 		$scope.model.selected = {};
 	};
-});
+}]);
 
 
 //END OF CREATE NEW USER VER 2
@@ -1146,7 +1180,7 @@ app.controller("userCtrl",
 
 //Create new user
 
-app.controller('createNewUserController', function($scope, $http){
+app.controller('createNewUserController', ['$scope','$http','ModalService',function($scope, $http,ModalService){
 
 	$scope.genders=['ROLE_USER','ROLE_EVENT','ROlE_ADMIN','ROLE_PROPERTY','ROLE_FINANCE','ROLE_TICKETING','ROLE_EXTEVE'];
 	$scope.selection=[];
@@ -1222,7 +1256,7 @@ app.controller('createNewUserController', function($scope, $http){
 			};
 		});
 	}
-});
+}]);
 
 
 //VIEW USER START
@@ -1496,7 +1530,7 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 //EDIT USER PROFILE
 
 //USER PROFILE CONTROLLER
-app.controller('userProfileController', ['$scope', '$http', function ($scope, $http) {
+app.controller('userProfileController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
 
 	$scope.submit = function(){
 		//alert("SUCCESS");
@@ -1560,7 +1594,24 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 	$scope.submitChangePass = function(){
 		//alert("SUCCESS");
 		if ( $scope.userProfile.password1 != $scope.userProfile.password2 ){
-			alert("2 Passwords do not match!");
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'The 2 passwords do not match',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 			return;
 		}
 		var dataObj = {
@@ -1675,10 +1726,10 @@ app.controller('userProfileController', ['$scope', '$http', function ($scope, $h
 
 
 /*1. TO DO LIST*/
-app.controller('taskController', function($scope, $http, $route,$state) {
+app.controller('taskController',['$scope','$http','$route','$state','ModalService', function($scope, $http, $route,$state,ModalService) {
 
 
-});
+}]);
 /*
 app.controller('DemoCtrl', function ($scope, $http) {
 	$scope.selectedNotifications = null;
@@ -1810,7 +1861,7 @@ app.directive('sidebarNewsfeed',function(){
 		replace: true,
 	}
 });
-app.controller('AlertDemoCtrl', function ($scope, datfactory, $http){
+app.controller('AlertDemoCtrl',[ '$scope','datfactory','$http','ModalService', function ($scope, datfactory, $http,ModalService){
 	datfactory.getlist()
 	.then(function(arrItems){
 		//$scope.alerts = arrItems;
@@ -1849,15 +1900,49 @@ app.controller('AlertDemoCtrl', function ($scope, datfactory, $http){
 			data    :  $scope.getId[index] //forms user object
 		});
 		del.success(function(){
-			alert("Notification deleted")
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Notification deleted successsfully!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 			$scope.alerts.splice(index, 1);
 		});
 		del.error(function(data){
-			alert(data);
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 
 	};
-});
+}]);
 app.controller('DropdownCtrl', function ($scope, $log) {
 	$scope.items = [
 	                'The first choice!',
@@ -2136,7 +2221,7 @@ app.controller('DetailController', function($scope, $routeParams){
 	$scope.message = messages[$routeParams.id];
 });
 
-app.controller('NewMailController', function($scope, $state, $http){
+app.controller('NewMailController',['$scope','$state','$http','ModalService', function($scope, $state, $http,ModalService){
 	var getMsg = $http({
 		method  : 'GET',
 		url     : 'https://localhost:8443/getUsersToSendTo',
@@ -2237,16 +2322,50 @@ app.controller('NewMailController', function($scope, $state, $http){
 
 		console.log("Sending the message");
 		sendMsg.success(function(){
-			alert('Message sent successfully!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Message sent successsfully!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		sendMsg.error(function(data){
-			alert(data);
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 
 		//alert('message sent');
 		$state.go('dashboard.workspace');
 	};
-});
+}]);
 
 //===========================================================================
 //fake emails:
@@ -2355,7 +2474,24 @@ app.controller('addEController', ['$scope', '$http','$location','$routeParams','
 		console.log('Buildings Gotten');
 	});
 	getBuild.error(function(){
-		alert('Get building error!!!!!!!!!!');
+		ModalService.showModal({
+
+			templateUrl: "views/errorMessageTemplate.html",
+			controller: "errorMessageModalController",
+			inputs: {
+				message: 'Error in getting building!',
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				console.log("OK");
+			});
+		});
+		$scope.dismissModal = function(result) {
+			close(result, 200); // close, but give 200ms for bootstrap to animate
+
+			console.log("in dissmiss");
+		};
 	});
 	$scope.currentlySelectedBuilding;
 	$scope.selectBuild = function(){
@@ -2450,10 +2586,44 @@ app.controller('addEController', ['$scope', '$http','$location','$routeParams','
 
 		console.log("SAVING THE Event");
 		send.success(function(){
-			alert('Event IS SAVED!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Event saved successsfully!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		send.error(function(){
-			alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Error in saving event! Check whether the unit is available',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -2618,10 +2788,44 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 
 		console.log("UPDATING THE EVENT");
 		send.success(function(){
-			alert('EVENT IS SAVED!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Event updated successsfully!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		send.error(function(){
-			alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Error in saving the event. Check if the unit is available',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};	
 }]);
@@ -2798,7 +3002,24 @@ app.controller('eventExternalController', ['$scope', '$http','$location','$route
 			//$scope.buildings = response.data;
 			console.log("Cancel the EVENT");
 		},function(response){
-			alert("DID NOT Cancel EVENT");
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Error in cancelling event!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
@@ -2871,11 +3092,45 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 			});
 			console.log("Deleting the event using the url: " + $scope.url);
 			deleteBooking.success(function(response){
-				alert('DELETE BOOKING SUCCESS! ');
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Booking deleted successsfully!',
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 				console.log("ID IS " + id);
 			});
 			deleteBooking.error(function(response){
-				alert('DELETE BOOKING FAIL! ');
+				ModalService.showModal({
+
+					templateUrl: "views/errorMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Did not manage to delete the booking',
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 				$location.path("/viewAllEventsEx");
 				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
 			});
@@ -2966,11 +3221,45 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 
 		console.log("SAVING THE CLIENT ORG");
 		send.success(function(data){
-			alert('Client organisation successfully saved' );
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Client organisation saved successsfully!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 			$location.path("/dashboard");
 		});
 		send.error(function(data){
-			alert(data);
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -3079,7 +3368,24 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 		console.log("fetching the user list.......");
 		toEdit.success(function(response){
 			$scope.Profiles = response;
-			alert('Succesfully updated the client organisation');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Client organisation updated successsfully!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 			$scope.send();
 		});
 		toEdit.error(function(response){
@@ -3133,10 +3439,44 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 		console.log("fetching the user list.......");
 		del.success(function(response){
 			//$scope.Profiles = response;
-			alert('Successfully delete ');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Client organisation deleted successsfully!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		del.error(function(response){
-			alert('DELETED THE client Org FAILED!!!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Did not managed to delete the client organisation',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 
 
@@ -3202,10 +3542,44 @@ app.controller('auditLogController', ['$scope', '$http','ModalService', function
 			var file = new Blob([data], {type: 'application/pdf'});
 			var fileURL = URL.createObjectURL(file);
 			window.open(fileURL);
-			alert('DOWNLOADED!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Download successful!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		send.error(function(data){
-			alert('DOWNLOAD GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Error in downloading',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -3394,7 +3768,24 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http', functi
 		file.upload.then(function (response) {
 			$timeout(function () {
 				file.result = response.data;
-				alert("is success " + JSON.stringify(response.data));
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Upload successful!',
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 				getLogo();
 			});
 		}, function (response) {
@@ -3432,10 +3823,44 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http', functi
 
 		console.log("SAVING THEME");
 		send.success(function(data){
-			alert('THEME IS SAVED');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Theme saved successsfully!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		send.error(function(data){
-			alert('THEME IS NOT SAVED!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Theme could not be saved!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	}
 

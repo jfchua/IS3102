@@ -32,7 +32,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 		console.log("SAVING THE BUILDING");
 		send.success(function(){
 			console.log("save building ok");
-			$state.go("dashboard.viewBuilding");
+			
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
@@ -44,6 +44,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
+					$state.go("dashboard.viewBuilding");
 				});
 			});
 
@@ -258,7 +259,7 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 
 		console.log("UPDATING THE BUILDING");
 		send.success(function(){
-			$state.go('dashboard.viewBuilding');
+			
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
@@ -270,6 +271,7 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
+					$state.go('dashboard.viewBuilding');
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -335,7 +337,6 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 					$http.post("//localhost:8443/building/deleteBuilding", JSON.stringify(tempObj)).then(function(response){
 						//$scope.buildings = response.data;
 						console.log("Delete the BUILDING");
-						$state.go("dashboard.viewBuilding");
 						ModalService.showModal({
 
 							templateUrl: "views/popupMessageTemplate.html",
@@ -347,6 +348,7 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
+								$state.go("dashboard.viewBuilding");
 							});
 						});
 						$scope.dismissModal = function(result) {
