@@ -588,7 +588,8 @@ public class PaymentPlanController {
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+							return (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class)
+									||(clazz == Category.class);
 						}
 						/**
 						 * Custom field exclusion goes here
@@ -621,8 +622,9 @@ public class PaymentPlanController {
 				int numTotal = 0;
 				if(!cats.isEmpty()){
 				for(Category c : cats){
-					revenue += c.getPrice()*c.getNumOfTickets();
-					numTotal += c.getNumOfTickets();
+					Set<Ticket> tics = c.getTickets();
+					revenue += c.getPrice()*tics.size();
+					numTotal += tics.size();
 				}
 				}
 				obj1.put("ticket",formatter.format(revenue));

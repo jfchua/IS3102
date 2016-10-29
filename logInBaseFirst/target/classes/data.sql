@@ -26,15 +26,15 @@ values ("Expo", "1 Expo Dr", "486150", "64032160", 1);
 insert into client_organisation (organisation_name, address, postal, phone) 
 values ("Suntec", "3 Temasek Boulevard","038983", "68221537");
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1 ,'Super Admin' , '2');
+VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1 ,'Kenneth LIM' , '2');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('admin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Admin' , '3');
+VALUES ('admin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Jin Fa CHUA' , '3');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('user@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'User', '4');
+VALUES ('user@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Kok Hwee TAN', '4');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('event@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'event', '5');
+VALUES ('event@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Hailing ZHANG', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('jaydentkh@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'lim', '5');
+VALUES ('jaydentkh@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'JayDen TAN', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('property@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'property manager', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
@@ -165,3 +165,9 @@ INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Property Syst
 
 insert into category values(1,'name',12,12,1);
 insert into category values(2,'namenumber2',15,15.5,1);
+
+insert into ticket values(1,'2016-10-26 22:00:00', 'P1', '2016-10-23 10:00:00', '2016-10-25 10:00:00', 'single entry','*15*',1);
+insert into ticket values(2,'2016-10-26 22:00:00', 'P2', '2016-10-22 10:00:00', '2016-10-25 10:00:00', 'single entry','*16*',1);
+insert into ticket values(3,'2016-10-26 22:00:00', 'P3', '2016-10-21 10:00:00', '2016-10-25 10:00:00', 'double entry','*17*',2);
+insert into ticket values(4,'2016-10-26 22:00:00', 'P4', '2016-10-20 10:00:00', '2016-10-25 10:00:00', 'double entry','*18*',2);
+insert into ticket values(5,'2016-10-26 22:00:00', 'P5', '2016-10-19 10:00:00', '2016-10-25 10:00:00', 'double entry','*19*',2);
