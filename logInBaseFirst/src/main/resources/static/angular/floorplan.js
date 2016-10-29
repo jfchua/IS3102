@@ -1,10 +1,12 @@
 app.controller('viewFloorPlanController', function ($scope, $http,shareData,$state,ModalService) {
 
+ 
   var levelIdObj;
   var levelId;
   var level;
   var building;
   var widthForFloorPlan;
+  var obj;
   
   angular.element(document).ready(function () {
 	  		//GET LEVEL	 
@@ -27,15 +29,23 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 		      level=level[0];
 		      
 		    }
-		    console.log("GET LEVEL: ");
-		    console.log(level);
-		    //SET GLASSBOX SIZE ACCORDINGTO LEVEL ATTRIBUTES LENGTH AND WIDTH
-		    widthForFloorPlan= document.getElementById('widthForFloorPlan').clientWidth;
-		    console.log("hailing test: widthForFloorPlan");
-		    console.log(widthForFloorPlan);
-		    $scope.levelLength=800;
-		    $scope.levelWidth=parseInt((level.width)*800/(level.length));
+		   // console.log("GET LEVEL: ");
+		   // console.log(level);
 		   
+	
+		
+		    //$scope.levelLength=800;
+		    //$scope.levelWidth=parseInt((level.width)*800/(level.length));
+		    
+		    //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
+		      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;
+		   
+		      
+		      meter=parseInt((widthForFloorPlan-12)/(level.length));
+		      $scope.levelLengthGrid=meter*(level.length);
+			    $scope.levelWidthGrid=meter*(level.width);	
+			    console.log( $scope.levelLengthGrid+" "+$scope.levelWidthGrid);
+			    
 		    //GET UNITS FROM levelIdObj
 		    levelId=level.id;
 		    levelIdObj={
@@ -120,58 +130,13 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 
   
 
-  /*
-   var downloadPlan=function() {
-      
-        // console.log(document.getElementById("1"));//can be used in read dragging
-     console.log(document.getElementById("glassbox"));  
-     console.log(html2canvas);
-     var glassboxEle=document.getElementById("glassbox");
-     html2canvas(glassboxEle, {
-                  onrendered: function(canvas) {
-                      theCanvas = canvas;
-                      document.body.appendChild(canvas);
-
-                      // Convert and download as image 
-                      Canvas2Image.saveAsPNG(canvas); 
-                      $("#respond").append(canvas);
-                      // Clean up 
-                      //document.body.removeChild(canvas);
-                  }
-              });
-      
-
-    }*/
-
-  //$scope.downloadPlan = html2canvas;
-  /*$scope.downloadPlan=function(){
-  
-  console.log(html2canvas);
-  html2canvas(window, document);
-
-  // expose functionality
-  module.exports = {
-      html2canvas: function (elements, opts) {
-          return window.html2canvas(elements, opts);
-      },
-      src: html2canvas
-  };
-  }
-  */
   
   $scope.downloadPlan = function () {
 	  console.log("her0");
 	  console.log(html2canvas);
 	
-	  /*
-	   
-	    console.log("here1");
-	    html2canvas(document.body, {onrendered:function(canvas){
-	    	console.log("here2");
-	    	document.body.appendChild(canvas);
-	    }})*/
-	    
-	  var canvasdiv = document.getElementById("glassbox");
+	
+	  var canvasdiv = document.getElementById("glassboxGrid");
 	    html2canvas(canvasdiv,{
 	    	 allowTaint: true,
              logging: true,
@@ -186,23 +151,7 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 	
 	    });
 	}
-  /*
-   $scope.downloadPlan = function(){
-	   console.log(html2canvas);
-       html2canvas($("#glassbox"), {
-              onrendered: function(canvas) {
-                  theCanvas = canvas;
-                  document.body.appendChild(canvas);
-
-                  // Convert and download as image 
-                  Canvas2Image.saveAsPNG(canvas); 
-                  $("#respond").append(canvas);
-                  // Clean up 
-                  //document.body.removeChild(canvas);
-              }
-          });
-  }
-  */
+ 
   //MODAL FOR VIEWING ONE UNIT
   $scope.complexResult = null;
 	 $scope.showModal = function(unit) {
@@ -230,6 +179,57 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 		
 			    console.log("in dissmiss");
 			 };
+			 
+			 
+			 //GRIDSTER CONFIG
+			 console.log("gridster test view");
+			 console.log(meter);
+			 $scope.gridsterOpts = {
+					 
+					 	
+					    columns: level.length, // the width of the grid, in columns
+					    pushing: false, // whether to push other items out of the way on move or resize
+					    floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
+					    swapping: false, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
+					    width:$scope.levelLengthGrid, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
+					    colWidth: meter, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
+					    rowHeight: meter, // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
+					    margins: [0, 0], // the pixel distance between each widget
+					    outerMargin: false, // whether margins apply to outer edges of the grid
+					    sparse: false, // "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
+					    isMobile: false, // stacks the grid items if true
+					    mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items
+					    mobileModeEnabled: false, // whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
+					    minColumns: level.length, // the minimum columns the grid must have
+					    minRows: level.width, // the minimum height of the grid, in rows
+					    maxRows: level.width,
+					    defaultSizeX: 2, // the default width of a gridster item, if not specifed
+					    defaultSizeY: 1, // the default height of a gridster item, if not specified
+					    minSizeX: 1, // minimum column width of an item
+					    maxSizeX: null, // maximum column width of an item
+					    minSizeY: 1, // minumum row height of an item
+					    maxSizeY: null, // maximum row height of an item
+					    resizable: {
+						       enabled: false,
+						       handles: ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'],
+						       start: function(event, $element, widget) {}, // optional callback fired when resize is started,
+						       resize: function(event, $element, widget) {}, // optional callback fired when item is resized,
+						       stop: function(event, $element, unit) {} // optional callback fired when item is finished resizing
+						    },
+						    draggable: {
+						       enabled: false, // whether dragging items is supported
+						       //handle: '.my-class', // optional selector for drag handle
+						       start: function(event, $element, widget) {}, // optional callback fired when drag is started,
+						       drag: function(event, $element, widget) {}, // optional callback fired when item is moved,
+						       stop: function(event, $element, unit) {} // optional callback fired when item is finished dragging
+						    }
+					
+					};
+		
+			 console.log("test opts view");
+			 console.log($scope.gridsterOpts.colWidth);
+			 console.log($scope.gridsterOpts.maxRows);
+			 console.log($scope.gridsterOpts.columns);
 
 })
 
@@ -264,7 +264,7 @@ app.controller('viewUnitController', ['$scope', '$element', 'title', 'close', 'u
 		    }, 500); // close, but give 500ms for bootstrap to animate
 		  };
 
-		
+		  
 
 	
 }])
@@ -514,141 +514,131 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
   
 
   
-  
-/*
-  $scope.addUnit = function () {  
-	    var dataObj={"levelId":levelId,"id": 0,"unitNumber": "#unit","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "./svg/rect.svg","icon": ""}};
-	    
-	    $http.post('/property/addUnit', JSON.stringify(dataObj)).then(function(response){
-	    	$scope.units=[];
-			 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-			        console.log("pure response is "+response.data);
-			
-			        console.log("test anglar.fromJon"+angular.fromJson(response.data));
-			        $scope.units=angular.fromJson(response.data);
-	      },function(response){
-	        console.log("DID NOT CREATE");
-	      })
-	 
-	  } )
-  }
-  
-	  $scope.specialType='./svg/entry.svg';
-	  $scope.addSpecialUnit = function (type) {   
-		  var dataObj={"levelId":levelId,"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "transparent","type": $scope.specialType,"icon": ""}};
-	    $http.post('/property/addUnit', JSON.stringify(dataObj)).then(function(response){
-	    	$scope.units=[];
-			 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-			        console.log("pure response is "+response.data);
-			
-			        console.log("test anglar.fromJon"+angular.fromJson(response.data));
-			        $scope.units=angular.fromJson(response.data);
-	      },function(response){
-	        console.log("DID NOT CREATE");
-	      })
-	 
-	  } )
-	 
-	  } 
-	  $scope.addSpecialUnitByIcon = function(icon){
-		  var dataObj={"levelId":levelId,"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 0,"top": 0,"height": 50,"width": 50, "color": "transparent","type": "","icon": {"id":$scope.icon.id,"iconType":$scope.icon.iconType,"iconPath":$scope.icon.iconPath}}};
-		  $http.post('/property/addUnit', JSON.stringify(dataObj)).then(function(response){
-		    	$scope.units=[];
-				 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-				        console.log("pure response is "+response.data);
-				
-				        console.log("test anglar.fromJon"+angular.fromJson(response.data));
-				        $scope.units=angular.fromJson(response.data);
-		      },function(response){
-		        console.log("DID NOT CREATE");
-		      })
-		 
-		  } )
-		  
-	  }
-	  
-	  */
-  $scope.addUnit = function () {  
-	    $scope.units.push({"id": 0,"unitNumber": "#unit","length": 100,"width": 100,"description": "#","square": {"left": 0,"top": 0,"height": 100,"width": 100, "color": "coral","type": "./svg/rect.svg","icon": ""}});
-	    var dataObj = {
-	            id: levelId,
-	            Units:{
-	              Unit:$scope.units
-	            }
-	        };
-	    $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
-	    	$scope.units=[];
-			 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-			        console.log("pure response is "+response.data);
-			
-			        console.log("test anglar.fromJon"+angular.fromJson(response.data));
-			        $scope.units=angular.fromJson(response.data);
-	      },function(response){
-	        console.log("DID NOT VIEW");
-	      })
-	 
-	  },function(response){
-	        console.log("DID NOT CREATE");
-      })
-}
 
-	  $scope.specialType='./svg/entry.svg';
-	  $scope.addSpecialUnit = function (type) {   
-		  $scope.units.push({"levelId":levelId,"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 0,"top": 0,"height": 100,"width": 100, "color": "transparent","type": $scope.specialType,"icon": ""}});
-		  var dataObj = {
-			        id: levelId,
-			        Units:{
-			          Unit:$scope.units
-			        }
-			    };
-		  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
-	    	$scope.units=[];
-			 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-			        console.log("pure response is "+response.data);
+			  $scope.addUnit = function () {  
+				  var dataObj = {
+						  id: levelId,
+						  Units:{
+							  Unit:$scope.units
+						  }
+				  };						
+				  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){			
+				  },function(response){			
+				  } ).then(function(){			
+					  var dataObj={levelId:levelId};
+					  $http.post('/property/addUnit', JSON.stringify(dataObj)).then(function(response){
+						  $scope.units=[];
+						  console.log("empty");
+						  console.log($scope.units);
+						  $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){			
+							  console.log(angular.fromJson(response.data));
+							  $scope.units=angular.fromJson(response.data);
 			
-			        console.log("test anglar.fromJon"+angular.fromJson(response.data));
-			        $scope.units=angular.fromJson(response.data);
-	      },function(response){
-	        console.log("DID NOT CREATE");
-	      })
-	 
-	  } )
-	 
-	  } 
-	  $scope.addSpecialUnitByIcon = function(iconId){
+						  },function(response){
+							  console.log("DID NOT view");
+							  console.log("response is "+angular.fromJson(response.data).error);
+						  })
+					  },function(response){//else is not saved successfully
+						  console.log("UNIT CANNOT BE ADDED");
+						  alert("UNIT CANNOT BE ADDED");
+					  })
+				  } )
+			  }//END ADD UNIT
 
-			var index=0;
-			var found=false;
-			var icon;
-			 angular.forEach($scope.icons, function(item){             
-				   	if(found==false && $scope.icons[index].id==iconId){
-				   		icon=$scope.icons[index];
-				   	}else
-				   		index = index + 1;
+			  $scope.specialType='./svg/entry.svg';
+			  $scope.addSpecialUnit = function (type) {   //note: passed in type is not used
+				  var dataObj = {
+						  id: levelId,
+						  Units:{
+							  Unit:$scope.units
+						  }
+				  };      
+				  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
+				  },function(response){
+				  } ).then(function(){
+					  var dataObj={levelId:levelId,type: $scope.specialType};
+					  $http.post('/property/addDefaultIcon', JSON.stringify(dataObj)).then(function(response){
+						  $scope.units=[];
+						  console.log("empty");
+						  console.log($scope.units);
+						  $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
+							  console.log(angular.fromJson(response.data));
+							  $scope.units=angular.fromJson(response.data);
+
+						  },function(response){
+							  console.log("DID NOT view");
+							  console.log("response is "+angular.fromJson(response.data).error);
+						  })
+					  },function(response){//else is not saved successfully
+						  console.log("UNIT CANNOT BE ADDED");
+						  alert("UNIT CANNOT BE ADDED");
+					  })
+				  } )
+			  } //END ADD DEFAULT ICON
+			  
+			  $scope.addSpecialUnitByIcon = function(iconId){
+				  //GET SELECTED CUSTOMISED ICON
+				  var index=0;
+				  var found=false;
+				  var icon;
+				  angular.forEach($scope.icons, function(item){             
+					  if(found==false && $scope.icons[index].id==iconId){
+						  icon=$scope.icons[index];
+					  }else
+						  index = index + 1;
 				  }); 
-			 console.log(iconId);
-			 console.log(icon);
-		  $scope.units.push({"levelId":levelId,"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 0,"top": 0,"height": 50,"width": 50, "color": "transparent","type": "","icon": {"id":icon.id,"iconType":icon.iconType,"iconPath":icon.iconPath}}});
-		  var dataObj = {
-			        id: levelId,
-			        Units:{
-			          Unit:$scope.units
-			        }
-			    };
-		  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
-		    	$scope.units=[];
-				 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-				        console.log("pure response is "+response.data);
-				
-				        console.log("test anglar.fromJon"+angular.fromJson(response.data));
-				        $scope.units=angular.fromJson(response.data);
-		      },function(response){
-		        console.log("DID NOT CREATE");
-		      })
-		 
-		  } )
-		  
-	  }
+				  console.log(iconId);
+				  console.log(icon);
+				 
+				  /*$scope.units.push({"levelId":levelId,"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 0,"top": 0,"height": 50,"width": 50, "color": "transparent","type": "","icon": {"id":icon.id,"iconType":icon.iconType,"iconPath":icon.iconPath}}});
+				  var dataObj = {
+						  id: levelId,
+						  Units:{
+							  Unit:$scope.units
+						  }
+				  };
+				  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
+					  $scope.units=[];
+					  $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
+						  console.log("pure response is "+response.data);
+
+						  console.log("test anglar.fromJon"+angular.fromJson(response.data));
+						  $scope.units=angular.fromJson(response.data);
+					  },function(response){
+						  console.log("DID NOT CREATE");
+					  })
+
+				  } )*/
+				  
+				  var dataObj = {
+						  id: levelId,
+						  Units:{
+							  Unit:$scope.units
+						  }
+				  };      
+				  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
+				  },function(response){
+				  } ).then(function(){
+					  var dataObj={levelId:levelId,iconId:icon.id};
+					  $http.post('/property/addCustIcon', JSON.stringify(dataObj)).then(function(response){
+						  $scope.units=[];
+						  console.log("empty");
+						  console.log($scope.units);
+						  $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
+							  console.log(angular.fromJson(response.data));
+							  $scope.units=angular.fromJson(response.data);
+
+						  },function(response){
+							  console.log("DID NOT view");
+							  console.log("response is "+angular.fromJson(response.data).error);
+						  })
+					  },function(response){//else is not saved successfully
+						  console.log("UNIT CANNOT BE ADDED");
+						  alert("UNIT CANNOT BE ADDED");
+					  })
+				  } )
+
+			  }//END ADD CUSTOMISED ICON
   $scope.saveUnits = function () {   
     console.log("Test: start saving units");
     var saveUnits=$scope.units;
@@ -868,8 +858,8 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 		  				        console.log("response is "+angular.fromJson(response.data).error);
 		  				      })
 		  		},function(response){//else is not saved successfully
-		  				console.log("UNIT CANNOT BE DELETED");
-		  			alert("THERE ARE ADVANCE BOOKINGS ON THIS UNIT. UNIT CANNOT BE DELETED");
+		  				console.log("UNIT CANNOT BE EDITED");
+		  			alert("UNIT CANNOT BE EDITED");
 		  		})
 		  		
 		  		

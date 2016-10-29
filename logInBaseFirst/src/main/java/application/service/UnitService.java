@@ -38,6 +38,17 @@ public interface UnitService {
 		boolean deleteUnitsFromLevel(Set<Long> unitIds, long levelId);
 		
 		boolean updateRent(long unitId, Double rent);
-
+		
+		 boolean passOverlapCheckTwoUnits(Unit unit1,Unit unit2);
+		 
+		 boolean passOverlapCheckTwoUnitsOneWay(Unit unit1,Unit unit2);
+		 
+		 boolean passOverlapCheckWithExistingUnits(long levelId, Unit unit);
+		 
+		 boolean addUnitOnLevel(long levelId);
+		 
+		 boolean addDefaultIconOnLevel(long levelId,String type);
+		 
+		 boolean addCustIconOnLevel(long levelId,long iconId);
 }
 

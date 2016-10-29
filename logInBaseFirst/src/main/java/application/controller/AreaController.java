@@ -66,7 +66,7 @@ public class AreaController {
 	
 	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 		//for view only, call view areas; for load and edit, call viewAreas first and then call saves areas;
-		@RequestMapping(value = "/viewArea", method = RequestMethod.POST)
+		@RequestMapping(value = "/viewAreas", method = RequestMethod.POST)
 		@ResponseBody
 		public String viewAreas(@RequestBody String booking, HttpServletRequest rq) {
 		System.out.println("AreaController: Start Viewing Areas");

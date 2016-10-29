@@ -119,9 +119,9 @@ VALUES('coral', 100, 100, 100, './svg/rect.svg', 100, null);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('coral', 100, 250, 250, './svg/rect.svg', 100, null);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('123',100,100,true,'unit1', 100 , 100 , 100 , 1, 1);
+VALUES('123',10,100,true,'unit1', 10 , 10 , 10 , 1, 1);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('123',100,100,true,'unit2',100,250,250, 1, 2);
+VALUES('123',10,100,true,'unit2',10,25,25, 1, 2);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
 VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party', 'CONCERT', null, 1, 'UNPAID', 12);
 --INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		

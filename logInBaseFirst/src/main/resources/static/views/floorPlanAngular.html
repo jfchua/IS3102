@@ -29,7 +29,7 @@
     <div class="panel-body" id="panelheadGrid">
 <div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{levelWidthGrid}} + 'px', width: {{levelLengthGrid}} + 'px'}">
     <ul>
-        <li gridster-item="unit"  id="{{unit.square.id}}"  ng-repeat="unit in units"  ng-dblclick="showModal(unit,$parent)"  ng-style="{'background-color':'{{unit.square.color}}'}" ><p> {{unit.unitNumber}}<a  ng-click="$parent.remove(unit)" tooltip-placement="top" tooltip="Delete unit"><i class="glyphicon glyphicon-trash"></i></a>
+        <li gridster-item="unit"  id="{{unit.square.id}}"  ng-repeat="unit in units"   ng-style="{'background-color':'{{unit.square.color}}'}" ><p> {{unit.unitNumber}}<a  ng-click="showModal(unit,$parent)" tooltip-placement="top" tooltip="Edit unit {{unit.unitNumber}}"><i class="glyphicon glyphicon-pencil"></i></a><a  ng-click="$parent.remove(unit)" tooltip-placement="top" tooltip="Delete unit {{unit.unitNumber}}"><i class="glyphicon glyphicon-trash"></i></a>
                           <img  class="svgtest" ng-src="{{unit.square.type||unit.square.icon.iconPath}}"  alt="icon"></p></li>
     </ul>
 </div>
@@ -55,22 +55,7 @@
    
     
  </div>    
-<div class="col-md-9" >
-<div class="panel panel-primary">
-				<div class="panel-heading" >
-					<h3 class="panel-title">Floor Plan	  
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-						</div>
-					</h3>
-				</div>
-			</div> 
-			
 
-
-  </div>
 
   <div id="respond"></div>
 </div>

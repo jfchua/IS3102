@@ -50,7 +50,7 @@ public class UnitController {
 		this.levelService=levelService;
 		this.userService=userService;
 	}
-	
+	/*
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 		//Security filters for inputs needs to be added
 		//This method takes in a string which contains the attributes of the building to be added.
@@ -116,6 +116,8 @@ public class UnitController {
 			}
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}	
+		
+		*/
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
 				@RequestMapping(value = "/getUnitsId", method = RequestMethod.POST)
@@ -412,6 +414,97 @@ public class UnitController {
 				
 				if(unitService.editUnitInfo(unitId,left,top, height,  width,  color, type, unitNumber, col,  row,  sizex, sizey,rentable, description)){
 					System.out.println("EDITED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			
+		}
+		
+		
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/addUnit", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> addUnit(@RequestBody String idObj,HttpServletRequest rq) {
+
+			
+			try{
+				
+				
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("levelId"));
+				long levelId = (Long)jsonObject.get("levelId");
+				
+				
+				
+				
+				if(unitService.addUnitOnLevel(levelId) ){
+					System.out.println("CREATED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			
+		}
+		
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/addDefaultIcon", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> addDefaultIcon(@RequestBody String idObj,HttpServletRequest rq) {
+
+			
+			try{
+				
+				
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("levelId"));
+				long levelId = (Long)jsonObject.get("levelId");
+				String type = (String)jsonObject.get("type");
+				
+				
+				
+				if(unitService.addDefaultIconOnLevel(levelId,type) ){
+					System.out.println("CREATED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			
+		}
+		
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/addCustIcon", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> addCustIcon(@RequestBody String idObj,HttpServletRequest rq) {
+
+			
+			try{
+				
+				
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("levelId"));
+				long levelId = (Long)jsonObject.get("levelId");
+				long iconId = (Long)jsonObject.get("iconId");
+				
+				
+				
+				if(unitService.addCustIconOnLevel(levelId,iconId) ){
+					System.out.println("CREATED");
 					return new ResponseEntity<Void>(HttpStatus.OK);
 				}else{
 					return new ResponseEntity<Void>(HttpStatus.CONFLICT);

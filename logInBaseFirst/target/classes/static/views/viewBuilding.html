@@ -24,7 +24,7 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th><i></i> Levels </th>
+								<th><i></i> ID </th>
                                 <th><i></i> Building Name </th>
                                 <th><i></i> Number of floors </th>
                                 <th><i></i> Address </th>
@@ -36,7 +36,7 @@
 						</thead>
 						<tbody>
 							 <tr ng-repeat="x in buildings | orderBy:'name'">
-                            <td><a  ui-sref="dashboard.viewLevels" ng-click="passBuilding(x)" tooltip-placement="top" tooltip="View Levels"><i class="glyphicon glyphicon-eye-open"></i></a></td>
+                            <td>{{x.id}}</td>
                               <!--  <td><button onClick="window.open('http://www.google.com.sg}');">{{ x.id }}</button></td>-->
                              <td>{{ x.name }}</td>
                              <td>{{ x.numFloor }}</td>
@@ -47,6 +47,7 @@
                              		<a  ui-sref="dashboard.updateBuilding" ng-click="updateBuilding(x)" tooltip-placement="top" tooltip="Update Building"><i class="glyphicon glyphicon-pencil"></i></a>
                              		<a  ui-sref="dashboard.deleteBuilding" ng-click="deleteBuilding(x)" tooltip-placement="top" tooltip="Delete Building"><i class="glyphicon glyphicon-trash"></i></a>
                              		<a  ui-sref="dashboard.addLevel" ng-click="addLevel(x)" tooltip-placement="top" tooltip="Add level"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                             		<a  ui-sref="dashboard.viewLevels" ng-hide="x.levels.length==0" ng-click="passBuilding(x)" tooltip-placement="top" tooltip="View Levels"><i class="glyphicon glyphicon-eye-open"></i></a>
                              </td>
                              </tr>
 							

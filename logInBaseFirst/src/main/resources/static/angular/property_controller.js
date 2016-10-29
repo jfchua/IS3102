@@ -39,7 +39,8 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 		$http.get("//localhost:8443/building/viewBuildings").then(function(response){
 			$scope.buildings = response.data;
 			console.log("DISPLAY ALL BUILDINGS");
-			console.log("LEVELS DATA ARE OF THE FOLLOWING: " + $scope.buildings);
+			console.log("test view buildings");
+			console.log( $scope.buildings);
 
 		},function(response){
 			alert("did not view");

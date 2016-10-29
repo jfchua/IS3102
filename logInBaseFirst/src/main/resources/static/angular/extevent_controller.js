@@ -1113,7 +1113,7 @@ app.controller('areaPlanController', function ($scope, $http,shareData) {
 
 		console.log(dataObj);
 
-		$http.post('/event/saveArea', JSON.stringify(dataObj)).then(function(response){
+		$http.post('/event/saveAreas', JSON.stringify(dataObj)).then(function(response){
 			console.log("pure response is "+JSON.stringify(response.data));
 	
 
