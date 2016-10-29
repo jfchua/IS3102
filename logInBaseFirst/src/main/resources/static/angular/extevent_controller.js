@@ -417,29 +417,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			});
 		}
 	}
-	/*
-	$scope.checkAvail = function(){
-		console.log("start checking availability");
-		$scope.data = {};
-
-		var dataObj = {
-				units: $scope.selectedUnits,
-				event_start_date: ($scope.event.event_start_date).toString(),
-				event_end_date: ($scope.event.event_end_date).toString(),
-		};
-		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/event/checkAvailability',
-			data    : dataObj //forms user object
-		});
-		send.success(function(){
-			alert('SELECTED UNITS ARE AVAILABLE!');
-		});
-		send.error(function(){
-			alert('SELECTED UNITS ARE NOT AVAILABLE!');
-		});
-	}*/
+	
 	$scope.checkRent = function(){
 		console.log("start checking rent");
 		$scope.data = {};

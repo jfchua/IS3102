@@ -38,6 +38,7 @@ import application.exception.UserNotFoundException;
 import application.service.EventExternalService;
 import application.service.EventOrganizerService;
 import application.service.PaymentPlanService;
+import application.service.UnitService;
 import application.service.UserService;
 
 @Controller
@@ -47,17 +48,19 @@ public class EventExternalController {
 	private final EventExternalService eventExternalService;
 	private final PaymentPlanService paymentPlanService;
 	private final UserService userService;
+	private final UnitService unitService;
 	private final EventCreateFormValidator eventCreateFormValidator;
 	private JSONParser parser = new JSONParser();
 	
 	@Autowired
-	public EventExternalController(EventExternalService eventService, UserService userService, 
+	public EventExternalController(EventExternalService eventService, UserService userService, UnitService unitService,
 			EventCreateFormValidator eventCreateFormValidator, PaymentPlanService paymentPlanService) {
 		super();
 		this.eventExternalService = eventService;
 		this.userService = userService;
 		this.eventCreateFormValidator = eventCreateFormValidator;
 	    this.paymentPlanService =paymentPlanService;
+	    this.unitService= unitService;
 	}
 	
 	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
@@ -219,7 +222,7 @@ public class EventExternalController {
 	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 		@RequestMapping(value = "/checkRent", method = RequestMethod.POST)
 		@ResponseBody
-		public ResponseEntity<Double> checkRent(@RequestBody String eventJSON,
+		public ResponseEntity<String> checkRent(@RequestBody String eventJSON,
 				HttpServletRequest rq) throws UserNotFoundException {
 			System.out.println("start check rent for event");
 			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
@@ -227,7 +230,7 @@ public class EventExternalController {
 			System.out.println(principal.getName());
 			Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
 			if ( !eventOrg1.isPresent() ){
-				return new ResponseEntity<Double>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 			}
 			try{
 				User eventOrg = eventOrg1.get();
@@ -236,11 +239,20 @@ public class EventExternalController {
 				Object obj = parser.parse(eventJSON);
 				JSONObject jsonObject = (JSONObject) obj;
 				JSONArray units = (JSONArray)jsonObject.get("units");
+				JSONArray jArray = new JSONArray();
+				NumberFormat formatter = new DecimalFormat("#0.00"); 
 	            String unitsId = "";
 	            for(int i = 0; i < units.size(); i++){
-	            	JSONObject unitObj = (JSONObject)units.get(i);		
+	            	JSONObject unitObj = (JSONObject)units.get(i);	
+	            	JSONObject obj1 = new JSONObject();
 	            	System.out.println(unitObj.toString());
 					long unitId = (Long)unitObj.get("id");
+					obj1.put("id", unitId);
+					Unit u = unitService.getUnitById(unitId).get();
+					obj1.put("base", formatter.format(u.getRent()));
+					obj1.put("rate", formatter.format(client.getSpecialRates()));
+					obj1.put("hour", formatter.format(u.getRent()));
+					obj1.put("rental", formatter.format(u.getRent()));
 					System.out.println(unitId);
 					unitsId = unitsId+unitId + " ";
 					System.out.println(unitsId);
@@ -252,11 +264,22 @@ public class EventExternalController {
 				System.out.println(price);
 				Gson gson2 = new Gson();
 				String json = gson2.toJson(price);
-				return new ResponseEntity<Double>(price, HttpStatus.OK);	
+				
+				
+				for(User u : eventOrgs){
+					
+					
+					System.out.println("event org name is "+u.getName());
+					obj1.put("name", u.getName());
+					obj1.put("email", u.getEmail());
+					obj1.put("outstanding",formatter.format(paymentPlanService.getOutstandingById(u.getId())));
+					jArray.add(obj1);
+				}
+				return new ResponseEntity<String>(price, HttpStatus.OK);	
 			}
 			catch (Exception e){
 				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
-				return new ResponseEntity<Double>(HttpStatus.CONFLICT);
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);
 			}		
 		}	
 
