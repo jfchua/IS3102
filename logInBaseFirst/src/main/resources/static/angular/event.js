@@ -128,6 +128,9 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
 	}
 
+	
+	
+	
 
 	
 
@@ -558,4 +561,58 @@ app.controller('ticketSalesController', ['$scope', '$http','$state','$routeParam
 	$scope.passEvent = function(id){
 		shareData.addData(id);
 	}
+}]);
+
+
+
+app.controller('ticketSaleDetailsController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+	$scope.payment={};
+	angular.element(document).ready(function () {
+		$scope.data = {};	
+		$scope.eventId = shareData.getData();
+		$scope.url = "https://localhost:8443/eventManager/getEvent/"+$scope.eventId;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE Event");
+		var getEvent = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/eventManager/getEvent/' + $scope.eventId,
+
+		});
+		console.log("Getting the event using the url: " + $scope.url);
+		getEvent.success(function(response){
+			console.log('GET PAYMENT PLAN SUCCESS! ');
+			console.log(response);
+			$scope.event = response;
+		});
+		getEvent.error(function(response){
+			$state.go("dashboard.viewTicketSales");
+			console.log('GET PAYMENT FAILED! ');
+		});
+		
+		
+		$scope.order_item = "cat";
+		$scope.order_reverse = false;
+		$scope.url1 = "https://localhost:8443/eventManager/getTicketSales/"+$scope.eventId;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE EVENTS");
+		var getSales = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/eventManager/getTicketSales/' + $scope.eventId,
+
+		});
+		console.log("Getting the events using the url: " + $scope.url1);
+		getSales.success(function(response){
+			console.log('GET EVENTS SUCCESS! ');
+			console.log(JSON.stringify(response));
+			console.log(response);
+			$scope.sales = response;
+		});
+		getSales.error(function(response){
+			$state.go("dashboard.viewTicketSales");
+			console.log('GET EVENTS FAILED! ');
+		});
+		
+		
+	});
+	
 }]);

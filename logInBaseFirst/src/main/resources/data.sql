@@ -165,3 +165,9 @@ INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Property Syst
 
 insert into category values(1,'name',12,12,1);
 insert into category values(2,'namenumber2',15,15.5,1);
+
+insert into ticket values(1,'2016-10-26 22:00:00', 'P1', '2016-10-23 10:00:00', '2016-10-25 10:00:00', 'single entry','*15*',1);
+insert into ticket values(2,'2016-10-26 22:00:00', 'P2', '2016-10-22 10:00:00', '2016-10-25 10:00:00', 'single entry','*16*',1);
+insert into ticket values(3,'2016-10-26 22:00:00', 'P3', '2016-10-21 10:00:00', '2016-10-25 10:00:00', 'double entry','*17*',2);
+insert into ticket values(4,'2016-10-26 22:00:00', 'P4', '2016-10-20 10:00:00', '2016-10-25 10:00:00', 'double entry','*18*',2);
+insert into ticket values(5,'2016-10-26 22:00:00', 'P5', '2016-10-19 10:00:00', '2016-10-25 10:00:00', 'double entry','*19*',2);
