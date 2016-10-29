@@ -61,4 +61,6 @@ public interface EventExternalService {
 	Set<PaymentPlan> viewAllPaymentPlan(ClientOrganisation client, User user);
 	
 	Double getTicketRevenue(ClientOrganisation client, long eventId);
+	
+	int getTicketNum(ClientOrganisation client, long eventId);
 }

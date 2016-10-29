@@ -901,4 +901,19 @@ public class EventExternalServiceImpl implements EventExternalService {
 			return revenue;
 		}
 	}
+
+	@Override
+	public int getTicketNum(ClientOrganisation client, long eventId) {
+		if(!checkEvent(client, eventId))
+			return 0;
+		else{
+			int num = 0;
+			Set<Category> cats = getEventById(eventId).get().getCategories();
+			for(Category c : cats){
+				Set<Ticket> tics = c.getTickets();
+				num += tics.size();
+			}
+			return num;
+		}
+	}
 }

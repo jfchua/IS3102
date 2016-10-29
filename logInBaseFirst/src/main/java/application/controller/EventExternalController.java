@@ -347,6 +347,7 @@ public class EventExternalController {
 				    obj.put("event_start_date", String.valueOf(event.getEvent_start_date()));
 				    obj.put("event_end_date", String.valueOf(event.getEvent_end_date()));
 				    obj.put("revenue", formatter.format(eventExternalService.getTicketRevenue(client, id)));
+				    obj.put("total", eventExternalService.getTicketNum(client, id));
 				    obj.put("filePath", event.getFilePath());
 					//String json = gson2.toJson(event);
 					//System.out.println("EVENT IS " + json);
