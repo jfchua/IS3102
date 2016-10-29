@@ -146,11 +146,16 @@ public class BookingController {
 							booking.getEvent().setCategories(null);
 							booking.getEvent().setEventOrg(null);
 							booking.getEvent().setPaymentPlan(null);
+							booking.getUnit().setBookings(null);
+							booking.getUnit().setLevel(null);
+							booking.getUnit().setMaintenanceSchedule(null);
+							booking.getUnit().setUnitAttributeValues(null);
+							booking.getUnit().setSquare(null);
 						}
 						Gson gson2 = new GsonBuilder()
 							    .setExclusionStrategies(new ExclusionStrategy() {
 							        public boolean shouldSkipClass(Class<?> clazz) {
-							            return (clazz == Area.class)||(clazz == Unit.class)||(clazz == MaintenanceSchedule.class)||(clazz == UnitAttributeValue.class);
+							            return (clazz == Area.class)||(clazz == MaintenanceSchedule.class)||(clazz == UnitAttributeValue.class);
 							        }
 
 							        /**

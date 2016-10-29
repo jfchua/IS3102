@@ -1046,26 +1046,37 @@ app.controller('paymentDetailsExController', ['$scope', '$http','$state','$route
 
 //Unit Plan of Event used by event organiser
 app.controller('areaPlanController', function ($scope, $http,shareData) {
-
-	
-	var bookingId;
+	  var widthForAreaPlan;
+	  var meter;
+	  var unit;
+	  var scale;
+	  var bookingIdObj;
 	angular.element(document).ready(function () {
 		var obj=shareData.getData();
 		$scope.booking=obj.booking;
 		$scope.event=obj.event;
 		console.log($scope.booking);
 		console.log($scope.event);
-		
+		unit=obj.booking.unit;
+		bookingIdObj={id:$scope.booking.id};
+	 //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
+	      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;    
+	      
+	      meter=parseInt((widthForFloorPlan-12)/(unit.sizeX));
+	      $scope.unitLengthGrid=meter*(unit.sizeX);
+		  $scope.unitWidthGrid=meter*(unit.sizeY);	
+		  scale=meter/2;//one grid represent 0.5m
+		  console.log( $scope.unitLengthGrid+" "+$scope.unitWidthGrid);
 		//get event id from previous page
 	
-		  			var dataObj={id:$scope.booking.id};
+		  			
 		  			
 		  			var getAreas= $http({
 		  				method  : 'POST',
 		  				url     : 'https://localhost:8443/area/viewAreas/',
-		  				data    : dataObj,
+		  				data    : bookingIdObj,
 		  		});
-		  			console.log("REACHED HERE FOR VIEWING AREAS " + JSON.stringify(dataObj));
+		  			console.log("REACHED HERE FOR VIEWING AREAS " + JSON.stringify(bookingIdObj));
 		  			getAreas.success(function(response){
 		  				console.log(response);
 		  				$scope.areas = response;
@@ -1076,8 +1087,82 @@ app.controller('areaPlanController', function ($scope, $http,shareData) {
 		  			});		
 		  		
 	});
-	
-	
+	$scope.menuOptions = [
+	                      
+	                       // null,        // Dividier
+	                        ['<img  class="svgtest" src="./svg/entry.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {
+	                            $scope.defaultIcon='./svg/entry.svg';
+	                            $scope.addDefaultIcon();
+	                        }],
+	                        ['<img  class="svgtest" src="./svg/exit.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                     
+	                            $scope.defaultIcon='./svg/exit.svg';
+	                            $scope.addDefaultIcon();
+	                        }],
+	                        ['<img  class="svgtest" src="./svg/chair.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                      
+	                            $scope.defaultIcon='./svg/chair.svg';
+	                            $scope.addDefaultIcon();
+	                        }],
+	                        ['<img  class="svgtest" src="./svg/armchair.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                      
+	                            $scope.defaultIcon='./svg/armchair.svg';
+	                            $scope.addDefaultIcon();
+	                        }],
+	                        ['<img  class="svgtest" src="./svg/table.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                        
+	                            $scope.defaultIcon='./svg/table.svg';
+	                            $scope.addDefaultIcon();
+	                        }],
+	                        ['<img  class="svgtest" src="./svg/stage.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                  
+	                            $scope.defaultIcon='./svg/stage.svg';
+	                            $scope.addDefaultIcon();
+	                        }],
+	                        ['<img  class="svgtest" src="./svg/food.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                  
+	                            $scope.defaultIcon='./svg/food.svg';
+	                            $scope.addDefaultIcon();
+	                        }],
+	                        ['<img  class="svgtest" src="./svg/restroomMan.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                  
+	                            $scope.defaultIcon='./svg/restroomMan.svg';
+	                            $scope.addDefaultIcon();
+	                        }],
+	                        ['<img  class="svgtest" src="./svg/restroomWoman.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                  
+	                            $scope.defaultIcon='./svg/restroomWoman.svg';
+	                            $scope.addDefaultIcon();
+	                        }],
+	                        ['<img  class="svgtest" src="./svg/restroomWheelchair.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {                  
+	                            $scope.defaultIcon='./svg/restroomWheelchair.svg';
+	                            $scope.addDefaultIcon();
+	                        }],
+	                    ];
+	  
+	 $scope.defaultIcon='./svg/entry.svg';
+	  $scope.addDefaultIcon = function (type) {   //note: passed in type is not used
+		  var dataObj = {
+				  id: $scope.booking.id,
+				  Areas:{
+					  Area:$scope.areas
+				  }
+		  };						
+		  $http.post('/area/saveAreas', JSON.stringify(dataObj)).then(function(response){
+		  },function(response){
+		  } ).then(function(){
+			  var obj={bookingId:$scope.booking.id,type: $scope.defaultIcon};
+			  $http.post('/area/addDefaultIcon', JSON.stringify(obj)).then(function(response){
+				  $scope.areas=[];
+				  console.log("empty");
+				  console.log($scope.areas);
+				  $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){
+					  console.log(angular.fromJson(response.data));
+					  $scope.areas=angular.fromJson(response.data);
+
+				  },function(response){
+					  console.log("DID NOT view");
+					  //console.log("response is "+angular.fromJson(response.data).error);
+				  })
+			  },function(response){//else is not saved successfully
+				  console.log("DEFAULT ICON CANNOT BE ADDED");
+				  alert("DEFAULT ICON CANNOT BE ADDED");
+			  })
+		  } )
+	  } //END ADD DEFAULT ICON
+	  
 	$scope.passEvent=function(){
 		shareData.addData($scope.event);
 	}
@@ -1089,13 +1174,37 @@ app.controller('areaPlanController', function ($scope, $http,shareData) {
 
 
 	}
+	
 
-	$scope.addArea = function () {  
-		
-		$scope.areas.push({"id": 0,"areaName": "#area","description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "rect"}});
-		console.log("test "+JSON.stringify($scope.areas));
-
-	} 
+	  $scope.addArea = function () {  
+		  var dataObj = {
+				  id: $scope.booking.id,
+				  Areas:{
+					  Area:$scope.areas
+				  }
+		  };						
+		  $http.post('/area/saveAreas', JSON.stringify(dataObj)).then(function(response){			
+		  },function(response){			
+		  } ).then(function(){			
+			  var dataObj={bookingId:$scope.booking.id};
+			  $http.post('/area/addArea', JSON.stringify(dataObj)).then(function(response){
+				  $scope.areas=[];
+				  console.log("empty");
+				  console.log($scope.areas);
+				  $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){			
+					  console.log(angular.fromJson(response.data));
+					  $scope.areas=angular.fromJson(response.data);
+	
+				  },function(response){
+					  console.log("DID NOT view");
+					  //console.log("response is "+angular.fromJson(response.data));
+				  })
+			  },function(response){//else is not saved successfully
+				  console.log("AREA CANNOT BE ADDED");
+				  alert("AREA CANNOT BE ADDED");
+			  })
+		  } )
+	  }//END ADD UNIT
 
 	$scope.saveAreas = function () {   
 
@@ -1113,7 +1222,7 @@ app.controller('areaPlanController', function ($scope, $http,shareData) {
 
 		console.log(dataObj);
 
-		$http.post('/event/saveAreas', JSON.stringify(dataObj)).then(function(response){
+		$http.post('/area/saveAreas', JSON.stringify(dataObj)).then(function(response){
 			console.log("pure response is "+JSON.stringify(response.data));
 	
 
@@ -1136,6 +1245,28 @@ app.controller('areaPlanController', function ($scope, $http,shareData) {
 		$scope.showDetail="id: "+ thisArea.id+", areaName: " + thisArea.areaName+", description: " + thisArea.description+"left: " + thisArea.square.left + ", top: " +  thisArea.square.top+ ", height: " + thisArea.square.height + ", width: " + thisArea.square.width;    
 
 	} 
+	
+	$scope.downloadPlan = function () {
+		  console.log("her0");
+		  console.log(html2canvas);
+		
+		
+		  var canvasdiv = document.getElementById("glassboxGrid");
+		    html2canvas(canvasdiv,{
+		    	 allowTaint: true,
+	             logging: true,
+	             taintTest: true,
+		        onrendered: function (canvas) {
+		            var a = document.createElement("a");
+		            a.href = canvas.toDataURL("plan/png");
+		            a.download ="plan.png";
+		            a.click();
+		        },
+		       
+		
+		    });
+		}
+	 
 	$scope.resize = function(area,evt,ui) {
 
 		console.log("resize");
@@ -1172,7 +1303,65 @@ app.controller('areaPlanController', function ($scope, $http,shareData) {
 	    	console.log(JSON.stringify(objToPassArea));
 	    }
 	 */
+	
+	 console.log("gridster test ");
+	 console.log(meter);
+	 $scope.gridsterOpts = {
+			 
+			 	
+			    columns: unit.sizeX*(meter/scale), // the width of the grid, in columns
+			    pushing: false, // whether to push other items out of the way on move or resize
+			    floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
+			    swapping: false, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
+			    width:$scope.unitLengthGrid, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
+			    colWidth: scale, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
+			    rowHeight: scale, // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
+			    margins: [1, 1], // the pixel distance between each widget
+			    outerMargin: false, // whether margins apply to outer edges of the grid
+			    sparse: false, // "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
+			    isMobile: false, // stacks the grid items if true
+			    mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items
+			    mobileModeEnabled: false, // whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
+			    minColumns: unit.sizeX*(meter/scale), // the minimum columns the grid must have
+			    minRows: unit.sizeY*(meter/scale), // the minimum height of the grid, in rows
+			    maxRows: unit.sizeY*(meter/scale),
+			    defaultSizeX: 2, // the default width of a gridster item, if not specifed
+			    defaultSizeY: 1, // the default height of a gridster item, if not specified
+			    minSizeX: 1, // minimum column width of an item
+			    maxSizeX: null, // maximum column width of an item
+			    minSizeY: 1, // minumum row height of an item
+			    maxSizeY: null, // maximum row height of an item
+			    resizable: {
+			       enabled: true,
+			       handles: ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'],
+			       start: function(event, $element, widget) {}, // optional callback fired when resize is started,
+			       resize: function(event, $element, widget) {}, // optional callback fired when item is resized,
+			       stop: function(event, $element, area) {
+			    	   
+			    	   //console.log($element);
+			    	 //  console.log(unit);
+			    	   $scope.updateArea(area);
+			       } // optional callback fired when item is finished resizing
+			    },
+			    draggable: {
+			       enabled: true, // whether dragging items is supported
+			       //handle: '.my-class', // optional selector for drag handle
+			       start: function(event, $element, widget) {}, // optional callback fired when drag is started,
+			       drag: function(event, $element, widget) {
+			    	 
+			       }, // optional callback fired when item is moved,
+			       stop: function(event, $element, area) {
+			    	   //console.log($element);
+			    	   //console.log(unit);
+			    	   $scope.updateArea(area);
+			       } // optional callback fired when item is finished dragging
+			    }
+			};
 
+	 console.log("test opts");
+	 console.log($scope.gridsterOpts.colWidth);
+	 console.log($scope.gridsterOpts.maxRows);
+	 console.log($scope.gridsterOpts.columns);
 })
 
 

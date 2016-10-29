@@ -26,7 +26,18 @@ public class Area {
 
 	    @Column(name = "description", nullable = false)
 	    private String description;
-	   
+	    
+	    @Column(name = "sizex", nullable = false)
+		private int sizeX;
+
+		@Column(name = "sizey", nullable = false)
+		private int sizeY;
+		
+		@Column(name = "row", nullable = false)
+		private int row;
+
+		@Column(name = "col", nullable = false)
+		private int col;
 	   
 	    @ManyToOne//(cascade=CascadeType.ALL)
 	    private BookingAppl booking;
@@ -67,6 +78,46 @@ public class Area {
 		}
 
 
+		public int getSizeX() {
+			return sizeX;
+		}
+
+
+		public void setSizeX(int sizeX) {
+			this.sizeX = sizeX;
+		}
+
+
+		public int getSizeY() {
+			return sizeY;
+		}
+
+
+		public void setSizeY(int sizeY) {
+			this.sizeY = sizeY;
+		}
+
+
+		public int getRow() {
+			return row;
+		}
+
+
+		public void setRow(int row) {
+			this.row = row;
+		}
+
+
+		public int getCol() {
+			return col;
+		}
+
+
+		public void setCol(int col) {
+			this.col = col;
+		}
+
+
 		public BookingAppl getBooking() {
 			return booking;
 		}
@@ -80,7 +131,8 @@ public class Area {
 		@Override
 		public String toString() {
 			return "Area [id=" + id + ", square=" + square + ", areaName=" + areaName + ", description=" + description
-					+ ", booking=" + booking + "]";
+					+ ", sizeX=" + sizeX + ", sizeY=" + sizeY + ", row=" + row + ", col=" + col + ", booking=" + booking
+					+ "]";
 		}
 
 	  

@@ -1,6 +1,6 @@
-<link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
-
-
+ <link rel="stylesheet" href="bower_components/angular-gridster/dist/angular-gridster.css"/>
+ <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
+ <link rel="stylesheet" href="../css/floorplanGrid.css" type="text/css" />
        <div ng-controller="areaPlanController as areaCtrl">    
            
 <div class="clearfix">
@@ -26,14 +26,15 @@
 					</h3>
 				</div>
 			</div>    
-               
-           <div id="respond"></div>
-    <div id="glassbox">
-        <div ng-repeat="area in areas track by $index" class="ui-widget-content" 
-            id="{{area.areaName}}" ng-mouseover=showDetails(area)  draggable resizable  on-resize="resize(area,$evt, $ui)"
-              ng-style="{height: {{area.square.height}} + 'px', width: {{area.square.width}} + 'px', 'left':{{area.square.left}}+'px','top':{{area.square.top}}+'px', 'background-color':'{{area.square.color}}' }" ><p>{{area.id}}</p> </div>
-        </div>
-       <div><p> {{showDetail}}</p></div>
+               <div class="panel-body" id="panelheadGrid">
+<div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{unitWidthGrid}} + 'px', width: {{unitLengthGrid}} + 'px'}">
+    <ul>
+        <li gridster-item="area"  id="{{area.square.id}}"  ng-repeat="area in areas"   ng-style="{'background-color':'{{area.square.color}}'}" ><p> {{area.unitName}}<a  ng-click="showModal(area,$parent)" tooltip-placement="top" tooltip="Edit area {{area.unitName}}"><i class="glyphicon glyphicon-pencil"></i></a><a  ng-click="$parent.remove(area)" tooltip-placement="top" tooltip="Delete area {{area.areaName}}"><i class="glyphicon glyphicon-trash"></i></a>
+                          <img  class="svgtest" ng-src="{{area.square.type||area.square.icon.iconPath}}"  alt="icon"></p></li>
+    </ul>
+</div>
+</div>
+          
   </div>
 <div class="col-md-3">
 <br>
@@ -46,7 +47,10 @@
 <br>
     <a ng-click="saveAreas()" tooltip-placement="right" tooltip="Save Unit Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-floppy-disk"></i></button></a>
  </div>
-  
+  <div class="col-md-3">
+<br>
+	<a  tooltip-placement="right" tooltip="Right Click for Adding a Default Icon" context-menu="menuOptions"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-asterisk"></i></button></a>
+</div>
             <div class="col-md-3">
      <br>    
      <a ng-click="downloadPlan()"  id="download" tooltip-placement="right" tooltip="Download Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-download-alt"></i></button></a>
