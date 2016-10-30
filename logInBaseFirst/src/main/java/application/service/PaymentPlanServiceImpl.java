@@ -645,4 +645,34 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		}
 
 	}
+
+	@Override
+	public boolean generatePayment(ClientOrganisation client, long id, String invoice) {
+		System.out.println("BEFORE TRY");
+		try{
+			System.out.println("AFTER TRY");
+			Optional<PaymentPlan> pay1 = Optional.ofNullable(paymentPlanRepository.findOne(id)); 
+			System.out.println("BEFORE IF "+ pay1.isPresent());
+			if(pay1.isPresent()){
+				System.out.println("INSIDE IF");
+				PaymentPlan pay = pay1.get();
+				Set<Payment> payments = pay.getPayments();
+				Payment p = new Payment();
+				p.setInvoice(invoice);
+				p.setPlan(id);
+				paymentRepository.save(p);
+				System.out.println("SAVE PAYMENT SUCCESS");
+				payments.add(p);
+				pay.setNextInvoice(invoice);
+				paymentPlanRepository.flush();
+				return true;
+			}
+			else{
+				System.out.println("SAVE PAYMENT ERROR");
+				return false;
+			}
+		}catch (Exception e){
+			return false;
+		}
+	}
 }

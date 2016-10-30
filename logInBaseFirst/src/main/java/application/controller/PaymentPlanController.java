@@ -815,6 +815,8 @@ public class PaymentPlanController {
 		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Invoice.jasper");
 		response.setContentType("application/pdf");
 		Principal principal = request.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+			ClientOrganisation client = usr.get().getClientOrganisation();
 		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
 		//ServletOutputStream outputStream = response.getOutputStream();
 		HashMap<String,Object> parameters = new HashMap<String,Object>();
@@ -822,14 +824,14 @@ public class PaymentPlanController {
 		sb.append(" ");
 		Object obj;
 		try {
-
+/*
 			if(info == null)
 				System.out.println("********** info is null");
 
 			if(parser == null)
 				System.out.println("********** parser is null");
 
-			System.out.println("********** HERE");
+			System.out.println("********** HERE");*/
 
 			obj = parser.parse(info);
 			JSONObject jsonObject = (JSONObject) obj;
@@ -846,7 +848,6 @@ public class PaymentPlanController {
 			try {
 				DataSource ds = (DataSource)context.getBean("dataSource");
 				conn = ds.getConnection();
-				System.out.println("************* ERROR: ");
 				System.out.println(conn.toString());
 			} catch (SQLException e) {
 				System.out.println("************* ERROR: " + e.getMessage());
@@ -857,8 +858,10 @@ public class PaymentPlanController {
 			path += "Invoice" + paymentId + ".pdf";
 			File f = new File(path);
 			int counter = 1;
+			String invoice = "";
 			if ( !f.exists()){
 				parameters.put("number", String.valueOf(paymentId));
+				invoice = String.valueOf(paymentId);
 			}
 			else{
 				while ( f.exists() && !f.isDirectory() ){
@@ -867,19 +870,21 @@ public class PaymentPlanController {
 					path += "Invoice" + paymentId + "-" + counter + ".pdf";		
 
 					f = new File(path);
+					invoice = paymentId + "-" + counter;
 				}
 				parameters.put("number", paymentId+ "-" + counter );
 			}
-
-
+			System.out.println("invoice is "+invoice);
+           boolean bl = paymentPlanService.generatePayment(client, paymentId, invoice);
+           System.out.println("*******GENERATE PAYMENT????"+bl);
 			System.err.println("path is " + path);
 			FileOutputStream fileOutputStream = new FileOutputStream(path);
 			JasperRunManager.runReportToPdfStream(jasperStream, fileOutputStream, parameters,conn);
 			fileOutputStream.flush();
 			fileOutputStream.close();
 			System.out.println("FLUSHED OUT THE LOG");
-			User usr = userService.getUserByEmail(principal.getName()).get();
-			ClientOrganisation client = usr.getClientOrganisation();
+			//User usr = userService.getUserByEmail(principal.getName()).get();
+			//ClientOrganisation client = usr.getClientOrganisation();
 			PaymentPolicy paypol = client.getPaymentPolicy();
             String email = "Please pay the amount stated in the invoice within "+ paypol.getNumOfDueDays() +
             		" days.";
