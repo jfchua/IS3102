@@ -45,4 +45,6 @@ public interface PaymentPlanService {
 	void alertForOverduePayment() throws UserNotFoundException;
 
 	void deleteOldPdfs();
+	
+	boolean generatePayment(ClientOrganisation client, long id, String invoice);
 }

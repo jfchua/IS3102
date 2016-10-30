@@ -26,15 +26,15 @@ public class Payment {
 	 private Double amount;
 	 
 	 @Temporal(TemporalType.TIMESTAMP)
-	 @Column(name = "paid", nullable = false)
+	 @Column(name = "paid")
 	 private Date paid;
 	 
 	 @Column(name = "plan")
 	 private Long plan;
-	 /*
-	 @Column(name = "owner")
-	 private String owner;*/
-
+	 
+	 @Column(name = "invoice", nullable = false)
+	 private String invoice;
+	 
 	 @Column(name = "cheque")
 	 private String cheque;
 	 /*
@@ -74,16 +74,15 @@ public String getCheque() {
 	public void setCheque(String cheque) {
 		this.cheque = cheque;
 	}
-
-	/*
-	public String getOwner() {
-		return owner;
+	
+	public String getInvoice() {
+		return invoice;
 	}
 
-	public void setOwner(String owner) {
-		this.owner = owner;
+	public void setInvoice(String invoice) {
+		this.invoice = invoice;
 	}
-*/
+
 	public Long getId() {
 		return id;
 	}
