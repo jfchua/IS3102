@@ -1,7 +1,7 @@
  <link rel="stylesheet" href="bower_components/angular-gridster/dist/angular-gridster.css"/>
  <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
  <link rel="stylesheet" href="../css/floorplanGrid.css" type="text/css" />
-       <div ng-controller="areaPlanController as areaCtrl">    
+       <div >    
            
 <div class="clearfix">
 		                        <ol class="breadcrumb no-bg no-m-t">
@@ -9,13 +9,12 @@
 		                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
 		                            <li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
 		                             <li><a ui-sref="dashboard.viewBookingEx" ng-click="passEvent()" >View Bookings</a></li>
-		                             <li><a ui-sref="dashboard.viewUnitPlanEx" ng-click="passBooking(booking)" >View Unit Plan</a></li>
 		                             
-		                             <li><a>Update Unit Plan</a></li>
+		                             <li><a>View Unit Plan</a></li>
 		                        </ol>
 		</div> 
            
-           <div class="col-md-9" id="widthForFloorPlan">
+           <div class="col-md-6" id="widthForFloorPlan">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">Unit Plan	  
@@ -30,29 +29,20 @@
                <div class="panel-body" id="panelheadGrid">
 <div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{unitWidthGrid}} + 'px', width: {{unitLengthGrid}} + 'px'}">
     <ul>
-        <li gridster-item="area"  id="{{area.square.id}}"  ng-repeat="area in areas"   ng-style="{'background-color':'{{area.square.color}}'}" ><p> {{area.areaName}}<a  ng-click="showModal(area,$parent)" tooltip-placement="top" tooltip="Edit area {{area.unitName}}"><i class="glyphicon glyphicon-pencil"></i></a><a  ng-click="$parent.remove(area)" tooltip-placement="top" tooltip="Delete area {{area.areaName}}"><i class="glyphicon glyphicon-trash"></i></a>
+        <li gridster-item="area"  id="{{area.square.id}}"  ng-repeat="area in areas"  ng-dblclick="showModal(area,$parent)"  ng-style="{'background-color':'{{area.square.color}}'}" ><p tooltip-placement="top" tooltip="Double click to view details of unit {{unit.unitNumber}}"> {{area.areaName}}
                           <img  class="svgtest" ng-src="{{area.square.type||area.square.icon.iconPath}}"  alt="icon"></p></li>
     </ul>
 </div>
 </div>
           
   </div>
-<div class="col-md-3">
-<br>
-<br>
-<br>
-    <a ng-click="addArea()" tooltip-placement="right" tooltip="Add an Area"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>
-</div>
 
-<div class="col-md-3">
-<br>
-    <a ng-click="saveAreas()" tooltip-placement="right" tooltip="Save Unit Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-floppy-disk"></i></button></a>
- </div>
-  <div class="col-md-3">
-<br>
-	<a  tooltip-placement="right" tooltip="Right Click for Adding a Default Icon" context-menu="menuOptions"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-asterisk"></i></button></a>
-</div>
-
+ <div class="col-md-3">
+     <br>
+      <br>
+       <br>
+     <a ui-sref="dashboard.createUnitPlanEx" ng-click="editUnitPlan()" tooltip-placement="right" tooltip="Edit unit plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-pencil"></i></button></a>
+     </div>
             <div class="col-md-3">
      <br>    
      <a ng-click="downloadPlan()"  id="download" tooltip-placement="right" tooltip="Download Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-download-alt"></i></button></a>

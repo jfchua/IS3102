@@ -519,6 +519,14 @@ app.config(
 					authorizedRoles:[USER_ROLES.organiser]
 				}
 			})
+			.state('dashboard.viewUnitPlanEx',{
+				url:'/viewUnitPlanEx',
+				templateUrl: '/views/viewUnitPlanEx.html',
+				controller: 'viewAreaPlanController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
 			.state('dashboard.updateEventEx',{
 				url:'/updateEventEx',
 				templateUrl: '/views/updateEventEx.html',

@@ -99,7 +99,7 @@ public class AreaController {
 							public boolean shouldSkipField(FieldAttributes f) {
 								//TODO Auto-generated method stub
 								return false;
-								//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+								
 							}
 						})
 						/**
@@ -207,7 +207,7 @@ public class AreaController {
 			return v;
 		
 }
-	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE','ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 	@RequestMapping(value = "/addArea", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> addArea(@RequestBody String idObj,HttpServletRequest rq) {
@@ -268,4 +268,107 @@ public class AreaController {
 		
 	}
 	
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	@RequestMapping(value = "/addCustIcon", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> addCustIcon(@RequestBody String idObj,HttpServletRequest rq) {
+
+		
+		try{
+			
+			
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("bookingId"));
+			long bookingId = (Long)jsonObject.get("bookingId");
+			long iconId = (Long)jsonObject.get("iconId");
+			
+			
+			
+			if(areaService.addCustIconOnBooking(bookingId,iconId) ){
+				System.out.println("CREATED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		
+	}
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	@RequestMapping(value = "/updateArea", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> updateArea(@RequestBody String idObj,HttpServletRequest rq) {
+
+		
+		try{
+			
+			
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("bookingId"));
+			long bookingId = (Long)jsonObject.get("bookingId");
+			JSONObject areaJson=(JSONObject)jsonObject.get("area");	
+			long areaId = (Long)areaJson.get("id");				
+			JSONObject squareJson=(JSONObject)areaJson.get("square");		
+			int left = (int) (long) squareJson.get("left");
+			int top = (int) (long) squareJson.get("top");
+			int height = (int) (long) squareJson.get("height");
+			int width = (int) (long) squareJson.get("width");
+			String color = (String)squareJson.get("color");
+			String type = (String)squareJson.get("type");
+			String areaName =(String)areaJson.get("areaName");
+			int col = (int) (long) areaJson.get("col");
+			int row = (int) (long) areaJson.get("row");
+			int sizex = (int) (long) areaJson.get("sizeX");
+			int sizey = (int) (long) areaJson.get("sizeY");
+			String description =(String)areaJson.get("description");
+			
+			
+			if(areaService.editAreaInfo(areaId,col,  row,  sizex, sizey,left,top, height,  width,  color, type, areaName,  description)){
+				System.out.println("EDITED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		
+	}
+	
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/deleteArea", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> deleteArea(@RequestBody String idObj,HttpServletRequest rq) {
+
+		
+		try{
+			
+			
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("id"));
+			long areaId = (Long)jsonObject.get("id");
+			System.out.println((Long)jsonObject.get("bookingId"));
+			long bookingId = (Long)jsonObject.get("bookingId");
+			
+			if(areaService.deleteArea(areaId,bookingId)){
+				System.out.println("DELETED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		
+	}
 }

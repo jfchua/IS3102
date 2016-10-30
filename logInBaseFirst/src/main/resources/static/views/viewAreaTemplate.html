@@ -1,0 +1,54 @@
+<div class="modal fade">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">View area: {{area.areaName}}</h4>
+      </div>
+      <div class="modal-body">
+        <p></p>
+        <form class="form-horizontal" role="form">
+							
+                    	 <div class="form-group" ng-show="area.square.type=='./svg/rect.svg'">
+							<label class="col-sm-6 control-label">Length</label>
+							<div class="col-sm-6">
+								<p class="form-control-static" >{{area.sizeY}}m</p>
+							</div>
+						</div>
+                         <div class="form-group" ng-show="area.square.type=='./svg/rect.svg'">
+							<label class="col-sm-6 control-label">Width</label>
+							<div class="col-sm-6">
+								<p class="form-control-static" >{{area.sizeY}}m</p>
+							</div>
+						</div>
+
+                       
+                        <div class="form-group" ng-show="area.square.type=='./svg/rect.svg'">
+							<label class="col-sm-6 control-label">Area Name</label>
+							<div class="col-sm-6">
+								<p class="form-control-static" ng-bind="area.areaName"></p>
+							</div>
+						</div>
+                        
+                        <div class="form-group" >
+							<label class="col-sm-6 control-label">Description</label>
+							<div class="col-sm-6">
+								<p class="form-control-static" ng-bind="area.description"></p>
+							</div>
+						</div>
+						
+					
+                    
+
+     </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal">Back</button>
+  
+      </div>
+    </div>
+  </div>
+</div>
+                   
+                     

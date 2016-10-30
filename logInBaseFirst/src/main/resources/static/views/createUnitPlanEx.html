@@ -9,6 +9,7 @@
 		                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
 		                            <li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
 		                             <li><a ui-sref="dashboard.viewBookingEx" ng-click="passEvent()" >View Bookings</a></li>
+		                             <li><a ui-sref="dashboard.viewUnitPlanEx" ng-click="passBooking(booking)" >View Unit Plan</a></li>
 		                             
 		                             <li><a>Update Unit Plan</a></li>
 		                        </ol>
@@ -29,7 +30,7 @@
                <div class="panel-body" id="panelheadGrid">
 <div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{unitWidthGrid}} + 'px', width: {{unitLengthGrid}} + 'px'}">
     <ul>
-        <li gridster-item="area"  id="{{area.square.id}}"  ng-repeat="area in areas"   ng-style="{'background-color':'{{area.square.color}}'}" ><p> {{area.unitName}}<a  ng-click="showModal(area,$parent)" tooltip-placement="top" tooltip="Edit area {{area.unitName}}"><i class="glyphicon glyphicon-pencil"></i></a><a  ng-click="$parent.remove(area)" tooltip-placement="top" tooltip="Delete area {{area.areaName}}"><i class="glyphicon glyphicon-trash"></i></a>
+        <li gridster-item="area"  id="{{area.square.id}}"  ng-repeat="area in areas"   ng-style="{'background-color':'{{area.square.color}}'}" ><p> {{area.areaName}}<a  ng-click="showModal(area,$parent)" tooltip-placement="top" tooltip="Edit area {{area.unitName}}"><i class="glyphicon glyphicon-pencil"></i></a><a  ng-click="$parent.remove(area)" tooltip-placement="top" tooltip="Delete area {{area.areaName}}"><i class="glyphicon glyphicon-trash"></i></a>
                           <img  class="svgtest" ng-src="{{area.square.type||area.square.icon.iconPath}}"  alt="icon"></p></li>
     </ul>
 </div>
@@ -51,6 +52,7 @@
 <br>
 	<a  tooltip-placement="right" tooltip="Right Click for Adding a Default Icon" context-menu="menuOptions"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-asterisk"></i></button></a>
 </div>
+
             <div class="col-md-3">
      <br>    
      <a ng-click="downloadPlan()"  id="download" tooltip-placement="right" tooltip="Download Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-download-alt"></i></button></a>

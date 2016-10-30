@@ -148,14 +148,13 @@ public class AreaServiceImpl implements AreaService {
 	@Override
 	public boolean deleteArea(long id, long bookingId) {
 		try{
-			Optional<Area> areaOpt = getAreaById(id);
+			Area area=areaRepository.findOne(id);
 			BookingAppl booking = bookingRepository.findOne(bookingId);
 		
-			if(areaOpt.isPresent()){
-				Area area= areaOpt.get();
+			
+			
 				Square square=area.getSquare();
 				area.setSquare(null);
-				
 				Set<Area> areas=booking.getAreas();
 				areas.remove(area);
 				booking.setAreas(areas);
@@ -167,11 +166,12 @@ public class AreaServiceImpl implements AreaService {
 				squareRepository.delete(square);
 				squareRepository.flush();
 				return true;
-			}
+			
 			}catch(Exception e){
+				System.out.println("renturn false for deleArea");
 				return false;
 			}
-			return true;
+		
 	}
 
 	@Override

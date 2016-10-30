@@ -450,7 +450,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 				//console.log($scope.icons[0].iconType);
 				//console.log($scope.icons[0].iconPath);
 			},function(response){
-				alert("DID NOT VIEW ICONS");
+				alert("DID NOT VIEW ICON MENU");
 				
 			})
 			/*
@@ -576,7 +576,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 				  } )
 			  } //END ADD DEFAULT ICON
 			  
-			  $scope.addSpecialUnitByIcon = function(iconId){
+			  $scope.addCustIcon = function(iconId){
 				  //GET SELECTED CUSTOMISED ICON
 				  var index=0;
 				  var found=false;
@@ -984,7 +984,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 
 
 
-//UPDATE EVENT STATUS MODAL
+//UPDATE UNIT MODAL
 app.controller('updateUnitController', ['$scope', '$element', 'title', 'close', 'unit',
                                                 function($scope, $element, title, close,unit) {
 	
