@@ -972,8 +972,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 				String str = new String();
 				str += units[k] + " ";
 				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();
-				str += base + " " + checkRate(client, cal.getTime())+ " ";
-				long first =date.getTime().getTime() - cal.getTime().getTime();			
+				str += base + " " + checkRate(client, calRef.getTime())+ " ";
+				long first =date.getTime().getTime() - calRef.getTime().getTime();			
 				long durFirst = TimeUnit.HOURS.convert(first, TimeUnit.MILLISECONDS);
 				System.out.println("*****END TIME IS "+date.getTime());
 				System.out.println("*****REFEREBCE TIME IS "+ calRef.getTime());
