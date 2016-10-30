@@ -6,8 +6,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,6 +40,7 @@ import application.exception.UserNotFoundException;
 import application.service.EventExternalService;
 import application.service.EventOrganizerService;
 import application.service.PaymentPlanService;
+import application.service.UnitService;
 import application.service.UserService;
 
 @Controller
@@ -47,17 +50,19 @@ public class EventExternalController {
 	private final EventExternalService eventExternalService;
 	private final PaymentPlanService paymentPlanService;
 	private final UserService userService;
+	private final UnitService unitService;
 	private final EventCreateFormValidator eventCreateFormValidator;
 	private JSONParser parser = new JSONParser();
 	
 	@Autowired
-	public EventExternalController(EventExternalService eventService, UserService userService, 
+	public EventExternalController(EventExternalService eventService, UserService userService, UnitService unitService,
 			EventCreateFormValidator eventCreateFormValidator, PaymentPlanService paymentPlanService) {
 		super();
 		this.eventExternalService = eventService;
 		this.userService = userService;
 		this.eventCreateFormValidator = eventCreateFormValidator;
 	    this.paymentPlanService =paymentPlanService;
+	    this.unitService= unitService;
 	}
 	
 	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
@@ -216,6 +221,70 @@ public class EventExternalController {
 			return new ResponseEntity<Void>(HttpStatus.OK);	
 		}	
 	    
+	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+		@RequestMapping(value = "/checkComponents", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<String> checkComponents(@RequestBody String eventJSON,
+				HttpServletRequest rq) throws UserNotFoundException {
+			System.out.println("start check rent for event");
+			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+			Principal principal = rq.getUserPrincipal();
+			System.out.println(principal.getName());
+			Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+			if ( !eventOrg1.isPresent() ){
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			}
+			try{
+				User eventOrg = eventOrg1.get();
+				ClientOrganisation client = eventOrg.getClientOrganisation();
+				System.out.println(eventOrg.getName());
+				Object obj = parser.parse(eventJSON);
+				JSONObject jsonObject = (JSONObject) obj;
+				JSONArray units = (JSONArray)jsonObject.get("units");
+				JSONArray jArray = new JSONArray();
+				String unitsId = "";
+				System.out.println("before formatting units id");
+				 for(int i = 0; i < units.size(); i++){
+		            	JSONObject unitObj = (JSONObject)units.get(i);
+		            	System.out.println(unitObj.toString());
+						long unitId = (Long)unitObj.get("id");
+						System.out.println(unitId);
+						unitsId = unitsId+unitId + " ";
+						System.out.println(unitsId);
+				 }
+				 System.out.println("***finish formatting units id" + unitsId);
+				NumberFormat formatter = new DecimalFormat("#0.00");          
+	            Date event_start_date = sdf.parse((String)jsonObject.get("event_start_date"));
+				System.out.println(event_start_date);
+				Date event_end_date = sdf.parse((String)jsonObject.get("event_end_date"));	
+	    		Set<String> comps = eventExternalService.checkRateNum(client, unitsId, event_start_date, event_end_date);	    		
+	    		Iterator iter = comps.iterator();
+	    		System.out.println("***Set<String> size is " + comps.size());
+	    		while (iter.hasNext()) {
+	    		    System.out.println("***inside while***");
+                    String str = (String) iter.next();
+                    String[] arr = str.split(" ");
+	            	JSONObject obj1 = new JSONObject();
+					obj1.put("id", arr[0]);
+					System.out.println("id "+arr[0]);
+					obj1.put("base", formatter.format(Double.valueOf(arr[1])));
+					System.out.println("base  "+arr[1]);
+					obj1.put("rate", formatter.format(Double.valueOf(arr[2])));
+					System.out.println("rate "+arr[2]);
+					obj1.put("hour", arr[3]);
+					System.out.println("hour "+ arr[3]);
+					obj1.put("rental", formatter.format(Double.valueOf(arr[4])));
+					System.out.println("rental "+arr[4]);
+					jArray.add(obj1);
+				}
+				return new ResponseEntity<String>(jArray.toString(), HttpStatus.OK);	
+			}
+			catch (Exception e){
+				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);
+			}		
+		}	
+
 	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 		@RequestMapping(value = "/checkRent", method = RequestMethod.POST)
 		@ResponseBody

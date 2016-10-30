@@ -909,11 +909,85 @@ public class EventExternalServiceImpl implements EventExternalService {
 		else{
 			int num = 0;
 			Set<Category> cats = getEventById(eventId).get().getCategories();
-			for(Category c : cats){
+			for(Category c : cats){{
+				
+			}
 				Set<Ticket> tics = c.getTickets();
 				num += tics.size();
 			}
 			return num;
 		}
+	}
+
+	@Override
+	public Set<String> checkRateNum(ClientOrganisation client, String unitsId, Date start, Date end) throws ParseException {
+		long diff =end.getTime() - start.getTime();
+		long duration = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)+1;
+		Set<String> setS = new HashSet<String>();
+		System.out.println("**");
+		String[] units = unitsId.split(" ");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(start);
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTime(start);
+		int num = 1;
+		cal1.add(Calendar.DAY_OF_MONTH, 1);
+		for(int i = 0; i < duration; i ++){
+			if(!checkRate(client, cal.getTime()).equals(checkRate(client, cal1.getTime())))
+				num++;
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			cal1.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		System.out.println("**num**"+num);
+		int k = 0;
+		cal.setTime(start);
+		cal1.setTime(start);
+		Calendar calRef = Calendar.getInstance();
+		calRef.setTime(start);
+		cal1.add(Calendar.DAY_OF_MONTH, 1);
+		for(int j = 0; j < units.length*num; j++){	
+			System.out.println("**for**");
+			Calendar date = Calendar.getInstance();
+			date.setTime(cal.getTime());
+			date.set(Calendar.HOUR_OF_DAY, 0);
+			date.set(Calendar.MINUTE, 0);
+			date.set(Calendar.SECOND, 0);
+			date.set(Calendar.MILLISECOND, 0);
+			date.add(Calendar.DAY_OF_MONTH, 1);	
+			if(DateUtils.isSameDay(cal.getTime(),end)){
+				System.out.println("**first**if**");
+				String str = new String();
+				str += units[k] + " ";
+				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();
+				str += base + " " + checkRate(client, calRef.getTime())+ " ";
+				long first =date.getTime().getTime() - calRef.getTime().getTime();
+				long durFirst = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+				Double duration1 = Double.valueOf(durFirst);
+				str += duration1 + " " + duration1 * base * checkRate(client, calRef.getTime()) + " ";
+				setS.add(str);
+			}
+			else if(!checkRate(client, cal.getTime()).equals(checkRate(client, cal1.getTime()))){
+				System.out.println("**if**");
+				String str = new String();
+				str += units[k] + " ";
+				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();
+				str += base + " " + checkRate(client, cal.getTime())+ " ";
+				long first =date.getTime().getTime() - cal.getTime().getTime();
+				long durFirst = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+				Double duration1 = Double.valueOf(durFirst);
+				str += duration1 + " " + duration1 * base * checkRate(client, cal.getTime()) + " ";
+				k ++;
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				cal1.add(Calendar.DAY_OF_MONTH, 1);
+				calRef.setTime(cal1.getTime());
+				setS.add(str);
+			}
+			else{
+				System.out.println("**else**");
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				cal1.add(Calendar.DAY_OF_MONTH, 1);
+			}
+		}
+		return setS;
 	}
 }
