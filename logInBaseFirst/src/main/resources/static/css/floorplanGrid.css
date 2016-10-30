@@ -5,9 +5,9 @@ div.gridster li.gridster-item {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     color: #004756;
     background: #ffffff;
-        position:absolute;
-            cursor:move;
-    padding: 10px;
+    position:absolute;
+    cursor:move;
+    padding: 5px;
 }
 
 #glassboxGrid {
