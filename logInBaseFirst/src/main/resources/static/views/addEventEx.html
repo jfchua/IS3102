@@ -99,6 +99,7 @@
                             <th><i></i> Number Of Hours </th>
                             <th><i></i> Rental Before GST </th>
                           </tr>
+                           </thead>
                          <tbody>
                          <tr ng-repeat="x in components | orderObjectBy:order_item:order_reverse">
                             <td>{{ x.id }}</td>
@@ -107,8 +108,7 @@
                             <td>{{ x.hour }}</td>
                             <td>{{ x.rental }}</td>
                         </tr>
-                         </tbody>
-                         </thead>
+                         </tbody>                       
                     </table>		
 					</div>
 					<div class="form-group">

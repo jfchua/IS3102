@@ -417,7 +417,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			});
 		}
 	}
-	
+	$scope.components={};
 	$scope.checkRent = function(){
 		console.log("start checking rent");
 		$scope.data = {};
@@ -438,7 +438,8 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			$scope.components = response;
 			$scope.order_item = "id";
 			$scope.order_reverse = false;
-			//alert("get component success");
+			console.log($scope.components);
+			alert("get component success");
 		});
 		send.error(function(response){
 			alert("get component failure");
