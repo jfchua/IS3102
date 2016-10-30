@@ -1,113 +1,128 @@
-        <div ng-cloak ng-controller="addMaintenanceController as addMaintenanceCtrl" >
 
-            <div class="clearfix">
-                            <ol class="breadcrumb no-bg no-m-t">
-                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-                                <li><a ui-sref="dashboard.viewMaintenance">View Maintenances</a></li>
-                                 <li><a>Add Maintenance</a></li>
-                            </ol>
-            </div>
-            <div class="col-md-9">
-                <div class="panel panel-primary">
+<div ng-cloak
+	ng-controller="addMaintenanceController as addMaintenanceCtrl">
 
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Add maintenance request		  
-                            <div class="panel-control pull-right">
-                                <a class="panelButton"><i class="fa fa-refresh"></i></a>
-                                <a class="panelButton"><i class="fa fa-minus"></i></a>
-                                <a class="panelButton"><i class="fa fa-remove"></i></a>
-                            </div>
-                        </h3>
-                    </div>
-                    <div class="panel-body">
-            <form>
-             <div class="form-group">
-                   <label for="exampleInput">Start Date</label>
-                   <input type="datetime-local" ng-model="maintenance.start" class="form-control" placeholder="Enter start date">
-            </div>
-            <div class="form-group">
-                   <label for="exampleInput">End Date</label>
-                   <input type="datetime-local" ng-model="maintenance.end" class="form-control" placeholder="Enter end date">
-           </div>
-            <div class="form-group">
-                        <label for="building" class="control-label">Select Building</label> <select
-                            name="building" ng-model="currentlySelectedBuilding" ng-options="x.id as x.name for x in buildings"
-                            class="form-control">
-                        </select>
-                        <!-- <p>Building ID <input ng-model="currentlySelectedBuilding"> Selected</p>-->
-                        <button ng-click="getLevel(currentlySelectedBuilding)">Apply</button>
-                    </div>
+	<div class="clearfix">
+		<ol class="breadcrumb no-bg no-m-t">
+			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
+			<li><a ui-sref="dashboard.viewMaintenance">View Maintenances</a></li>
+			<li><a>Add Maintenance</a></li>
+		</ol>
+	</div>
+	<div class="col-md-9">
+		<div class="panel panel-primary">
 
-                    <div class="form-group">
-                        <label for="level" class="control-label">Select Level</label> <select
-                            name="level" ng-model="currentlySelectedLevel" ng-options="x.id as x.levelNum for x in levels"
-                          class="form-control">
-                        </select>
-                        <!--  <p>Level ID <input ng-model="currentlySelectedLevel"> Selected</p>-->
-                        <button ng-click="getUnit(currentlySelectedLevel)">Apply</button>
-                    </div>
-                    <div class="form-group">
-                        <ul class="list-group" name="units">
-                            <li ng-repeat="unit in selectedUnits" 
-                                class="list-group-item">{{unit.unitNumber}}
-                                <button ng-click="deleteUnit(unit)">
-                                    <i class="glyphicon glyphicon-trash"></i>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="form-group">
-                        <label for="unit" class="control-label">Select Unit</label> <select
-                            name="unit" ng-model="currentlySelectedUnit" ng-options="x as x.unitNumber for x in units | filter: { rentable : true }"
-                            ng-change="selectUnit()" class="form-control">						
-                        </select>
-                        <div ng-mouseover="checkAvail()" >
-                        <p>Put mouse over to check Availability<br>
-                         Available?  {{avail}}</p>			   
-                        </div>
-            </div>
-            <br>
-           <!--  <button  ng-click="getAllVendors()">Get List of Vendors</button>-->
-            <div class="form-group">
-                        <ul class="list-group" name="vendors">
-                            <li ng-repeat="vendor in selectedVendors" 
-                                class="list-group-item">{{vendor.name}}
-                                <button ng-click="deleteVendor(vendor)">
-                                    <i class="glyphicon glyphicon-trash"></i>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="form-group">
-                        <label for="vendor" class="control-label">Select Vendor</label> <select
-                            name="vendor" ng-model="currentlySelectedVendor" ng-options="x as x.name for x in vendors"
-                            ng-change="selectVendor()" class="form-control">
-                            <option ng-repeat="vendor in vendors">{{vendor}}</option>
-                        </select>				
-                    </div>
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Add maintenance request
+					<div class="panel-control pull-right">
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<form>
+					<div class="form-group">
+						<label for="exampleInput">Start Date</label> <input
+							type="datetime-local" ng-model="maintenance.start"
+							ng-change='checkDateErr(maintenance.start,maintenance.end)'
+							class="form-control" placeholder="Enter start date">
+					</div>
+					<div class="form-group">
+						<label for="exampleInput">End Date</label> <input
+							type="datetime-local" ng-model="maintenance.end"
+							ng-change='checkDateErr(maintenance.start,maintenance.end)'
+							class="form-control" placeholder="Enter end date">
+					</div>
+					<div class="form-group">
+						<label for="building" class="control-label">Select
+							Building</label> <select name="building"
+							ng-model="currentlySelectedBuilding"
+							ng-options="x.id as x.name for x in buildings"
+							class="form-control">
+						</select>
+						<!-- <p>Building ID <input ng-model="currentlySelectedBuilding"> Selected</p>-->
+						<button ng-click="getLevel(currentlySelectedBuilding)">Apply</button>
+					</div>
+
+					<div class="form-group">
+						<label for="level" class="control-label">Select Level</label> <select
+							name="level" ng-model="currentlySelectedLevel"
+							ng-options="x.id as x.levelNum for x in levels"
+							class="form-control">
+						</select>
+						<!--  <p>Level ID <input ng-model="currentlySelectedLevel"> Selected</p>-->
+						<button ng-click="getUnit(currentlySelectedLevel)">Apply</button>
+					</div>
+					<div class="form-group">
+						<ul class="list-group" name="units">
+							<li ng-repeat="unit in selectedUnits" class="list-group-item">{{unit.unitNumber}}
+								<button ng-click="deleteUnit(unit)">
+									<i class="glyphicon glyphicon-trash"></i>
+								</button>
+							</li>
+						</ul>
+					</div>
+					<div class="form-group">
+						<label for="unit" class="control-label">Select Unit</label> <select
+							name="unit" ng-model="currentlySelectedUnit"
+							ng-options="x as x.unitNumber for x in units | filter: { rentable : true }"
+							ng-change="selectUnit()" class="form-control">
+						</select>
+						<div ng-mouseover="checkAvail()">
+							<p>
+								Put mouse over to check Availability<br> Available?
+								{{avail}}
+							</p>
+						</div>
+					</div>
+					<br>
+					<!--  <button  ng-click="getAllVendors()">Get List of Vendors</button>-->
+					<div class="form-group">
+						<ul class="list-group" name="vendors">
+							<li ng-repeat="vendor in selectedVendors" class="list-group-item">{{vendor.name}}
+								<button ng-click="deleteVendor(vendor)">
+									<i class="glyphicon glyphicon-trash"></i>
+								</button>
+							</li>
+						</ul>
+					</div>
+					<div class="form-group">
+						<label for="vendor" class="control-label">Select Vendor</label> <select
+							name="vendor" ng-model="currentlySelectedVendor"
+							ng-options="x as x.name for x in vendors"
+							ng-change="selectVendor()" class="form-control">
+							<option ng-repeat="vendor in vendors">{{vendor}}</option>
+						</select>
+					</div>
 
 
-            <!--  <div class="form-group">
+					<!--  <div class="form-group">
                    <label for="exampleInput">Vendor Id</label>
                    <input type="text" ng-model="maintenance.vendorId" class="form-control" placeholder="Enter vendor id">
             </div>-->
 
-           <div class="form-group">
-                   <label for="exampleInput"> Description </label>
-                   <input type="text" ng-model="maintenance.description" class="form-control" placeholder="Enter description">
-           </div>       
+					<div class="form-group">
+						<label for="exampleInput"> Description </label> <input type="text"
+							ng-model="maintenance.description" class="form-control"
+							placeholder="Enter description">
+					</div>
 
 
 
-           <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "addMaintenance()">Submit</button> &nbsp;
+					<button class="progress-button primary-progress"
+						data-style="shrink" data-horizontal ng-click="addMaintenance()">Submit</button>
+					&nbsp;
 
-                        </form>
+				</form>
 
 
 
 
-                    </div>
-                </div>
-            </div>
-    </div>
+			</div>
+		</div>
+	</div>
+</div>

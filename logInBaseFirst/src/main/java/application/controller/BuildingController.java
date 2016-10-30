@@ -1,5 +1,7 @@
 package application.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Optional;
 import java.util.Set;
@@ -18,7 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -31,11 +35,15 @@ import application.entity.ClientOrganisation;
 import application.entity.Level;
 import application.entity.User;
 import application.exception.BuildingNotFoundException;
+import application.exception.InvalidFileUploadException;
+import application.exception.InvalidIconException;
 import application.exception.InvalidPostalCodeException;
 import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
+import application.repository.BuildingRepository;
 import application.service.BuildingService;
 import application.service.ClientOrganisationService;
+import application.service.FileUploadCheckingService;
 import application.service.UserService;
 
 @Controller
@@ -46,20 +54,24 @@ public class BuildingController {
 	private final ClientOrganisationService clientOrganisationService;
 	private final UserService userService;
 	private final AuditLogRepository auditLogRepository;
+	private final BuildingRepository buildingRepository;
+	private final FileUploadCheckingService fileService;
 	private Gson geeson= new Gson();
 
 	private JSONParser parser = new JSONParser();
 
 	@Autowired
-	public BuildingController(AuditLogRepository auditLogRepository, BuildingService buildingService, ClientOrganisationService clientOrganisationService,
+	public BuildingController(FileUploadCheckingService fileService,BuildingRepository buildingRepository,AuditLogRepository auditLogRepository, BuildingService buildingService, ClientOrganisationService clientOrganisationService,
 			UserService userService) {
 		super();
 		this.buildingService = buildingService;
 		this.clientOrganisationService = clientOrganisationService;
 		this.userService = userService;
 		this.auditLogRepository = auditLogRepository;
+		this.buildingRepository = buildingRepository;
+		this.fileService = fileService;
 	}
- 
+
 
 	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 	// Each object (building) will contain... long id, collection of levels.
@@ -178,6 +190,7 @@ public class BuildingController {
 	@ResponseBody
 	public ResponseEntity<String> addBuilding(@RequestBody String buildingJSON,HttpServletRequest rq) throws UserNotFoundException,InvalidPostalCodeException {
 		System.out.println("startADD");
+		String buildingInputName = "";
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -189,6 +202,7 @@ public class BuildingController {
 			Object obj1 = parser.parse(buildingJSON);
 			JSONObject jsonObject = (JSONObject) obj1;
 			String name = (String)jsonObject.get("name");
+
 			String address = (String)jsonObject.get("address");
 			String postalCode = (String)jsonObject.get("postalCode");
 			System.out.println(postalCode);
@@ -207,8 +221,10 @@ public class BuildingController {
 				al.setUserEmail(usr.get().getEmail());
 				auditLogRepository.save(al);
 			}
-			else
+			else{
 				return new ResponseEntity<String>(geeson.toJson("Server error in adding new building"),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			buildingInputName = name;
 		}
 		catch ( InvalidPostalCodeException e){
 			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -217,12 +233,15 @@ public class BuildingController {
 			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
 			return new ResponseEntity<String>(geeson.toJson("Server error in adding new building"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<String>(HttpStatus.OK);
+		Building build = buildingRepository.getBuildingByName(buildingInputName);
+		String buildingIdToReturn = Long.toString(build.getId());
+		System.out.println("Gotten building of id" + build.getId() + " from name of " + buildingInputName);
+		return new ResponseEntity<String>(buildingIdToReturn,HttpStatus.OK);
 	}	
 
 	//This method takes in a String which is the ID of the building to be deleted
 	// Call $http.post(URL,(String)id);
-	
+
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/deleteBuilding", method = RequestMethod.POST)
 	@ResponseBody
@@ -233,7 +252,7 @@ public class BuildingController {
 		if ( !usr.isPresent() ){
 			return new ResponseEntity<String>(geeson.toJson("User was not found"),HttpStatus.INTERNAL_SERVER_ERROR);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
-		
+
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
 			System.out.println(buildingId + " delete!!");
@@ -260,7 +279,7 @@ public class BuildingController {
 		catch (Exception e){
 			return new ResponseEntity<String>(geeson.toJson("Server error deleting building"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 	}
 	//This method takes in a JSON format which contains an object with 7 attributes
 	//Long/String id, String name, String address, int postalCode, String city, 
@@ -270,7 +289,7 @@ public class BuildingController {
 	@RequestMapping(value = "/updateBuilding", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> updateBuilding(@RequestBody String buildingId,HttpServletRequest rq) throws UserNotFoundException {
-		System.out.println("start1111");
+		String buildingInputName = "";
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -294,9 +313,11 @@ public class BuildingController {
 			String filePath = (String)jsonObject.get("filePath");
 			//Principal principal = rq.getUserPrincipal();
 			//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-			boolean bl = buildingService.editBuildingInfo(client,id, name, address, postalCode, city, numFloor, filePath);
-			if(!bl)
+			boolean bl = buildingService.editBuildingInfo(client,id, name, address, postalCode, city, numFloor);
+			if(!bl){
 				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			buildingInputName = name;
 
 			AuditLog al = new AuditLog();
 			al.setTimeToNow();
@@ -315,6 +336,48 @@ public class BuildingController {
 		catch (Exception e){
 			return new ResponseEntity<String>(geeson.toJson("Server error in updating building"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		Building build = buildingRepository.getBuildingByName(buildingInputName);
+		String buildingIdToReturn = Long.toString(build.getId());
+		return new ResponseEntity<String>(buildingIdToReturn,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/saveBuildingImage")
+	public ResponseEntity<String> saveBuildingImage(@RequestParam("file") MultipartFile file,String buildingId, HttpServletRequest request ) throws IOException, UserNotFoundException, InvalidIconException {
+
+		Principal p = request.getUserPrincipal();
+		User curUser = userService.getUserByEmail(p.getName()).get();
+		//CHECKING FOR FILE VALIDITY
+		if ( buildingId == null || buildingId.equals("")){
+			return new ResponseEntity<String>(geeson.toJson("Server error in saving building information"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		try{
+			fileService.checkFile(file);
+			//GET RELATIVE PATH SINCE EVERYONE COMPUTER DIFFERENT
+			String iconPath = request.getSession().getServletContext().getRealPath("/");
+			System.out.println(iconPath);
+			File toTrans = new File(iconPath,file.getOriginalFilename());
+			toTrans.setExecutable(true);
+			toTrans.setWritable(true);
+			file.transferTo(toTrans);
+			System.err.println("saveBuildingImage in controller saving to " + Long.valueOf(buildingId));
+			boolean OK = buildingService.saveImageToBuilding(Long.valueOf(buildingId), file.getOriginalFilename());
+			if(OK){
+				System.out.println("Building image is created");
+			}else{
+				System.out.println("Building image is not created");
+			}
+			//clientOrganisationRepository.saveAndFlush(client);
+			System.out.println("Saved Logo");
+		}
+		catch ( InvalidFileUploadException e ){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( Exception e){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		System.err.println(String.format("received %s", file.getOriginalFilename()));
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 

@@ -1,5 +1,5 @@
 //VIEW VENDOR, ADD VENDOR
-app.controller('vendorController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('vendorController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService',function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$http.get("//localhost:8443/vendor/viewAllVendors").then(function(response){
@@ -35,18 +35,57 @@ app.controller('vendorController', ['$scope', '$http','$state','$routeParams','s
 		console.log("SAVING THE vendor");
 		send.success(function(){
 
-			alert('Vendor saved successfully, going back to view buildings');
-			$state.go("dashboard.viewAllVendors");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Vendor saved successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllVendors");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+
 		});
 		send.error(function(data){
-			alert('Error,' + data);
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
 		});
 	};
 
 }]);	
 //UPDATE A VENDOR, DELETE A VENDOR
 //VIEW VENDOR, ADD VENDOR
-app.controller('updateVendorController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('updateVendorController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService',function ($scope, $http,$state, $routeParams, shareData,ModalService) {
 	angular.element(document).ready(function () {
 		$scope.vendor1 = shareData.getData();
 		var dataObj = {			
@@ -84,59 +123,210 @@ app.controller('updateVendorController', ['$scope', '$http','$state','$routePara
 
 		console.log("UPDATING THE VENDOR");
 		send.success(function(){
-			alert('Vendor successfully updated');
-			$state.go("dashboard.viewAllVendors");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Vendor saved successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllVendors");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
 		});
 		send.error(function(data){
-			alert('Error, ' + data);
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
 		});
 	};	
 
 	$scope.deleteVendor = function(){
-		if(confirm('CONFIRM TO DELETE VENDOR '+$scope.vendor.name+'?')){
-			$scope.data = {};
-			console.log("Start deleting vendor");
-			//$scope.vendor = shareData.getData();
-			console.log($scope.vendor.id);
-			var tempObj ={vendorId:$scope.vendor.id};
-			console.log("fetch id "+ tempObj);
-			$http.post("//localhost:8443/vendor/deleteVendor", JSON.stringify(tempObj)).then(function(response){
-				console.log("Cancel the VENDOR");
-				alert('Vendor successfully delete, going back to viewing vendors');
-				$state.go("dashboard.viewAllVendors");
-			},function(response){
-				alert('Error deleting vendor, ' + response);
-				//console.log("response is : ")+JSON.stringify(response);
-			}	
-			)
-		}
+
+
+		ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: 'Do you wish to delete vendor '+$scope.vendor.name+'?',
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					$scope.data = {};
+					console.log("Start deleting vendor");
+					//$scope.vendor = shareData.getData();
+					console.log($scope.vendor.id);
+					var tempObj ={vendorId:$scope.vendor.id};
+					console.log("fetch id "+ tempObj);
+					$http.post("//localhost:8443/vendor/deleteVendor", JSON.stringify(tempObj)).then(function(response){
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Vendor deleted successfully',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewAllVendors");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+
+					},function(data){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+					}	
+					)
+				}
+			});
+		});
+
+		$scope.dismissModal = function(result) {
+			close(result, 200); // close, but give 200ms for bootstrap to animate
+
+			console.log("in dissmiss");
+		};
+
+		//END SHOWMODAL
+
 	}
 
 
 }]);	
 
 //DELETE MAINTENANCE
-app.controller('deleteMaintenanceController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
+app.controller('deleteMaintenanceController', ['$scope',  '$timeout','$http','shareData','$state','ModalService', function ($scope,  $timeout,$http ,shareData,$state,ModalService) {
 	angular.element(document).ready(function () {
 
 		$scope.maintenance = shareData.getData();
 	});
 	$scope.deleteMaintenance = function(){
-		if(confirm('CONFIRM TO DELETE MAINTENANCE '+$scope.maintenance.id+'?')){
+		
+		ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: 'Do you wish to delete the maintenance of ID '+$scope.maintenance.id+'?',
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					var tempObj ={id:$scope.maintenance.id};
+					$http.post("//localhost:8443/maintenance/deleteMaintenance", JSON.stringify(tempObj)).then(function(response){
+						ModalService.showModal({
 
-			var tempObj ={id:$scope.maintenance.id};
-			$http.post("//localhost:8443/maintenance/deleteMaintenance", JSON.stringify(tempObj)).then(function(response){
-				console.log("delete the maintenance");
-				alert('MAINTENANCE IS DELETED! GOING BACK TO VIEW MAINTENANCES...');
-				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$state.go("dashboard.viewMaintenance");
-			},function(response){
-				alert("DID NOT delete maintenance");
-				//console.log("response is : ")+JSON.stringify(response);
-			}	
-			)
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: "Maintenance successfully deleted. Going back to view maintenances."
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewMaintenance");
+							});
+						});
 
-		}
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+
+					},function(response){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: "Server error in deleting the maintenance",
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+					}	
+					)
+				}
+			});
+		});
+
+		$scope.dismissModal = function(result) {
+			close(result, 200); // close, but give 200ms for bootstrap to animate
+
+			console.log("in dissmiss");
+		};
+
+		//END SHOWMODAL		
 
 
 	}
@@ -144,7 +334,62 @@ app.controller('deleteMaintenanceController', ['$scope',  '$timeout','$http','sh
 }])
 
 
-app.controller('addMaintenanceController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData){
+app.controller('addMaintenanceController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService){
+	
+	$scope.checkDateErr = function(startDate,endDate) {
+		$scope.errMessage = '';
+		var curDate = new Date();
+
+		if(new Date(startDate) > new Date(endDate)){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "End Date should be greater than start date",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.maintenance.end = '';
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+
+			return false;
+		}
+		if(new Date(startDate) < curDate){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Maintenance start date should not be before today",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.maintenance.start = '';
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+			return false;
+		}
+	};
+	
 	console.log("start selecting venue");
 	var getBuild = $http({
 		method  : 'GET',
@@ -328,17 +573,56 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 
 
 		send.success(function(){
-			alert('MAINTENANCE IS SAVED! GOING BACK TO VIEW ALL MAINTENANCES');
-			$state.go("dashboard.viewMaintenance");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Maintenance successfully saved",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewMaintenance");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+
 		});
 		send.error(function(){
-			alert('MAINTENANCE IS NOT SAVED BECAUSE IT IS NOT AVAILABLE!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Maintenance not added due to unavailability",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
 		});
 	};
 
 }]);
 
-app.controller('updateMaintenanceController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData){
+app.controller('updateMaintenanceController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService){
 	angular.element(document).ready(function () {
 		//VIEW MAINTENANCES
 		$scope.maintenance1 = shareData.getData();
@@ -534,11 +818,50 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 
 		console.log("UPDATING THE MAINT");
 		send.success(function(){
-			alert('MAINT IS SAVED! GOING BACK TO VIEW MAINTNANCES');
-			$state.go("dashboard.viewMaintenance");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Maintenance saved successfully",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewMaintenance");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+
 		});
 		send.error(function(){
-			alert('UPDATING MAINT GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Server error in updating maintenance"
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
 		});
 	};	
 
