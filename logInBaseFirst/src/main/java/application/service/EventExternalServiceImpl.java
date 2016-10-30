@@ -972,6 +972,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				str += duration1 + " " + duration1 * base * checkRate(client, calRef.getTime()) + " ";	
 				System.out.println("NOT SURE WHY WRONG " + str);
 				setS.add(str);
+				System.out.println("before k++" +k);
 				k ++;
 			}
 			else if(!checkRate(client, cal.getTime()).equals(checkRate(client, cal1.getTime()))){

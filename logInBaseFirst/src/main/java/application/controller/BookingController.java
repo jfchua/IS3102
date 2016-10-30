@@ -149,13 +149,17 @@ public class BookingController {
 							booking.getUnit().setBookings(null);
 							booking.getUnit().setLevel(null);
 							booking.getUnit().setMaintenanceSchedule(null);
-							booking.getUnit().setUnitAttributeValues(null);
+							Set<UnitAttributeValue> values=booking.getUnit().getUnitAttributeValues();
+							for(UnitAttributeValue value:values){
+								value.setUnits(null);
+								value.getUnitAttributeType().setUnitAttributeValues(null);
+							}
 							booking.getUnit().setSquare(null);
 						}
 						Gson gson2 = new GsonBuilder()
 							    .setExclusionStrategies(new ExclusionStrategy() {
 							        public boolean shouldSkipClass(Class<?> clazz) {
-							            return (clazz == Area.class)||(clazz == MaintenanceSchedule.class)||(clazz == UnitAttributeValue.class);
+							            return (clazz == Area.class)||(clazz == MaintenanceSchedule.class);
 							        }
 
 							        /**

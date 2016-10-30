@@ -1060,8 +1060,8 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 		bookingIdObj={id:$scope.booking.id};
 	 //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
 	      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;    
-	      
-	      meter=parseInt((widthForFloorPlan-12)/(unit.sizeX));
+	      console.log(widthForFloorPlan);
+	      meter=parseInt((widthForFloorPlan-40)/(unit.sizeX));
 	      $scope.unitLengthGrid=meter*(unit.sizeX);
 		  $scope.unitWidthGrid=meter*(unit.sizeY);	
 		  scale=meter/2;//one grid represent 0.5m
@@ -1603,23 +1603,26 @@ app.controller('updateAreaController', ['$scope', '$element', 'title', 'close', 
 app.controller('viewAreaPlanController', function ($scope, $http,shareData,ModalService) {
 	  var widthForAreaPlan;
 	  var meter;
-	  var unit;
+	  
 	  var scale;
 	  var bookingIdObj;
+	
+	  $scope.areas=[];
+	  $scope.legends=[];
 	angular.element(document).ready(function () {
 		var obj=shareData.getData();
 		$scope.booking=obj.booking;
 		$scope.event=obj.event;
 		console.log($scope.booking);
 		console.log($scope.event);
-		unit=obj.booking.unit;
+		$scope.unit=obj.booking.unit;
 		bookingIdObj={id:$scope.booking.id};
 	 //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
 	      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;    
-	      
-	      meter=parseInt((widthForFloorPlan-12)/(unit.sizeX));
-	      $scope.unitLengthGrid=meter*(unit.sizeX);
-		  $scope.unitWidthGrid=meter*(unit.sizeY);	
+	      console.log(widthForFloorPlan);
+	      meter=parseInt((widthForFloorPlan-40)/($scope.unit.sizeX));
+	      $scope.unitLengthGrid=meter*($scope.unit.sizeX);
+		  $scope.unitWidthGrid=meter*($scope.unit.sizeY);	
 		  scale=meter/2;//one grid represent 0.5m
 		  console.log( $scope.unitLengthGrid+" "+$scope.unitWidthGrid);
 		//get event id from previous page
@@ -1632,13 +1635,48 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 		  			getAreas.success(function(response){
 		  				console.log(response);
 		  				$scope.areas = response;
+
+		  				angular.forEach($scope.areas, function(area){   
+		  					$scope.addToLegend(area);
+		  					
+		  				})
 		  				
 		  			});
 		  			getAreas.error(function(){
+		  				//$scope.areas =[];
+		  			});	
+		  			
+		  			
+		  			$scope.addToLegend= function(area){
+		  			//PUSH UNIQUE AREA TO LEGENDS
+		  		
+		  			//console.log(areas[0]);
+		  			//$scope.legends.push(areas[index]);
+		  			console.log("test legend");
+		  			console.log($scope.legends);
+	  				var isDuplicate=false;
+		  			angular.forEach($scope.legends, function(legend){    
+			  				if((isDuplicate==false)&&(area.description == legend.description)){	
+			  				
+			  					isDuplicate=true;
+			  					console.log(isDuplicate);
+			  				}else{
+			  				
+			  				console.log(isDuplicate);
+			  				}
+			  			
 		  				
-		  			});		
+		  			}); 
 		  			
+		  			if(isDuplicate){	
+	  					
+	  				}else{
+	  					$scope.legends.push(area);
+	  				}
+		  			console.log($scope.legends);
 		  			
+		  			}
+		  			/*
 		  		  //RETRIEVE ICON WHEN LOADED
 					$http.get("//localhost:8443/property/viewIcons").then(function(response){			
 						//console.log(response.data);
@@ -1685,7 +1723,7 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 						alert("DID NOT VIEW ICONS");
 						
 					})
-		  		
+		  		*/
 	});
 
 	$scope.passEvent=function(){
@@ -1722,7 +1760,7 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 		  console.log(html2canvas);
 		
 		
-		  var canvasdiv = document.getElementById("glassboxGrid");
+		  var canvasdiv = document.getElementById("screenshot");
 		    html2canvas(canvasdiv,{
 		    	 allowTaint: true,
 	             logging: true,
@@ -1765,7 +1803,7 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 	 $scope.gridsterOpts = {
 			 
 			 	
-			    columns: unit.sizeX*(meter/scale), // the width of the grid, in columns
+			    columns: $scope.unit.sizeX*(meter/scale), // the width of the grid, in columns
 			    pushing: false, // whether to push other items out of the way on move or resize
 			    floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
 			    swapping: false, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
@@ -1778,9 +1816,9 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 			    isMobile: false, // stacks the grid items if true
 			    mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items
 			    mobileModeEnabled: false, // whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
-			    minColumns: unit.sizeX*(meter/scale), // the minimum columns the grid must have
-			    minRows: unit.sizeY*(meter/scale), // the minimum height of the grid, in rows
-			    maxRows: unit.sizeY*(meter/scale),
+			    minColumns: $scope.unit.sizeX*(meter/scale), // the minimum columns the grid must have
+			    minRows: $scope.unit.sizeY*(meter/scale), // the minimum height of the grid, in rows
+			    maxRows: $scope.unit.sizeY*(meter/scale),
 			    defaultSizeX: 2, // the default width of a gridster item, if not specifed
 			    defaultSizeY: 1, // the default height of a gridster item, if not specified
 			    minSizeX: 1, // minimum column width of an item
