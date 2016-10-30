@@ -430,19 +430,36 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
 		var send = $http({
 			method  : 'POST',
+			url     : 'https://localhost:8443/event/checkComponents',
+			data    : dataObj //forms user object
+		});
+		//$scope.avail = "";	
+		send.success(function(response){
+			$scope.components = response;
+			$scope.order_item = "id";
+			$scope.order_reverse = false;
+			//alert("get component success");
+		});
+		send.error(function(response){
+			alert("get component failure");
+		});
+		
+		
+		var send1 = $http({
+			method  : 'POST',
 			url     : 'https://localhost:8443/event/checkRent',
 			data    : dataObj //forms user object
 		});
-		//$scope.avail = "";
-		send.success(function(response){
+		send1.success(function(response){
 			$scope.totalRent = response;
+			$scope.components = response.data;
 			$scope.totalRentAfter = response*1.07;
 			console.log($scope.totalRent);
 		});
-		send.error(function(response){
+		send1.error(function(response){
 			$scope.totalRent = response;
 			console.log($scope.totalRent);
-		});
+		});		
 	}
 	$scope.eventTypes=[{'name':'Concert','eventType':'CONCERT'},
 	                  {'name':'Conference','eventType':'CONFERENCE'},
