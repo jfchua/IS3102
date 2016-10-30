@@ -155,6 +155,7 @@ $scope.twoOptions=[
 				level:level,
 				unit:unit,
 				}
+	  console.log(unit);
 		shareData.addData(obj);
 	  $state.go("dashboard.viewUnitPlanDefault");
   }
@@ -1084,35 +1085,37 @@ app.controller('updateUnitController', ['$scope', '$element', 'title', 'close', 
 
 
 //DEFAULT AREA PLAN OF A UNIT DESIGNED BY PROPERTY MANAGER
-app.controller('defaultUnitPlanController', function ($scope, $http,shareData,ModalService) {
+app.controller('defaultUnitPlanController', function ($scope, $http,shareData,ModalService,$state) {
 	  var widthForAreaPlan;
 	  var meter;
 	  var unit;
 	  var scale;
-	  var bookingIdObj;
-	angular.element(document).ready(function () {
+	  var unitIdObj;
+	  angular.element(document).ready(function () {
 		var obj=shareData.getData();
-		$scope.booking=obj.booking;
-		$scope.event=obj.event;
-		console.log($scope.booking);
-		console.log($scope.event);
-		unit=obj.booking.unit;
-		bookingIdObj={id:$scope.booking.id};
+		console.log(obj);
+		$scope.building=obj.building;
+		$scope.level=obj.level;
+		$scope.unit=obj.unit;
+		console.log($scope.building);
+		console.log($scope.level);
+		
+		unitIdObj={id:$scope.unit.id};
 	 //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
 	      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;    
 	      console.log(widthForFloorPlan);
-	      meter=parseInt((widthForFloorPlan-40)/(unit.sizeX));
-	      $scope.unitLengthGrid=meter*(unit.sizeX);
-		  $scope.unitWidthGrid=meter*(unit.sizeY);	
+	      meter=parseInt((widthForFloorPlan-40)/($scope.unit.sizeX));
+	      $scope.unitLengthGrid=meter*($scope.unit.sizeX);
+		  $scope.unitWidthGrid=meter*($scope.unit.sizeY);	
 		  scale=meter/2;//one grid represent 0.5m
 		  console.log( $scope.unitLengthGrid+" "+$scope.unitWidthGrid);
 		//get event id from previous page
 		  			var getAreas= $http({
 		  				method  : 'POST',
-		  				url     : 'https://localhost:8443/area/viewAreas/',
-		  				data    : bookingIdObj,
+		  				url     : 'https://localhost:8443/area/viewAreasDefault/',
+		  				data    : unitIdObj,
 		  		});
-		  			console.log("REACHED HERE FOR VIEWING AREAS " + JSON.stringify(bookingIdObj));
+		  			console.log("REACHED HERE FOR VIEWING AREAS " + JSON.stringify(unitIdObj));
 		  			getAreas.success(function(response){
 		  				console.log(response);
 		  				$scope.areas = response;
@@ -1220,18 +1223,18 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 	 $scope.defaultIcon='./svg/entry.svg';
 	  $scope.addDefaultIcon = function (type) {   //note: passed in type is not used
 		  var dataObj = {
-				  id: $scope.booking.id,
+				  id: $scope.unit.id,
 				  Areas:{
 					  Area:$scope.areas
 				  }
 		  };						
 		
-			  var obj={bookingId:$scope.booking.id,type: $scope.defaultIcon};
-			  $http.post('/area/addDefaultIcon', JSON.stringify(obj)).then(function(response){
+			  var obj={unitId:$scope.unit.id,type: $scope.defaultIcon};
+			  $http.post('/area/addDefaultIconDefault', JSON.stringify(obj)).then(function(response){
 				  $scope.areas=[];
 				  console.log("empty");
 				  console.log($scope.areas);
-				  $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){
+				  $http.post('//localhost:8443/area/viewAreasDefault', JSON.stringify(unitIdObj)).then(function(response){
 					  console.log(angular.fromJson(response.data));
 					  $scope.areas=angular.fromJson(response.data);
 
@@ -1263,18 +1266,18 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 	
 		  
 		  var dataObj = {
-				  id: $scope.booking.id,
+				  id: $scope.unit.id,
 				  Areas:{
 					  Area:$scope.areas
 				  }
 		  };      
 		 
-			  var saveIconObj={bookingId:$scope.booking.id,iconId:icon.id};
+			  var saveIconObj={unitId:$scope.unit.id,iconId:icon.id};
 			  $http.post('/area/addCustIcon', JSON.stringify(saveIconObj)).then(function(response){
 				  $scope.areas=[];
 				  console.log("empty");
 				  console.log($scope.areas);
-				  $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){
+				  $http.post('//localhost:8443/area/viewAreasDefault', JSON.stringify(unitIdObj)).then(function(response){
 					  console.log(angular.fromJson(response.data));
 					  $scope.areas=angular.fromJson(response.data);
 
@@ -1290,7 +1293,36 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 
 	  }//END ADD CUSTOMISED ICON
 	  
+	  //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
+	  $scope.passBuilding = function(){
+		  shareData.addData($scope.building);
+		  $state.go("dashboard.viewLevels");
+	  }
 	  
+	  
+	  //FOR GO BACK TO VIEW FLOOR PLAN
+	  $scope.viewFloorPlan= function(){
+	    //shareData.addData(level);
+		  var obj={building:$scope.building,
+					level:$scope.level
+					}
+			shareData.addData(obj);
+		  $state.go("dashboard.viewFloorPlan");
+	  }
+	  
+	 
+	$scope.viewUnitPlan=function(){
+		
+		var obj={
+				
+				building:$scope.building,
+				level:$scope.level,
+				unit:$scope.unit
+				};
+		shareData.addData(obj);
+		 $state.go("dashboard.viewUnitPlanDefault");
+	}
+
 	$scope.passEvent=function(){
 		shareData.addData($scope.event);
 	}
@@ -1313,18 +1345,18 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 
 	  $scope.addArea = function () {  
 		  var dataObj = {
-				  id: $scope.booking.id,
+				  id: $scope.unit.id,
 				  Areas:{
 					  Area:$scope.areas
 				  }
 		  };						
 		 	
-			  var dataObj={bookingId:$scope.booking.id};
-			  $http.post('/area/addArea', JSON.stringify(dataObj)).then(function(response){
+			  var dataObj={unitId:$scope.unit.id};
+			  $http.post('/area/addAreaDefault', JSON.stringify(dataObj)).then(function(response){
 				  $scope.areas=[];
 				  console.log("empty");
 				  console.log($scope.areas);
-				  $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){			
+				  $http.post('//localhost:8443/area/viewAreasDefault', JSON.stringify(unitIdObj)).then(function(response){			
 					  console.log(angular.fromJson(response.data));
 					  $scope.areas=angular.fromJson(response.data);
 	
@@ -1345,18 +1377,18 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 			// console.log("scope test3");
 		//	 console.log(   angular.element(document.getElementById('1')).scope());
 			  var dataObj = {
-				        id: $scope.booking.id,
+				        id: $scope.unit.id,
 				        Areas:{
 				          Areas:$scope.areas
 				        }
 				    };
 			
-			  			var dataObj={area:area,bookingId:$scope.booking.id};
-			  			$http.post('/area/updateArea', JSON.stringify(dataObj)).then(function(response){
+			  			var dataObj={area:area,unitId:$scope.unit.id};
+			  			$http.post('/area/updateAreaDefault', JSON.stringify(dataObj)).then(function(response){
 			  				$scope.areas=[];
 			  				console.log("empty");
 			  				//console.log($scope.units);
-			  				 $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){
+			  				 $http.post('//localhost:8443/area/viewAreasDefault', JSON.stringify(unitIdObj)).then(function(response){
 			  				        console.log(response.data);
 			  				
 			  				        console.log(angular.fromJson(response.data));
@@ -1380,7 +1412,7 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 		 $scope.remove = function(area) { 
 				
 			  var dataObj = {
-				        id: $scope.booking.id,
+				        id: $scope.unit.id,
 				        Areas:{
 				          Areas:$scope.area
 				        }
@@ -1388,10 +1420,10 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 			
 			    	  if (confirm('CONFIRM TO DELETE THIS Area'+area.areaName+'?')) {
 			  			
-			  			var dataObj={id:area.id,bookingId:$scope.booking.id};
-			  			$http.post('/area/deleteArea', JSON.stringify(dataObj)).then(function(response){
+			  			var dataObj={id:area.id,unitId:$scope.unit.id};
+			  			$http.post('/area/deleteAreaDefault', JSON.stringify(dataObj)).then(function(response){
 			  				$scope.areas=[];
-			  				 $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){
+			  				 $http.post('//localhost:8443/area/viewAreasDefault', JSON.stringify(unitIdObj)).then(function(response){
 			  				        console.log("pure response is "+response.data);
 			  				
 			  				        console.log("test anglar.fromJon"+angular.fromJson(response.data));
@@ -1419,7 +1451,7 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 		console.log(areasString);
 
 		var dataObj = {
-				id: $scope.booking.id,
+				id: $scope.unit.id,
 				Areas:{
 					Area:saveAreas
 				}
@@ -1427,7 +1459,7 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 
 		console.log(dataObj);
 
-		$http.post('/area/saveAreas', JSON.stringify(dataObj)).then(function(response){
+		$http.post('/area/saveAreasDefault', JSON.stringify(dataObj)).then(function(response){
 			console.log("pure response is "+JSON.stringify(response.data));
 	
 
@@ -1468,7 +1500,7 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 		
 		    });
 		}
-	 
+	 /*
 	$scope.resize = function(area,evt,ui) {
 
 		console.log("resize");
@@ -1489,7 +1521,7 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 	}
 
 
-
+*/
 	/*
 	    var areaIds="";
 	    $scope.addToAreaIds=function(areaId){
@@ -1511,7 +1543,7 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 	 $scope.gridsterOpts = {
 			 
 			 	
-			    columns: unit.sizeX*(meter/scale), // the width of the grid, in columns
+			    columns: $scope.unit.sizeX*(meter/scale), // the width of the grid, in columns
 			    pushing: false, // whether to push other items out of the way on move or resize
 			    floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
 			    swapping: false, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
@@ -1524,9 +1556,9 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 			    isMobile: false, // stacks the grid items if true
 			    mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items
 			    mobileModeEnabled: false, // whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
-			    minColumns: unit.sizeX*(meter/scale), // the minimum columns the grid must have
-			    minRows: unit.sizeY*(meter/scale), // the minimum height of the grid, in rows
-			    maxRows: unit.sizeY*(meter/scale),
+			    minColumns: $scope.unit.sizeX*(meter/scale), // the minimum columns the grid must have
+			    minRows: $scope.unit.sizeY*(meter/scale), // the minimum height of the grid, in rows
+			    maxRows: $scope.unit.sizeY*(meter/scale),
 			    defaultSizeX: 2, // the default width of a gridster item, if not specifed
 			    defaultSizeY: 1, // the default height of a gridster item, if not specified
 			    minSizeX: 1, // minimum column width of an item
@@ -1642,13 +1674,12 @@ app.controller('updateAreaController', ['$scope', '$element', 'title', 'close', 
 //Unit Plan of Event used by event organiser
 app.controller('viewDefaultUnitPlanController', function ($scope, $http,shareData,ModalService,$state) {
 	  var widthForAreaPlan;
-	  var meter;
-	  
+	  var meter;	  
 	  var scale;
 	  var levelIdObj;
-	
 	  $scope.areas=[];
 	  $scope.legends=[];
+	  $scope.unit;
 	angular.element(document).ready(function () {
 		var obj=shareData.getData();
 		$scope.building=obj.building;
@@ -1670,7 +1701,7 @@ app.controller('viewDefaultUnitPlanController', function ($scope, $http,shareDat
 		  			var getAreas= $http({
 		  				method  : 'POST',
 		  				url     : 'https://localhost:8443/area/viewAreasDefault/',
-		  				data    : levelIdObj,
+		  				data    : unitIdObj,
 		  		});
 		  			console.log("REACHED HERE FOR VIEWING AREAS " + JSON.stringify(unitIdObj));
 		  			getAreas.success(function(response){
@@ -1743,16 +1774,17 @@ app.controller('viewDefaultUnitPlanController', function ($scope, $http,shareDat
 		  $state.go("dashboard.viewFloorPlan");
 	  }
 	  
-	  
-	$scope.passUnit=function(unit){
-		console.log(unit);
+	 
+	$scope.editUnitPlan=function(){
+		
 		var obj={
 				
 				building:$scope.building,
 				level:$scope.level,
-				unit:unit
+				unit:$scope.unit
 				};
 		shareData.addData(obj);
+		 $state.go("dashboard.createUnitPlanDefault");
 	}
 
 

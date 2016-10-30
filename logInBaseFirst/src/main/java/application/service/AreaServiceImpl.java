@@ -455,6 +455,7 @@ public class AreaServiceImpl implements AreaService {
 	public boolean addAreaOnUnit(long unitId) {
 		//GET LEVEL
 		Unit unit=unitRepository.getOne(unitId);
+		System.out.println("AreaServiceImpl: addAreaDefault 458");
 		//GET DIMENSION AND POSITION THAT WILL NOT OVERLAP WIHT EXISTING UNITS ON THE LEVEL
 		int unitLength=unit.getSizex()*scale;
 		int unitWidth=unit.getSizey()*scale;
@@ -465,14 +466,16 @@ public class AreaServiceImpl implements AreaService {
 		Area areaTemp=new Area();
 		boolean keepChecking=true;
 		do{
+			System.out.println("AreaServiceImpl: addAreaDefault 469");
 			areaTemp.setSizeX(sizex);
 			areaTemp.setSizeY(sizey);
 			areaTemp.setCol(col);
 			areaTemp.setRow(row);
-			if(passOverlapCheckWithExistingAreas(unitId,areaTemp)){
+			System.out.println("AreaServiceImpl: addAreaDefault474");
+			if(passOverlapCheckWithExistingAreasUnit(unitId,areaTemp)){
 				keepChecking=false;
 			}else{
-				
+				System.out.println("AreaServiceImpl: addAreaDefault477");
 				int temp1=1 + (int)(Math.random() * sizex);
 				int temp2=1 +(int)(Math.random() * sizey);
 				sizex=Math.min(temp1,temp2);
@@ -482,21 +485,26 @@ public class AreaServiceImpl implements AreaService {
 			}
 		}while(keepChecking);
 		
-		
+		System.out.println("AreaServiceImpl: addAreaDefault487");
 	
 		
 		Square square=createSquare(100,100,100,100,"coral","./svg/rect.svg");
 		areaTemp.setAreaName("#Name");
 		areaTemp.setDescription("# There is no description yet");
+		System.out.println("AreaServiceImpl: addAreaDefault493");
 		areaRepository.saveAndFlush(areaTemp);
 		areaTemp.setSquare(square);
+		System.out.println("AreaServiceImpl: addAreaDefault496");
 		areaRepository.saveAndFlush(areaTemp);
 		Set<Area> areas=unit.getAreas();
 		areas.add(areaTemp);
 		unit.setAreas(areas);
+		System.out.println("AreaServiceImpl: addAreaDefault 501");
 		unitRepository.saveAndFlush(unit);
-		areaTemp.setUnit(unit);
-		areaRepository.saveAndFlush(areaTemp);
+		//areaTemp.setUnit(unit);
+		System.out.println("AreaServiceImpl: addAreaDefault504");
+		//areaRepository.saveAndFlush(areaTemp);
+		//System.out.println("AreaServiceImpl: addAreaDefault506");
 		return true;
 	}
 	
@@ -505,6 +513,7 @@ public class AreaServiceImpl implements AreaService {
 		//GET LEVEL
 		Unit unit=unitRepository.getOne(unitId);
 		//GET DIMENSION AND POSITION THAT WILL NOT OVERLAP WIHT EXISTING UNITS ON THE LEVEL
+		System.out.println("AreaServiceImpl: addAreaDefault515");
 		int unitLength=unit.getSizex()*scale;
 		int unitWidth=unit.getSizey()*scale;
 		int sizex=Math.min(unitLength/20, unitWidth/20);
@@ -513,12 +522,14 @@ public class AreaServiceImpl implements AreaService {
 		int row=0;
 		Area areaTemp=new Area();
 		boolean keepChecking=true;
+		System.out.println("AreaServiceImpl: addAreaDefault524");
 		do{
 			areaTemp.setSizeX(sizex);
 			areaTemp.setSizeY(sizey);
 			areaTemp.setCol(col);
 			areaTemp.setRow(row);
-			if(passOverlapCheckWithExistingAreas(unitId,areaTemp)){
+			System.out.println("AreaServiceImpl: addAreaDefault530");
+			if(passOverlapCheckWithExistingAreasUnit(unitId,areaTemp)){
 				keepChecking=false;
 			}else{
 				col=0 + (int)(Math.random() * (unitLength-sizex));
@@ -526,17 +537,21 @@ public class AreaServiceImpl implements AreaService {
 			}
 		}while(keepChecking);
 		Square square=createSquare(100,100,100,100,"transparent",type);
+		System.out.println("AreaServiceImpl: addAreaDefault539");
 		areaTemp.setAreaName("");	
 		areaTemp.setDescription("# There is no description yet");
 		areaRepository.saveAndFlush(areaTemp);
+		System.out.println("AreaServiceImpl: addAreaDefault543");
 		areaTemp.setSquare(square);
 		areaRepository.saveAndFlush(areaTemp);
+		System.out.println("AreaServiceImpl: addAreaDefault546");
 		Set<Area> areas=unit.getAreas();
 		areas.add(areaTemp);
 		unit.setAreas(areas);
 		unitRepository.saveAndFlush(unit);
-		areaTemp.setUnit(unit);
-		areaRepository.saveAndFlush(areaTemp);	
+		System.out.println("AreaServiceImpl: addAreaDefault551");
+		//areaTemp.setUnit(unit);
+		//areaRepository.saveAndFlush(areaTemp);	
 		return true;
 	}
 	
@@ -559,7 +574,7 @@ public class AreaServiceImpl implements AreaService {
 			areaTemp.setSizeY(sizey);
 			areaTemp.setCol(col);
 			areaTemp.setRow(row);
-			if(passOverlapCheckWithExistingAreas(unitId,areaTemp)){
+			if(passOverlapCheckWithExistingAreasUnit(unitId,areaTemp)){
 				keepChecking=false;
 			}else{
 				col=0 + (int)(Math.random() * (unitLength-sizex));
@@ -577,8 +592,8 @@ public class AreaServiceImpl implements AreaService {
 		areas.add(areaTemp);
 		unit.setAreas(areas);
 		unitRepository.saveAndFlush(unit);
-		areaTemp.setUnit(unit);
-		areaRepository.saveAndFlush(areaTemp);	
+		//areaTemp.setUnit(unit);
+		//areaRepository.saveAndFlush(areaTemp);	
 		return true;
 	}
 	
@@ -621,7 +636,18 @@ public class AreaServiceImpl implements AreaService {
 		
 	}
 	
-	
+	@Override
+	public  boolean passOverlapCheckWithExistingAreasUnit(long unitId, Area area) {
+		
+		Unit unit=unitRepository.getOne(unitId);
+		Set<Area> areas=unit.getAreas();
+		for (Area oneExistArea:areas){
+			if(!passOverlapCheckTwoAreas(area,oneExistArea)){
+				return false;
+			}
+		} //END FOR LOOP FOR ALL EXISTING UNITS ON LEVEL
+		return true;
+	}
 
 	
 }

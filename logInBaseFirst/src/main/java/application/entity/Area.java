@@ -42,8 +42,8 @@ public class Area {
 	    @ManyToOne//(cascade=CascadeType.ALL)
 	    private BookingAppl booking;
 	    
-	    @ManyToOne//(cascade=CascadeType.ALL)
-	    private Unit unit;
+	    //@ManyToOne//(cascade=CascadeType.ALL)
+	  //  private Unit unit;
 
 		public Long getId() {
 			return id;
@@ -130,14 +130,14 @@ public class Area {
 		}
 
 
-		public Unit getUnit() {
-			return unit;
-		}
+		//public Unit getUnit() {
+		//	return unit;
+		//}
 
 
-		public void setUnit(Unit unit) {
-			this.unit = unit;
-		}
+		//public void setUnit(Unit unit) {
+		//	this.unit = unit;
+		//}
 
 
 		@Override

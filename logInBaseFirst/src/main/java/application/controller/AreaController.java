@@ -375,7 +375,7 @@ public class AreaController {
 	
 	
 	//DEFAULT UNIT PLAN
-		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY','ROLE_EXTEVE')")
 		//for view only, call view areas; for load and edit, call viewAreas first and then call saves areas;
 		@RequestMapping(value = "/viewAreasDefault", method = RequestMethod.POST)
 		@ResponseBody
@@ -395,7 +395,7 @@ public class AreaController {
 				//long eventId = Long.parseLong(event);
 				Set<Area> areas = areaService.getAreasByUnitId(unitId);
 				for(Area area: areas){
-					area.setUnit(null);
+					area.setBooking(null);//might need to delete
 				}
 
 				Gson gson2 = new GsonBuilder()
@@ -438,17 +438,17 @@ public class AreaController {
 
 
 			try{
-
+				
 
 				Object obj = parser.parse(idObj);
 				JSONObject jsonObject = (JSONObject) obj;
-				System.out.println((Long)jsonObject.get("uniId"));
-				long uniId = (Long)jsonObject.get("uniId");
+				System.out.println((Long)jsonObject.get("unitId"));
+				long unitId = (Long)jsonObject.get("unitId");
 
 
 
 
-				if(areaService.addAreaOnBooking(uniId) ){
+				if(areaService.addAreaOnUnit(unitId) ){
 					System.out.println("CREATED");
 					return new ResponseEntity<Void>(HttpStatus.OK);
 				}else{
@@ -473,13 +473,13 @@ public class AreaController {
 
 				Object obj = parser.parse(idObj);
 				JSONObject jsonObject = (JSONObject) obj;
-				System.out.println((Long)jsonObject.get("uniId"));
-				long uniId = (Long)jsonObject.get("uniId");
+				System.out.println((Long)jsonObject.get("unitId"));
+				long unitId = (Long)jsonObject.get("unitId");
 				String type = (String)jsonObject.get("type");
 
 
 
-				if(areaService.addDefaultIconOnBooking(uniId,type) ){
+				if(areaService.addDefaultIconOnUnit(unitId,type) ){
 					System.out.println("CREATED");
 					return new ResponseEntity<Void>(HttpStatus.OK);
 				}else{
@@ -504,13 +504,13 @@ public class AreaController {
 
 				Object obj = parser.parse(idObj);
 				JSONObject jsonObject = (JSONObject) obj;
-				System.out.println((Long)jsonObject.get("uniId"));
-				long uniId = (Long)jsonObject.get("uniId");
+				System.out.println((Long)jsonObject.get("unitId"));
+				long unitId = (Long)jsonObject.get("unitId");
 				long iconId = (Long)jsonObject.get("iconId");
 
 
 
-				if(areaService.addCustIconOnBooking(uniId,iconId) ){
+				if(areaService.addCustIconOnUnit(unitId,iconId) ){
 					System.out.println("CREATED");
 					return new ResponseEntity<Void>(HttpStatus.OK);
 				}else{
@@ -534,8 +534,8 @@ public class AreaController {
 
 				Object obj = parser.parse(idObj);
 				JSONObject jsonObject = (JSONObject) obj;
-				System.out.println((Long)jsonObject.get("uniId"));
-				long uniId = (Long)jsonObject.get("uniId");
+				System.out.println((Long)jsonObject.get("unitId"));
+				long unitId = (Long)jsonObject.get("unitId");
 				JSONObject areaJson=(JSONObject)jsonObject.get("area");	
 				long areaId = (Long)areaJson.get("id");				
 				JSONObject squareJson=(JSONObject)areaJson.get("square");		
@@ -580,10 +580,10 @@ public class AreaController {
 				JSONObject jsonObject = (JSONObject) obj;
 				System.out.println((Long)jsonObject.get("id"));
 				long areaId = (Long)jsonObject.get("id");
-				System.out.println((Long)jsonObject.get("uniId"));
-				long uniId = (Long)jsonObject.get("uniId");
+				System.out.println((Long)jsonObject.get("unitId"));
+				long unitId = (Long)jsonObject.get("unitId");
 
-				if(areaService.deleteAreaDefault(areaId,uniId)){
+				if(areaService.deleteAreaDefault(areaId,unitId)){
 					System.out.println("DELETED");
 					return new ResponseEntity<Void>(HttpStatus.OK);
 				}else{

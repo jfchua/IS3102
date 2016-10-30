@@ -64,5 +64,7 @@ public interface AreaService {
 	
 	boolean deleteAreaDefault(long id, long unitId);
 	
+	boolean passOverlapCheckWithExistingAreasUnit(long unitId, Area area) ;
+	
 
 }
