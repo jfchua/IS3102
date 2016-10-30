@@ -390,6 +390,22 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
+                                			   .state('dashboard.createUnitPlanDefault',{
+                                				  url:'/createUnitPlanDefault',
+                                				  templateUrl: '/views/createUnitPlanDefault.html',
+                                				  controller: 'defaultUnitPlanController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })	
+                                			  .state('dashboard.viewUnitPlanDefault',{
+                                				  url:'/viewUnitPlanDefault',
+                                				  templateUrl: '/views/viewUnitPlanDefault.html',
+                                				  controller: 'viewDefaultUnitPlanController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
                                 			  .state('dashboard.viewMaintenance',{
                                 				  url:'/viewMaintenance',	
                                 				  templateUrl: '/views/viewMaintenance.html',

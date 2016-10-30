@@ -29,7 +29,7 @@
     <div class="panel-body" id="panelheadGrid">
 <div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{levelWidthGrid}} + 'px', width: {{levelLengthGrid}} + 'px'}">
     <ul>
-        <li gridster-item="unit"  id="{{unit.square.id}}"  ng-repeat="unit in units"   ng-style="{'background-color':'{{unit.square.color}}'}" ><p> {{unit.unitNumber}}<a  ng-click="showModal(unit,$parent)" tooltip-placement="top" tooltip="Edit unit {{unit.unitNumber}}"><i class="glyphicon glyphicon-pencil"></i></a><a  ng-click="$parent.remove(unit)" tooltip-placement="top" tooltip="Delete unit {{unit.unitNumber}}"><i class="glyphicon glyphicon-trash"></i></a>
+        <li gridster-item="unit"  id="{{unit.square.id}}" context-menu="iconMenu" ng-repeat="unit in units"   ng-style="{'background-color':'{{unit.square.color}}'}" ><p> {{unit.unitNumber}}<a  ng-click="showModal(unit,$parent)" tooltip-placement="top" tooltip="Edit unit {{unit.unitNumber}}"><i class="glyphicon glyphicon-pencil"></i></a><a  ng-click="$parent.remove(unit)" tooltip-placement="top" tooltip="Delete unit {{unit.unitNumber}}"><i class="glyphicon glyphicon-trash"></i></a>
                           <img  class="svgtest" ng-src="{{unit.square.type||unit.square.icon.iconPath}}"  alt="icon"></p></li>
     </ul>
 </div>

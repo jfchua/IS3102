@@ -17,14 +17,16 @@ public class AreaServiceImpl implements AreaService {
 	private final BookingApplRepository bookingRepository;
 	private final SquareRepository squareRepository;
 	private final IconRepository iconRepository;
+	private final UnitRepository unitRepository;
 	private static final Logger LOGGER = LoggerFactory.getLogger(AreaServiceImpl.class);
 	private static int scale=2;
 	@Autowired
-	public AreaServiceImpl(BookingApplRepository bookingRepository,AreaRepository areaRepository, SquareRepository squareRepository,IconRepository iconRepository) {
+	public AreaServiceImpl(BookingApplRepository bookingRepository,AreaRepository areaRepository, SquareRepository squareRepository,IconRepository iconRepository,UnitRepository unitRepository) {
 		this.bookingRepository =bookingRepository;
 		this.areaRepository = areaRepository;
 		this.squareRepository=squareRepository;
 		this.iconRepository=iconRepository;
+		this.unitRepository=unitRepository;
 	}
 	
 	@Override
@@ -438,5 +440,188 @@ public class AreaServiceImpl implements AreaService {
 		squareRepository.saveAndFlush(square);
 		return square;
 	}
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	@Override
+	public boolean addAreaOnUnit(long unitId) {
+		//GET LEVEL
+		Unit unit=unitRepository.getOne(unitId);
+		//GET DIMENSION AND POSITION THAT WILL NOT OVERLAP WIHT EXISTING UNITS ON THE LEVEL
+		int unitLength=unit.getSizex()*scale;
+		int unitWidth=unit.getSizey()*scale;
+		int sizex=Math.min(unitLength/10, unitWidth/10);
+		int sizey=Math.min(unitLength/10, unitWidth/10);
+		int col=0;
+		int row=0;
+		Area areaTemp=new Area();
+		boolean keepChecking=true;
+		do{
+			areaTemp.setSizeX(sizex);
+			areaTemp.setSizeY(sizey);
+			areaTemp.setCol(col);
+			areaTemp.setRow(row);
+			if(passOverlapCheckWithExistingAreas(unitId,areaTemp)){
+				keepChecking=false;
+			}else{
+				
+				int temp1=1 + (int)(Math.random() * sizex);
+				int temp2=1 +(int)(Math.random() * sizey);
+				sizex=Math.min(temp1,temp2);
+				sizey=Math.min(temp1,temp2);
+				col=0 + (int)(Math.random() * (unitLength-sizex));
+				row=0 + (int)(Math.random() * (unitWidth-sizey));
+			}
+		}while(keepChecking);
+		
+		
+	
+		
+		Square square=createSquare(100,100,100,100,"coral","./svg/rect.svg");
+		areaTemp.setAreaName("#Name");
+		areaTemp.setDescription("# There is no description yet");
+		areaRepository.saveAndFlush(areaTemp);
+		areaTemp.setSquare(square);
+		areaRepository.saveAndFlush(areaTemp);
+		Set<Area> areas=unit.getAreas();
+		areas.add(areaTemp);
+		unit.setAreas(areas);
+		unitRepository.saveAndFlush(unit);
+		areaTemp.setUnit(unit);
+		areaRepository.saveAndFlush(areaTemp);
+		return true;
+	}
+	
+	@Override
+	public boolean addDefaultIconOnUnit(long unitId,String type) {
+		//GET LEVEL
+		Unit unit=unitRepository.getOne(unitId);
+		//GET DIMENSION AND POSITION THAT WILL NOT OVERLAP WIHT EXISTING UNITS ON THE LEVEL
+		int unitLength=unit.getSizex()*scale;
+		int unitWidth=unit.getSizey()*scale;
+		int sizex=Math.min(unitLength/20, unitWidth/20);
+		int sizey=Math.min(unitLength/20+1, unitWidth/20+1);
+		int col=0;
+		int row=0;
+		Area areaTemp=new Area();
+		boolean keepChecking=true;
+		do{
+			areaTemp.setSizeX(sizex);
+			areaTemp.setSizeY(sizey);
+			areaTemp.setCol(col);
+			areaTemp.setRow(row);
+			if(passOverlapCheckWithExistingAreas(unitId,areaTemp)){
+				keepChecking=false;
+			}else{
+				col=0 + (int)(Math.random() * (unitLength-sizex));
+				row=0 + (int)(Math.random() * (unitWidth-sizey));
+			}
+		}while(keepChecking);
+		Square square=createSquare(100,100,100,100,"transparent",type);
+		areaTemp.setAreaName("");	
+		areaTemp.setDescription("# There is no description yet");
+		areaRepository.saveAndFlush(areaTemp);
+		areaTemp.setSquare(square);
+		areaRepository.saveAndFlush(areaTemp);
+		Set<Area> areas=unit.getAreas();
+		areas.add(areaTemp);
+		unit.setAreas(areas);
+		unitRepository.saveAndFlush(unit);
+		areaTemp.setUnit(unit);
+		areaRepository.saveAndFlush(areaTemp);	
+		return true;
+	}
+	
+	
+	@Override
+	public boolean addCustIconOnUnit(long unitId,long iconId) {
+		//GET LEVEL
+		Unit unit=unitRepository.getOne(unitId);
+		//GET DIMENSION AND POSITION THAT WILL NOT OVERLAP WIHT EXISTING UNITS ON THE LEVEL
+		int unitLength=unit.getSizex()*scale;
+		int unitWidth=unit.getSizey()*scale;
+		int sizex=Math.min(unitLength/15, unitWidth/15);
+		int sizey=Math.min(unitLength/15+1, unitWidth/15+1);
+		int col=0;
+		int row=0;
+		Area areaTemp=new Area();
+		boolean keepChecking=true;
+		do{
+			areaTemp.setSizeX(sizex);
+			areaTemp.setSizeY(sizey);
+			areaTemp.setCol(col);
+			areaTemp.setRow(row);
+			if(passOverlapCheckWithExistingAreas(unitId,areaTemp)){
+				keepChecking=false;
+			}else{
+				col=0 + (int)(Math.random() * (unitLength-sizex));
+				row=0 + (int)(Math.random() * (unitWidth-sizey));
+			}
+		}while(keepChecking);
+		Square square=createSquareWithIcon(iconId,100,100,100,100,"transparent","");
+		areaTemp.setAreaName("");
+		//hahahaha
+		areaTemp.setDescription("# There is no description yet");
+		areaRepository.saveAndFlush(areaTemp);
+		areaTemp.setSquare(square);
+		areaRepository.saveAndFlush(areaTemp);
+		Set<Area> areas=unit.getAreas();
+		areas.add(areaTemp);
+		unit.setAreas(areas);
+		unitRepository.saveAndFlush(unit);
+		areaTemp.setUnit(unit);
+		areaRepository.saveAndFlush(areaTemp);	
+		return true;
+	}
+	
+	
+	@Override
+	public Set<Area> getAreasByUnitId(long unitId) {
+
+		Unit unit=unitRepository.getOne(unitId);  
+		Set<Area> areas = unit.getAreas();
+		return  areas;
+	}
+	
+	
+	@Override
+	public boolean deleteAreaDefault(long id, long unitId) {
+		try{
+			Area area=areaRepository.findOne(id);
+			Unit unit = unitRepository.findOne(unitId);
+		
+			
+			
+				Square square=area.getSquare();
+				area.setSquare(null);
+				Set<Area> areas=unit.getAreas();
+				areas.remove(area);
+				unit.setAreas(areas);
+				unitRepository.saveAndFlush(unit);
+				
+				areaRepository.delete(area);
+				areaRepository.flush();
+				
+				squareRepository.delete(square);
+				squareRepository.flush();
+				return true;
+			
+			}catch(Exception e){
+				System.out.println("renturn false for deleArea");
+				return false;
+			}
+		
+	}
+	
+	
+
 	
 }
