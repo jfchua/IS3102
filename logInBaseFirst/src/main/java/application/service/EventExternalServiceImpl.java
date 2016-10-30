@@ -711,6 +711,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 			System.out.println("rent for first day " + rent);
 			//days in between
 			Double rentInBetween = 0.00;
+			//Double rent1 = 0.00;
 			while(!DateUtils.isSameDay(date.getTime(),event_end_date)){
 				for(int i = 0; i<units.length; i ++){
 					long uId = Long.valueOf(units[i]);
@@ -718,10 +719,12 @@ public class EventExternalServiceImpl implements EventExternalService {
 					if(unit1.isPresent()){
 						Unit unit = unit1.get();
 				        Double rentU = unit.getRent();
-				        rentInBetween += 24*rentU;
+				        rentInBetween += (24*rentU)*checkRate(client, date.getTime());
 					}
 				}
-				rentInBetween*=checkRate(client, date.getTime());
+				//rent1*=checkRate(client, date.getTime());
+				//rentInBetween += rent1;
+				System.out.println("!!!!RENT IN BETWEEN!!!" + rentInBetween);
 				date.add(Calendar.DAY_OF_MONTH, 1);
 			}
 			System.out.println("rent for days in between " + rentInBetween);
@@ -930,7 +933,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 		cal.setTime(start);
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime(start);
-		int num = 1;
+		/*int num = 1;
 		cal1.add(Calendar.DAY_OF_MONTH, 1);
 		for(int i = 0; i < duration; i ++){
 			if(!checkRate(client, cal.getTime()).equals(checkRate(client, cal1.getTime())))
@@ -938,14 +941,14 @@ public class EventExternalServiceImpl implements EventExternalService {
 			cal.add(Calendar.DAY_OF_MONTH, 1);
 			cal1.add(Calendar.DAY_OF_MONTH, 1);
 		}
-		System.out.println("**num**"+num);
+		System.out.println("**num**"+num);*/
 		int k = 0;
-		cal.setTime(start);
-		cal1.setTime(start);
+		//cal.setTime(start);
+		//cal1.setTime(start);
 		Calendar calRef = Calendar.getInstance();
 		calRef.setTime(start);
 		cal1.add(Calendar.DAY_OF_MONTH, 1);
-		for(int j = 0; j <= units.length*num && k < units.length; j++){	
+		while(k < units.length){	
 			System.out.println("**for**");
 			Calendar date = Calendar.getInstance();
 			date.setTime(cal.getTime());
@@ -960,12 +963,16 @@ public class EventExternalServiceImpl implements EventExternalService {
 				str += units[k] + " ";
 				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();
 				str += base + " " + checkRate(client, calRef.getTime())+ " ";
-				long first =end.getTime() - calRef.getTime().getTime();				
+				long first =end.getTime() - calRef.getTime().getTime();			
+				System.out.println("*****END TIME IS "+end);
+				System.out.println("*****REFEREBCE TIME IS "+ calRef.getTime());
 				long durFirst = TimeUnit.HOURS.convert(first, TimeUnit.MILLISECONDS);
+				System.out.println("FIRST ****" + durFirst);
 				Double duration1 = Double.valueOf(durFirst);
-				str += duration1 + " " + duration1 * base * checkRate(client, calRef.getTime()) + " ";
-				k ++;				
+				str += duration1 + " " + duration1 * base * checkRate(client, calRef.getTime()) + " ";	
+				System.out.println("NOT SURE WHY WRONG " + str);
 				setS.add(str);
+				k ++;
 			}
 			else if(!checkRate(client, cal.getTime()).equals(checkRate(client, cal1.getTime()))){
 				System.out.println("**if**");
@@ -990,7 +997,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				setS.add(str);
 			}
 			else{
-				System.out.println("**else**");
+				System.out.println("*************");
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				cal1.add(Calendar.DAY_OF_MONTH, 1);
 			}
