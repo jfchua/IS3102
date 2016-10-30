@@ -829,25 +829,25 @@ public class EventExternalServiceImpl implements EventExternalService {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-		System.out.println("day of week is " + dayOfWeek);
+		//System.out.println("day of week is " + dayOfWeek);
 		int month = cal.get(Calendar.MONTH);
-		System.out.println("Month in integer is " + month);
+		//System.out.println("Month in integer is " + month);
 		String monthString = new DateFormatSymbols().getMonths()[month].substring(0,3);
-		System.out.println("Month in String is " + monthString);
+		//System.out.println("Month in String is " + monthString);
 		DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
 		Double highest = 0.00;
 		for(SpecialRate sR : rates){
 			if((sR.getPeriod().equals(monthString.toUpperCase()))&&(sR.getRate()>=highest)){
 				highest = sR.getRate();
-				System.out.println("RATE IS " + special);
+				//System.out.println("RATE IS " + special);
 			}
 			if ((sR.getPeriod().length()!=3)&&(sR.getPeriod().length()!=7) && DateUtils.isSameDay(sdf.parse(sR.getPeriod()),date)&&(sR.getRate()>=highest)){
 				highest = sR.getRate();
-				System.out.println("RATE IS " + special);
+				//System.out.println("RATE IS " + special);
 			}
 			if(((dayOfWeek == Calendar.SATURDAY)||(dayOfWeek == Calendar.SUNDAY))&&(sR.getPeriod().equals("weekend"))&&(sR.getRate()>=highest)){
 				highest = sR.getRate();
-				System.out.println("RATE IS " + special);
+				//System.out.println("RATE IS " + special);
 			}
 		}
 		if(highest.equals(0.00))
@@ -945,7 +945,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 		Calendar calRef = Calendar.getInstance();
 		calRef.setTime(start);
 		cal1.add(Calendar.DAY_OF_MONTH, 1);
-		for(int j = 0; j < units.length*num; j++){	
+		for(int j = 0; j <= units.length*num && k < units.length; j++){	
 			System.out.println("**for**");
 			Calendar date = Calendar.getInstance();
 			date.setTime(cal.getTime());
@@ -960,10 +960,11 @@ public class EventExternalServiceImpl implements EventExternalService {
 				str += units[k] + " ";
 				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();
 				str += base + " " + checkRate(client, calRef.getTime())+ " ";
-				long first =date.getTime().getTime() - calRef.getTime().getTime();
-				long durFirst = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+				long first =end.getTime() - calRef.getTime().getTime();				
+				long durFirst = TimeUnit.HOURS.convert(first, TimeUnit.MILLISECONDS);
 				Double duration1 = Double.valueOf(durFirst);
 				str += duration1 + " " + duration1 * base * checkRate(client, calRef.getTime()) + " ";
+				k ++;				
 				setS.add(str);
 			}
 			else if(!checkRate(client, cal.getTime()).equals(checkRate(client, cal1.getTime()))){
@@ -972,14 +973,20 @@ public class EventExternalServiceImpl implements EventExternalService {
 				str += units[k] + " ";
 				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();
 				str += base + " " + checkRate(client, cal.getTime())+ " ";
-				long first =date.getTime().getTime() - cal.getTime().getTime();
-				long durFirst = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
-				Double duration1 = Double.valueOf(durFirst);
-				str += duration1 + " " + duration1 * base * checkRate(client, cal.getTime()) + " ";
-				k ++;
+				long first =date.getTime().getTime() - cal.getTime().getTime();			
+				long durFirst = TimeUnit.HOURS.convert(first, TimeUnit.MILLISECONDS);
+				System.out.println("*****END TIME IS "+date.getTime());
+				System.out.println("*****REFEREBCE TIME IS "+ calRef.getTime());
+				System.out.println("FIRST ****" + durFirst);
+				//System.out.println("FIRST ****" + durFirst);
+				Double durationX = Double.valueOf(durFirst);
+				//System.out.println("FIRST DURATION****" + durationX);
+				str += durationX + " " + durationX * base * checkRate(client, cal.getTime()) + " ";
+				
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				cal1.add(Calendar.DAY_OF_MONTH, 1);
-				calRef.setTime(cal1.getTime());
+				calRef.setTime(date.getTime());
+				System.out.println("NOT SURE WHY WRONG " + str);
 				setS.add(str);
 			}
 			else{
