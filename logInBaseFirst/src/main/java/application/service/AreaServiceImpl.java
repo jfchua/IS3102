@@ -16,24 +16,29 @@ public class AreaServiceImpl implements AreaService {
 	private final AreaRepository areaRepository;
 	private final BookingApplRepository bookingRepository;
 	private final SquareRepository squareRepository;
-	private static final Logger LOGGER = LoggerFactory.getLogger(LevelServiceImpl.class);
-	
+	private final IconRepository iconRepository;
+	private static final Logger LOGGER = LoggerFactory.getLogger(AreaServiceImpl.class);
+	private static int scale=2;
 	@Autowired
-	public AreaServiceImpl(BookingApplRepository bookingRepository,AreaRepository areaRepository, SquareRepository squareRepository) {
+	public AreaServiceImpl(BookingApplRepository bookingRepository,AreaRepository areaRepository, SquareRepository squareRepository,IconRepository iconRepository) {
 		this.bookingRepository =bookingRepository;
 		this.areaRepository = areaRepository;
 		this.squareRepository=squareRepository;
-		
+		this.iconRepository=iconRepository;
 	}
 	
 	@Override
-	public Area createArea(int left, int top, int height, int width, String color, String type, String areaName,
+	public Area createArea(int col, int row,int  sizex,int sizey,int left, int top, int height, int width, String color, String type, String areaName,
 			String description) {
 		Square square=createSquare(left,top,height,width,color,type);
 		Area area = new Area();
 		area.setSquare(square);
 		area.setAreaName(areaName);
-	
+		area.setCol(col);
+		area.setRow(row);
+		area.setSizeX(sizex);
+		area.setSizeY(sizey);
+		
 		area.setDescription(description);
 		areaRepository.save(area); 
 		area.setSquare(square);
@@ -44,13 +49,17 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	@Override
-	public Area createAreaOnBooking(long bookingId, int left, int top, int height, int width, String color, String type,
+	public Area createAreaOnBooking(long bookingId, int col, int row,int  sizex,int sizey,int left, int top, int height, int width, String color, String type,
 			String areaName, String description) {
 		Square square=createSquare(left,top,height,width,color,type);
 		Area area = new Area();
 
 		area.setAreaName(areaName);		
 		area.setDescription(description);
+		area.setCol(col);
+		area.setRow(row);
+		area.setSizeX(sizex);
+		area.setSizeY(sizey);
 		
 		areaRepository.saveAndFlush(area);
 		area.setSquare(square);
@@ -85,7 +94,7 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	@Override
-	public boolean editAreaInfo(long id, int left, int top, int height, int width, String color, String type,
+	public boolean editAreaInfo(long id, int col, int row,int  sizex,int sizey,int left, int top, int height, int width, String color, String type,
 			String areaName, String description) {
 		try{
 			Optional<Area> areaOpt = getAreaById(id);
@@ -95,6 +104,10 @@ public class AreaServiceImpl implements AreaService {
 				
 				area.setAreaName(areaName);
 				area.setDescription(description);
+				area.setCol(col);
+				area.setRow(row);
+				area.setSizeX(sizex);
+				area.setSizeY(sizey);
 			
 				long SquareId=area.getSquare().getId();
 				if(editSquareInfo(SquareId,left, top, height, width,  color, type)){
@@ -135,14 +148,13 @@ public class AreaServiceImpl implements AreaService {
 	@Override
 	public boolean deleteArea(long id, long bookingId) {
 		try{
-			Optional<Area> areaOpt = getAreaById(id);
+			Area area=areaRepository.findOne(id);
 			BookingAppl booking = bookingRepository.findOne(bookingId);
 		
-			if(areaOpt.isPresent()){
-				Area area= areaOpt.get();
+			
+			
 				Square square=area.getSquare();
 				area.setSquare(null);
-				
 				Set<Area> areas=booking.getAreas();
 				areas.remove(area);
 				booking.setAreas(areas);
@@ -154,11 +166,12 @@ public class AreaServiceImpl implements AreaService {
 				squareRepository.delete(square);
 				squareRepository.flush();
 				return true;
-			}
+			
 			}catch(Exception e){
+				System.out.println("renturn false for deleArea");
 				return false;
 			}
-			return true;
+		
 	}
 
 	@Override
@@ -175,7 +188,7 @@ public class AreaServiceImpl implements AreaService {
 
 	@Override
 	public Set<Area> getAllAreas() {
-		LOGGER.debug("Getting all units");
+		LOGGER.debug("Getting all areas");
 		return areaRepository.fetchAllAreas();
 	}
 
@@ -232,5 +245,198 @@ public class AreaServiceImpl implements AreaService {
 		System.out.println(requestPersonId==bookingOwnerId );
 		return requestPersonId==bookingOwnerId;
 	}
-
+	
+	
+	@Override
+	public  boolean passOverlapCheckWithExistingAreas(long bookingId, Area area) {
+		//GET LEVEL
+		BookingAppl booking=bookingRepository.getOne(bookingId);
+		Set<Area> areas=booking.getAreas();
+		for (Area oneExistArea:areas){
+			if(!passOverlapCheckTwoAreas(area,oneExistArea)){
+				return false;
+			}
+		} //END FOR LOOP FOR ALL EXISTING UNITS ON LEVEL
+		return true;
+	}
+	
+	@Override
+	public boolean passOverlapCheckTwoAreas(Area area1,Area area2) {
+		if(passOverlapCheckTwoAreasOneWay(area1,area2)&&passOverlapCheckTwoAreasOneWay(area2,area1)){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+	
+	@Override
+	public boolean passOverlapCheckTwoAreasOneWay(Area area1,Area area2) {
+		int col1=area1.getCol();
+		int row1=area1.getRow();
+		int sizeX1=area1.getSizeX();
+		int sizeY1=area1.getSizeY();
+		
+		int col2=area2.getCol();
+		int row2=area2.getRow();
+		int sizeX2=area2.getSizeX();
+		int sizeY2=area2.getSizeY();
+		
+		if( ((col1+sizeX1>=col2)&&(row1+sizeY1>=row2))&&((col1<=col2+sizeX2)&&(row1<=row2+sizeY2))){
+			return false;
+		}else if (((col1<=col2+sizeX2)&&(row1+sizeY1>=row2))&&((col1+sizeX1>=col2)&&(row1<=row2+sizeY2))){
+			return false;
+		}else{
+			return true;
+		}
+		
+	}
+	
+	
+	@Override
+	public boolean addAreaOnBooking(long bookingId) {
+		//GET LEVEL
+		BookingAppl booking=bookingRepository.getOne(bookingId);
+		//GET DIMENSION AND POSITION THAT WILL NOT OVERLAP WIHT EXISTING UNITS ON THE LEVEL
+		int unitLength=booking.getUnit().getSizex()*scale;
+		int unitWidth=booking.getUnit().getSizey()*scale;
+		int sizex=Math.min(unitLength/10, unitWidth/10);
+		int sizey=Math.min(unitLength/10, unitWidth/10);
+		int col=0;
+		int row=0;
+		Area areaTemp=new Area();
+		boolean keepChecking=true;
+		do{
+			areaTemp.setSizeX(sizex);
+			areaTemp.setSizeY(sizey);
+			areaTemp.setCol(col);
+			areaTemp.setRow(row);
+			if(passOverlapCheckWithExistingAreas(bookingId,areaTemp)){
+				keepChecking=false;
+			}else{
+				
+				int temp1=1 + (int)(Math.random() * sizex);
+				int temp2=1 +(int)(Math.random() * sizey);
+				sizex=Math.min(temp1,temp2);
+				sizey=Math.min(temp1,temp2);
+				col=0 + (int)(Math.random() * (unitLength-sizex));
+				row=0 + (int)(Math.random() * (unitWidth-sizey));
+			}
+		}while(keepChecking);
+		
+		
+	
+		
+		Square square=createSquare(100,100,100,100,"coral","./svg/rect.svg");
+		areaTemp.setAreaName("#Name");
+		areaTemp.setDescription("# There is no description yet");
+		areaRepository.saveAndFlush(areaTemp);
+		areaTemp.setSquare(square);
+		areaRepository.saveAndFlush(areaTemp);
+		Set<Area> areas=booking.getAreas();
+		areas.add(areaTemp);
+		booking.setAreas(areas);
+		bookingRepository.saveAndFlush(booking);
+		areaTemp.setBooking(booking);
+		areaRepository.saveAndFlush(areaTemp);
+		return true;
+	}
+	
+	@Override
+	public boolean addDefaultIconOnBooking(long bookingId,String type) {
+		//GET LEVEL
+		BookingAppl booking=bookingRepository.getOne(bookingId);
+		//GET DIMENSION AND POSITION THAT WILL NOT OVERLAP WIHT EXISTING UNITS ON THE LEVEL
+		int unitLength=booking.getUnit().getSizex()*scale;
+		int unitWidth=booking.getUnit().getSizey()*scale;
+		int sizex=Math.min(unitLength/20, unitWidth/20);
+		int sizey=Math.min(unitLength/20+1, unitWidth/20+1);
+		int col=0;
+		int row=0;
+		Area areaTemp=new Area();
+		boolean keepChecking=true;
+		do{
+			areaTemp.setSizeX(sizex);
+			areaTemp.setSizeY(sizey);
+			areaTemp.setCol(col);
+			areaTemp.setRow(row);
+			if(passOverlapCheckWithExistingAreas(bookingId,areaTemp)){
+				keepChecking=false;
+			}else{
+				col=0 + (int)(Math.random() * (unitLength-sizex));
+				row=0 + (int)(Math.random() * (unitWidth-sizey));
+			}
+		}while(keepChecking);
+		Square square=createSquare(100,100,100,100,"transparent",type);
+		areaTemp.setAreaName("");	
+		areaTemp.setDescription("# There is no description yet");
+		areaRepository.saveAndFlush(areaTemp);
+		areaTemp.setSquare(square);
+		areaRepository.saveAndFlush(areaTemp);
+		Set<Area> areas=booking.getAreas();
+		areas.add(areaTemp);
+		booking.setAreas(areas);
+		bookingRepository.saveAndFlush(booking);
+		areaTemp.setBooking(booking);
+		areaRepository.saveAndFlush(areaTemp);	
+		return true;
+	}
+	
+	
+	@Override
+	public boolean addCustIconOnBooking(long bookingId,long iconId) {
+		//GET LEVEL
+		BookingAppl booking=bookingRepository.getOne(bookingId);
+		//GET DIMENSION AND POSITION THAT WILL NOT OVERLAP WIHT EXISTING UNITS ON THE LEVEL
+		int unitLength=booking.getUnit().getSizex()*scale;
+		int unitWidth=booking.getUnit().getSizey()*scale;
+		int sizex=Math.min(unitLength/15, unitWidth/15);
+		int sizey=Math.min(unitLength/15+1, unitWidth/15+1);
+		int col=0;
+		int row=0;
+		Area areaTemp=new Area();
+		boolean keepChecking=true;
+		do{
+			areaTemp.setSizeX(sizex);
+			areaTemp.setSizeY(sizey);
+			areaTemp.setCol(col);
+			areaTemp.setRow(row);
+			if(passOverlapCheckWithExistingAreas(bookingId,areaTemp)){
+				keepChecking=false;
+			}else{
+				col=0 + (int)(Math.random() * (unitLength-sizex));
+				row=0 + (int)(Math.random() * (unitWidth-sizey));
+			}
+		}while(keepChecking);
+		Square square=createSquareWithIcon(iconId,100,100,100,100,"transparent","");
+		areaTemp.setAreaName("");
+		//hahahaha
+		areaTemp.setDescription("# There is no description yet");
+		areaRepository.saveAndFlush(areaTemp);
+		areaTemp.setSquare(square);
+		areaRepository.saveAndFlush(areaTemp);
+		Set<Area> areas=booking.getAreas();
+		areas.add(areaTemp);
+		booking.setAreas(areas);
+		bookingRepository.saveAndFlush(booking);
+		areaTemp.setBooking(booking);
+		areaRepository.saveAndFlush(areaTemp);	
+		return true;
+	}
+	
+	@Override
+	public Square createSquareWithIcon( long iconId,int left, int top, int height, int width, String color, String type){
+		Icon icon=iconRepository.getOne(iconId);
+		Square square = new Square();
+		square.setLeft(left);
+		square.setTop(top);
+		square.setHeight(height);
+		square.setWidth(width);
+		square.setColor(color);
+		square.setType(type);
+		square.setIcon(icon);
+		squareRepository.saveAndFlush(square);
+		return square;
+	}
+	
 }

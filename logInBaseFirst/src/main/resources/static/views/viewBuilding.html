@@ -46,7 +46,7 @@
                              <td>
                              		<a  ui-sref="dashboard.updateBuilding" ng-click="updateBuilding(x)" tooltip-placement="top" tooltip="Update Building"><i class="glyphicon glyphicon-pencil"></i></a>
                              		<a  ui-sref="dashboard.deleteBuilding" ng-click="deleteBuilding(x)" tooltip-placement="top" tooltip="Delete Building"><i class="glyphicon glyphicon-trash"></i></a>
-                             		<a  ui-sref="dashboard.addLevel" ng-click="addLevel(x)" tooltip-placement="top" tooltip="Add level"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                             		<a  ui-sref="dashboard.addLevel" ng-hide="x.levels.length==x.numFloor" ng-click="addLevel(x)" tooltip-placement="top" tooltip="Add level"><i class="glyphicon glyphicon-plus-sign"></i></a>
                              		<a  ui-sref="dashboard.viewLevels" ng-hide="x.levels.length==0" ng-click="passBuilding(x)" tooltip-placement="top" tooltip="View Levels"><i class="glyphicon glyphicon-eye-open"></i></a>
                              </td>
                              </tr>

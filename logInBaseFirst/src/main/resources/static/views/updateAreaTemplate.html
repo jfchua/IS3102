@@ -3,32 +3,32 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Update unit: {{unit.unitNumber}}</h4>
+        <h4 class="modal-title">Update area: {{area.areaName}}</h4>
       </div>
       <div class="modal-body">
         <p></p>
         <form class="form-horizontal" role="form">
 						   		
-                        <div class="form-group" ng-show="unit.rentable">
+                        <div class="form-group" ng-show="area.square.type=='./svg/rect.svg'">
                                <label for="exampleInput">Length (in meter)</label>
-                               <input type="number" min="1" max="999" ng-model="unit.sizeX"  class="form-control underline">
+                               <input type="number" min="1" max="999" ng-model="area.sizeX"  class="form-control underline">
                         </div>
-                        <div class="form-group" ng-show="unit.rentable">
+                        <div class="form-group" ng-show="area.square.type=='./svg/rect.svg'">
                                <label for="exampleInput">Width (in meter)</label>
-                               <input type="number" min="1" max="999" ng-model="unit.sizeY" class="form-control underline">
+                               <input type="number" min="1" max="999" ng-model="area.sizeY" class="form-control underline">
                         </div>
-                        <div class="form-group"  ng-show="unit.rentable">
+                        <div class="form-group"  ng-show="area.square.type=='./svg/rect.svg'">
                                <label for="exampleInput">color</label>
-                               <color-picker ng-model="unit.square.color"></color-picker>
-                               <input type="text" ng-model="unit.square.color" class="form-control underline" disabled>
+                               <color-picker ng-model="area.square.color"></color-picker>
+                               <input type="text" ng-model="area.square.color" class="form-control underline" disabled>
                         </div>
-                        <div class="form-group"  ng-show="unit.rentable">
-                               <label for="exampleInput">Unit Number</label>
-                               <input type="text" ng-model="unit.unitNumber" class="form-control underline">
+                        <div class="form-group"  ng-show="area.square.type=='./svg/rect.svg'">
+                               <label for="exampleInput">Area Name</label>
+                               <input type="text" ng-model="area.areaName" class="form-control underline">
                        </div>
                        <div class="form-group">
                                <label for="exampleInput">Description</label>
-                               <input type="text" ng-model="unit.description" class="form-control underline">
+                               <input type="text" ng-model="area.description" class="form-control underline">
                        </div>
 
      </form>

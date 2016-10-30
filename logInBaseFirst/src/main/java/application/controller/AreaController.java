@@ -63,8 +63,7 @@ public class AreaController {
 		this.userService=userService;
 	}
 	
-	
-	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE','ROLE_PROPERTY')")
 		//for view only, call view areas; for load and edit, call viewAreas first and then call saves areas;
 		@RequestMapping(value = "/viewAreas", method = RequestMethod.POST)
 		@ResponseBody
@@ -72,8 +71,6 @@ public class AreaController {
 		System.out.println("AreaController: Start Viewing Areas");
 	
 			try{
-				
-				
 				Object obj = parser.parse(booking);
 				
 				JSONObject jsonObject = (JSONObject) obj;
@@ -102,7 +99,7 @@ public class AreaController {
 							public boolean shouldSkipField(FieldAttributes f) {
 								//TODO Auto-generated method stub
 								return false;
-								//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+								
 							}
 						})
 						/**
@@ -121,7 +118,7 @@ public class AreaController {
 				}			
 }           
 		
-	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE','ROLE_PROPERTY')")
 		//for load and edit, call viewAreas first and then call saves areas; 
 		@RequestMapping(value = "/saveAreas", method = RequestMethod.POST)
 		@ResponseBody
@@ -169,6 +166,10 @@ public class AreaController {
 				String type = (String)squareJson.get("type");
 				System.out.println("Test: 33");
 				String areaName =(String)areaObj.get("areaName");
+				int col = (int) (long) areaObj.get("col");
+				int row = (int) (long) areaObj.get("row");
+				int sizex = (int) (long) areaObj.get("sizeX");
+				int sizey = (int) (long) areaObj.get("sizeY");
 				System.out.println("Test: 33 "+areaName);
 				//int dimensionWidth=Integer.valueOf((String)areaObj.get("width"));
 				//int dimensionLength=Integer.valueOf((String)areaObj.get("length"));
@@ -177,10 +178,10 @@ public class AreaController {
 				
 				if (areaId==0){
 					System.out.println("Add new area");
-					Area area=areaService.createAreaOnBooking(eventId,left, top, height,  width,  color,  type,areaName,description);
+					Area area=areaService.createAreaOnBooking(eventId, col,  row,  sizex, sizey,left, top, height,  width,  color,  type,areaName,description);
 					areaIds.add(area.getId());
 					System.out.println("AreaController Test: added new area, id "+area.getId());
-				}else if((areaService.editAreaInfo(areaId,left, top, height,  width,  color,  type,areaName,description))==true){
+				}else if((areaService.editAreaInfo(areaId, col,  row,  sizex, sizey,left, top, height,  width,  color,  type,areaName,description))==true){
 					areaIds.add(areaId);		
 					System.out.println("AreaController Test: existed/edited area, id "+areaId);
 				}else{
@@ -206,5 +207,168 @@ public class AreaController {
 			return v;
 		
 }
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	@RequestMapping(value = "/addArea", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> addArea(@RequestBody String idObj,HttpServletRequest rq) {
 
+		
+		try{
+			
+			
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("bookingId"));
+			long bookingId = (Long)jsonObject.get("bookingId");
+			
+			
+			
+			
+			if(areaService.addAreaOnBooking(bookingId) ){
+				System.out.println("CREATED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		
+	}
+	
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE','ROLE_PROPERTY')")
+	@RequestMapping(value = "/addDefaultIcon", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> addDefaultIcon(@RequestBody String idObj,HttpServletRequest rq) {
+
+		
+		try{
+			
+			
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("bookingId"));
+			long bookingId = (Long)jsonObject.get("bookingId");
+			String type = (String)jsonObject.get("type");
+			
+			
+			
+			if(areaService.addDefaultIconOnBooking(bookingId,type) ){
+				System.out.println("CREATED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		
+	}
+	
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	@RequestMapping(value = "/addCustIcon", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> addCustIcon(@RequestBody String idObj,HttpServletRequest rq) {
+
+		
+		try{
+			
+			
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("bookingId"));
+			long bookingId = (Long)jsonObject.get("bookingId");
+			long iconId = (Long)jsonObject.get("iconId");
+			
+			
+			
+			if(areaService.addCustIconOnBooking(bookingId,iconId) ){
+				System.out.println("CREATED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		
+	}
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	@RequestMapping(value = "/updateArea", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> updateArea(@RequestBody String idObj,HttpServletRequest rq) {
+
+		
+		try{
+			
+			
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("bookingId"));
+			long bookingId = (Long)jsonObject.get("bookingId");
+			JSONObject areaJson=(JSONObject)jsonObject.get("area");	
+			long areaId = (Long)areaJson.get("id");				
+			JSONObject squareJson=(JSONObject)areaJson.get("square");		
+			int left = (int) (long) squareJson.get("left");
+			int top = (int) (long) squareJson.get("top");
+			int height = (int) (long) squareJson.get("height");
+			int width = (int) (long) squareJson.get("width");
+			String color = (String)squareJson.get("color");
+			String type = (String)squareJson.get("type");
+			String areaName =(String)areaJson.get("areaName");
+			int col = (int) (long) areaJson.get("col");
+			int row = (int) (long) areaJson.get("row");
+			int sizex = (int) (long) areaJson.get("sizeX");
+			int sizey = (int) (long) areaJson.get("sizeY");
+			String description =(String)areaJson.get("description");
+			
+			
+			if(areaService.editAreaInfo(areaId,col,  row,  sizex, sizey,left,top, height,  width,  color, type, areaName,  description)){
+				System.out.println("EDITED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		
+	}
+	
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/deleteArea", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> deleteArea(@RequestBody String idObj,HttpServletRequest rq) {
+
+		
+		try{
+			
+			
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("id"));
+			long areaId = (Long)jsonObject.get("id");
+			System.out.println((Long)jsonObject.get("bookingId"));
+			long bookingId = (Long)jsonObject.get("bookingId");
+			
+			if(areaService.deleteArea(areaId,bookingId)){
+				System.out.println("DELETED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		
+	}
 }

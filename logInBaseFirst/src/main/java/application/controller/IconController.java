@@ -117,7 +117,7 @@ public class IconController {
 	}
 	 */
 
-	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE','ROLE_PROPERTY')")
 	@RequestMapping(value = "/viewIcons", method = RequestMethod.GET)
 	@ResponseBody
 	public  ResponseEntity<Set<Icon>> viewIcons(HttpServletRequest rq) throws UserNotFoundException {
@@ -339,7 +339,7 @@ public class IconController {
 
 	}
 
-	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE','ROLE_PROPERTY')")
 	@RequestMapping(value = "/getIconsMenu", method = RequestMethod.GET)
 	@ResponseBody
 	public  ResponseEntity<JSONArray> getIconsMenu(HttpServletRequest rq) throws UserNotFoundException {
@@ -360,7 +360,7 @@ public class IconController {
 			int index=0;
 			for(Icon icon: icons){
 				String menuOptionName="<img  class=\"svgtest\" src=\""+icon.getIconPath()+"\" alt=\""+icon.getIconPath()+"\" width=\"50px\" height=\"50px\">";
-				String menuOptionFunc=" function ($itemScope, $event, modelValue, text, $li) {$scope.addSpecialUnitByIcon("+icon.getId()+");}";
+				String menuOptionFunc=" function ($itemScope, $event, modelValue, text, $li) {$scope.addCustIcon("+icon.getId()+");}";
 				JSONObject menuOption = new JSONObject(); 
 				menuOption.put("name", menuOptionName); 
 				menuOption.put("funct", menuOptionFunc); 
