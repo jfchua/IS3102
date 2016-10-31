@@ -443,11 +443,60 @@ public class AreaServiceImpl implements AreaService {
 	
 	
 	
-	
-	
+
+	@Override
+	public 	boolean saveDefaultAreasToBooking(long bookingId,long unitId) {
+		//GET LEVEL
+		Unit unit=unitRepository.getOne(unitId);
+		BookingAppl booking=bookingRepository.getOne(bookingId);
+		Set<Area> areas=unit.getAreas();
+		System.out.println("453 ");
+		for(Area area:areas){
+			System.out.println("455 ");
+			Area areaNew=copyArea(area);
+			System.out.println("457 ");
+			Set<Area> oldAreas=booking.getAreas();
+			oldAreas.add(areaNew);
+			booking.setAreas(oldAreas);
+			bookingRepository.saveAndFlush(booking);
+			System.out.println("462 ");
+			areaNew.setBooking(booking);
+			areaRepository.saveAndFlush(areaNew);
+			System.out.println("465");
+			areaRepository.saveAndFlush(area);
+			
+		}
+		System.out.println("468 ");
+		return true;
+	}
 
 	
-	
+	@Override
+	public 	Area copyArea(Area area) {
+		Square square = area.getSquare();
+		Square squareNew=createSquare(square.getLeft(),square.getTop(),square.getHeight(),square.getWidth(),square.getColor(),square.getType());
+		if(square.getIcon()!=null){
+			System.out.println("476 get icon");
+			Icon icon=square.getIcon();
+			squareNew.setIcon(icon);
+			squareRepository.saveAndFlush(square);
+		}
+		System.out.println("481 get icon");
+		Area areaNew=new Area();
+		areaNew.setAreaName(area.getAreaName());
+		areaNew.setDescription(area.getDescription());
+		areaNew.setCol(area.getCol());
+		areaNew.setRow(area.getRow());
+		areaNew.setSizeX(area.getSizeX());
+		areaNew.setSizeY(area.getSizeY());
+		System.out.println("489 get icon");
+		areaRepository.saveAndFlush(areaNew);
+		areaNew.setSquare(squareNew);
+		System.out.println("492 get icon");
+		areaRepository.saveAndFlush(areaNew);
+		return areaNew;
+	}
+
 	
 	
 	

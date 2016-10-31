@@ -130,10 +130,10 @@ $scope.twoOptions=[
                 	  // console.log($itemScope.unit);
                 	   $scope.showModal($itemScope.unit,$parent);
                    }],
-                   ['View Unit Plan', function ($itemScope, $event, modelValue, text, $li) {
-                      
+                   ['<p ng-show="$itemScope.unit.square.type==\'./svg/rect.svg\'">View Unit Plan</p>', function ($itemScope, $event, modelValue, text, $li) {
+                	
                        $scope.viewUnitPlanDefault($itemScope.unit);
-
+                      
                    }],
                    ];
   //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
@@ -151,6 +151,9 @@ $scope.twoOptions=[
   }
   
   $scope.viewUnitPlanDefault=function (unit){
+	  console.log(unit);
+	  if(unit.square.type=='./svg/rect.svg'){
+		  
 	  var obj={building:building,
 				level:level,
 				unit:unit,
@@ -158,6 +161,7 @@ $scope.twoOptions=[
 	  console.log(unit);
 		shareData.addData(obj);
 	  $state.go("dashboard.viewUnitPlanDefault");
+	  }
   }
    $scope.showDetails= function (thisUnit) {   
      console.log(thisUnit);
@@ -1273,7 +1277,7 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 		  };      
 		 
 			  var saveIconObj={unitId:$scope.unit.id,iconId:icon.id};
-			  $http.post('/area/addCustIcon', JSON.stringify(saveIconObj)).then(function(response){
+			  $http.post('/area/addCustIconDefault', JSON.stringify(saveIconObj)).then(function(response){
 				  $scope.areas=[];
 				  console.log("empty");
 				  console.log($scope.areas);

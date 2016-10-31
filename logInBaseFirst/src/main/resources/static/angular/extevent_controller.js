@@ -1269,7 +1269,28 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 
 
 	}
-	
+	$scope.showDefaultUnitPlan= function(){
+		
+		var unitIdObj={unitId:unit.id,bookingId:$scope.booking.id};
+		 $http.post('//localhost:8443/area/saveDefaultAreas', JSON.stringify(unitIdObj)).then(function(response){
+			  //console.log(angular.fromJson(response.data));
+			 // $scope.areas=angular.fromJson(response.data);
+			  
+			  $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){			
+				  console.log(angular.fromJson(response.data));
+				  $scope.areas=angular.fromJson(response.data);
+
+			  },function(response){
+				  console.log("DID NOT view");
+				  //console.log("response is "+angular.fromJson(response.data));
+			  })
+			  
+		  },function(response){
+			  console.log("DID NOT SAVE DEFAULT AREAS");
+			  //console.log("response is "+angular.fromJson(response.data).error);
+		  })
+		
+	}
 
 	  $scope.addArea = function () {  
 		  var dataObj = {
@@ -1648,10 +1669,6 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 		  			
 		  			
 		  			$scope.addToLegend= function(area){
-		  			//PUSH UNIQUE AREA TO LEGENDS
-		  		
-		  			//console.log(areas[0]);
-		  			//$scope.legends.push(areas[index]);
 		  			console.log("test legend");
 		  			console.log($scope.legends);
 	  				var isDuplicate=false;
@@ -1663,9 +1680,7 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 			  				}else{
 			  				
 			  				console.log(isDuplicate);
-			  				}
-			  			
-		  				
+			  				}		  				
 		  			}); 
 		  			
 		  			if(isDuplicate){	
@@ -1676,56 +1691,26 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 		  			console.log($scope.legends);
 		  			
 		  			}
-		  			/*
-		  		  //RETRIEVE ICON WHEN LOADED
-					$http.get("//localhost:8443/property/viewIcons").then(function(response){			
-						//console.log(response.data);
-						$scope.icons = response.data;
-						console.log($scope.icons);
-						//console.log($scope.icons[0]);
-						//console.log($scope.icons[0].iconType);
-						//console.log($scope.icons[0].iconPath);
-						$scope.icon=$scope.icons[0];
-					},function(response){
-						alert("DID NOT VIEW ICONS");
-						
-					})
-					
-					
-					
-					
-					//GET ICON MENU
-					$http.get("//localhost:8443/property/getIconsMenu").then(function(response){			
-						console.log(response);
-						var data = angular.fromJson(response.data);
-						console.log(data);
-						//$scope.iconMenu=[];
-						var index=0;
-						 angular.forEach(data, function(item){             
-							   	var iconMenuRow=[];
-							   	iconMenuRow.push(data[index].name);
-							   
-							   	eval( 'var func = ' +data[index].funct ); //working
-							   	console.log(data[index].funct);
-							   	iconMenuRow.push(func);//working
-							   	$scope.menuOptions.push(iconMenuRow);//working
-							    // $scope.iconMenu.push([data[index]]);
-							     index++;
-							     console.log(iconMenuRow);
-							  }); 
-						 console.log("test icon menu");
-						 console.log($scope.iconMenu);
-						//console.log($scope.icons);
-						//console.log($scope.icons[0]);
-						//console.log($scope.icons[0].iconType);
-						//console.log($scope.icons[0].iconPath);
-					},function(response){
-						alert("DID NOT VIEW ICONS");
-						
-					})
-		  		*/
+		  			
 	});
 
+	
+	$scope.showDefaultUnitPlan= function(){
+		var unitIdObj={id:$scope.unit.id};
+		 $http.post('//localhost:8443/area/viewAreasDefault', JSON.stringify(unitIdObj)).then(function(response){
+			  console.log(angular.fromJson(response.data));
+			  $scope.areas=angular.fromJson(response.data);
+			  angular.forEach($scope.areas, function(area){   
+					$scope.addToLegend(area);
+					
+				})
+
+		  },function(response){
+			  console.log("DID NOT view");
+			  //console.log("response is "+angular.fromJson(response.data).error);
+		  })
+		
+	}
 	$scope.passEvent=function(){
 		shareData.addData($scope.event);
 	}
@@ -1746,14 +1731,7 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 	}
 	
 
-	
-/*
-	$scope.showDetails= function (thisArea) {   
-		//console.log(thisArea.id); 
 
-		$scope.showDetail="id: "+ thisArea.id+", areaName: " + thisArea.areaName+", description: " + thisArea.description+"left: " + thisArea.square.left + ", top: " +  thisArea.square.top+ ", height: " + thisArea.square.height + ", width: " + thisArea.square.width;    
-
-	} */
 	
 	$scope.downloadPlan = function () {
 		  console.log("her0");
@@ -1775,27 +1753,7 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 		
 		    });
 		}
-	 /*
-	$scope.resize = function(area,evt,ui) {
-
-		console.log("resize");
-
-		area.square.width = evt.size.width;//working restrict A
-		area.square.height = evt.size.height;
-		area.square.left = parseInt(evt.position.left);
-		area.square.top = parseInt(evt.position.top);
-	}
-	$scope.drag = function(area,evt,ui) {
-
-		console.log(evt);
-		console.log("DRAGGING");
-		area.square.left = parseInt(evt.position.left);
-		area.square.top = parseInt(evt.position.top);
-		area.square.width = evt.helper.context.clientWidth;
-		area.square.height = evt.helper.context.clientHeight;
-	}
-
-*/
+	
 
 	
 	 console.log("gridster test ");
@@ -1900,11 +1858,7 @@ app.controller('viewAreaController', ['$scope', '$element', 'title', 'close', 'a
 
 		  $scope.title = title;
 		  $scope.area=area;
-		  //console.log(title);
-		  //console.log(close);
-		  //console.log($element);
-		  //  This close function doesn't need to use jQuery or bootstrap, because
-		  //  the button has the 'data-dismiss' attribute.
+		 
 		  $scope.close = function() {
 		 	  close({
 		      area:$scope.area
@@ -1936,7 +1890,7 @@ app.controller('ticketSaleExController', ['$scope', '$http','$state','$routePara
 		$scope.data = {};	
 		$scope.eventId = shareData.getData();
 		$scope.url = "https://localhost:8443/event/getEvent1/"+$scope.eventId;
-		//$scope.dataToShare = [];
+		
 		console.log("GETTING THE Event");
 		var getEvent = $http({
 			method  : 'GET',
@@ -1958,7 +1912,7 @@ app.controller('ticketSaleExController', ['$scope', '$http','$state','$routePara
 		$scope.order_item = "cat";
 		$scope.order_reverse = false;
 		$scope.url1 = "https://localhost:8443/event/getTicketSales/"+$scope.eventId;
-		//$scope.dataToShare = [];
+		
 		console.log("GETTING THE EVENTS");
 		var getSales = $http({
 			method  : 'GET',

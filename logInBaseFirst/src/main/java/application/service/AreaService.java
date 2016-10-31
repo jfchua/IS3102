@@ -11,8 +11,7 @@ public interface AreaService {
 	Area createArea(int col, int row,int  sizex,int sizey, int left, int top, int height, int width, String color, String type,
 			String areaName, String description);
 
-	Area createAreaOnBooking(long bookingId, int col, int row,int  sizex,int sizey, int left, int top, int height, int width, String color, String type,String areaName,
-			String description);	
+	Area createAreaOnBooking(long bookingId, int col, int row,int  sizex,int sizey, int left, int top, int height, int width, String color, String type,String areaName, String description);	
 
 	Square createSquare( int left, int top, int height, int width, String color, String type);
 
@@ -51,7 +50,9 @@ public interface AreaService {
 	Square createSquareWithIcon( long iconId,int left, int top, int height, int width, String color, String type);
 	
 	
+	boolean saveDefaultAreasToBooking(long bookingId,long unitId);
 	
+	Area copyArea(Area area);
 	
 	
 	Set<Area> getAreasByUnitId(long unitId);
