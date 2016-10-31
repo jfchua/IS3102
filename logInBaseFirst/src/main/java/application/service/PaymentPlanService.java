@@ -39,7 +39,7 @@ public interface PaymentPlanService {
 	
 	boolean updateTicketRevenue(ClientOrganisation client, User user, long paymentPlanId, Double paid);
 	
-	boolean updateOutgoingPayment(ClientOrganisation client, User user, long paymentPlanId, Double paid);
+	boolean updateOutgoingPayment(ClientOrganisation client, User user, long paymentPlanId, Double paid, String cheque);
 	
 	Set<Payment> getPaymentsByOrgId(ClientOrganisation client, long id);
 	

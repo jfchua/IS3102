@@ -30,7 +30,9 @@
                             <th><i></i> Payment Plan ID </th>
                             <th><i></i> Amount </th>
                             <th><i></i> Cheque Number </th>
+                            <th><i></i> Invoice Number </th>
                            </tr>
+                           </thead>
                          <tbody>
                          <tr ng-repeat="x in payments | orderObjectBy:order_item:order_reverse">
                             <td>{{ x.id }}</td>
@@ -38,9 +40,9 @@
                             <td>{{ x.plan }}</td>
                             <td>{{ x.amount }}</td>
                             <td>{{ x.cheque }}</td>
+                            <td>{{ x.invoice }}</td> 
                         </tr>
-                         </tbody>
-                         </thead>
+                         </tbody>                    
                     </table>			
 				</div>
 			</div>

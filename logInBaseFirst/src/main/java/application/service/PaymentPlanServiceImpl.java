@@ -427,7 +427,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	}
 
 	@Override
-	public boolean updateTicketRevenue(ClientOrganisation client, User user, long paymentPlanId, Double paid) {
+	public boolean updateTicketRevenue(ClientOrganisation client, User user, long paymentPlanId, 
+			Double paid) {
 		Set<User> users = userRepository.getAllUsers(client);
 		System.out.println("clientUser");
 		PaymentPolicy payPol = client.getPaymentPolicy();
@@ -462,7 +463,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	}
 
 	@Override
-	public boolean updateOutgoingPayment(ClientOrganisation client, User user, long paymentPlanId, Double paid) {
+	public boolean updateOutgoingPayment(ClientOrganisation client, User user, long paymentPlanId, 
+			Double paid,  String cheque) {
 		Set<User> users = userRepository.getAllUsers(client);
 		System.out.println("clientUser");
 		PaymentPolicy payPol = client.getPaymentPolicy();
@@ -483,6 +485,16 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			System.out.println(pay1.isPresent());
 			if(pay1.isPresent()){
 				PaymentPlan pay = pay1.get();
+				Set<Payment> payments = pay.getPayments();
+				Payment outPayment = new Payment();
+				outPayment.setInvoice("NA");
+				outPayment.setAmount(-paid);
+				outPayment.setPlan(paymentPlanId);
+				outPayment.setCheque(cheque);
+				Calendar cal = Calendar.getInstance();
+				outPayment.setPaid(cal.getTime());
+				paymentRepository.save(outPayment);
+				payments.add(outPayment);
 				Double payable = pay.getPayable();
 				if((payable + paid)!= 0)
 					return false;

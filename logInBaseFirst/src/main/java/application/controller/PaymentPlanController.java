@@ -709,6 +709,7 @@ public class PaymentPlanController {
 			Long paymentId = (Long)jsonObject.get("id");
 			System.out.println(paymentId);
 			Double amount = Double.valueOf((String)jsonObject.get("ticket"));
+			//String cheque = (String)jsonObject.get("cheque");
 			System.out.println("ticket: "+ amount);
 			//Double subsequent = (Double)jsonObject.get("subsequent");
 			boolean bl = paymentPlanService.updateTicketRevenue(client, user, paymentId, amount);
@@ -741,8 +742,9 @@ public class PaymentPlanController {
 			System.out.println(paymentId);
 			Double amount = Double.valueOf((String)jsonObject.get("toBePaid"));
 			System.out.println("ticket: "+ amount);
+			String cheque = (String)jsonObject.get("cheque");
 			//Double subsequent = (Double)jsonObject.get("subsequent");
-			boolean bl = paymentPlanService.updateOutgoingPayment(client, user, paymentId, amount);
+			boolean bl = paymentPlanService.updateOutgoingPayment(client, user, paymentId, amount, cheque);
 			System.out.println("success or not?" + bl);
 			if(!bl)
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -791,14 +793,17 @@ public class PaymentPlanController {
 			for(Payment p: payments){
 				JSONObject obj1 = new JSONObject();
 				obj1.put("id", p.getId());
-				System.out.println("payment id is "+p.getId());
-				obj1.put("date", String.valueOf(p.getPaid()));								    
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.");
+				String[] arr1 = String.valueOf(sdf.format(p.getPaid())).split(" ");
+				System.out.println("payment date is "+ arr1[0]);
+				obj1.put("date", arr1[0]);								    
 				obj1.put("plan",p.getPlan());
 				System.out.println("TOTAL1");
 				obj1.put("amount",p.getAmount());
 				System.out.println("TOTAL2");
 				obj1.put("cheque",p.getCheque());
 				System.out.println("TOTAL3");
+				obj1.put("invoice",p.getInvoice());
 				jArray.add(obj1);
 			}
 			System.out.println("finishing getting list of payments");
