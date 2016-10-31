@@ -17,6 +17,32 @@ app.controller('vendorController', ['$scope', '$http','$state','$routeParams','s
 	$scope.addVendor = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
+		
+		if ( !$scope.vendor || !$scope.vendor.email || !$scope.vendor.name || !$scope.vendor.description || !$scope.vendor.contact){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered all fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		
+		
 		var dataObj = {			
 				email: $scope.vendor.email,
 				name: $scope.vendor.name,
@@ -106,6 +132,32 @@ app.controller('updateVendorController', ['$scope', '$http','$state','$routePara
 		$scope.data = {};
 		//$scope.event = JSON.parse(shareData.getData());
 		console.log($scope.vendor.id);
+		
+		
+		if ( !$scope.vendor || !$scope.vendor.email || !$scope.vendor.name || !$scope.vendor.description || !$scope.vendor.contact){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered all fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		
 		var dataObj = {				
 				id: $scope.vendor.id,
 				email: $scope.vendor.email,

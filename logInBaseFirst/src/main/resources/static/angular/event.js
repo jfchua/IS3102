@@ -545,7 +545,7 @@ app.controller('notificationController', ['$scope', '$http','shareData','$state'
 	})
 }]);
 
-app.controller('ticketSalesController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('ticketSalesController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService',function ($scope, $http,$state, $routeParams, shareData,ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$scope.order_item = "id";
@@ -554,7 +554,7 @@ app.controller('ticketSalesController', ['$scope', '$http','$state','$routeParam
 			$scope.events = response.data;
 			console.log("DISPLAY ALL EVENTS");
 		},function(response){
-			alert("did not view events");
+			console.log("did not view events");
 		}	
 		)	
 	});

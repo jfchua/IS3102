@@ -1,5 +1,5 @@
 //VIEW ALL EVENTS,
-app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$state','$routeParams','shareData', function ($scope, $rootScope,$http,$state, $routeParams, shareData) {
+app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$state','$routeParams','shareData', 'ModalService', function ($scope, $rootScope,$http,$state, $routeParams, shareData,ModalService) {
 
 
 	angular.element(document).ready(function () {
@@ -67,25 +67,85 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 	}
 
 	$scope.requestForTicketSales = function(event){
-		if(confirm('Confirm ticket sales for '+event.event_title+'?' + " This action cannot be undone")){
+		
+		ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: 'Confirm ticket sales for '+event.event_title+'?' + " This action cannot be undone"
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					var tempObj ={eventId: event.id};
+					console.log("fetch id ");
+					console.log(tempObj);
+					//var buildings ={name: $scope.name, address: $scope.address};
+					$http.post("//localhost:8443/event/requestTickets", JSON.stringify(tempObj)).then(function(response){
+						//$scope.buildings = response.data;
+						console.log("REQUEST FOR TICKET SALES");
+						$scope.requestedTicket = true;
+						ModalService.showModal({
 
-			var tempObj ={eventId: event.id};
-			console.log("fetch id ");
-			console.log(tempObj);
-			//var buildings ={name: $scope.name, address: $scope.address};
-			$http.post("//localhost:8443/event/requestTickets", JSON.stringify(tempObj)).then(function(response){
-				//$scope.buildings = response.data;
-				console.log("REQUEST FOR TICKET SALES");
-				$scope.requestedTicket = true;
-				alert('Successfully set ticket sales');
-				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$state.go($state.current, {}, {reload: true}); 
-			},function(response){
-				alert("Did not request ticket sales. Check if the event has been approved");
-				//console.log("response is : ")+JSON.stringify(response);
-			}	
-			)
-		}	
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: "Ticket sales set successfully",
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go($state.current, {}, {reload: true}); 
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
+
+					},function(response){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: "Did not request ticket sales. Check if the event has been approved",
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+					}	
+					)
+				}
+			});
+		});
+
+		$scope.dismissModal = function(result) {
+			close(result, 200); // close, but give 200ms for bootstrap to animate
+
+			console.log("in dissmiss");
+		};
+
+		//END SHOWMODAL
+
+
+
+		
+		
 	}
 
 	$scope.getEventById= function(){
@@ -450,6 +510,24 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			console.log("start checking availability");
 			$scope.data = {};
 
+			if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date){
+				ModalService.showModal({
+
+					templateUrl: "views/errorMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: "Please make sure you have entered the starting and ending dates to check for availability and rent calculation",
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+						$scope.selectedUnits = [];
+						$scope.currentlySelectedUnit = '';
+					});
+				});
+				return;
+			}
 			var dataObj = {
 					units: $scope.selectedUnits,
 					event_start_date: ($scope.event.event_start_date).toString(),
@@ -476,7 +554,9 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 	$scope.checkRent = function(){
 		console.log("start checking rent");
 		$scope.data = {};
-
+		if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date){
+			return;
+		}
 		var dataObj = {
 				units: $scope.selectedUnits,
 				event_start_date: ($scope.event.event_start_date).toString(),
@@ -494,7 +574,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			$scope.order_item = "id";
 			$scope.order_reverse = false;
 			console.log($scope.components);
-			alert("get component success");
+			console.log("get component success");
 		});
 		send.error(function(response){
 			alert("get component failure");
@@ -529,6 +609,25 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		console.log("start adding");
 		$scope.data = {};
 
+		if ( $scope.selectedUnits == null || $scope.event.event_title == null || $scope.event.event_description == null || $scope.eventType == null ||
+				$scope.event.event_start_date == null || $scope.event.event_end_date == null){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Please make sure you have entered all fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			return;
+		}
+
+
 		var dataObj = {
 				units: $scope.selectedUnits,
 				event_title: $scope.event.event_title,
@@ -548,8 +647,28 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 
 		console.log("SAVING THE Event");
 		send.success(function(){
-			alert('Event IS SAVED!');
-			$state.go("dashboard.viewAllEventsEx");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Event saved successfully",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllEventsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+
+
 		});
 		send.error(function(){
 			alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
@@ -624,7 +743,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 
 }]);
 
-app.controller('updateEController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData){
+app.controller('updateEController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService){
 	angular.element(document).ready(function () {
 		//VIEW EVENT
 		$scope.event1 = shareData.getData();
@@ -835,7 +954,24 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 	$scope.checkRent = function(){
 		console.log("start checking rent");
 		$scope.data = {};
+		if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date){
+			ModalService.showModal({
 
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Please make sure you have entered the starting and ending dates to check for availability and rent calculation",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.selectedBookingsUnits = [];
+					$scope.currentlySelectedUnit = '';
+				});
+			});
+			return;
+		}
 		var dataObj = {
 				units: $scope.selectedBookingsUnits,
 				event_start_date: ($scope.event.event_start_date).toString(),
@@ -893,11 +1029,52 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 
 		console.log("UPDATING THE EVENT");
 		send.success(function(){
-			alert('EVENT IS SAVED! GOING BACK TO VIEW ALL EVENTS');
-			$state.go("dashboard.viewAllEventsEx");
+			console.log("REQUEST FOR TICKET SALES");
+			$scope.requestedTicket = true;
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Event saved successfully",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllEventsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+
 		});
 		send.error(function(){
-			alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
+			console.log("REQUEST FOR TICKET SALES");
+			$scope.requestedTicket = true;
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Did not save event, unit is unavailable",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};	
 }]);
@@ -906,7 +1083,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 
 
 
-app.controller('bookingController', ['$scope','$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('bookingController', ['$scope','$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService) {
 	angular.element(document).ready(function () {	
 		//console.log(tempObj)
 		console.log("DISPLAY ALL BOOKINGS");
