@@ -217,7 +217,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 
 	@Override
 	public boolean updateAmountPaidByOrg(ClientOrganisation client, User user,long paymentPlanId,
-			String chequeNum, Double paid) {
+			String chequeNum, Double paid, String nextInvoice) {
 		Set<User> users = userRepository.getAllUsers(client);
 		System.out.println("clientUser");
 		NumberFormat formatter = new DecimalFormat("#0.00"); 
@@ -240,6 +240,13 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			if(pay1.isPresent()){
 				PaymentPlan pay = pay1.get();
 				Set<Payment> payments = pay.getPayments();
+				Payment payment = new Payment();
+				for(Payment p : payments){
+					if(p.getInvoice().equals(nextInvoice))
+						payment = p;
+				}
+				if(payment.getInvoice().isEmpty())
+					return false;
 				Double payable = pay.getPayable();
 				System.out.println("payable " + payable);
 				Event event = pay.getEvent();
@@ -249,7 +256,6 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				System.out.println("before if");	    	
 				if(payable < paid)
 					return false;
-				Payment payment = new Payment();
 				Calendar cal = Calendar.getInstance();
 				payment.setPaid(cal.getTime());
 				//System.out.println(cal.getTime());

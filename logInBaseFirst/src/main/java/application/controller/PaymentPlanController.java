@@ -557,8 +557,10 @@ public class PaymentPlanController {
 			System.out.println("amount: "+ amount);
 			String cheque = (String)jsonObject.get("cheque");
 			System.out.println("cheque: "+cheque);
+			String nextInvoice = (String)jsonObject.get("nextInvoice");
+			System.out.println("invoice: "+nextInvoice);
 			//Double subsequent = (Double)jsonObject.get("subsequent");
-			boolean bl = paymentPlanService.updateAmountPaidByOrg(client, user, paymentId, cheque, amount);
+			boolean bl = paymentPlanService.updateAmountPaidByOrg(client, user, paymentId, cheque, amount, nextInvoice);
 			System.out.println("success or not?" + bl);
 			if(!bl)
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -816,7 +818,7 @@ public class PaymentPlanController {
 		response.setContentType("application/pdf");
 		Principal principal = request.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
-			ClientOrganisation client = usr.get().getClientOrganisation();
+	    ClientOrganisation client = usr.get().getClientOrganisation();
 		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
 		//ServletOutputStream outputStream = response.getOutputStream();
 		HashMap<String,Object> parameters = new HashMap<String,Object>();
@@ -896,7 +898,6 @@ public class PaymentPlanController {
 			e1.printStackTrace();
 		}
 	}
-
 
 	@RequestMapping(value = "/downloadReport", method = RequestMethod.POST, produces = "application/pdf")
 	@ResponseBody
