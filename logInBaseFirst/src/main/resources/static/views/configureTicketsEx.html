@@ -39,7 +39,7 @@
 					</thead>
 					<tbody>
 
-						<tr ng-repeat="x in tickets">
+						<tr ng-repeat="x in tickets track by $index">
 							<td>{{ x.id }}</td>
 							<td>{{ x.categoryName }}</td>
 							<td>{{ x.price }}</td>
