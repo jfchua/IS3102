@@ -313,7 +313,7 @@ public class BuildingController {
 			String filePath = (String)jsonObject.get("filePath");
 			//Principal principal = rq.getUserPrincipal();
 			//User currUser = (User)userService.getUserByEmail(principal.getName()).get();
-			boolean bl = buildingService.editBuildingInfo(client,id, name, address, postalCode, city, numFloor);
+			boolean bl = buildingService.editBuildingInfo(client,id, name, address, postalCode, city, numFloor,"filePath");
 			if(!bl){
 				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}

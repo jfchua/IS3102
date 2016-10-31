@@ -1,117 +1,147 @@
- <link rel="stylesheet" href="bower_components/angular-gridster/dist/angular-gridster.css"/>
- <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
- <link rel="stylesheet" href="../css/floorplanGrid.css" type="text/css" />
-       <div class="row">    
- 
-<div class="clearfix">
-		                        <ol class="breadcrumb no-bg no-m-t">
-		                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-		                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-		                            <li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
-		                             <li><a ui-sref="dashboard.viewBookingEx" ng-click="passEvent()" >View Bookings</a></li>
-		                             
-		                             <li><a>View Unit Plan</a></li>
-		                        </ol>
-		</div> 
-             <div class="col-md-11" id="screenshot">  
-           <div class="col-md-6" id="widthForFloorPlan">
+
+<link rel="stylesheet"
+	href="bower_components/angular-gridster/dist/angular-gridster.css" />
+<link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
+<link rel="stylesheet" href="../css/floorplanGrid.css" type="text/css" />
+<div class="row">
+
+	<div class="clearfix">
+		<ol class="breadcrumb no-bg no-m-t">
+			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
+			<li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
+			<li><a ui-sref="dashboard.viewBookingEx" ng-click="passEvent()">View
+					Bookings</a></li>
+
+			<li><a>View Unit Plan</a></li>
+		</ol>
+	</div>
+	<div class="col-md-11" id="screenshot">
+		<div class="col-md-6" id="widthForFloorPlan">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					<h3 class="panel-title">Unit Plan	  
+					<h3 class="panel-title">
+						Unit Plan
 						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+								class="panelButton"><i class="fa fa-minus"></i></a> <a
+								class="panelButton"><i class="fa fa-remove"></i></a>
 						</div>
 					</h3>
 				</div>
-			    
-<div class="panel-body" id="panelheadGrid">
-<div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{unitWidthGrid}} + 'px', width: {{unitLengthGrid}} + 'px'}">
-    <ul>
-        <li gridster-item="area"  id="{{area.square.id}}"  ng-repeat="area in areas"  ng-dblclick="showModal(area,$parent)"  ng-style="{'background-color':'{{area.square.color}}'}" ><p tooltip-placement="top" tooltip="Double click to view details of area {{area.areaName}}"> {{area.areaName}}
-                          <img  class="svgtest" ng-src="{{area.square.type||area.square.icon.iconPath}}"  alt="icon"></p></li>
-    </ul>
-</div>
-</div>
-    </div> 
-     <div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">Legend	  
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-						</div>
-					</h3>
-				</div>
-			    
-	<div class="panel-body" >
-	 <table >
-  <tbody >
-  	<tr class="col-md-6" ng-repeat="area in legends track by area.id" >
-      <th scope="row"> <img  ng-style="{'background-color':'{{area.square.color}}',  height: '20px', width:  '20px'}" class="svgtest"  ng-src="{{area.square.type||area.square.icon.iconPath}}"  alt="icon"></th>
-      <td>{{area.description}}</td>
-    </tr>
-   
-  </tbody>
-</table>
-	</div>
-	</div>     
-  </div>
-<div class="col-md-6">
-<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">Unit Details	  
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-						</div>
-					</h3>
-				</div>
-			    
-	<div class="panel-body" >
-     
-     <table class="table table-hover">
-  <tbody>
-    <tr>
-      <th scope="row">Unit Number</th>
-      <td>{{unit.unitNumber}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Length</th>
-      <td>{{unit.sizeX}}m</td>
-    </tr>
-    <tr>
-      <th scope="row">Width</th>
-      <td>{{unit.sizeY}}m</td>
-    </tr>
-     <tr>
-      <th scope="row">Description</th>
-      <td>{{unit.description}}</td>
-    </tr>
-     <tr ng-repeat="attribute in unit.unitAttributeValues">
-      <th scope="row">{{attribute.unitAttributeType.attributeType}}</th>
-      <td>{{attribute.attributeValue}}</td>
-    </tr>
-  </tbody>
-</table>
-     </div>
-     </div>
- </div>
 
- </div>
- <div class="col-md-1">
-     <br>
-      <br>
-       <br>
-     <a ui-sref="dashboard.createUnitPlanEx" ng-click="editUnitPlan()" tooltip-placement="left" tooltip="Edit unit plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-pencil"></i></button></a>
-     </div>
-            <div class="col-md-1">
-     <br>    
-     <a ng-click="downloadPlan()"  id="download" tooltip-placement="left" tooltip="Download Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-download-alt"></i></button></a>
-    
-    </div>  
-         </div>
-           
+				<div class="panel-body" id="panelheadGrid">
+					<div gridster="gridsterOpts" id="glassboxGrid"
+						ng-style="{height: {{unitWidthGrid}} + 'px', width: {{unitLengthGrid}} + 'px'}">
+						<ul>
+							<li gridster-item="area" id="{{area.square.id}}"
+								ng-repeat="area in areas" ng-dblclick="showModal(area,$parent)"
+								ng-style="{'background-color':'{{area.square.color}}'}"><p
+									tooltip-placement="top"
+									tooltip="Double click to view details of area {{area.areaName}}">
+									{{area.areaName}} <img class="svgtest"
+										ng-src="{{area.square.type||area.square.icon.iconPath}}"
+										alt="icon">
+								</p></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Legend
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+								class="panelButton"><i class="fa fa-minus"></i></a> <a
+								class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+
+				<div class="panel-body">
+					<table>
+						<tbody>
+							<tr class="col-md-6" ng-repeat="area in legends track by area.id">
+								<th scope="row"><img
+									ng-style="{'background-color':'{{area.square.color}}',  height: '20px', width:  '20px'}"
+									class="svgtest"
+									ng-src="{{area.square.type||area.square.icon.iconPath}}"
+									alt="icon"></th>
+								<td>{{area.description}}</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Unit Details
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+								class="panelButton"><i class="fa fa-minus"></i></a> <a
+								class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+
+				<div class="panel-body">
+
+					<table class="table table-hover">
+						<tbody>
+							<tr>
+								<th scope="row">Unit Number</th>
+								<td>{{unit.unitNumber}}</td>
+							</tr>
+							<tr>
+								<th scope="row">Length</th>
+								<td>{{unit.sizeX}}m</td>
+							</tr>
+							<tr>
+								<th scope="row">Width</th>
+								<td>{{unit.sizeY}}m</td>
+							</tr>
+							<tr>
+								<th scope="row">Description</th>
+								<td>{{unit.description}}</td>
+							</tr>
+							<tr ng-repeat="attribute in unit.unitAttributeValues">
+								<th scope="row">{{attribute.unitAttributeType.attributeType}}</th>
+								<td>{{attribute.attributeValue}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="col-md-1">
+		<br>  <a ui-sref="dashboard.createUnitPlanEx"
+			ng-click="editUnitPlan()" tooltip-placement="left"
+			tooltip="Edit unit plan"><button type="button"
+				class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-pencil"></i>
+			</button></a>
+	</div>
+
+	<div class="col-md-1">
+		<br> <a ng-click="downloadPlan()" id="download"
+			tooltip-placement="left" tooltip="Download Floor Plan"><button
+				type="button" class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-download-alt"></i>
+			</button></a>
+
+	</div>
+	<div class="col-md-1" ng-show="areas.length==0">
+	 <br> <a ng-click="showDefaultUnitPlan()"
+			tooltip-placement="left" tooltip="Show default unit plan"><button
+				type="button" class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-eye-open"></i>
+			</button></a>
+	</div>
+</div>

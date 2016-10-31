@@ -95,7 +95,7 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 
 	@Override
-	public boolean editBuildingInfo(ClientOrganisation client, long id, String name, String address, String postalCode, String city, int numFloor) throws BuildingNotFoundException, InvalidPostalCodeException {
+	public boolean editBuildingInfo(ClientOrganisation client, long id, String name, String address, String postalCode, String city, int numFloor, String path) throws BuildingNotFoundException, InvalidPostalCodeException {
 		// TODO Auto-generated method stub
 		
 		if ( !getBuildingById(id).isPresent()){

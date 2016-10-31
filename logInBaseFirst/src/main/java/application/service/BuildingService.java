@@ -18,7 +18,7 @@ public interface BuildingService {
 
 	public Set<Building> getAllBuildings(ClientOrganisation client);
 
-	boolean editBuildingInfo(ClientOrganisation client, long id, String name, String address, String postalCode, String city, int numFloor) throws BuildingNotFoundException, InvalidPostalCodeException;
+	boolean editBuildingInfo(ClientOrganisation client, long id, String name, String address, String postalCode, String city, int numFloor, String path) throws BuildingNotFoundException, InvalidPostalCodeException;
 
 	boolean deleteBuilding(ClientOrganisation client, long id) throws BuildingNotFoundException;
 

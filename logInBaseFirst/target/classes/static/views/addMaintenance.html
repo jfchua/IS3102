@@ -42,20 +42,20 @@
 							Building</label> <select name="building"
 							ng-model="currentlySelectedBuilding"
 							ng-options="x.id as x.name for x in buildings"
+							ng-change="getLevel(currentlySelectedBuilding)"
 							class="form-control">
 						</select>
 						<!-- <p>Building ID <input ng-model="currentlySelectedBuilding"> Selected</p>-->
-						<button ng-click="getLevel(currentlySelectedBuilding)">Apply</button>
 					</div>
 
 					<div class="form-group">
 						<label for="level" class="control-label">Select Level</label> <select
 							name="level" ng-model="currentlySelectedLevel"
 							ng-options="x.id as x.levelNum for x in levels"
+							ng-change="getUnit(currentlySelectedLevel)"
 							class="form-control">
 						</select>
-						<!--  <p>Level ID <input ng-model="currentlySelectedLevel"> Selected</p>-->
-						<button ng-click="getUnit(currentlySelectedLevel)">Apply</button>
+
 					</div>
 					<div class="form-group">
 						<ul class="list-group" name="units">
