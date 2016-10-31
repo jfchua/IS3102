@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
@@ -335,7 +336,7 @@ public class PaymentPlanController {
 			User user = usr.get();
 			ClientOrganisation client = usr.get().getClientOrganisation();
 			Set<User> eventOrgs = userService.getExternalUsers(client);
-			System.err.println("HELLOOOOOOOOOOOOO");	
+			//System.err.println("HELLOOOOOOOOOOOOO");	
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
 						public boolean shouldSkipClass(Class<?> clazz) {
@@ -365,7 +366,7 @@ public class PaymentPlanController {
 			for(User u : eventOrgs){
 				JSONObject obj1 = new JSONObject();
 				obj1.put("id", u.getId());
-				System.out.println("event org name is "+u.getName());
+				//System.out.println("event org name is "+u.getName());
 				obj1.put("name", u.getName());
 				obj1.put("email", u.getEmail());
 				obj1.put("outstanding",formatter.format(paymentPlanService.getOutstandingById(u.getId())));
@@ -776,7 +777,7 @@ public class PaymentPlanController {
 			ClientOrganisation client = usr.get().getClientOrganisation();				   
 			long id = Long.parseLong(orgId);
 			Set<Payment> payments= paymentPlanService.getPaymentsByOrgId(client, id);
-			System.out.println("There are X events and X is "+ payments.size());
+			System.err.println("There are X events and X is "+ payments.size());
 			JSONArray jArray = new JSONArray();
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
@@ -801,19 +802,21 @@ public class PaymentPlanController {
 			NumberFormat formatter = new DecimalFormat("#0.00"); 
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.");
 			for(Payment p: payments){
+				if(p.getCheque()!=null){
 				JSONObject obj1 = new JSONObject();
 				obj1.put("id", p.getId());				
 				String[] arr1 = String.valueOf(sdf.format(p.getPaid())).split(" ");
-				System.out.println("payment date is "+ arr1[0]);
+				System.err.println("payment date is "+ arr1[0]);
 				obj1.put("date", arr1[0]);								    
 				obj1.put("plan",p.getPlan());
-				System.out.println("TOTAL1");			
+				System.err.println("TOTAL1");			
 				obj1.put("amount",formatter.format(p.getAmount()));
 				System.out.println("TOTAL2");
 				obj1.put("cheque",p.getCheque());
 				System.out.println("TOTAL3");
 				obj1.put("invoice",p.getInvoice());
 				jArray.add(obj1);
+				}
 			}
 			System.out.println("finishing getting list of payments");
 			return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);			
@@ -889,6 +892,93 @@ public class PaymentPlanController {
 					invoice = paymentId + "-" + counter;
 				}
 				parameters.put("number", paymentId+ "-" + counter );
+			}
+			System.out.println("invoice is "+invoice);
+			boolean bl = paymentPlanService.generatePayment(client, paymentId, invoice);
+			System.out.println("*******GENERATE PAYMENT????"+bl);
+			System.err.println("path is " + path);
+			FileOutputStream fileOutputStream = new FileOutputStream(path);
+			JasperRunManager.runReportToPdfStream(jasperStream, fileOutputStream, parameters,conn);
+			fileOutputStream.flush();
+			fileOutputStream.close();
+			System.out.println("FLUSHED OUT THE LOG");
+			//User usr = userService.getUserByEmail(principal.getName()).get();
+			//ClientOrganisation client = usr.getClientOrganisation();
+			PaymentPolicy paypol = client.getPaymentPolicy();
+			String email = "Please pay the amount stated in the invoice within "+ paypol.getNumOfDueDays() +
+					" days.";
+			emailService.sendEmailWithAttachment(user.getEmail(), "Invoice for payment plan id "+paymentId, email , path);
+
+
+		} catch (ParseException e1) {
+			System.out.println("at /download invoice there was an error parsing the json string received");
+			e1.printStackTrace();
+		}
+	}
+
+	@RequestMapping(value = "/downloadInvoiceForUpdate", method = RequestMethod.POST, produces = "application/pdf")
+	public void downloadInvoiceForUpdate(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException, InvalidAttachmentException {
+		System.out.println("Enter");
+		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Invoice.jasper");
+		response.setContentType("application/pdf");
+		Principal principal = request.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		ClientOrganisation client = usr.get().getClientOrganisation();
+		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+		//ServletOutputStream outputStream = response.getOutputStream();
+		HashMap<String,Object> parameters = new HashMap<String,Object>();
+		StringBuilder sb = new StringBuilder();
+		sb.append(" ");
+		Object obj;
+		try {
+			/*
+			if(info == null)
+				System.out.println("********** info is null");
+
+			if(parser == null)
+				System.out.println("********** parser is null");
+
+			System.out.println("********** HERE");*/
+
+			obj = parser.parse(info);
+			JSONObject jsonObject = (JSONObject) obj;
+			Long paymentId = (Long)jsonObject.get("id");
+			PaymentPlan p = paymentPlanService.getPaymentPlanById(paymentId).get();
+			Event event = p.getEvent();
+			User user = event.getEventOrg();
+			sb.append(" P.ID = ");
+			sb.append(paymentId);
+			System.err.println("Query parameter is : " + sb.toString());
+			parameters.put("criteria", sb.toString());
+
+			Connection conn = null;
+			try {
+				DataSource ds = (DataSource)context.getBean("dataSource");
+				conn = ds.getConnection();
+				System.out.println(conn.toString());
+			} catch (SQLException e) {
+				System.out.println("************* ERROR: " + e.getMessage());
+				e.printStackTrace();
+			}
+			String path = request.getSession().getServletContext().getRealPath("/");
+			System.err.println("path is " + path);
+			path += "Invoice" + paymentId + ".pdf";
+			File f = new File(path);
+			//int counter = 1;
+			String invoice = "";
+			PaymentPlan pay = paymentPlanService.getPaymentPlanById(paymentId).get();
+			Set<Payment> pays = pay.getPayments();
+			if ( pays.size()==1){
+				parameters.put("number", String.valueOf(paymentId));
+				invoice = String.valueOf(paymentId);
+			}
+			else{
+				Iterator iter = pays.iterator();
+				while (iter.hasNext()){
+					invoice = ((Payment)iter.next()).getInvoice();
+				}
+				System.err.println(invoice);
+				parameters.put("number", invoice);
 			}
 			System.out.println("invoice is "+invoice);
 			boolean bl = paymentPlanService.generatePayment(client, paymentId, invoice);

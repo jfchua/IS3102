@@ -159,12 +159,20 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				NumberFormat formatter = new DecimalFormat("#0.00"); 
 				// plan.setGst(Double.valueOf(formatter.format(total/1.07*0.07)));
 				pay.setDeposit(Double.valueOf(formatter.format(total*depositRate)));
+				System.err.println(total*depositRate);
 				//System.out.println(formatter.format(total*depositRate));
 				pay.setDepositRate(depositRate);
 				pay.setSubsequentNumber(subsequentNumber);
 				//System.out.println("after subsequent");
 				pay.setSubsequent(Double.valueOf(formatter.format((total-total*depositRate)/subsequentNumber)));
 				//System.out.println("finally!!!");
+				Set<Payment> pays = pay.getPayments();
+				if(pays.size()==1){
+					pay.setNextPayment(Double.valueOf(formatter.format(total*depositRate)));
+				}
+				else if(pays.size()>1){
+					pay.setNextPayment(Double.valueOf(formatter.format((total-total*depositRate)/subsequentNumber)));
+				}
 				paymentPlanRepository.flush();
 				messageService.sendMessage(user, pay.getEvent().getEventOrg(), "Change of Payment Plan", "Your payment plan is changed, "
 						+ "the latest deposit rate is " + depositRate +", the latest number of subsequent number of payments are "+subsequentNumber);
