@@ -449,7 +449,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			System.out.println(pay1.isPresent());
 			if(pay1.isPresent()){
 				PaymentPlan pay = pay1.get();
-				pay.setTicketRevenue(paid);
+				NumberFormat formatter = new DecimalFormat("#0.00");
+				pay.setTicketRevenue(Double.valueOf(formatter.format(paid)));
 				Double payable = pay.getPayable();
 				pay.setPayable(payable-paid);
 				paymentPlanRepository.flush();
@@ -484,6 +485,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			Optional<PaymentPlan> pay1 = getPaymentPlanById(paymentPlanId); 
 			System.out.println(pay1.isPresent());
 			if(pay1.isPresent()){
+				NumberFormat formatter = new DecimalFormat("#0.00"); 
 				PaymentPlan pay = pay1.get();
 				Set<Payment> payments = pay.getPayments();
 				Payment outPayment = new Payment();
@@ -495,7 +497,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				outPayment.setPaid(cal.getTime());
 				paymentRepository.save(outPayment);
 				payments.add(outPayment);
-				Double payable = pay.getPayable();
+				Double payable = Double.valueOf(formatter.format(pay.getPayable()));
 				if((payable + paid)!= 0)
 					return false;
 				pay.setPayable(0.00);
