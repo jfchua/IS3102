@@ -22,7 +22,8 @@ public interface PaymentPlanService {
 	
 	Set<PaymentPlan> viewAllPaymentPlan(ClientOrganisation client, User user);
 	
-	boolean updateAmountPaidByOrg(ClientOrganisation client, User user, long paymentPlanId, String chequeNum,Double paid);
+	boolean updateAmountPaidByOrg(ClientOrganisation client, User user, long paymentPlanId, String chequeNum,
+			Double paid, String nextInvoice);
 	
 	boolean checkEvent(ClientOrganisation client, long eventId);
 	
