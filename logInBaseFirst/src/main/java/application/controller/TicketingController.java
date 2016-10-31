@@ -34,14 +34,18 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import application.entity.BookingAppl;
+import application.entity.Building;
 import application.entity.Category;
+import application.entity.ClientOrganisation;
 import application.entity.Event;
 import application.entity.Feedback;
+import application.entity.Level;
 import application.entity.PaymentPlan;
 import application.entity.Ticket;
 import application.entity.User;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
+import application.repository.BuildingRepository;
 import application.repository.CategoryRepository;
 import application.repository.FeedbackRepository;
 import application.service.BookingService;
@@ -64,15 +68,17 @@ public class TicketingController {
 	private final EngagementService engagementService;
 	private final FeedbackRepository feedbackRepository;
 	private final CategoryRepository categoryRepository;
+	private final BuildingRepository buildingRepository;
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 
 	@Autowired
-	public TicketingController(CategoryRepository categoryRepository, FeedbackRepository feedbackRepository,EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
+	public TicketingController(BuildingRepository buildingRepository, CategoryRepository categoryRepository, FeedbackRepository feedbackRepository,EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
 			UserService userService) {
 		super();
 		this.eventExternalService = eeventService;
 		this.bookingService = bookingService;
+		this.buildingRepository = buildingRepository;
 		this.userService = userService;
 		this.ticketingService = ticketingService;
 		this.categoryRepository = categoryRepository;
@@ -580,6 +586,57 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/tixViewBuildings", method = RequestMethod.GET)
+	@ResponseBody
+	public String viewBuildings(HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+			Set<Building> buildings = buildingRepository.fetchAllBuildings();
+			//Gson gson = new Gson();
+			//String json = gson.toJson(buildings);
+			//System.out.println("Returning buildings with json of : " + json);
+			//return json;	
+			System.out.println(buildings);
+			Gson gson2 = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == Level.class);
+						}
+
+						/**
+						 * Custom field exclusion goes here
+						 */
+
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+						}
+
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();
+
+
+
+			String json = gson2.toJson(buildings);
+			System.out.println("BUILDING IS " + json);
+
+			return json;
+		}
+		catch (Exception e){
+			return "cannot fetch";
+		}
+	}	
 
 
 	/*
