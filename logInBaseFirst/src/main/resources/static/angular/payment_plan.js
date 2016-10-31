@@ -180,6 +180,10 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 				subsequent_number: $scope.plan.subsequentNumber,
 				//nextInvoice: $scope.plan.nextInvoice,
 		};
+		var dataObj1 = {
+				id: $scope.plan.id,
+		};
+
 		console.log("SUBMIT PAYMENT PLAN");
 		console.log(JSON.stringify(dataObj));
 
@@ -191,7 +195,27 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 
 		console.log("UPDATING THE PAYMENT");
 		send.success(function(){		
-			alert('PAYMENT IS SAVED! GOING BACK TO VIEW PAYMENT PLANS');
+alert('PAYMENT IS UPDATED! DOWNLOAD THE INVOICE!! GOING BACK TO VIEW PAYMENT PLANS');
+			
+			var send = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/payment/downloadInvoiceForUpdate',
+				data    : dataObj1, 
+				responseType: 'arraybuffer'
+			});
+
+			console.log("DOWNLOADING");
+			send.success(function(data){
+				console.log(JSON.stringify(data));
+				var file = new Blob([data], {type: 'application/pdf'});
+				var fileURL = URL.createObjectURL(file);
+				window.open(fileURL);
+				alert('DOWNLOADED!');
+			});
+			send.error(function(data){
+				alert('DOWNLOAD GOT ERROR!');
+			});	
+
 			$state.go("dashboard.viewAllPaymentPlans");
 		});
 		send.error(function(){
