@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
@@ -129,7 +130,7 @@ public class PaymentPlanController {
 					 * By default, Gson does not serialize null values
 					 */
 					.serializeNulls()
-					.create();			    
+					.create();	    
 			String json = gson2.toJson(plans);
 			System.out.println(json);
 			return json;
@@ -172,7 +173,7 @@ public class PaymentPlanController {
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			else{
 				String  subject = "Payment plan for event ID " + eventId + " created!";
-				String msg = "Your event ID " + eventId + " has a new payment plan with total amount "+total+" .";			   
+				String msg = "Your event ID " + eventId + " has a new payment plan with total amount "+total+" .";	   
 				emailService.sendEmail(org.getEmail(), subject, msg);
 				messageService.sendMessage(user, org, subject, msg);
 			}
@@ -203,7 +204,7 @@ public class PaymentPlanController {
 			System.out.println(eventOrg.getName());
 			Object obj = parser.parse(eventJSON);
 			JSONObject jsonObject = (JSONObject) obj;
-			Long eventId = (Long)jsonObject.get("event");				
+			Long eventId = (Long)jsonObject.get("event");	
 			Double price = paymentPlanService.checkRent(client, eventId);
 			PaymentPolicy payPol = client.getPaymentPolicy();
 
@@ -227,7 +228,7 @@ public class PaymentPlanController {
 		catch (Exception e){
 			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
-		}		
+		}	
 	}	
 
 	@RequestMapping(value = "/updatePaymentPlan", method = RequestMethod.POST)
@@ -271,7 +272,7 @@ public class PaymentPlanController {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);		}
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);	}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
 			Set<Event> events = eventService.getAllApprovedEvents(client);
@@ -335,7 +336,7 @@ public class PaymentPlanController {
 			User user = usr.get();
 			ClientOrganisation client = usr.get().getClientOrganisation();
 			Set<User> eventOrgs = userService.getExternalUsers(client);
-			System.err.println("HELLOOOOOOOOOOOOO");	
+			//System.err.println("HELLOOOOOOOOOOOOO");	
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
 						public boolean shouldSkipClass(Class<?> clazz) {
@@ -360,12 +361,12 @@ public class PaymentPlanController {
 					 * By default, Gson does not serialize null values
 					 */
 					.serializeNulls()
-					.create();		
+					.create();	
 			NumberFormat formatter = new DecimalFormat("#0.00");    
 			for(User u : eventOrgs){
 				JSONObject obj1 = new JSONObject();
 				obj1.put("id", u.getId());
-				System.out.println("event org name is "+u.getName());
+				//System.out.println("event org name is "+u.getName());
 				obj1.put("name", u.getName());
 				obj1.put("email", u.getEmail());
 				obj1.put("outstanding",formatter.format(paymentPlanService.getOutstandingById(u.getId())));
@@ -392,7 +393,7 @@ public class PaymentPlanController {
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 		try{
-			ClientOrganisation client = usr.get().getClientOrganisation();				   
+			ClientOrganisation client = usr.get().getClientOrganisation();	   
 			long id = Long.parseLong(orgId);
 			Set<Event> events= paymentPlanService.getEventsByOrgId(client, id);
 			System.out.println("There are X events and X is "+events.size());
@@ -434,7 +435,7 @@ public class PaymentPlanController {
 				jArray.add(obj1);
 			}
 			System.out.println("finishing getting list of events");
-			return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);			
+			return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);	
 		}
 		catch (Exception e){
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
@@ -453,7 +454,7 @@ public class PaymentPlanController {
 			return new ResponseEntity<Set<PaymentPlan>>(HttpStatus.CONFLICT);
 		}
 		try{
-			ClientOrganisation client = usr.get().getClientOrganisation();				   
+			ClientOrganisation client = usr.get().getClientOrganisation();	   
 			long id = Long.parseLong(orgId);
 			Set<Event> events= paymentPlanService.getEventsByOrgId(client, id);
 			System.out.println("There are X events and X is "+events.size());
@@ -484,7 +485,7 @@ public class PaymentPlanController {
 					payments.add(p);
 			}
 			System.out.println("finishing getting list of events");
-			return new ResponseEntity<Set<PaymentPlan>>(payments,HttpStatus.OK);			
+			return new ResponseEntity<Set<PaymentPlan>>(payments,HttpStatus.OK);	
 		}
 		catch (Exception e){
 			return new ResponseEntity<Set<PaymentPlan>>(HttpStatus.CONFLICT);
@@ -504,7 +505,7 @@ public class PaymentPlanController {
 		}
 		try{
 			User user = usr.get();
-			ClientOrganisation client = usr.get().getClientOrganisation();		
+			ClientOrganisation client = usr.get().getClientOrganisation();	
 			long id = Long.parseLong(planId);
 			PaymentPlan policy = paymentPlanService.getPaymentPlanById(id).get();
 			Gson gson2 = new GsonBuilder()
@@ -529,13 +530,13 @@ public class PaymentPlanController {
 					 * By default, Gson does not serialize null values
 					 */
 					.serializeNulls()
-					.create();		
+					.create();	
 			return new ResponseEntity<PaymentPlan>(policy, HttpStatus.OK);
 		}
 		catch (Exception e){
 			return new ResponseEntity<PaymentPlan>(HttpStatus.CONFLICT);
 		}
-	}					
+	}	
 
 	@RequestMapping(value = "/updateReceivedPayment", method = RequestMethod.POST)
 	@ResponseBody
@@ -570,7 +571,7 @@ public class PaymentPlanController {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
-	}						
+	}	
 
 	// Call this method using $http.get and you will get a JSON format containing an array of event objects.
 	// Each object (building) will contain... long id, collection of levels.
@@ -583,7 +584,7 @@ public class PaymentPlanController {
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 		try{
-			ClientOrganisation client = usr.get().getClientOrganisation();				   				
+			ClientOrganisation client = usr.get().getClientOrganisation();	   	
 			Set<Event> events= eventExternalService.getEventsWithTicket(client);
 			System.out.println("There are X events and X is "+events.size());
 			JSONArray jArray = new JSONArray();
@@ -642,7 +643,7 @@ public class PaymentPlanController {
 				jArray.add(obj1);
 			}
 			System.out.println("finishing getting list of events" + jArray.toString());
-			return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);			
+			return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);	
 		}
 		catch (Exception e){
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
@@ -661,7 +662,7 @@ public class PaymentPlanController {
 
 		try{
 			User user = usr.get();
-			ClientOrganisation client = usr.get().getClientOrganisation();		
+			ClientOrganisation client = usr.get().getClientOrganisation();	
 			long id = Long.parseLong(planId);
 			PaymentPlan policy = paymentPlanService.getPaymentPlanByEvent(client, id);
 			Gson gson2 = new GsonBuilder()
@@ -698,7 +699,7 @@ public class PaymentPlanController {
 		catch (Exception e){
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
-	}									
+	}	
 
 	@RequestMapping(value = "/updateTicketRevenue", method = RequestMethod.POST)
 	@ResponseBody
@@ -730,7 +731,7 @@ public class PaymentPlanController {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
-	}			
+	}	
 
 	@RequestMapping(value = "/updateOutgoingPayment", method = RequestMethod.POST)
 	@ResponseBody
@@ -773,10 +774,10 @@ public class PaymentPlanController {
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 		try{
-			ClientOrganisation client = usr.get().getClientOrganisation();				   
+			ClientOrganisation client = usr.get().getClientOrganisation();	   
 			long id = Long.parseLong(orgId);
 			Set<Payment> payments= paymentPlanService.getPaymentsByOrgId(client, id);
-			System.out.println("There are X events and X is "+ payments.size());
+			System.err.println("There are X events and X is "+ payments.size());
 			JSONArray jArray = new JSONArray();
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
@@ -801,22 +802,24 @@ public class PaymentPlanController {
 			NumberFormat formatter = new DecimalFormat("#0.00"); 
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.");
 			for(Payment p: payments){
-				JSONObject obj1 = new JSONObject();
-				obj1.put("id", p.getId());				
-				String[] arr1 = String.valueOf(sdf.format(p.getPaid())).split(" ");
-				System.out.println("payment date is "+ arr1[0]);
-				obj1.put("date", arr1[0]);								    
-				obj1.put("plan",p.getPlan());
-				System.out.println("TOTAL1");			
-				obj1.put("amount",formatter.format(p.getAmount()));
-				System.out.println("TOTAL2");
-				obj1.put("cheque",p.getCheque());
-				System.out.println("TOTAL3");
-				obj1.put("invoice",p.getInvoice());
-				jArray.add(obj1);
+				if(p.getCheque()!=null){
+					JSONObject obj1 = new JSONObject();
+					obj1.put("id", p.getId());	
+					String[] arr1 = String.valueOf(sdf.format(p.getPaid())).split(" ");
+					System.err.println("payment date is "+ arr1[0]);
+					obj1.put("date", arr1[0]);	    
+					obj1.put("plan",p.getPlan());
+					System.err.println("TOTAL1");	
+					obj1.put("amount",formatter.format(p.getAmount()));
+					System.out.println("TOTAL2");
+					obj1.put("cheque",p.getCheque());
+					System.out.println("TOTAL3");
+					obj1.put("invoice",p.getInvoice());
+					jArray.add(obj1);
+				}
 			}
 			System.out.println("finishing getting list of payments");
-			return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);			
+			return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);	
 		}
 		catch (Exception e){
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
@@ -841,13 +844,13 @@ public class PaymentPlanController {
 		Object obj;
 		try {
 			/*
-			if(info == null)
-				System.out.println("********** info is null");
+	if(info == null)
+	System.out.println("********** info is null");
 
-			if(parser == null)
-				System.out.println("********** parser is null");
+	if(parser == null)
+	System.out.println("********** parser is null");
 
-			System.out.println("********** HERE");*/
+	System.out.println("********** HERE");*/
 
 			obj = parser.parse(info);
 			JSONObject jsonObject = (JSONObject) obj;
@@ -883,12 +886,99 @@ public class PaymentPlanController {
 				while ( f.exists() && !f.isDirectory() ){
 					counter++;
 					path = request.getSession().getServletContext().getRealPath("/");
-					path += "Invoice" + paymentId + "-" + counter + ".pdf";		
+					path += "Invoice" + paymentId + "-" + counter + ".pdf";	
 
 					f = new File(path);
 					invoice = paymentId + "-" + counter;
 				}
 				parameters.put("number", paymentId+ "-" + counter );
+			}
+			System.out.println("invoice is "+invoice);
+			boolean bl = paymentPlanService.generatePayment(client, paymentId, invoice);
+			System.out.println("*******GENERATE PAYMENT????"+bl);
+			System.err.println("path is " + path);
+			FileOutputStream fileOutputStream = new FileOutputStream(path);
+			JasperRunManager.runReportToPdfStream(jasperStream, fileOutputStream, parameters,conn);
+			fileOutputStream.flush();
+			fileOutputStream.close();
+			System.out.println("FLUSHED OUT THE LOG");
+			//User usr = userService.getUserByEmail(principal.getName()).get();
+			//ClientOrganisation client = usr.getClientOrganisation();
+			PaymentPolicy paypol = client.getPaymentPolicy();
+			String email = "Please pay the amount stated in the invoice within "+ paypol.getNumOfDueDays() +
+					" days.";
+			emailService.sendEmailWithAttachment(user.getEmail(), "Invoice for payment plan id "+paymentId, email , path);
+
+
+		} catch (ParseException e1) {
+			System.out.println("at /download invoice there was an error parsing the json string received");
+			e1.printStackTrace();
+		}
+	}
+
+	@RequestMapping(value = "/downloadInvoiceForUpdate", method = RequestMethod.POST, produces = "application/pdf")
+	public void downloadInvoiceForUpdate(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException, InvalidAttachmentException {
+		System.out.println("Enter");
+		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Invoice.jasper");
+		response.setContentType("application/pdf");
+		Principal principal = request.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		ClientOrganisation client = usr.get().getClientOrganisation();
+		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+		//ServletOutputStream outputStream = response.getOutputStream();
+		HashMap<String,Object> parameters = new HashMap<String,Object>();
+		StringBuilder sb = new StringBuilder();
+		sb.append(" ");
+		Object obj;
+		try {
+			/*
+	if(info == null)
+	System.out.println("********** info is null");
+
+	if(parser == null)
+	System.out.println("********** parser is null");
+
+	System.out.println("********** HERE");*/
+
+			obj = parser.parse(info);
+			JSONObject jsonObject = (JSONObject) obj;
+			Long paymentId = (Long)jsonObject.get("id");
+			PaymentPlan p = paymentPlanService.getPaymentPlanById(paymentId).get();
+			Event event = p.getEvent();
+			User user = event.getEventOrg();
+			sb.append(" P.ID = ");
+			sb.append(paymentId);
+			System.err.println("Query parameter is : " + sb.toString());
+			parameters.put("criteria", sb.toString());
+
+			Connection conn = null;
+			try {
+				DataSource ds = (DataSource)context.getBean("dataSource");
+				conn = ds.getConnection();
+				System.out.println(conn.toString());
+			} catch (SQLException e) {
+				System.out.println("************* ERROR: " + e.getMessage());
+				e.printStackTrace();
+			}
+			String path = request.getSession().getServletContext().getRealPath("/");
+			System.err.println("path is " + path);
+			path += "Invoice" + paymentId + ".pdf";
+			File f = new File(path);
+			//int counter = 1;
+			String invoice = "";
+			PaymentPlan pay = paymentPlanService.getPaymentPlanById(paymentId).get();
+			Set<Payment> pays = pay.getPayments();
+			if ( pays.size()==1){
+				parameters.put("number", String.valueOf(paymentId));
+				invoice = String.valueOf(paymentId);
+			}
+			else{
+				Iterator iter = pays.iterator();
+				while (iter.hasNext()){
+					invoice = ((Payment)iter.next()).getInvoice();
+				}
+				System.err.println(invoice);
+				parameters.put("number", invoice);
 			}
 			System.out.println("invoice is "+invoice);
 			boolean bl = paymentPlanService.generatePayment(client, paymentId, invoice);
