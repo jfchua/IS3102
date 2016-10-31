@@ -326,7 +326,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 		Set<BookingAppl> bookings = new HashSet<BookingAppl>();
 		event.setBookings(bookings);
 		String[] units = unitsId.split(" ");
-		System.out.println(units[0]);
+		System.err.println(units[0]);
 		Set<User> eventOrgs = userRepository.getAllUsers(client);
 		boolean doesHave = false;
 		for(User u: eventOrgs){
@@ -371,7 +371,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 					Unit unit = unit1.get();	
 					BookingAppl booking = new BookingAppl();
 					booking.setEvent_start_date_time(event_start_date);
-					System.out.println("inside the controller");
+					System.err.println("inside the controller");
 					System.out.println(event_start_date);
 					System.out.println(booking.getEvent_start_date_time());
 					booking.setEvent_end_date_time(event_end_date);
@@ -970,7 +970,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				System.out.println("FIRST ****" + durFirst);
 				Double duration1 = Double.valueOf(durFirst);
 				str += duration1 + " " + duration1 * base * checkRate(client, calRef.getTime()) + " ";	
-				System.out.println("NOT SURE WHY WRONG " + str);
+				System.out.println("******NOT SURE WHY WRONG " + str);
 				setS.add(str);
 				System.out.println("before k++" +k);
 				k ++;
@@ -994,7 +994,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				cal1.add(Calendar.DAY_OF_MONTH, 1);
 				calRef.setTime(date.getTime());
-				System.out.println("NOT SURE WHY WRONG " + str);
+				System.out.println("**NOT SURE WHY WRONG " + str);
 				setS.add(str);
 			}
 			else{
