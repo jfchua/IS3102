@@ -651,12 +651,12 @@ public class PaymentPlanController {
 
 	@RequestMapping(value = "/getPaymentViaEvent/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<PaymentPlan> getPaymentViaEvent(@PathVariable("id") String planId, HttpServletRequest rq) throws UserNotFoundException{
+	public ResponseEntity<String> getPaymentViaEvent(@PathVariable("id") String planId, HttpServletRequest rq) throws UserNotFoundException{
 		System.out.println("startADD");
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return new ResponseEntity<PaymentPlan>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 
 		try{
@@ -686,11 +686,17 @@ public class PaymentPlanController {
 					 * By default, Gson does not serialize null values
 					 */
 					.serializeNulls()
-					.create();		
-			return new ResponseEntity<PaymentPlan>(policy, HttpStatus.OK);
+					.create();	
+			NumberFormat formatter = new DecimalFormat("#0.00"); 
+			JSONObject obj1 = new JSONObject();
+			obj1.put("id", policy.getId());
+			obj1.put("total", String.valueOf(policy.getTotal()));
+			obj1.put("payable",formatter.format(policy.getPayable()));
+			obj1.put("ticketRevenue",formatter.format(policy.getTicketRevenue()));
+			return new ResponseEntity<String>(obj1.toString(), HttpStatus.OK);
 		}
 		catch (Exception e){
-			return new ResponseEntity<PaymentPlan>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 	}									
 
@@ -711,6 +717,7 @@ public class PaymentPlanController {
 			Long paymentId = (Long)jsonObject.get("id");
 			System.out.println(paymentId);
 			Double amount = Double.valueOf((String)jsonObject.get("ticket"));
+			//String cheque = (String)jsonObject.get("cheque");
 			System.out.println("ticket: "+ amount);
 			//Double subsequent = (Double)jsonObject.get("subsequent");
 			boolean bl = paymentPlanService.updateTicketRevenue(client, user, paymentId, amount);
@@ -743,8 +750,9 @@ public class PaymentPlanController {
 			System.out.println(paymentId);
 			Double amount = Double.valueOf((String)jsonObject.get("toBePaid"));
 			System.out.println("ticket: "+ amount);
+			String cheque = (String)jsonObject.get("cheque");
 			//Double subsequent = (Double)jsonObject.get("subsequent");
-			boolean bl = paymentPlanService.updateOutgoingPayment(client, user, paymentId, amount);
+			boolean bl = paymentPlanService.updateOutgoingPayment(client, user, paymentId, amount, cheque);
 			System.out.println("success or not?" + bl);
 			if(!bl)
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -790,17 +798,21 @@ public class PaymentPlanController {
 					 */
 					.serializeNulls()
 					.create();
+			NumberFormat formatter = new DecimalFormat("#0.00"); 
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.");
 			for(Payment p: payments){
 				JSONObject obj1 = new JSONObject();
-				obj1.put("id", p.getId());
-				System.out.println("payment id is "+p.getId());
-				obj1.put("date", String.valueOf(p.getPaid()));								    
+				obj1.put("id", p.getId());				
+				String[] arr1 = String.valueOf(sdf.format(p.getPaid())).split(" ");
+				System.out.println("payment date is "+ arr1[0]);
+				obj1.put("date", arr1[0]);								    
 				obj1.put("plan",p.getPlan());
-				System.out.println("TOTAL1");
-				obj1.put("amount",p.getAmount());
+				System.out.println("TOTAL1");			
+				obj1.put("amount",formatter.format(p.getAmount()));
 				System.out.println("TOTAL2");
 				obj1.put("cheque",p.getCheque());
 				System.out.println("TOTAL3");
+				obj1.put("invoice",p.getInvoice());
 				jArray.add(obj1);
 			}
 			System.out.println("finishing getting list of payments");

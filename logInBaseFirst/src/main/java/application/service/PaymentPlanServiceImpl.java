@@ -427,7 +427,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	}
 
 	@Override
-	public boolean updateTicketRevenue(ClientOrganisation client, User user, long paymentPlanId, Double paid) {
+	public boolean updateTicketRevenue(ClientOrganisation client, User user, long paymentPlanId, 
+			Double paid) {
 		Set<User> users = userRepository.getAllUsers(client);
 		System.out.println("clientUser");
 		PaymentPolicy payPol = client.getPaymentPolicy();
@@ -448,7 +449,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			System.out.println(pay1.isPresent());
 			if(pay1.isPresent()){
 				PaymentPlan pay = pay1.get();
-				pay.setTicketRevenue(paid);
+				NumberFormat formatter = new DecimalFormat("#0.00");
+				pay.setTicketRevenue(Double.valueOf(formatter.format(paid)));
 				Double payable = pay.getPayable();
 				pay.setPayable(payable-paid);
 				paymentPlanRepository.flush();
@@ -462,7 +464,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	}
 
 	@Override
-	public boolean updateOutgoingPayment(ClientOrganisation client, User user, long paymentPlanId, Double paid) {
+	public boolean updateOutgoingPayment(ClientOrganisation client, User user, long paymentPlanId, 
+			Double paid,  String cheque) {
 		Set<User> users = userRepository.getAllUsers(client);
 		System.out.println("clientUser");
 		PaymentPolicy payPol = client.getPaymentPolicy();
@@ -482,8 +485,19 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			Optional<PaymentPlan> pay1 = getPaymentPlanById(paymentPlanId); 
 			System.out.println(pay1.isPresent());
 			if(pay1.isPresent()){
+				NumberFormat formatter = new DecimalFormat("#0.00"); 
 				PaymentPlan pay = pay1.get();
-				Double payable = pay.getPayable();
+				Set<Payment> payments = pay.getPayments();
+				Payment outPayment = new Payment();
+				outPayment.setInvoice("NA");
+				outPayment.setAmount(-paid);
+				outPayment.setPlan(paymentPlanId);
+				outPayment.setCheque(cheque);
+				Calendar cal = Calendar.getInstance();
+				outPayment.setPaid(cal.getTime());
+				paymentRepository.save(outPayment);
+				payments.add(outPayment);
+				Double payable = Double.valueOf(formatter.format(pay.getPayable()));
 				if((payable + paid)!= 0)
 					return false;
 				pay.setPayable(0.00);
