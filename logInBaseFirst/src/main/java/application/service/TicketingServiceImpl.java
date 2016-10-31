@@ -163,6 +163,20 @@ public class TicketingServiceImpl implements TicketingService {
 		System.out.println("Returning event info : " + bd.toString());
 		return bd.toString();
 	}
+	
+	public int checkTickets(int numTickets, Long categoryId){
+		
+		Category c = categoryRepository.findOne(categoryId);
+		int maxNumTix = c.getNumOfTickets();
+		int currentTixNum = c.getTickets().size();
+		int availableTix = maxNumTix-currentTixNum;
+		if ( numTickets> availableTix ){
+			return availableTix; 
+		}
+		else{
+			return -1;
+		}
+	}
 
 	public boolean generateTicket(User user, String paymentId, int numTickets, Long categoryId){
 		try{

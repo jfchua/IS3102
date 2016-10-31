@@ -372,6 +372,7 @@ app.controller('ticketRController', ['$scope', '$http','$state','$routeParams','
 		var dataObj = {			
 				id: $scope.payment.id,
 				ticket: ($scope.ticket).toString(),
+				//cheque: $scope.cheque,
 		};
 		console.log("REACHED HERE FOR SUBMIT PAYMENT Plan " + JSON.stringify(dataObj));
 		var send = $http({
@@ -426,6 +427,7 @@ app.controller('outgoingController', ['$scope', '$http','$state','$routeParams',
 		var dataObj = {			
 				id: $scope.payment.id,
 				toBePaid: $scope.amountToBePaid,
+				cheque: $scope.cheque,
 		};
 		console.log("REACHED HERE FOR SUBMIT PAYMENT Plan " + JSON.stringify(dataObj));
 		var send = $http({

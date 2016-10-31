@@ -17,5 +17,7 @@ public interface TicketingService {
 	public String getEventDataAsJson(Long eventId) throws EventNotFoundException;
 	
 	public boolean generateTicket(User user, String paymentId, int numTickets, Long categoryId);
+	
+	public int checkTickets(int numTickets, Long categoryId);
 
 }

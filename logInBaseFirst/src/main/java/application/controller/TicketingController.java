@@ -2,6 +2,8 @@ package application.controller;
 
 import java.io.File;
 import java.security.Principal;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -40,6 +42,7 @@ import application.entity.Ticket;
 import application.entity.User;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
+import application.repository.CategoryRepository;
 import application.repository.FeedbackRepository;
 import application.service.BookingService;
 import application.service.EngagementService;
@@ -60,17 +63,19 @@ public class TicketingController {
 	private final EventService eventService;
 	private final EngagementService engagementService;
 	private final FeedbackRepository feedbackRepository;
+	private final CategoryRepository categoryRepository;
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 
 	@Autowired
-	public TicketingController(FeedbackRepository feedbackRepository,EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
+	public TicketingController(CategoryRepository categoryRepository, FeedbackRepository feedbackRepository,EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
 			UserService userService) {
 		super();
 		this.eventExternalService = eeventService;
 		this.bookingService = bookingService;
 		this.userService = userService;
 		this.ticketingService = ticketingService;
+		this.categoryRepository = categoryRepository;
 		this.feedbackRepository = feedbackRepository;
 		this.eventService = eventService;
 		this.engagementService = engagementService;
@@ -361,7 +366,7 @@ public class TicketingController {
 			Gson gson = new Gson();
 			System.err.println("before wrapt");
 			System.err.println(ticketsJSON);
-			
+
 			Object obj1 = parser.parse(ticketsJSON);
 			JSONObject jsonObject = (JSONObject) obj1;
 			JSONArray id = (JSONArray)jsonObject.get("ticketsJSON");
@@ -385,7 +390,7 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/tixFeedback",  method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> tixFeedback(@RequestBody String ticketsJSON, HttpServletRequest rq) throws UserNotFoundException {
@@ -398,7 +403,7 @@ public class TicketingController {
 		try{
 
 			Gson gson = new Gson();
-			
+
 			Object obj1 = parser.parse(ticketsJSON);
 			JSONObject jsonObject = (JSONObject) obj1;
 			String feedbackCategory = (String)jsonObject.get("category");
@@ -417,8 +422,8 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/tixGetFeedback",  method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> tixGetFeedback(HttpServletRequest rq) throws UserNotFoundException {
@@ -467,11 +472,11 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	@RequestMapping(value = "/tixGetTix",  method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> tixGetTix(HttpServletRequest rq) throws UserNotFoundException {
@@ -480,7 +485,7 @@ public class TicketingController {
 		if ( !usr.isPresent() ){
 			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		System.err.println("inside tix buy ticket");
+		System.err.println("inside tix get ticket");
 		try{
 
 			Gson gson = new GsonBuilder()
@@ -505,7 +510,18 @@ public class TicketingController {
 					 */
 					.serializeNulls()
 					.create();	
-			System.err.println("return tix: " + gson.toJson(usr.get().getTickets()));
+			Set<Ticket> ticketsToReturn = usr.get().getTickets();
+			System.err.println("return tix original" + gson.toJson(usr.get().getTickets() ));
+			Date todayDate = new Date();
+			Set<Ticket> toDelete = new HashSet<>();
+
+			for ( Ticket t : ticketsToReturn){
+				if (t.getEnd_date().before(todayDate)){
+					toDelete.add(t);
+				}
+			}
+			ticketsToReturn.removeAll(toDelete);
+			System.err.println("return tix: " + gson.toJson(ticketsToReturn));
 			return new ResponseEntity<String>(gson.toJson(usr.get().getTickets()),HttpStatus.OK);
 		}
 		//catch ( EventNotFoundException e){
@@ -518,8 +534,54 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
-	
+
+
+	@RequestMapping(value = "/tixCheckTix",  method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> tixCheckTix(@RequestBody String ticketsJSON, HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		String toReturn = "OK";
+		System.err.println("inside tix buy ticket");
+		try{
+
+			Gson gson = new Gson();
+			System.err.println("before wrapt");
+			System.err.println(ticketsJSON);
+
+			JSONArray id = (JSONArray)parser.parse(ticketsJSON);
+			System.err.println(id.toString());
+			for ( Object j : id){
+				System.err.println(j.toString());
+				JSONObject ticketInfo = (JSONObject) j;
+				Long numTickets = (Long)ticketInfo.get("numTickets");
+				Long categoryId = (Long)ticketInfo.get("categoryId");
+				System.err.println("CALLED TICKETING SERVICE ONCE");
+				String catName = categoryRepository.findOne(categoryId).getCategoryName();
+				int res = ticketingService.checkTickets(numTickets.intValue(), categoryId);
+				if ( res != -1 ){
+					toReturn += ("Category: " + catName + " has only " + res + " tickets remaining for purchase.");
+				}
+			}
+			return new ResponseEntity<String>(geeson.toJson(toReturn.substring(2)),HttpStatus.OK);
+
+
+		}
+		//catch ( EventNotFoundException e){
+		//	return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+
+		//}
+		catch (Exception e){
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+
 	/*
 
 

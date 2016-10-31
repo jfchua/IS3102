@@ -171,3 +171,7 @@ insert into ticket values(2,'2016-10-26 22:00:00', 'P2', '2016-10-22 10:00:00', 
 insert into ticket values(3,'2016-10-26 22:00:00', 'P3', '2016-10-21 10:00:00', '2016-10-25 10:00:00', 'double entry','*17*',2);
 insert into ticket values(4,'2016-10-26 22:00:00', 'P4', '2016-10-20 10:00:00', '2016-10-25 10:00:00', 'double entry','*18*',2);
 insert into ticket values(5,'2016-10-26 22:00:00', 'P5', '2016-10-19 10:00:00', '2016-10-25 10:00:00', 'double entry','*19*',2);
+insert into ticket values(6,'2016-12-26 22:00:00', 'P6', '2016-10-19 10:00:00', '2016-10-25 10:00:00', 'double entry','*19*',2);
+insert into user_tickets values( 6,1);
+insert into user_tickets values( 6,2);
+insert into user_tickets values (6,6);
