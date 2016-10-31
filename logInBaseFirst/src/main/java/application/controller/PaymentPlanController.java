@@ -636,7 +636,7 @@ public class PaymentPlanController {
 				if ( ev.getPaymentPlan() != null ){
 					PaymentPlan pay = ev.getPaymentPlan();
 					Double balance = pay.getPayable();
-					obj1.put("outstanding",balance);
+					obj1.put("outstanding",formatter.format(balance));
 					System.out.println("TOTAL3" + balance);
 				}
 				jArray.add(obj1);
