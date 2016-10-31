@@ -22,8 +22,8 @@
 					<li class="messages-top text-center">
 						{{numberOfNotification}}{{ ' Notifications' | translate }}
 					</li>
-					<li class="dropdown-messages" uib-alert ng-repeat="alert in alertsForTopNav" close="closeAlert($index)">
-						<a href="#">
+					<li class="dropdown-messages" uib-alert ng-repeat="alert in alertsForTopNav" close="closeAlert($index)" >
+						<a ng-click="showModal(alert)">
 							<div class="message-sender">
 								{{alert.senderName}}
 							</div>
