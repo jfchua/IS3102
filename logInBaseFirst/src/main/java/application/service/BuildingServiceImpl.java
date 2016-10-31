@@ -15,8 +15,12 @@ import org.springframework.stereotype.Service;
 
 import application.entity.Building;
 import application.entity.ClientOrganisation;
+import application.entity.Icon;
 import application.entity.Vendor;
+import application.enumeration.IconType;
 import application.exception.BuildingNotFoundException;
+import application.exception.InvalidFileUploadException;
+import application.exception.InvalidIconException;
 import application.exception.InvalidPostalCodeException;
 import application.repository.BuildingRepository;
 import application.repository.ClientOrganisationRepository;
@@ -91,8 +95,7 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 
 	@Override
-	public boolean editBuildingInfo(ClientOrganisation client, long id, String name, String address, String postalCode, String city, int numFloor,
-			String filePath) throws BuildingNotFoundException, InvalidPostalCodeException {
+	public boolean editBuildingInfo(ClientOrganisation client, long id, String name, String address, String postalCode, String city, int numFloor) throws BuildingNotFoundException, InvalidPostalCodeException {
 		// TODO Auto-generated method stub
 		
 		if ( !getBuildingById(id).isPresent()){
@@ -118,7 +121,7 @@ public class BuildingServiceImpl implements BuildingService {
 				building1.get().setPostalCode(postalCode);
 				building1.get().setCity(city);
 				building1.get().setNumFloor(numFloor);
-				building1.get().setPicPath(filePath);
+				//building1.get().setPicPath(filePath);
 				//buildingRepository.save(building);
 				buildingRepository.flush();
 			}
@@ -169,6 +172,27 @@ public class BuildingServiceImpl implements BuildingService {
 		}catch (Exception e){
 			return false;
 		}
+	}
+	
+	@Override
+	public boolean saveImageToBuilding(Long buildingId, String iconPath) throws InvalidFileUploadException {
+		String t = iconPath.toUpperCase();
+		System.err.println("creating icon: " + t);
+		if ( !t.contains(".JPG") && !t.contains(".JPEG")&& !t.contains(".SVG") && !t.contains(".TIF") && !t.contains(".PNG") ){
+			System.err.println("Invalid icon: " + t);
+			throw new InvalidFileUploadException("Building image uploaded is invalid");
+		}
+		try{		
+			Building b = this.getBuilding(buildingId);
+			b.setPicPath(iconPath);
+			System.err.println("Building pic path saved as " + iconPath);
+			buildingRepository.saveAndFlush(b);
+			return true;
+		}catch(Exception e){
+			System.err.println("Error at creating building image " + e.getMessage());
+			return false;
+		}
+
 	}
 
 }

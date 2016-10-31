@@ -1,7 +1,10 @@
 /*       4. BUILDING         */
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //VIEW BUILDINGS, ADD A BUILDING
-app.controller('buildingController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService) {
+app.controller('buildingController', ['$scope', '$http','$state','$routeParams','shareData','ModalService','Upload', '$timeout', function ($scope, $http,$state, $routeParams, shareData,ModalService,Upload,$timeout) {
+
+
+
 	$scope.submit1 = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -9,6 +12,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 		if ( !angular.isDefined($scope.building) ){
 			return;
 		}
+
 
 
 
@@ -30,8 +34,76 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 		});
 
 		console.log("SAVING THE BUILDING");
-		send.success(function(){
+		send.success(function(buildingId){
 			console.log("save building ok");
+			if ($scope.picFile != null && $scope.picFile != "") {
+				$scope.buildingId = buildingId;
+				$scope.picFile.upload = Upload.upload({
+					url: 'https://localhost:8443//building/saveBuildingImage',
+					data: { file: $scope.picFile,buildingId:$scope.buildingId},
+				});
+
+				$scope.picFile.upload.then(function (response) {
+					$timeout(function () {
+						$scope.picFile.result = response.data;
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Building and its associated image has been saved successfully',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewBuilding");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+
+					});
+				}, function (response) {
+					if (response.status > 0){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: response.data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
+
+						//END SHOWMODAL
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+
+						$scope.errorMsg = response.status + ': ' + response.data;
+					}
+				}, function (evt) {
+					// Math.min is to fix IE which reports 200% sometimes
+					$scope.picFile.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+				})
+				/////////////////////////
+				return;
+			}
+
+
 
 			ModalService.showModal({
 
@@ -197,7 +269,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 }]);
 
 //UPDATE BUILDING
-app.controller('updateBuildingController', ['$scope',  '$timeout','$http','shareData','$state','ModalService', function ($scope,  $timeout,$http ,shareData,$state,ModalService) {
+app.controller('updateBuildingController', ['$scope',  '$timeout','$http','shareData','$state','ModalService','Upload',function ($scope,  $timeout,$http ,shareData,$state,ModalService,Upload) {
 
 	angular.element(document).ready(function () {
 
@@ -258,7 +330,77 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 		});
 
 		console.log("UPDATING THE BUILDING");
-		send.success(function(){
+		send.success(function(buildingId){
+
+
+			if ($scope.picFile != null) {
+				$scope.buildingId = buildingId;
+				$scope.picFile.upload = Upload.upload({
+					url: 'https://localhost:8443//building/saveBuildingImage',
+					data: { file: $scope.picFile,buildingId:$scope.buildingId},
+				});
+
+				$scope.picFile.upload.then(function (response) {
+					$timeout(function () {
+						$scope.picFile.result = response.data;
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Building and its associated image has been saved successfully',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewBuilding");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+
+					});
+				}, function (response) {
+					if (response.status > 0){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: response.data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
+
+						//END SHOWMODAL
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+
+						$scope.errorMsg = response.status + ': ' + response.data;
+					}
+				}, function (evt) {
+					// Math.min is to fix IE which reports 200% sometimes
+					$scope.picFile.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+				})
+				/////////////////////////
+				return;
+			}
+
+
 
 			ModalService.showModal({
 

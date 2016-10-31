@@ -104,6 +104,10 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 				subsequent_number: $scope.plan.subsequentNumber,
 		};
 
+		var dataObj1 = {
+				id: $scope.plan.id,
+		};
+		
 		console.log("SUBMIT PAYMENT PLAN");
 		console.log(JSON.stringify(dataObj));
 
@@ -114,8 +118,28 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 		});
 
 		console.log("SAVING THE PAYMENT");
-		send.success(function(){		
-			alert('PAYMENT IS SAVED! GOING BACK TO VIEW PAYMENT PLANS');
+		send.success(function(){
+			
+			alert('PAYMENT IS SAVED! DOWNLOAD THE INVOICE!! GOING BACK TO VIEW PAYMENT PLANS');
+			
+			var send = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/payment/downloadInvoice',
+				data    : dataObj1, 
+				responseType: 'arraybuffer'
+			});
+
+			console.log("DOWNLOADING");
+			send.success(function(data){
+				console.log(JSON.stringify(data));
+				var file = new Blob([data], {type: 'application/pdf'});
+				var fileURL = URL.createObjectURL(file);
+				window.open(fileURL);
+				alert('DOWNLOADED!');
+			});
+			send.error(function(data){
+				alert('DOWNLOAD GOT ERROR!');
+			});	
 			$state.go("dashboard.viewAllPaymentPlans");
 		});
 		send.error(function(){
@@ -139,6 +163,7 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 				total : $scope.plan1.total,
 				deposit: $scope.plan1.deposit,
 				subsequentNumber: $scope.plan1.subsequentNumber,
+				//nextInvoice: $scope.plan1.nextInvoice,
 		};	
 		$scope.plan = angular.copy($scope.plan1);
 		console.log("$scope.policy3");
@@ -153,6 +178,7 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 				id: $scope.plan.id,
 				depositRate: ($scope.plan.depositRate).toString(),
 				subsequent_number: $scope.plan.subsequentNumber,
+				//nextInvoice: $scope.plan.nextInvoice,
 		};
 		console.log("SUBMIT PAYMENT PLAN");
 		console.log(JSON.stringify(dataObj));
@@ -277,6 +303,7 @@ app.controller('receivedPController', ['$scope', '$http','$state','$routeParams'
 				id: $scope.paymentPlan.id,
 				amountPaid: $scope.amountPaid,
 				cheque: $scope.chequeNum,
+				nextInvoice: $scope.paymentPlan.nextInvoice,
 		};
 		console.log("REACHED HERE FOR SUBMIT PAYMENT Plan " + JSON.stringify(dataObj));
 		var send = $http({
