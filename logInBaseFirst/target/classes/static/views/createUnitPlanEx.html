@@ -1,56 +1,83 @@
- <link rel="stylesheet" href="bower_components/angular-gridster/dist/angular-gridster.css"/>
- <link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
- <link rel="stylesheet" href="../css/floorplanGrid.css" type="text/css" />
-       <div ng-controller="areaPlanController as areaCtrl">    
-           
-<div class="clearfix">
-		                        <ol class="breadcrumb no-bg no-m-t">
-		                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-		                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-		                            <li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
-		                             <li><a ui-sref="dashboard.viewBookingEx" ng-click="passEvent()" >View Bookings</a></li>
-		                             <li><a ui-sref="dashboard.viewUnitPlanEx" ng-click="passBooking(booking)" >View Unit Plan</a></li>
-		                             
-		                             <li><a>Update Unit Plan</a></li>
-		                        </ol>
-		</div> 
-           
-           <div class="col-md-9" id="widthForFloorPlan">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">Unit Plan	  
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-						</div>
-					</h3>
-				</div>
-			</div>    
-               <div class="panel-body" id="panelheadGrid">
-<div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{unitWidthGrid}} + 'px', width: {{unitLengthGrid}} + 'px'}">
-    <ul>
-        <li gridster-item="area"  id="{{area.square.id}}"  ng-repeat="area in areas"   ng-style="{'background-color':'{{area.square.color}}'}" ><p> {{area.areaName}}<a  ng-click="showModal(area,$parent)" tooltip-placement="top" tooltip="Edit area {{area.unitName}}"><i class="glyphicon glyphicon-pencil"></i></a><a  ng-click="$parent.remove(area)" tooltip-placement="top" tooltip="Delete area {{area.areaName}}"><i class="glyphicon glyphicon-trash"></i></a>
-                          <img  class="svgtest" ng-src="{{area.square.type||area.square.icon.iconPath}}"  alt="icon"></p></li>
-    </ul>
-</div>
-</div>
-          
-  </div>
-<div class="col-md-3">
-<br>
-<br>
-<br>
-    <a ng-click="addArea()" tooltip-placement="right" tooltip="Add an Area"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>
-</div>
 
-<div class="col-md-3">
-<br>
-    <a ng-click="saveAreas()" tooltip-placement="right" tooltip="Save Unit Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-floppy-disk"></i></button></a>
- </div>
-  <div class="col-md-3">
-<br>
-	<a  tooltip-placement="right" tooltip="Right Click for Adding a Default Icon" context-menu="menuOptions"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-asterisk"></i></button></a>
+<link rel="stylesheet"
+	href="bower_components/angular-gridster/dist/angular-gridster.css" />
+<link rel="stylesheet" href="../css/floorplan.css" type="text/css" />
+<link rel="stylesheet" href="../css/floorplanGrid.css" type="text/css" />
+<div ng-controller="areaPlanController as areaCtrl">
+
+	<div class="clearfix">
+		<ol class="breadcrumb no-bg no-m-t">
+			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
+			<li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
+			<li><a ui-sref="dashboard.viewBookingEx" ng-click="passEvent()">View
+					Bookings</a></li>
+			<li><a ui-sref="dashboard.viewUnitPlanEx"
+				ng-click="passBooking(booking)">View Unit Plan</a></li>
+
+			<li><a>Update Unit Plan</a></li>
+		</ol>
+	</div>
+
+	<div class="col-md-9" id="widthForFloorPlan">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Unit Plan
+					<div class="panel-control pull-right">
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+					</div>
+				</h3>
+			</div>
+		</div>
+		<div class="panel-body" id="panelheadGrid">
+			<div gridster="gridsterOpts" id="glassboxGrid"
+				ng-style="{height: {{unitWidthGrid}} + 'px', width: {{unitLengthGrid}} + 'px'}">
+				<ul>
+					<li gridster-item="area" id="{{area.square.id}}"
+						ng-repeat="area in areas"
+						ng-style="{'background-color':'{{area.square.color}}'}"><p>
+							{{area.areaName}}<a ng-click="showModal(area,$parent)"
+								tooltip-placement="top" tooltip="Edit area {{area.unitName}}"><i
+								class="glyphicon glyphicon-pencil"></i></a><a
+								ng-click="$parent.remove(area)" tooltip-placement="top"
+								tooltip="Delete area {{area.areaName}}"><i
+								class="glyphicon glyphicon-trash"></i></a> <img class="svgtest"
+								ng-src="{{area.square.type||area.square.icon.iconPath}}"
+								alt="icon">
+						</p></li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+	<div class="col-md-1">
+
+		<br> <a ng-click="addArea()" 
+			tooltip-placement="right" tooltip="Add an Area"><button
+				type="button" class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-plus"></i>
+			</button></a>
+	</div>
+
+	<div class="col-md-1" >
+		<br> <a tooltip-placement="right"
+			tooltip="Right Click for Adding a Default Icon"
+			context-menu="menuOptions"><button type="button"
+				class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-asterisk"></i>
+			</button></a>
+	</div>
+
+
+	<div class="col-md-1" ng-show="areas.length==0">
+		<br> <a ng-click="showDefaultUnitPlan()" tooltip-placement="left"
+			tooltip="Use default unit plan"><button type="button"
+				class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-folder-open"></i>
+			</button></a>
+	</div>
+
 </div>
-         </div>
-           

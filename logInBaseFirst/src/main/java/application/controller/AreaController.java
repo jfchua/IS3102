@@ -371,8 +371,35 @@ public class AreaController {
 		}
 		
 	}
-	
-	
+	//SAVE DEFAULT AREAS TO BOOKING'S UNIT PLAN
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	@RequestMapping(value = "/saveDefaultAreas", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> saveDefaultAreas(@RequestBody String idObj,HttpServletRequest rq) {
+
+
+		try{
+
+
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("bookingId"));
+			long bookingId = (Long)jsonObject.get("bookingId");
+			System.out.println((Long)jsonObject.get("unitId"));
+			long unitId = (Long)jsonObject.get("unitId");
+
+			if(areaService.saveDefaultAreasToBooking(bookingId,unitId)){
+				System.out.println("SAVED DEFAULT AREAS");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+
+	}
 	
 	//DEFAULT UNIT PLAN
 		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY','ROLE_EXTEVE')")
