@@ -357,7 +357,7 @@ public class UserServiceImpl implements UserService {
 
 			userRepository.save(user);
 			System.out.println("Saved user");
-			emailService.sendEmail(userEmail, "Algattas account signup", "Thank you for signing up for a new account. You may now log in with your new account.");
+			emailService.sendEmail(userEmail, "Algattas account signup", "Hi " + name + "! Thank you for signing up for a new account. You may now log in with your new account.");
 
 		}
 		catch ( Exception e){

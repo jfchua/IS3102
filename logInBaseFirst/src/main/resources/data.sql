@@ -175,3 +175,4 @@ insert into ticket values(6,'2016-12-26 22:00:00', 'P6', '2016-10-19 10:00:00', 
 insert into user_tickets values( 6,1);
 insert into user_tickets values( 6,2);
 insert into user_tickets values (6,6);
+insert into discount values ( 1,"12345","DISCOUNT MESSAGE", "STARHUB");

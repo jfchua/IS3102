@@ -586,7 +586,7 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/tixViewBuildings", method = RequestMethod.GET)
 	@ResponseBody
 	public String viewBuildings(HttpServletRequest rq) throws UserNotFoundException {
@@ -601,6 +601,7 @@ public class TicketingController {
 			//String json = gson.toJson(buildings);
 			//System.out.println("Returning buildings with json of : " + json);
 			//return json;	
+
 			System.out.println(buildings);
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
@@ -636,7 +637,9 @@ public class TicketingController {
 		catch (Exception e){
 			return "cannot fetch";
 		}
-	}	
+	}
+
+
 
 
 	/*
