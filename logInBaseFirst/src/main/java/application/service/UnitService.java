@@ -51,5 +51,11 @@ public interface UnitService {
 		 boolean addDefaultIconOnLevel(long levelId,String type);
 		 
 		 boolean addCustIconOnLevel(long levelId,long iconId);
+		 
+		 
+		 
+		 
+		
+			
 }
 

@@ -30,6 +30,7 @@
                                 <th><i></i> Address </th>
                                 <th><i></i> City </th>
                                 <th><i></i> Postal Code </th>
+                                <th>Building Image</th>
                                 <th>Actions</th>
                                 
 							</tr>
@@ -43,6 +44,7 @@
                              <td>{{ x.address }}</td>
                              <td>{{ x.city }}</td>
                              <td>{{ x.postalCode }}</td>
+                             <td><img ng-show="x.picPath" class="svgtest" src="{{x.picPath}}"  width="100px" height="100px"></td> 
                              <td>
                              		<a  ui-sref="dashboard.updateBuilding" ng-click="updateBuilding(x)" tooltip-placement="top" tooltip="Update Building"><i class="glyphicon glyphicon-pencil"></i></a>
                              		<a  ui-sref="dashboard.deleteBuilding" ng-click="deleteBuilding(x)" tooltip-placement="top" tooltip="Delete Building"><i class="glyphicon glyphicon-trash"></i></a>

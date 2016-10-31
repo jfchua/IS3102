@@ -390,6 +390,22 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
+                                			   .state('dashboard.createUnitPlanDefault',{
+                                				  url:'/createUnitPlanDefault',
+                                				  templateUrl: '/views/createUnitPlanDefault.html',
+                                				  controller: 'defaultUnitPlanController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })	
+                                			  .state('dashboard.viewUnitPlanDefault',{
+                                				  url:'/viewUnitPlanDefault',
+                                				  templateUrl: '/views/viewUnitPlanDefault.html',
+                                				  controller: 'viewDefaultUnitPlanController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
                                 			  .state('dashboard.viewMaintenance',{
                                 				  url:'/viewMaintenance',	
                                 				  templateUrl: '/views/viewMaintenance.html',
@@ -3717,7 +3733,7 @@ app.controller('YesNoController', ['$scope', 'close','message', function($scope,
 
 
 //UPLOAD LOGO CONTROLLER//
-app.controller('logoController', ['$scope', 'Upload', '$timeout','$http', function ($scope, Upload, $timeout,$http ) {
+app.controller('logoController', ['$scope', 'Upload', '$timeout','$http','ModalService' ,function ($scope, Upload, $timeout,$http,ModalService ) {
 	/* $scope.submit = function() {
 	      if ($scope.form.file.$valid && $scope.file) {
 	        $scope.upload($scope.file);

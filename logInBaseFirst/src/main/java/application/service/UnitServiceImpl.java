@@ -26,7 +26,6 @@ public class UnitServiceImpl implements UnitService {
 		this.unitRepository = unitRepository;
 		this.squareRepository=squareRepository;
 		this.iconRepository=iconRepository;
-		
 	}
 /*	@Override
 	public Unit createUnit(int left, int top, int height, int width, String color, String type,
@@ -119,10 +118,10 @@ public class UnitServiceImpl implements UnitService {
 		Square square=createSquare(100,100,100,100,"coral","./svg/rect.svg");
 		
 		System.out.println("UnitService"+1);
-		unitTemp.setUnitNumber("# There is not unit number yet");
+		unitTemp.setUnitNumber("#unit");
 		unitTemp.setRentable(true);
 		System.out.println("test124");
-		unitTemp.setDescription("# There is not description yet");
+		unitTemp.setDescription("# There is no description yet");
 		unitTemp.setRent(100.00);//hard coded rent =100, need to change later
 		System.out.println("127");
 		unitRepository.saveAndFlush(unitTemp);
@@ -175,7 +174,7 @@ public class UnitServiceImpl implements UnitService {
 		Square square=createSquare(100,100,100,100,"transparent",type);
 		unitTemp.setUnitNumber("");
 		unitTemp.setRentable(false);
-		unitTemp.setDescription("# There is not description yet");
+		unitTemp.setDescription("# There is no description yet");
 		unitRepository.saveAndFlush(unitTemp);
 		unitTemp.setSquare(square);
 		unitRepository.saveAndFlush(unitTemp);
@@ -218,7 +217,7 @@ public class UnitServiceImpl implements UnitService {
 		unitTemp.setUnitNumber("");
 		unitTemp.setRentable(false);
 		//hahahaha
-		unitTemp.setDescription("# There is not description yet");
+		unitTemp.setDescription("# There is no description yet");
 		unitRepository.saveAndFlush(unitTemp);
 		unitTemp.setSquare(square);
 		unitRepository.saveAndFlush(unitTemp);

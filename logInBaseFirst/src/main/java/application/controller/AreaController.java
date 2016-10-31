@@ -63,7 +63,7 @@ public class AreaController {
 		this.userService=userService;
 	}
 	
-	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE','ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 		//for view only, call view areas; for load and edit, call viewAreas first and then call saves areas;
 		@RequestMapping(value = "/viewAreas", method = RequestMethod.POST)
 		@ResponseBody
@@ -118,7 +118,7 @@ public class AreaController {
 				}			
 }           
 		
-	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE','ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 		//for load and edit, call viewAreas first and then call saves areas; 
 		@RequestMapping(value = "/saveAreas", method = RequestMethod.POST)
 		@ResponseBody
@@ -238,7 +238,7 @@ public class AreaController {
 	}
 	
 	
-	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE','ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 	@RequestMapping(value = "/addDefaultIcon", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> addDefaultIcon(@RequestBody String idObj,HttpServletRequest rq) {
@@ -343,7 +343,7 @@ public class AreaController {
 	}
 	
 	
-	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 	@RequestMapping(value = "/deleteArea", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Void> deleteArea(@RequestBody String idObj,HttpServletRequest rq) {
@@ -371,4 +371,228 @@ public class AreaController {
 		}
 		
 	}
+	
+	
+	
+	//DEFAULT UNIT PLAN
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY','ROLE_EXTEVE')")
+		//for view only, call view areas; for load and edit, call viewAreas first and then call saves areas;
+		@RequestMapping(value = "/viewAreasDefault", method = RequestMethod.POST)
+		@ResponseBody
+		public String viewAreasDefault(@RequestBody String unit, HttpServletRequest rq) {
+			System.out.println("AreaController: Start Viewing Areas");
+
+			try{
+				Object obj = parser.parse(unit);
+
+				JSONObject jsonObject = (JSONObject) obj;
+
+				System.out.println("Event jsonObject "+jsonObject);
+				long unitId = (Long)jsonObject.get("id");
+				System.out.println(unitId);
+
+				System.out.println("bookingId id "+unitId);
+				//long eventId = Long.parseLong(event);
+				Set<Area> areas = areaService.getAreasByUnitId(unitId);
+				for(Area area: areas){
+					area.setBooking(null);//might need to delete
+				}
+
+				Gson gson2 = new GsonBuilder()
+						.setExclusionStrategies(new ExclusionStrategy() {
+							public boolean shouldSkipClass(Class<?> clazz) {
+								return false;
+							}
+
+							/**
+							 * Custom field exclusion goes here
+							 */
+							@Override
+							public boolean shouldSkipField(FieldAttributes f) {
+								//TODO Auto-generated method stub
+								return false;
+
+							}
+						})
+						/**
+						 * Use serializeNulls method if you want To serialize null values 
+						 * By default, Gson does not serialize null values
+						 */
+						.serializeNulls()
+						.create();			    
+				String json = gson2.toJson(areas);
+				//String json2 = gson2.toJson("Server error in getting all the events");
+				return json;	
+			}
+			catch (Exception e){
+
+				return "";
+			}			
+		}           
+
+		
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/addAreaDefault", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> addAreaDefault(@RequestBody String idObj,HttpServletRequest rq) {
+
+
+			try{
+				
+
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("unitId"));
+				long unitId = (Long)jsonObject.get("unitId");
+
+
+
+
+				if(areaService.addAreaOnUnit(unitId) ){
+					System.out.println("CREATED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+
+		}
+
+
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/addDefaultIconDefault", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> addDefaultIconDefault(@RequestBody String idObj,HttpServletRequest rq) {
+
+
+			try{
+
+
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("unitId"));
+				long unitId = (Long)jsonObject.get("unitId");
+				String type = (String)jsonObject.get("type");
+
+
+
+				if(areaService.addDefaultIconOnUnit(unitId,type) ){
+					System.out.println("CREATED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+
+		}
+
+
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/addCustIconDefault", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> addCustIconDefault(@RequestBody String idObj,HttpServletRequest rq) {
+
+
+			try{
+
+
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("unitId"));
+				long unitId = (Long)jsonObject.get("unitId");
+				long iconId = (Long)jsonObject.get("iconId");
+
+
+
+				if(areaService.addCustIconOnUnit(unitId,iconId) ){
+					System.out.println("CREATED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+
+		}
+
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/updateAreaDefault", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> updateAreaDefault(@RequestBody String idObj,HttpServletRequest rq) {
+
+
+			try{
+
+
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("unitId"));
+				long unitId = (Long)jsonObject.get("unitId");
+				JSONObject areaJson=(JSONObject)jsonObject.get("area");	
+				long areaId = (Long)areaJson.get("id");				
+				JSONObject squareJson=(JSONObject)areaJson.get("square");		
+				int left = (int) (long) squareJson.get("left");
+				int top = (int) (long) squareJson.get("top");
+				int height = (int) (long) squareJson.get("height");
+				int width = (int) (long) squareJson.get("width");
+				String color = (String)squareJson.get("color");
+				String type = (String)squareJson.get("type");
+				String areaName =(String)areaJson.get("areaName");
+				int col = (int) (long) areaJson.get("col");
+				int row = (int) (long) areaJson.get("row");
+				int sizex = (int) (long) areaJson.get("sizeX");
+				int sizey = (int) (long) areaJson.get("sizeY");
+				String description =(String)areaJson.get("description");
+
+
+				if(areaService.editAreaInfo(areaId,col,  row,  sizex, sizey,left,top, height,  width,  color, type, areaName,  description)){
+					System.out.println("EDITED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+
+		}
+
+
+		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+		@RequestMapping(value = "/deleteAreaDefault", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<Void> deleteAreaDefault(@RequestBody String idObj,HttpServletRequest rq) {
+
+
+			try{
+
+
+				Object obj = parser.parse(idObj);
+				JSONObject jsonObject = (JSONObject) obj;
+				System.out.println((Long)jsonObject.get("id"));
+				long areaId = (Long)jsonObject.get("id");
+				System.out.println((Long)jsonObject.get("unitId"));
+				long unitId = (Long)jsonObject.get("unitId");
+
+				if(areaService.deleteAreaDefault(areaId,unitId)){
+					System.out.println("DELETED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
+			}
+			catch (Exception e){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+
+		}
 }

@@ -77,7 +77,20 @@ public class Unit {
 	@JsonIgnore
 	private Set<UnitAttributeValue> unitAttributeValues = new HashSet<UnitAttributeValue>();
 	
-	
+	// @OneToMany(mappedBy ="unit", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	// @JsonIgnore
+	// private Set<Area> areas = new HashSet<Area>();
+	 @OneToMany(fetch = FetchType.EAGER)
+		private Set<Area> areas=new HashSet<Area>();
+	  
+	public Set<Area> getAreas() {
+		return areas;
+	}
+
+	public void setAreas(Set<Area> areas) {
+		this.areas = areas;
+	}
+
 	public Set<BookingAppl> getBookings() {
 		return bookings;
 	}

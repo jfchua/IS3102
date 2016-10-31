@@ -49,5 +49,22 @@ public interface AreaService {
 	boolean addCustIconOnBooking(long bookingId,long iconId);
 
 	Square createSquareWithIcon( long iconId,int left, int top, int height, int width, String color, String type);
+	
+	
+	
+	
+	
+	Set<Area> getAreasByUnitId(long unitId);
+
+	boolean addAreaOnUnit(long unitId);
+
+	boolean addDefaultIconOnUnit(long unitId,String type);
+
+	boolean addCustIconOnUnit(long unitId,long iconId);
+	
+	boolean deleteAreaDefault(long id, long unitId);
+	
+	boolean passOverlapCheckWithExistingAreasUnit(long unitId, Area area) ;
+	
 
 }

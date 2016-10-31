@@ -12,10 +12,17 @@ import application.entity.Level;
 
 public interface BuildingRepository extends JpaRepository<Building, Long>{
 	@Query(
-	        value = "SELECT * FROM Building", 
-	        nativeQuery=true
-	   )
+			value = "SELECT * FROM Building", 
+			nativeQuery=true
+			)
 	//public Set<Building> fetchAllBuildings();
 
 	public Set<Building> fetchAllBuildings();
+
+
+	@Query(
+			value = "SELECT * FROM Building l where l.name = :buildingName", 
+			nativeQuery=true
+			)
+	public Building getBuildingByName(@Param("buildingName") String name);
 }

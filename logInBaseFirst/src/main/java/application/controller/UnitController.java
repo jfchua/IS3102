@@ -74,7 +74,7 @@ public class UnitController {
 				int sizex = (int) (long) unitObj.get("sizeX");
 				int sizey = (int) (long) unitObj.get("sizeY");
 				String description =(String)unitObj.get("description");
-				
+
 				JSONObject squareJson=(JSONObject)unitObj.get("square");			
 				int left = (int) (long) squareJson.get("left");
 				int top = (int) (long) squareJson.get("top");
@@ -82,14 +82,14 @@ public class UnitController {
 				int width = (int) (long) squareJson.get("width");
 				String color = (String)squareJson.get("color");			
 				String type = (String)squareJson.get("type");
-					
+
 				boolean rentable=false;
 				JSONObject iconJson;
 				Long iconId;				
-				
+
 				if(type.equals("")){//SQUARE IS WITH ICON OBJECT
 					System.out.println("UNIT IS WITH ICON OBJECT");
-				
+
 					iconJson=(JSONObject)squareJson.get("icon");
 					iconId = (Long)iconJson.get("id");	
 					String iconType=(String)iconJson.get("iconType");
@@ -107,7 +107,7 @@ public class UnitController {
 					}
 					Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description);
 					System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
-					
+
 				}		
 
 			}catch (Exception e){
@@ -116,563 +116,570 @@ public class UnitController {
 			}
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}	
-		
-		*/
+
+	 */
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
-		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
-				@RequestMapping(value = "/getUnitsId", method = RequestMethod.POST)
-				@ResponseBody
-				public String getUnitsId( @RequestBody String units, HttpServletRequest rq)  {
-					System.out.println("level json"+units);
-					try{
-						System.out.println("Sending notification...");
-						Object obj = parser.parse(units);
-						JSONObject jsonObject = (JSONObject) obj;
-						JSONArray unitsId = (JSONArray)jsonObject.get("id");
-						//int len = unitId.length();
-						//unitId = unitId.substring(1, len-1);
-						//String[] unitsId = unitId.split(",");
-						System.out.println("before the loop");
-						String toBeReturned = "";
-						System.out.println("before the loop2");
-						System.out.println(unitsId.size());
-						for(int i = 0; i < unitsId.size(); i++){
-							System.out.println((Long)unitsId.get(i));
-							toBeReturned = toBeReturned+(Long)unitsId.get(i) + " ";
-							System.out.println(toBeReturned);
-						}
-						Gson gson = new Gson();
-					    String json = gson.toJson(toBeReturned);
-					    System.out.println(json);
-					    return json;
-						}
-						catch (Exception e){
-							return "cannot fetch units id";
-						}
-				}
+	//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
+	@RequestMapping(value = "/getUnitsId", method = RequestMethod.POST)
+	@ResponseBody
+	public String getUnitsId( @RequestBody String units, HttpServletRequest rq)  {
+		System.out.println("level json"+units);
+		try{
+			System.out.println("Sending notification...");
+			Object obj = parser.parse(units);
+			JSONObject jsonObject = (JSONObject) obj;
+			JSONArray unitsId = (JSONArray)jsonObject.get("id");
+			//int len = unitId.length();
+			//unitId = unitId.substring(1, len-1);
+			//String[] unitsId = unitId.split(",");
+			System.out.println("before the loop");
+			String toBeReturned = "";
+			System.out.println("before the loop2");
+			System.out.println(unitsId.size());
+			for(int i = 0; i < unitsId.size(); i++){
+				System.out.println((Long)unitsId.get(i));
+				toBeReturned = toBeReturned+(Long)unitsId.get(i) + " ";
+				System.out.println(toBeReturned);
+			}
+			Gson gson = new Gson();
+			String json = gson.toJson(toBeReturned);
+			System.out.println(json);
+			return json;
+		}
+		catch (Exception e){
+			return "cannot fetch units id";
+		}
+	}
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY','ROLE_EXTEVE')")
-		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
-		@RequestMapping(value = "/viewUnits", method = RequestMethod.POST)
-		@ResponseBody
-		public String viewUnits( @RequestBody String level, HttpServletRequest rq)  {
-			System.out.println("level json"+level);
-			try{
-			
-				Object obj = parser.parse(level);
-				System.out.println("Level obj "+obj);
-				JSONObject jsonObject = (JSONObject) obj;
-				
-				System.out.println("Level jsonObject "+jsonObject);
-				long levelId = (Long)jsonObject.get("id");
-			
-				System.out.println("Level id "+levelId);
-				//long levelId = Long.parseLong(level);
-				Set<Unit> units = unitService.getUnitsByLevelId(levelId);
-				for(Unit unit:units){	
-					System.out.println("********** unit: " + unit.getUnitNumber());
-					Set<UnitAttributeValue> values = unit.getUnitAttributeValues();
-					for(UnitAttributeValue value:values){
-						value.setUnits(null);
-						value.getUnitAttributeType().setUnitAttributeValues(null);
-					}
-					}
-				System.out.println("Level units "+units);
-				Gson gson2 = new GsonBuilder()
-					    .setExclusionStrategies(new ExclusionStrategy() {
-					        public boolean shouldSkipClass(Class<?> clazz) {
-					            return (clazz == Level.class) || (clazz == MaintenanceSchedule.class)||(clazz == BookingAppl.class);
-					        }
+	//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
+	@RequestMapping(value = "/viewUnits", method = RequestMethod.POST)
+	@ResponseBody
+	public String viewUnits( @RequestBody String level, HttpServletRequest rq)  {
+		System.out.println("level json"+level);
+		try{
 
-					        /**
-					          * Custom field exclusion goes here
-					          */
+			Object obj = parser.parse(level);
+			System.out.println("Level obj "+obj);
+			JSONObject jsonObject = (JSONObject) obj;
 
-							@Override
-							public boolean shouldSkipField(FieldAttributes f) {
-								//TODO Auto-generated method stub
-								return false;
-							}
+			System.out.println("Level jsonObject "+jsonObject);
+			long levelId = (Long)jsonObject.get("id");
 
-					     })
-					    /**
-					      * Use serializeNulls method if you want To serialize null values 
-					      * By default, Gson does not serialize null values
-					      */
-					    .serializeNulls()
-					    .create();
-					
-			
-			    
-			    String json = gson2.toJson(units);
-			    System.out.println(json);
-			    return json;
+			System.out.println("Level id "+levelId);
+			//long levelId = Long.parseLong(level);
+			Set<Unit> units = unitService.getUnitsByLevelId(levelId);
+			for(Unit unit:units){	
+				System.out.println("********** unit: " + unit.getUnitNumber());
+				Set<UnitAttributeValue> values = unit.getUnitAttributeValues();
+				for(UnitAttributeValue value:values){
+					value.setUnits(null);
+					value.getUnitAttributeType().setUnitAttributeValues(null);
 				}
-				catch (Exception e){
-					
-					System.out.println("************* ERROR: " + e.getMessage());
-					e.printStackTrace();
-					
-					JSONObject bd = new JSONObject(); 
-					bd.put("error", "cannot fetch"); 
-					
-				    System.out.println("Returning building id : " + bd.toString());
-					return bd.toString();
-				}
-		
-			
-}           
+			}
+			System.out.println("Level units "+units);
+			Gson gson2 = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == Level.class) || (clazz == MaintenanceSchedule.class)||(clazz == BookingAppl.class);
+						}
 
-	
-    //for load and edit, call viewUnits first and then call saves units; for create new floor plan, can use both saveUnits or create Units
+						/**
+						 * Custom field exclusion goes here
+						 */
+
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+						}
+
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();
+
+
+
+			String json = gson2.toJson(units);
+			System.out.println(json);
+			return json;
+		}
+		catch (Exception e){
+
+			System.out.println("************* ERROR: " + e.getMessage());
+			e.printStackTrace();
+
+			JSONObject bd = new JSONObject(); 
+			bd.put("error", "cannot fetch"); 
+
+			System.out.println("Returning building id : " + bd.toString());
+			return bd.toString();
+		}
+
+
+	}           
+
+
+	//for load and edit, call viewUnits first and then call saves units; for create new floor plan, can use both saveUnits or create Units
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")	
 	@RequestMapping(value = "/saveUnits", method = RequestMethod.POST)
-		@ResponseBody
-		@ResponseStatus(HttpStatus.OK)
-		public ResponseEntity<Void> saveUnits(@RequestBody String json,HttpServletRequest rq)  {
-			
-			try{
-				//GET LEVEL ID AND UNITS
-				Object obj = parser.parse(json);			
-				JSONObject text = (JSONObject) obj;			
-				long levelId = (Long)text.get("id");				
-				JSONObject array = (JSONObject)text.get("Units");				
-				JSONArray units = (JSONArray)array.get("Unit");				
-				Set<Long> unitIds=new HashSet<Long>();//list of ids of units that are still on floor plan
-				
-				//LOOP THROUGH EACH UNIT
-				for(int i = 0; i <units.size(); i++){	
-                    
-                    
-                    
-						JSONObject unitObj = (JSONObject)units.get(i);				
-						long unitId = (Long)unitObj.get("id");				
-						JSONObject squareJson=(JSONObject)unitObj.get("square");		
-						int left = (int) (long) squareJson.get("left");
-						int top = (int) (long) squareJson.get("top");
-						int height = (int) (long) squareJson.get("height");
-						int width = (int) (long) squareJson.get("width");
-						String color = (String)squareJson.get("color");
-						String unitNumber =(String)unitObj.get("unitNumber");
-						int col = (int) (long) unitObj.get("col");
-						int row = (int) (long) unitObj.get("row");
-						int sizex = (int) (long) unitObj.get("sizeX");
-						int sizey = (int) (long) unitObj.get("sizeY");
-						
-						String description =(String)unitObj.get("description");
-						
-						//boolean defaultIcon=true;
-						boolean rentable=false;
-						JSONObject iconJson;
-						Long iconId;
-						String type = (String)squareJson.get("type");
-						System.out.println("TYPE:"+type);
-                    
-                        if (unitId==0){//CREATE NEW UNIT
-							     if(type.equals("")){//SQUARE IS WITH ICON OBJECT
-                                        System.out.println("UNIT"+unitId+" IS WITH ICON OBJECT");
-                                        //	defaultIcon=false;
-                                        System.out.println("TEST:1");
-                                        iconJson=(JSONObject)squareJson.get("icon");
-                                        System.out.println("TEST:2");
-                                        iconId = (Long)iconJson.get("id");	
-                                        System.out.println("TEST:3");
-                                        String iconType=(String)iconJson.get("iconType");
-                                        System.out.println("TEST:4");
-                                            if(iconType.equals("RECT")){
-                                                System.out.println("TEST:5");
-                                                rentable=true;
-                                                System.out.println("Customised shape is rect: " +rentable);
-                                            }
-						                  System.out.println("ADD NEW UNIT WITH ICON");
-                                        Unit unit=unitService.createUnitOnLevelWithIcon(levelId,iconId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description);
-                                        unitIds.add(unit.getId());
-                                        System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
-						
-						}else{//SQUARE IS WITH DEFAULT ICON
-							         System.out.println("UNIT"+unitId+" IS USING DEFAULT ICON");
-						              System.out.println("TEST:6");
-						             String[] typeName1=type.split("/");
-						             System.out.println("TEST:6 "+typeName1[typeName1.length-1]);
-						             String[] typeName2=typeName1[typeName1.length-1].split("\\.");
-						             System.out.println("TEST:6 "+typeName2);
-						             String typeName3=typeName2[typeName2.length-2];
-						             System.out.println("type "+typeName3);
-						              
-						              if(typeName3.equals("rect")){						
-						            	  rentable=true;
-						            	  System.out.println("Shape is rect: " +rentable);
-                            
-						              }
-                                        System.out.println("ADD NEW UNIT");
-                                        Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description);
-                                        unitIds.add(unit.getId());
-                                        System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
-					
-						
-						}
-								
-									
-							
-							
-						}else{//EDIT EXISTING UNIT
-							
-								if(unitService.editUnitInfo(unitId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description)==true){
-									unitIds.add(unitId);		
-									System.out.println("UNITCONTROLLER: UNIT IS EDITED. UNIT ID:"+unitId);
-								}else{
-									System.out.println("UNITCONTROLLER: ERROR. UNIT ID:"+unitId);
-									//need to return error response
-									//return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-								}
-							
-						}
-                    
-                    
-						
-						
-						
-				}//end for 
-				System.out.println("Test: 6");
-				//this part maybe can delete already
-				/*if(unitService.deleteUnitsFromLevel(unitIds,levelId)==false){
-					System.out.println("Test 61 error: cannot delete units");
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-				}else{
-					System.out.println("Test 61 successful: units deleted/updated");
-				}*/
-				System.out.println("Test 7");
-				}
-				catch (Exception e){
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-				}
-			System.out.println("End Save");
-			ResponseEntity<Void> v = new ResponseEntity<Void>(HttpStatus.OK);
-			return v;
-        }
-	
-	
-		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
-		@RequestMapping(value = "/deleteUnit", method = RequestMethod.POST)
-		@ResponseBody
-		public ResponseEntity<Void> deleteUnit(@RequestBody String idObj,HttpServletRequest rq) {
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<Void> saveUnits(@RequestBody String json,HttpServletRequest rq)  {
 
-			
-			try{
-				
-				
-				Object obj = parser.parse(idObj);
-				JSONObject jsonObject = (JSONObject) obj;
-				System.out.println((Long)jsonObject.get("id"));
-				long unitId = (Long)jsonObject.get("id");
-				System.out.println((Long)jsonObject.get("levelId"));
-				long levelId = (Long)jsonObject.get("levelId");
-				
-				if(unitService.deleteUnit(unitId,levelId)){
-					System.out.println("DELETED");
-					return new ResponseEntity<Void>(HttpStatus.OK);
-				}else{
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-				}
-			}
-			catch (Exception e){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			
-		}
-		
-		
-		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
-		@RequestMapping(value = "/updateUnit", method = RequestMethod.POST)
-		@ResponseBody
-		public ResponseEntity<Void> updateUnit(@RequestBody String idObj,HttpServletRequest rq) {
+		try{
+			//GET LEVEL ID AND UNITS
+			Object obj = parser.parse(json);			
+			JSONObject text = (JSONObject) obj;			
+			long levelId = (Long)text.get("id");				
+			JSONObject array = (JSONObject)text.get("Units");				
+			JSONArray units = (JSONArray)array.get("Unit");				
+			Set<Long> unitIds=new HashSet<Long>();//list of ids of units that are still on floor plan
 
-			
-			try{
-				
-				
-				Object obj = parser.parse(idObj);
-				JSONObject jsonObject = (JSONObject) obj;
-				System.out.println((Long)jsonObject.get("levelId"));
-				long levelId = (Long)jsonObject.get("levelId");
-				JSONObject unitJson=(JSONObject)jsonObject.get("unit");	
-				long unitId = (Long)unitJson.get("id");				
-				JSONObject squareJson=(JSONObject)unitJson.get("square");		
+			//LOOP THROUGH EACH UNIT
+			for(int i = 0; i <units.size(); i++){	
+
+
+
+				JSONObject unitObj = (JSONObject)units.get(i);				
+				long unitId = (Long)unitObj.get("id");				
+				JSONObject squareJson=(JSONObject)unitObj.get("square");		
 				int left = (int) (long) squareJson.get("left");
 				int top = (int) (long) squareJson.get("top");
 				int height = (int) (long) squareJson.get("height");
 				int width = (int) (long) squareJson.get("width");
 				String color = (String)squareJson.get("color");
+				String unitNumber =(String)unitObj.get("unitNumber");
+				int col = (int) (long) unitObj.get("col");
+				int row = (int) (long) unitObj.get("row");
+				int sizex = (int) (long) unitObj.get("sizeX");
+				int sizey = (int) (long) unitObj.get("sizeY");
+
+				String description =(String)unitObj.get("description");
+
+				//boolean defaultIcon=true;
+				boolean rentable=false;
+				JSONObject iconJson;
+				Long iconId;
 				String type = (String)squareJson.get("type");
-				String unitNumber =(String)unitJson.get("unitNumber");
-				int col = (int) (long) unitJson.get("col");
-				int row = (int) (long) unitJson.get("row");
-				int sizex = (int) (long) unitJson.get("sizeX");
-				int sizey = (int) (long) unitJson.get("sizeY");
-				String description =(String)unitJson.get("description");
-				boolean rentable =(boolean)unitJson.get("rentable");
-				
-				
-				if(unitService.editUnitInfo(unitId,left,top, height,  width,  color, type, unitNumber, col,  row,  sizex, sizey,rentable, description)){
-					System.out.println("EDITED");
-					return new ResponseEntity<Void>(HttpStatus.OK);
-				}else{
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-				}
-			}
-			catch (Exception e){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			
-		}
-		
-		
-		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
-		@RequestMapping(value = "/addUnit", method = RequestMethod.POST)
-		@ResponseBody
-		public ResponseEntity<Void> addUnit(@RequestBody String idObj,HttpServletRequest rq) {
+				System.out.println("TYPE:"+type);
 
-			
-			try{
-				
-				
-				Object obj = parser.parse(idObj);
-				JSONObject jsonObject = (JSONObject) obj;
-				System.out.println((Long)jsonObject.get("levelId"));
-				long levelId = (Long)jsonObject.get("levelId");
-				
-				
-				
-				
-				if(unitService.addUnitOnLevel(levelId) ){
-					System.out.println("CREATED");
-					return new ResponseEntity<Void>(HttpStatus.OK);
-				}else{
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-				}
-			}
-			catch (Exception e){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			
-		}
-		
-		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
-		@RequestMapping(value = "/addDefaultIcon", method = RequestMethod.POST)
-		@ResponseBody
-		public ResponseEntity<Void> addDefaultIcon(@RequestBody String idObj,HttpServletRequest rq) {
-
-			
-			try{
-				
-				
-				Object obj = parser.parse(idObj);
-				JSONObject jsonObject = (JSONObject) obj;
-				System.out.println((Long)jsonObject.get("levelId"));
-				long levelId = (Long)jsonObject.get("levelId");
-				String type = (String)jsonObject.get("type");
-				
-				
-				
-				if(unitService.addDefaultIconOnLevel(levelId,type) ){
-					System.out.println("CREATED");
-					return new ResponseEntity<Void>(HttpStatus.OK);
-				}else{
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-				}
-			}
-			catch (Exception e){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			
-		}
-		
-		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
-		@RequestMapping(value = "/addCustIcon", method = RequestMethod.POST)
-		@ResponseBody
-		public ResponseEntity<Void> addCustIcon(@RequestBody String idObj,HttpServletRequest rq) {
-
-			
-			try{
-				
-				
-				Object obj = parser.parse(idObj);
-				JSONObject jsonObject = (JSONObject) obj;
-				System.out.println((Long)jsonObject.get("levelId"));
-				long levelId = (Long)jsonObject.get("levelId");
-				long iconId = (Long)jsonObject.get("iconId");
-				
-				
-				
-				if(unitService.addCustIconOnLevel(levelId,iconId) ){
-					System.out.println("CREATED");
-					return new ResponseEntity<Void>(HttpStatus.OK);
-				}else{
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-				}
-			}
-			catch (Exception e){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			
-		}
-		
-		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
-		@RequestMapping(value = "/getAllUnits", method = RequestMethod.GET)
-		@ResponseBody
-		public ResponseEntity<Set<Unit>> getAllUnits( HttpServletRequest rq) throws UserNotFoundException  {
-			
-			Principal principal = rq.getUserPrincipal();
-			Optional<User> usr = userService.getUserByEmail(principal.getName());
-			if ( !usr.isPresent() ){
-
-				return new ResponseEntity<Set<Unit>>(HttpStatus.CONFLICT);
-			}
-			try{
-				ClientOrganisation client = usr.get().getClientOrganisation();
-				//Set<Icon> icons = iconService.getAllIconFromClientOrganisation(client);	
-				Set<Building> buildings = client.getBuildings();
-				Set<Unit> units=new HashSet<Unit>();
-				for(Building building:buildings){
-					Set<Level> levels=building.getLevels();
-					for(Level level:levels){
-						Set<Unit> unitsOfLevel=level.getUnits();
-						for(Unit unitOfLevel:unitsOfLevel){
-							unitOfLevel.getLevel().getBuilding().setLevels(null);
-							unitOfLevel.getLevel().setUnits(null);;
-							unitOfLevel.setBookings(null);
-							unitOfLevel.setMaintenanceSchedule(null);
-							unitOfLevel.setSquare(null);
-							unitOfLevel.setUnitAttributeValues(null);
+				if (unitId==0){//CREATE NEW UNIT
+					if(type.equals("")){//SQUARE IS WITH ICON OBJECT
+						System.out.println("UNIT"+unitId+" IS WITH ICON OBJECT");
+						//	defaultIcon=false;
+						System.out.println("TEST:1");
+						iconJson=(JSONObject)squareJson.get("icon");
+						System.out.println("TEST:2");
+						iconId = (Long)iconJson.get("id");	
+						System.out.println("TEST:3");
+						String iconType=(String)iconJson.get("iconType");
+						System.out.println("TEST:4");
+						if(iconType.equals("RECT")){
+							System.out.println("TEST:5");
+							rentable=true;
+							System.out.println("Customised shape is rect: " +rentable);
 						}
-						units.addAll(unitsOfLevel);
+						System.out.println("ADD NEW UNIT WITH ICON");
+						Unit unit=unitService.createUnitOnLevelWithIcon(levelId,iconId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description);
+						unitIds.add(unit.getId());
+						System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
+
+					}else{//SQUARE IS WITH DEFAULT ICON
+						System.out.println("UNIT"+unitId+" IS USING DEFAULT ICON");
+						System.out.println("TEST:6");
+						String[] typeName1=type.split("/");
+						System.out.println("TEST:6 "+typeName1[typeName1.length-1]);
+						String[] typeName2=typeName1[typeName1.length-1].split("\\.");
+						System.out.println("TEST:6 "+typeName2);
+						String typeName3=typeName2[typeName2.length-2];
+						System.out.println("type "+typeName3);
+
+						if(typeName3.equals("rect")){						
+							rentable=true;
+							System.out.println("Shape is rect: " +rentable);
+
 						}
-					
+						System.out.println("ADD NEW UNIT");
+						Unit unit=unitService.createUnitOnLevel(levelId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description);
+						unitIds.add(unit.getId());
+						System.out.println("UNITCONTROLLER: NEW UNIT IS ADDED. UNIT ID:"+unit.getId());
+
+
+					}
+
+
+
+
+				}else{//EDIT EXISTING UNIT
+
+					if(unitService.editUnitInfo(unitId,left, top, height,  width,  color,  type,unitNumber,col,  row,  sizex, sizey,rentable,description)==true){
+						unitIds.add(unitId);		
+						System.out.println("UNITCONTROLLER: UNIT IS EDITED. UNIT ID:"+unitId);
+					}else{
+						System.out.println("UNITCONTROLLER: ERROR. UNIT ID:"+unitId);
+						//need to return error response
+						//return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+					}
+
 				}
+
+
+
+
+
+			}//end for 
+			System.out.println("Test: 6");
+			//this part maybe can delete already
+			/*if(unitService.deleteUnitsFromLevel(unitIds,levelId)==false){
+					System.out.println("Test 61 error: cannot delete units");
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}else{
+					System.out.println("Test 61 successful: units deleted/updated");
+				}*/
+			System.out.println("Test 7");
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		System.out.println("End Save");
+		ResponseEntity<Void> v = new ResponseEntity<Void>(HttpStatus.OK);
+		return v;
+	}
+
+
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/deleteUnit", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> deleteUnit(@RequestBody String idObj,HttpServletRequest rq) {
+
+
+		try{
+
+
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("id"));
+			long unitId = (Long)jsonObject.get("id");
+			System.out.println((Long)jsonObject.get("levelId"));
+			long levelId = (Long)jsonObject.get("levelId");
+
+			if(unitService.deleteUnit(unitId,levelId)){
+				System.out.println("DELETED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+
+	}
+
+
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/updateUnit", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> updateUnit(@RequestBody String idObj,HttpServletRequest rq) {
+
+
+		try{
+
+
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("levelId"));
+			long levelId = (Long)jsonObject.get("levelId");
+			JSONObject unitJson=(JSONObject)jsonObject.get("unit");	
+			long unitId = (Long)unitJson.get("id");				
+			JSONObject squareJson=(JSONObject)unitJson.get("square");		
+			int left = (int) (long) squareJson.get("left");
+			int top = (int) (long) squareJson.get("top");
+			int height = (int) (long) squareJson.get("height");
+			int width = (int) (long) squareJson.get("width");
+			String color = (String)squareJson.get("color");
+			String type = (String)squareJson.get("type");
+			String unitNumber =(String)unitJson.get("unitNumber");
+			int col = (int) (long) unitJson.get("col");
+			int row = (int) (long) unitJson.get("row");
+			int sizex = (int) (long) unitJson.get("sizeX");
+			int sizey = (int) (long) unitJson.get("sizeY");
+			String description =(String)unitJson.get("description");
+			boolean rentable =(boolean)unitJson.get("rentable");
+
+
+			if(unitService.editUnitInfo(unitId,left,top, height,  width,  color, type, unitNumber, col,  row,  sizex, sizey,rentable, description)){
+				System.out.println("EDITED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+
+	}
+
+
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/addUnit", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> addUnit(@RequestBody String idObj,HttpServletRequest rq) {
+
+
+		try{
+
+
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("levelId"));
+			long levelId = (Long)jsonObject.get("levelId");
+
+
+
+
+			if(unitService.addUnitOnLevel(levelId) ){
+				System.out.println("CREATED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+
+	}
+
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/addDefaultIcon", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> addDefaultIcon(@RequestBody String idObj,HttpServletRequest rq) {
+
+
+		try{
+
+
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("levelId"));
+			long levelId = (Long)jsonObject.get("levelId");
+			String type = (String)jsonObject.get("type");
+
+
+
+			if(unitService.addDefaultIconOnLevel(levelId,type) ){
+				System.out.println("CREATED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+
+	}
+
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/addCustIcon", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> addCustIcon(@RequestBody String idObj,HttpServletRequest rq) {
+
+
+		try{
+
+
+			Object obj = parser.parse(idObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			System.out.println((Long)jsonObject.get("levelId"));
+			long levelId = (Long)jsonObject.get("levelId");
+			long iconId = (Long)jsonObject.get("iconId");
+
+
+
+			if(unitService.addCustIconOnLevel(levelId,iconId) ){
+				System.out.println("CREATED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+
+	}
+
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/getAllUnits", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Set<Unit>> getAllUnits( HttpServletRequest rq) throws UserNotFoundException  {
+
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+
+			return new ResponseEntity<Set<Unit>>(HttpStatus.CONFLICT);
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();
+			//Set<Icon> icons = iconService.getAllIconFromClientOrganisation(client);	
+			Set<Building> buildings = client.getBuildings();
+			Set<Unit> units=new HashSet<Unit>();
+			for(Building building:buildings){
+				Set<Level> levels=building.getLevels();
+				for(Level level:levels){
+					Set<Unit> unitsOfLevel=level.getUnits();
+					for(Unit unitOfLevel:unitsOfLevel){
+						unitOfLevel.getLevel().getBuilding().setLevels(null);
+						unitOfLevel.getLevel().setUnits(null);;
+						unitOfLevel.setBookings(null);
+						unitOfLevel.setMaintenanceSchedule(null);
+						unitOfLevel.setSquare(null);
+						unitOfLevel.setUnitAttributeValues(null);
+					}
+					units.addAll(unitsOfLevel);
+				}
+
+			}
+
+
+			return new ResponseEntity<Set<Unit>>(units,HttpStatus.OK);
+		}
+		catch (Exception e){
+
+			return new ResponseEntity<Set<Unit>>(HttpStatus.CONFLICT);
+		}
+
+	}           
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/updateRent", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> updateRent(@RequestBody String unitObj,HttpServletRequest rq) {
+
+
+		try{
+
+
+			Object obj = parser.parse(unitObj);
+			JSONObject jsonObject = (JSONObject) obj;
+			JSONObject unitJson=(JSONObject)jsonObject.get("unit");	
+			long unitId = (Long)unitJson.get("id");				
+			System.out.println("test rent");
+			Double rent =Double.parseDouble((String)unitJson.get("rent"));
+			System.out.println(rent);
+			if(unitService.updateRent(unitId,rent)){
+				System.out.println("RENT UPDATED");
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}else{
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+
+	}
+
+
+
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY','ROLE_EXTEVE')")
+	//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
+	@RequestMapping(value = "/viewUnitsWithBookings", method = RequestMethod.POST)
+	@ResponseBody
+	public String viewUnitsWithBookings( @RequestBody String level, HttpServletRequest rq)  {
+		System.out.println("level json"+level);
+		try{
+
+			Object obj = parser.parse(level);
+			System.out.println("Level obj "+obj);
+			JSONObject jsonObject = (JSONObject) obj;
+
+			System.out.println("Level jsonObject "+jsonObject);
+			long levelId = (Long)jsonObject.get("id");
+
+			System.out.println("Level id "+levelId);
+			//long levelId = Long.parseLong(level);
+			Set<Unit> units = unitService.getUnitsByLevelId(levelId);
+			for(Unit unit:units){	
+				System.out.println("********** unit: " + unit.getUnitNumber());
+				Set<UnitAttributeValue> values = unit.getUnitAttributeValues();
+				for(UnitAttributeValue value:values){
+					value.setUnits(null);
+					value.getUnitAttributeType().setUnitAttributeValues(null);
+				}
+				Set<BookingAppl> bookings = unit.getBookings();
+				for(BookingAppl booking:bookings){
+					booking.setUnit(null);
+					booking.setAreas(null);
+					booking.setEvent(null);
+					booking.setOwner(null);
+
+				}
+				Set<MaintenanceSchedule> maints = unit.getMaintenanceSchedule();
+				for(MaintenanceSchedule maint:maints){
+					maint.setUnit(null);
+					maint.setMaintenance(null);
+				}
+			}
+			System.out.println("Level units "+units);
+			Gson gson2 = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == Level.class);
+						}
+
+						/**
+						 * Custom field exclusion goes here
+						 */
+
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+						}
+
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();
+
+
+
+			String json = gson2.toJson(units);
+			System.out.println(json);
+			return json;
+		}
+		catch (Exception e){
+
+			System.out.println("************* ERROR: " + e.getMessage());
+			e.printStackTrace();
+
+			JSONObject bd = new JSONObject(); 
+			bd.put("error", "cannot fetch"); 
+
+			System.out.println("Returning building id : " + bd.toString());
+			return bd.toString();
+		}
+
+
+	}	
+
+
+
+
+
 	
-			
-				return new ResponseEntity<Set<Unit>>(units,HttpStatus.OK);
-			}
-			catch (Exception e){
 
-				return new ResponseEntity<Set<Unit>>(HttpStatus.CONFLICT);
-			}
-			
-}           
-		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
-		@RequestMapping(value = "/updateRent", method = RequestMethod.POST)
-		@ResponseBody
-		public ResponseEntity<Void> updateRent(@RequestBody String unitObj,HttpServletRequest rq) {
 
-			
-			try{
-				
-				
-				Object obj = parser.parse(unitObj);
-				JSONObject jsonObject = (JSONObject) obj;
-				JSONObject unitJson=(JSONObject)jsonObject.get("unit");	
-				long unitId = (Long)unitJson.get("id");				
-				System.out.println("test rent");
-				Double rent =Double.parseDouble((String)unitJson.get("rent"));
-				System.out.println(rent);
-				if(unitService.updateRent(unitId,rent)){
-					System.out.println("RENT UPDATED");
-					return new ResponseEntity<Void>(HttpStatus.OK);
-				}else{
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-				}
-			}
-			catch (Exception e){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			
-		}
-		
 
-		
-		@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY','ROLE_EXTEVE')")
-		//for view only, call view units; for load and edit, call viewUnits first and then call saves units;
-		@RequestMapping(value = "/viewUnitsWithBookings", method = RequestMethod.POST)
-		@ResponseBody
-		public String viewUnitsWithBookings( @RequestBody String level, HttpServletRequest rq)  {
-			System.out.println("level json"+level);
-			try{
-			
-				Object obj = parser.parse(level);
-				System.out.println("Level obj "+obj);
-				JSONObject jsonObject = (JSONObject) obj;
-				
-				System.out.println("Level jsonObject "+jsonObject);
-				long levelId = (Long)jsonObject.get("id");
-			
-				System.out.println("Level id "+levelId);
-				//long levelId = Long.parseLong(level);
-				Set<Unit> units = unitService.getUnitsByLevelId(levelId);
-				for(Unit unit:units){	
-					System.out.println("********** unit: " + unit.getUnitNumber());
-					Set<UnitAttributeValue> values = unit.getUnitAttributeValues();
-					for(UnitAttributeValue value:values){
-						value.setUnits(null);
-						value.getUnitAttributeType().setUnitAttributeValues(null);
-					}
-					Set<BookingAppl> bookings = unit.getBookings();
-					for(BookingAppl booking:bookings){
-						booking.setUnit(null);
-						booking.setAreas(null);
-						booking.setEvent(null);
-						booking.setOwner(null);
-						
-					}
-					Set<MaintenanceSchedule> maints = unit.getMaintenanceSchedule();
-					for(MaintenanceSchedule maint:maints){
-						maint.setUnit(null);
-						maint.setMaintenance(null);
-					}
-					}
-				System.out.println("Level units "+units);
-				Gson gson2 = new GsonBuilder()
-					    .setExclusionStrategies(new ExclusionStrategy() {
-					        public boolean shouldSkipClass(Class<?> clazz) {
-					            return (clazz == Level.class);
-					        }
-
-					        /**
-					          * Custom field exclusion goes here
-					          */
-
-							@Override
-							public boolean shouldSkipField(FieldAttributes f) {
-								//TODO Auto-generated method stub
-								return false;
-							}
-
-					     })
-					    /**
-					      * Use serializeNulls method if you want To serialize null values 
-					      * By default, Gson does not serialize null values
-					      */
-					    .serializeNulls()
-					    .create();
-					
-			
-			    
-			    String json = gson2.toJson(units);
-			    System.out.println(json);
-			    return json;
-				}
-				catch (Exception e){
-					
-					System.out.println("************* ERROR: " + e.getMessage());
-					e.printStackTrace();
-					
-					JSONObject bd = new JSONObject(); 
-					bd.put("error", "cannot fetch"); 
-					
-				    System.out.println("Returning building id : " + bd.toString());
-					return bd.toString();
-				}
-		
-			
-}           
-
-		
 }
