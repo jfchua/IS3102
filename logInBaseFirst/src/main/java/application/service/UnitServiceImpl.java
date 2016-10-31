@@ -1,6 +1,8 @@
 package application.service;
 
 import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -18,14 +20,22 @@ public class UnitServiceImpl implements UnitService {
 	private final LevelRepository levelRepository;
 	private final SquareRepository squareRepository;
 	private final IconRepository iconRepository;
+	private final BookingApplRepository bookingRepository;
+	private final MaintenanceScheduleRepository maintRepository;
+	private final AreaRepository areaRepository;
+	private final UnitAttributeValueRepository unitAttributeValueRepository;
 	private static final Logger LOGGER = LoggerFactory.getLogger(LevelServiceImpl.class);
 	
 	@Autowired
-	public UnitServiceImpl(LevelRepository levelRepository,UnitRepository unitRepository, SquareRepository squareRepository,IconRepository iconRepository) {
+	public UnitServiceImpl(LevelRepository levelRepository,UnitRepository unitRepository, SquareRepository squareRepository,IconRepository iconRepository,BookingApplRepository bookingRepository,MaintenanceScheduleRepository maintRepository,AreaRepository areaRepository,UnitAttributeValueRepository unitAttributeValueRepository) {
 		this.levelRepository =levelRepository;
 		this.unitRepository = unitRepository;
 		this.squareRepository=squareRepository;
 		this.iconRepository=iconRepository;
+		this.bookingRepository=bookingRepository;
+		this.maintRepository=maintRepository;
+		this.areaRepository=areaRepository;
+		this.unitAttributeValueRepository=unitAttributeValueRepository;
 	}
 /*	@Override
 	public Unit createUnit(int left, int top, int height, int width, String color, String type,
@@ -447,6 +457,32 @@ public class UnitServiceImpl implements UnitService {
 				level.setUnits(units);
 				levelRepository.saveAndFlush(level);
 				
+
+				Set<BookingAppl> bookings=unit.getBookings();
+				Set<MaintenanceSchedule> maints=unit.getMaintenanceSchedule();
+				for(BookingAppl booking:bookings){
+					booking.setUnit(null);
+					bookingRepository.saveAndFlush(booking);
+				}
+				for(MaintenanceSchedule maint:maints){
+					maint.setUnit(null);
+					maintRepository.saveAndFlush(maint);
+				}
+				
+				Set<Area> areas=unit.getAreas();
+				for(Area area:areas){
+					areaRepository.delete(area);
+					areaRepository.flush();
+				}
+				
+				Set<UnitAttributeValue> values=unit.getUnitAttributeValues();
+				for(UnitAttributeValue value:values){
+					Set<Unit> unitsOfValue=value.getUnits();
+					unitsOfValue.remove(unit);
+					value.setUnits(unitsOfValue);
+					unitAttributeValueRepository.saveAndFlush(value);
+				}
+				
 				unitRepository.delete(unit);
 				unitRepository.flush();
 				
@@ -512,6 +548,30 @@ public class UnitServiceImpl implements UnitService {
 		return  level.getUnits();
 	}
 	
+	@Override
+	public boolean checkBookings(long unitId){
+		Unit unit=unitRepository.findOne(unitId);
+		
+		Date today=new Date();
+		System.out.println("unitservice 522 today:");
+		System.out.println(today);
+		Set<BookingAppl> bookings=unit.getBookings();
+		Set<MaintenanceSchedule> maints=unit.getMaintenanceSchedule();
+		for(BookingAppl booking:bookings){
+			Date end=booking.getEvent_end_date_time();
+			if(end.after(today)){
+				System.out.println("528");
+				return false;
+			}
+		}
+		for(MaintenanceSchedule maint:maints){
+			Date end=maint.getEnd_time();
+			if(end.after(today)){
+				return false;
+			}
+		}
+		return true;
+	}
 	
 
 }

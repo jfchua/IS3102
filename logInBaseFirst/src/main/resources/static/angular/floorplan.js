@@ -853,11 +853,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 			          Unit:$scope.units
 			        }
 			    };
-		  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
-		    	
-		  },function(response){
-		        
-		      } ).then(function(){
+	
 		    	  if (confirm('CONFIRM TO DELETE THIS UNIT'+unit.unitNumber+'?')) {
 		  			
 		  			var dataObj={id:unit.id,levelId:levelId};
@@ -879,7 +875,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 		  		})
 		  		
 		  		}
-		      } )
+		      
 		
 		   
 	}//END REMOVE

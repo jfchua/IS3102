@@ -366,12 +366,17 @@ public class UnitController {
 			long unitId = (Long)jsonObject.get("id");
 			System.out.println((Long)jsonObject.get("levelId"));
 			long levelId = (Long)jsonObject.get("levelId");
-
+			System.out.println("unitcontroller 369"+ unitService.checkBookings(unitId));
+			if(!unitService.checkBookings(unitId)){
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			else{
 			if(unitService.deleteUnit(unitId,levelId)){
 				System.out.println("DELETED");
 				return new ResponseEntity<Void>(HttpStatus.OK);
 			}else{
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
 			}
 		}
 		catch (Exception e){
