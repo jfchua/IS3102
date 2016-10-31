@@ -52,7 +52,7 @@ public interface UnitService {
 		 
 		 boolean addCustIconOnLevel(long levelId,long iconId);
 		 
-		 
+		 boolean checkBookings(long unitId);
 		 
 		 
 		

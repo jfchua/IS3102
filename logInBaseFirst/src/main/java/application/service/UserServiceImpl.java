@@ -346,6 +346,7 @@ public class UserServiceImpl implements UserService {
 			user.setRoles(roles);
 			user.setEmail(userEmail);
 			user.setClientOrganisation(null);
+			user.setSecurity("");
 
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String hashedPassword = encoder.encode(password);

@@ -55,8 +55,8 @@
 	</div>
 	<div class="col-md-1">
 
-		<br> <a ng-click="addArea()" 
-			tooltip-placement="right" tooltip="Add an Area"><button
+		<br> <a 
+			tooltip-placement="right" tooltip="Add an Area"><button ng-click="addArea()" 
 				type="button" class="btn btn-primary btn-circle btn-lg">
 				<i class="glyphicon glyphicon-plus"></i>
 			</button></a>
@@ -72,9 +72,9 @@
 	</div>
 
 
-	<div class="col-md-1" ng-show="areas.length==0">
-		<br> <a ng-click="showDefaultUnitPlan()" tooltip-placement="left"
-			tooltip="Use default unit plan"><button type="button"
+	<div class="col-md-1" >
+		<br> <a  tooltip-placement="left"
+			tooltip="Use default unit plan"><button type="button" ng-click="showDefaultUnitPlan()" ng-disabled="areas.length!=0"
 				class="btn btn-primary btn-circle btn-lg">
 				<i class="glyphicon glyphicon-folder-open"></i>
 			</button></a>
