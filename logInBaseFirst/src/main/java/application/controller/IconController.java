@@ -31,9 +31,14 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import application.entity.Area;
 import application.entity.AuditLog;
+import application.entity.BookingAppl;
+import application.entity.Building;
 import application.entity.ClientOrganisation;
 import application.entity.Icon;
+import application.entity.Level;
+import application.entity.Unit;
 import application.entity.User;
 import application.exception.IconNotFoundException;
 import application.exception.InvalidFileUploadException;
@@ -262,6 +267,44 @@ public class IconController {
 			Object obj = parser.parse(iconId);
 			JSONObject jsonObject = (JSONObject) obj;
 			long id = (Long)jsonObject.get("id");
+			
+			//CHECK IF ICON IS USED IN FLOOR PLAN
+			Set<Building> buildings=client.getBuildings();
+			for(Building building:buildings){
+				Set<Level> levels=building.getLevels();
+				for(Level level:levels){
+					Set<Unit> units=level.getUnits();
+					for(Unit unit: units){
+						if(unit.getSquare().getIcon()!=null){
+							Icon icon=unit.getSquare().getIcon();
+							if(icon.getId()==id){
+								//NEW ERROR MESSAGE
+								System.out.println("icon is used in floor plan");
+								return new ResponseEntity<String>(geeson.toJson("Icon was used in floor plan"),HttpStatus.INTERNAL_SERVER_ERROR);
+							}
+						}
+						
+						Set<Area> areas= new HashSet<Area>();
+						areas.addAll(unit.getAreas());
+						Set<BookingAppl> bookings= unit.getBookings();
+						for(BookingAppl booking:bookings){
+							areas.addAll(booking.getAreas());
+						}
+						for(Area area:areas){
+							if(area.getSquare().getIcon()!=null){
+								Icon icon1=area.getSquare().getIcon();
+							if(icon1.getId()==id){
+								//NEW ERROR MESSAGE
+								System.out.println("Icon is used in area plan");
+								return new ResponseEntity<String>(geeson.toJson("Icon was used in area plan"),HttpStatus.INTERNAL_SERVER_ERROR);
+							
+										}
+								}
+						}
+					}
+				}
+			}
+			
 			boolean bl = iconService.deleteIconFromClientOrganisation(client, id);
 			System.out.println("delete icon " + id);
 			if ( bl ){

@@ -20,12 +20,14 @@ app.controller('iconController', function ($scope, $http,shareData) {
 
 	$scope.remove = function(icon) { 
 		if (confirm('CONFIRM TO DELETE ICON'+icon.id+'?')) {
-			var index = $scope.icons.indexOf(icon);
-			$scope.icons.splice(index, 1);  
+		
 			var dataObj={id:icon.id};
 			$http.post('/property/deleteIcon', JSON.stringify(dataObj)).then(function(response){
+				var index = $scope.icons.indexOf(icon);
+				$scope.icons.splice(index, 1);  
 		},function(response){//else is not saved successfully
-			alert("Error, " + response);
+			alert("Error, " + response.data);
+			console.log(response);
 		})
 
 		}
