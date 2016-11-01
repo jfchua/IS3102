@@ -1912,6 +1912,36 @@ app.controller('AlertDemoCtrl',[ '$scope','datfactory','$http','ModalService', f
 		$scope.numberOfNotification=$scope.alerts.length;
 
 	});
+	
+	 //MODAL FOR VIEWING ONE MESSAGE
+	  $scope.complexResult = null;
+		 $scope.showModal = function(message) {
+			 console.log(message);
+			    // Just provide a template url, a controller and call 'showModal'.
+			    ModalService.showModal({
+			    	
+			    	      templateUrl: "views/viewMessageTemplate.html",
+			    	      controller: "viewMessageController",
+			    	      inputs: {
+			    	        title: "View Message",
+			    	        message:message
+			    	      }
+			    	    }).then(function(modal) {
+			    	      modal.element.modal();
+			    	      modal.close.then(function(result) {
+			    	     console.log("FINISHED VIEWING UNIT");
+			    	      });
+			    	    });
+
+			  };//END SHOWMODAL
+			  
+			  $scope.dismissModal = function(result) {
+				    close(result, 200); // close, but give 200ms for bootstrap to animate
+			
+				    console.log("in dissmiss");
+				 };
+				 
+	
 	$scope.closeAlert = function(index) {
 
 		console.log("ID: " + $scope.getId[index]);
@@ -1964,6 +1994,43 @@ app.controller('AlertDemoCtrl',[ '$scope','datfactory','$http','ModalService', f
 
 	};
 }]);
+
+//VIEW MESSAGE MODAL
+app.controller('viewMessageController', ['$scope', '$element', 'title', 'close', 'message',
+                                                function($scope, $element, title, close,message) {
+	
+
+		  $scope.title = title;
+		  $scope.message=message;
+		  console.log(title);
+		  console.log(close);
+		  console.log($element);
+		  //  This close function doesn't need to use jQuery or bootstrap, because
+		  //  the button has the 'data-dismiss' attribute.
+		  $scope.close = function() {
+		 	  close({
+		     
+		    }, 500); // close, but give 500ms for bootstrap to animate
+		  };
+
+		  //  This cancel function must use the bootstrap, 'modal' function because
+		  //  the doesn't have the 'data-dismiss' attribute.
+		  $scope.cancel = function() {
+
+		    //  Manually hide the modal.
+		    $element.modal('hide');
+		    
+		    //  Now call close, returning control to the caller.
+		    close({
+		    	
+		    }, 500); // close, but give 500ms for bootstrap to animate
+		  };
+
+		  
+
+	
+}])
+
 app.controller('DropdownCtrl', function ($scope, $log) {
 	$scope.items = [
 	                'The first choice!',
