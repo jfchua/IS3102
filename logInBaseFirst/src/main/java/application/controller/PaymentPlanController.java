@@ -981,7 +981,7 @@ public class PaymentPlanController {
 				parameters.put("number", invoice);
 			}
 			System.out.println("invoice is "+invoice);
-			boolean bl = paymentPlanService.generatePayment(client, paymentId, invoice);
+			boolean bl = paymentPlanService.updatePayment(client, paymentId, invoice);
 			System.out.println("*******GENERATE PAYMENT????"+bl);
 			System.err.println("path is " + path);
 			FileOutputStream fileOutputStream = new FileOutputStream(path);

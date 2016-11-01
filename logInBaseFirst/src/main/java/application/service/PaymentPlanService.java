@@ -48,4 +48,6 @@ public interface PaymentPlanService {
 	void deleteOldPdfs();
 	
 	boolean generatePayment(ClientOrganisation client, long id, String invoice);
+	
+	boolean updatePayment(ClientOrganisation client, long id, String invoice);
 }
