@@ -209,6 +209,10 @@ public class TicketingController {
 			JSONObject jsonObject = (JSONObject) obj1;
 			Long id = (Long)jsonObject.get("eventId");
 			System.err.println("deleting id of : "  + id);
+			if ( categoryRepository.findOne(id).getTickets().size() > 0){
+				return new ResponseEntity<String>(geeson.toJson("Unable to delete category, there exists one or more tickets already purchased in this category!"),HttpStatus.INTERNAL_SERVER_ERROR);
+
+			}
 			ticketingService.deleteCat(id);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
@@ -638,6 +642,62 @@ public class TicketingController {
 			return "cannot fetch";
 		}
 	}
+
+
+	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	// Call this method using $http.get and you will get a JSON format containing an array of event objects.
+	// Each object (building) will contain... long id, collection of levels.
+	@RequestMapping(value = "/updateCategory", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> updateCategory(@RequestBody String category,HttpServletRequest rq) throws UserNotFoundException {
+		System.err.println("update cat");
+
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>("User not found!", HttpStatus.INTERNAL_SERVER_ERROR); 
+		}
+		try{
+			System.err.println("before try");
+			Object obj1 = parser.parse(category);
+			System.err.println("after try" + obj1.toString());
+			JSONObject jsonObject = (JSONObject) obj1;
+			Long catId = (Long)jsonObject.get("categoryId");
+			double price = -1;
+			System.err.println("gotten catid " + catId);
+			String name = (String)jsonObject.get("name");
+			Object pricet = jsonObject.get("price");
+			if ( pricet instanceof Double){
+				price = (double)pricet;
+			}
+			else if ( pricet instanceof Integer){
+				price = (int)pricet;
+			}
+			else if ( pricet instanceof Long){
+				System.err.println("its of type long");
+				long theprice = (long)jsonObject.get("price");
+				price = (int)theprice;
+			}
+			System.err.println("price is now " + price);
+			long numTicketst = (long)jsonObject.get("numTickets");
+			int numTickets = (int)numTicketst;
+			System.err.println("gotten info of " + name + " " + price + " " + numTickets + " cat id: " + catId);
+
+			boolean bl = ticketingService.updateCategory(catId, name, price, numTickets);
+			if ( bl ){
+				return new ResponseEntity<String>(HttpStatus.OK);
+			}
+		}
+		catch ( EventNotFoundException e){
+			return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+
+		}
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in adding category" + e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(geeson.toJson("Server error in getting categories"),HttpStatus.INTERNAL_SERVER_ERROR);
+
+	}	
 
 
 

@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 	private final EmailService emailService;
 	private final PasswordResetTokenRepository passwordResetTokenRepository;
 	private final RoleRepository roleRepository; 
-	
+
 
 	// private final MessageRepository messageRepository = null;
 
@@ -75,16 +75,16 @@ public class UserServiceImpl implements UserService {
 		}
 		return us;
 	}
-	
+
 	@Override
 	public boolean getUserBySecurity(User user, String security) {
 		System.out.println(user.getSecurity() + "is the userserviceimpl");
 		if (user.getSecurity().equals(security)) {
-		return true;
+			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public Collection<User> getAllUsers() {
 		LOGGER.debug("Getting all users");
@@ -307,67 +307,20 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean checkOldPassword(Long id, String oldpass) throws OldPasswordInvalidException, UserNotFoundException {
 
-			Optional<User> user = this.getUserById(id);
-			String oldPassUser = user.get().getPasswordHash();
+		Optional<User> user = this.getUserById(id);
+		String oldPassUser = user.get().getPasswordHash();
 
-			BCryptPasswordEncoder t = new BCryptPasswordEncoder();
-			if ( !t.matches(oldpass, oldPassUser)){
-				System.err.println("invalid old pass");
-				throw new OldPasswordInvalidException("The old password entered was invalid");
-			}
-			return true;
-
-
-	}
-	
-	public boolean registerNewUser(String name, String userEmail, String password) throws EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException{
-		Pattern pat = Pattern.compile("^.+@.+\\..+$");
-		Matcher get = pat.matcher(userEmail);		
-		if(!get.matches()){
-			System.err.println("Invalid email exception");
-			throw new InvalidEmailException("The email " + userEmail + " is invalid");
-			//return false;
-		}
-		try{
-			if ( this.getUserByEmail(userEmail).isPresent() ){
-				System.err.println("User already exists!");
-				throw new EmailAlreadyExistsException("User with email " + userEmail + " already exists");
-			}
-		}
-		catch ( UserNotFoundException e ){			
-		}
-		try{
-			//CREATE USER START
-			User user = new User();
-			user.setName(name);
-			Role r = roleRepository.getRoleByName("ROLE_EVEGOER");
-			Set<Role> roles = new HashSet<Role>();
-			roles.add(r);
-			user.setRoles(roles);
-			user.setEmail(userEmail);
-			user.setClientOrganisation(null);
-			user.setSecurity("");
-
-			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-			String hashedPassword = encoder.encode(password);
-			user.setPasswordHash(hashedPassword); //add salt?
-			//Send created password to the new user's email
-
-			//REPOSITORY SAVING
-
-			userRepository.save(user);
-			System.out.println("Saved user");
-			emailService.sendEmail(userEmail, "Algattas account signup", "Hi " + name + "! Thank you for signing up for a new account. You may now log in with your new account.");
-
-		}
-		catch ( Exception e){
-			System.err.println("Exception at register new user "  + e.toString());
-			return false;
+		BCryptPasswordEncoder t = new BCryptPasswordEncoder();
+		if ( !t.matches(oldpass, oldPassUser)){
+			System.err.println("invalid old pass");
+			throw new OldPasswordInvalidException("The old password entered was invalid");
 		}
 		return true;
 
 
 	}
+
+
 
 
 }
