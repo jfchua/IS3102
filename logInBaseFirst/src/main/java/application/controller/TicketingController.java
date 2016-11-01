@@ -209,8 +209,7 @@ public class TicketingController {
 			JSONObject jsonObject = (JSONObject) obj1;
 			Long id = (Long)jsonObject.get("eventId");
 			System.err.println("deleting id of : "  + id);
-			boolean bl =ticketingService.deleteCat(id);
-			System.out.println("cate deleted successfully? " +bl);
+			ticketingService.deleteCat(id);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		catch ( Exception e){
