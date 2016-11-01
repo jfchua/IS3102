@@ -379,26 +379,35 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	}
 
 	@Override
-	public Double getOutstandingById(long userId) {
+	public String getOutstandingById(long userId) {
 		try{
 			Optional<User> user1 = Optional.ofNullable(userRepository.findOne(userId)); 
 			Double outstanding = 0.00;
+			Double total = 0.00;
+			Double paid = 0.00;
+			String str = "";
+			NumberFormat formatter = new DecimalFormat("#0.00");
 			if(user1.isPresent()){
 				User user = user1.get();
 				System.out.println("user id is "+user.getId());
 				Set<Event> events = user.getEvents();
 				for(Event e : events){
+					if(e.getPaymentPlan()!=null){
 					PaymentPlan pay = e.getPaymentPlan();
 					System.out.println("payment plan total "+ pay.getTotal());
 					outstanding += pay.getPayable();
+					total += pay.getTotal();
+					paid += pay.getPaid();
+					}
 				}
 				System.out.println("outstanding");
-				return outstanding;
+				str = formatter.format(total)+ " "+formatter.format(outstanding) + " " + formatter.format(paid);
+				return str;
 			}	
 			else 
-				return 0.00;
+				return "";
 		}catch (Exception e){
-			return 0.00;
+			return "";
 		}
 	}
 
