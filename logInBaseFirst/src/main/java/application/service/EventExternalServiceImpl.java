@@ -653,7 +653,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 		Set<User> eventOrgs = userRepository.getAllUsers(client);
 		boolean doesHave = false;
 		String[] units = unitsId.split(" ");
-		System.out.println(units[0]);
+		//System.out.println(units[0]);
 		for(User u: eventOrgs){
 			Set<Role> roles = u.getRoles();
 			for(Role r: roles){
@@ -708,7 +708,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				}
 			}
 			rent *= checkRate(client, event_start_date);
-			System.out.println("rent for first day " + rent);
+			//System.out.println("rent for first day " + rent);
 			//days in between
 			Double rentInBetween = 0.00;
 			//Double rent1 = 0.00;
@@ -724,10 +724,10 @@ public class EventExternalServiceImpl implements EventExternalService {
 				}
 				//rent1*=checkRate(client, date.getTime());
 				//rentInBetween += rent1;
-				System.out.println("!!!!RENT IN BETWEEN!!!" + rentInBetween);
+				//System.out.println("!!!!RENT IN BETWEEN!!!" + rentInBetween);
 				date.add(Calendar.DAY_OF_MONTH, 1);
 			}
-			System.out.println("rent for days in between " + rentInBetween);
+			//System.out.println("rent for days in between " + rentInBetween);
 			rent += rentInBetween;
 			//last day
 			//date.add(Calendar.DAY_OF_MONTH, 1);
@@ -747,7 +747,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				}
 			}
 			rentFinal *= checkRate(client, event_end_date);
-			System.out.println("rent for final day " + rentFinal);
+			//System.out.println("rent for final day " + rentFinal);
 			return rent+rentFinal;
 		}
 	}
@@ -943,6 +943,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 		}
 		System.out.println("**num**"+num);*/
 		int k = 0;
+		int count = 0;
 		//cal.setTime(start);
 		//cal1.setTime(start);
 		Calendar calRef = Calendar.getInstance();
@@ -964,15 +965,19 @@ public class EventExternalServiceImpl implements EventExternalService {
 				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();
 				str += base + " " + checkRate(client, calRef.getTime())+ " ";
 				long first =end.getTime() - calRef.getTime().getTime();			
-				System.out.println("*****END TIME IS "+end);
-				System.out.println("*****REFEREBCE TIME IS "+ calRef.getTime());
+				//System.out.println("*****END TIME IS "+end);
+				//System.out.println("*****REFEREBCE TIME IS "+ calRef.getTime());
 				long durFirst = TimeUnit.HOURS.convert(first, TimeUnit.MILLISECONDS);
-				System.out.println("FIRST ****" + durFirst);
+				//System.out.println("FIRST ****" + durFirst);
 				Double duration1 = Double.valueOf(durFirst);
 				str += duration1 + " " + duration1 * base * checkRate(client, calRef.getTime()) + " ";	
 				System.out.println("******NOT SURE WHY WRONG " + str);
 				setS.add(str);
-				System.out.println("before k++" +k);
+				System.err.println("before k++" +k);
+				cal.setTime(start);
+				cal1.setTime(start);
+				calRef.setTime(start);
+				count ++;
 				k ++;
 			}
 			else if(!checkRate(client, cal.getTime()).equals(checkRate(client, cal1.getTime()))){
@@ -983,9 +988,9 @@ public class EventExternalServiceImpl implements EventExternalService {
 				str += base + " " + checkRate(client, calRef.getTime())+ " ";
 				long first =date.getTime().getTime() - calRef.getTime().getTime();			
 				long durFirst = TimeUnit.HOURS.convert(first, TimeUnit.MILLISECONDS);
-				System.out.println("*****END TIME IS "+date.getTime());
-				System.out.println("*****REFEREBCE TIME IS "+ calRef.getTime());
-				System.out.println("FIRST ****" + durFirst);
+				//System.out.println("*****END TIME IS "+date.getTime());
+				//System.out.println("*****REFEREBCE TIME IS "+ calRef.getTime());
+				//System.out.println("FIRST ****" + durFirst);
 				//System.out.println("FIRST ****" + durFirst);
 				Double durationX = Double.valueOf(durFirst);
 				//System.out.println("FIRST DURATION****" + durationX);
@@ -996,6 +1001,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				calRef.setTime(date.getTime());
 				System.out.println("**NOT SURE WHY WRONG " + str);
 				setS.add(str);
+				count ++;
 			}
 			else{
 				System.out.println("*************");
@@ -1003,6 +1009,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 				cal1.add(Calendar.DAY_OF_MONTH, 1);
 			}
 		}
+		System.err.println("K is " +k);
+		System.err.println("Count is " +count);
 		return setS;
 	}
 }

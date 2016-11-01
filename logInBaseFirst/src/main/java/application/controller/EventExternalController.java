@@ -261,8 +261,8 @@ public class EventExternalController {
 	    		Iterator iter = comps.iterator();
 	    		System.out.println("***Set<String> size is " + comps.size());
 	    		while (iter.hasNext()) {
-	    		    System.out.println("***inside while***");
                     String str = (String) iter.next();
+                    System.err.println(str);
                     String[] arr = str.split(" ");
 	            	JSONObject obj1 = new JSONObject();
 					obj1.put("id", arr[0]);
