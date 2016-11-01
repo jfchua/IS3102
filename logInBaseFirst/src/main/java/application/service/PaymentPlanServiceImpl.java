@@ -696,6 +696,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				Payment p = new Payment();
 				p.setInvoice(invoice);
 				p.setPlan(id);
+				//p.setAmount(pay.getNextPayment());
 				paymentRepository.save(p);
 				System.out.println("SAVE PAYMENT SUCCESS");
 				payments.add(p);
