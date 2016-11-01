@@ -31,7 +31,7 @@ public interface PaymentPlanService {
 	
 	Double checkRent(ClientOrganisation client, long eventId);
 	//boolean updateAmountPayable(ClientOrganisation client, long paymentId, Double paid);
-	Double getOutstandingById(long userId);
+	String getOutstandingById(long userId);
 	
 	Set<Event> getEventsByOrgId(ClientOrganisation client, long id);
 

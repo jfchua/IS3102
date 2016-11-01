@@ -369,7 +369,17 @@ public class PaymentPlanController {
 				//System.out.println("event org name is "+u.getName());
 				obj1.put("name", u.getName());
 				obj1.put("email", u.getEmail());
-				obj1.put("outstanding",formatter.format(paymentPlanService.getOutstandingById(u.getId())));
+				if(!paymentPlanService.getOutstandingById(u.getId()).isEmpty()){
+				String[] arr = paymentPlanService.getOutstandingById(u.getId()).split(" ");
+				obj1.put("total",arr[0]);
+				obj1.put("outstanding",arr[1]);
+				obj1.put("paid",arr[2]);
+				}
+				else{
+					obj1.put("total", "");
+					obj1.put("outstanding", "");
+					obj1.put("paid", "");
+				}
 				jArray.add(obj1);
 			}
 			System.out.println("finish getting all orgs oustanding amount");
