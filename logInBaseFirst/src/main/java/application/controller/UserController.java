@@ -53,6 +53,7 @@ import application.repository.ClientOrganisationRepository;
 import application.repository.RoleRepository;
 import application.repository.UserRepository;
 import application.service.ClientOrganisationService;
+import application.service.TicketingService;
 import application.service.UserService;
 
 @Controller
@@ -67,16 +68,18 @@ public class UserController {
 	private final UserService userService;
 	private final RoleRepository roleRepository;
 	private final UserRepository userRepository;
+	private final TicketingService ticketingService;
 	private final AuditLogRepository auditLogRepository;
 
 	private JSONParser parser = new JSONParser();
 	//private final UserCreateFormValidator userCreateFormValidator;
 
 	@Autowired
-	public UserController(AuditLogRepository auditLogRepository, ClientOrganisationRepository clientOrganisationRepository, ClientOrganisationService clientOrganisationService,UserService userService, RoleRepository roleRepository, UserRepository userRepository) {
+	public UserController(TicketingService ticketingService, AuditLogRepository auditLogRepository, ClientOrganisationRepository clientOrganisationRepository, ClientOrganisationService clientOrganisationService,UserService userService, RoleRepository roleRepository, UserRepository userRepository) {
 		//this.userService = userService;
 		this.clientOrganisationService = clientOrganisationService;
 		this.userService = userService;
+		this.ticketingService = ticketingService;
 		this.roleRepository =  roleRepository;
 		this.userRepository = userRepository;
 		this.clientOrganisationRepository = clientOrganisationRepository;
@@ -825,7 +828,7 @@ public class UserController {
 			String name = (String)jsonObject.get("name");
 			String password = (String)jsonObject.get("password");
 			System.out.println("user of email and name is signging up for new account :" +  email + "  "  +name + " " + password);
-			if ( !userService.registerNewUser(name, email, password) ) return new ResponseEntity<String>(gson.toJson("Error creating new user"),HttpStatus.INTERNAL_SERVER_ERROR);
+			if ( !ticketingService.registerNewUser(name, email, password) ) return new ResponseEntity<String>(gson.toJson("Error creating new user"),HttpStatus.INTERNAL_SERVER_ERROR);
 
 
 		}

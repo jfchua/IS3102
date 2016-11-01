@@ -1,4 +1,4 @@
-app.controller('configureTicketsController', function ($scope, $rootScope, $http,$state, $routeParams, shareData) {
+app.controller('configureTicketsController', ['$scope','$rootScope','$http','$state','shareData','ModalService', function ($scope, $rootScope, $http,$state, shareData,ModalService) {
 
 	angular.element(document).ready(function () {
 		$scope.data = {};
@@ -16,30 +16,139 @@ app.controller('configureTicketsController', function ($scope, $rootScope, $http
 		)	
 	});
 
-	$scope.passCategory = function(category){
+	$scope.passCategory = function(category){	
+		console.log("PASSINGATEGORY1" + JSON.stringify(category));
 		shareData.addData(category);
-		console.log(JSON.stringify(category));
+
+		//$rootScope.category = category;
+
+		//$state.go("dashboard.configureTickets");
 	}
-	
+
+
 	$scope.deleteCat = function(category){
 		var dataObj = {			
 				eventId: category.id						
 		};
 		$http.post("//localhost:8443/deleteCategory", JSON.stringify(dataObj)).then(function(response){
 			$scope.requestedTicket = true;
-			alert('Deleted category successfully!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Category deleted successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go($state.current, {}, {reload: true}); 
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
 			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-			$state.go($state.current, {}, {reload: true}); 
+
 		},function(response){
-			alert("Did not delete category from server " + JSON.stringify(response) );
-			//console.log("response is : ")+JSON.stringify(response);
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: response,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	}
 
 	$scope.submitAddCategory = function(){
 		//categoryName $scope.numTickets);
 		//categoryPrice
+		alert(typeof $scope.numTickets);
+		alert(typeof $scope.categoryPrice);
+		if ( !$scope.categoryName || !$scope.categoryPrice || !$scope.numTickets ){
+			ModalService.showModal({
 
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Please ensure you have entered all fields correctly',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		else if ($scope.categoryPrice<0.01){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Category price must be greater than $0.01',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		else if ($scope.numTickets < 1 ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'At least 1 ticket must be sold for this category!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
 		var dataObj = {			
 				eventId: $rootScope.event.id,
 				name: $scope.categoryName,
@@ -48,16 +157,190 @@ app.controller('configureTicketsController', function ($scope, $rootScope, $http
 		};
 		$http.post("//localhost:8443/addCategory", JSON.stringify(dataObj)).then(function(response){
 			$scope.requestedTicket = true;
-			alert('Added category successfully!');
-			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-			$state.go("dashboard.configureTicketsEx");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Category added successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureTicketsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
 		},function(response){
-			alert("Did not add the category into server " + JSON.stringify(response) );
-			//console.log("response is : ")+JSON.stringify(response);
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Server error in adding category',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureTicketsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
-		
+
 
 	}
 
 
-});
+}]);
+
+
+app.controller('updateCategoryController', ['$scope', '$http','$state','$rootScope','shareData', 'ModalService',function ($scope, $http,$state, $rootScope, shareData,ModalService) {
+	angular.element(document).ready(function () {
+		$scope.category = angular.copy(shareData.getData());
+		console.log(JSON.stringify($scope.category));
+		$scope.categoryName = $scope.category.categoryName;
+		$scope.categoryPrice = $scope.category.price;
+		$scope.numTickets = $scope.category.numOfTickets;
+		$scope.categoryId = $scope.category.id;
+
+	}
+
+	)
+	$scope.submitUpdateCategory = function(){	
+
+		if ( !$scope.categoryName || !$scope.categoryPrice || !$scope.numTickets ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Please ensure you have entered all fields correctly',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		else if ($scope.categoryPrice<0.01){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Category price must be greater than $0.01',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		else if ($scope.numTickets < 1 ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'At least 1 ticket must be sold for this category!',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+
+		var dataObj = {			
+				categoryId: $scope.categoryId,
+				name: $scope.categoryName,
+				price: $scope.categoryPrice,
+				numTickets: $scope.numTickets,						
+		};
+		$http.post("//localhost:8443/updateCategory", JSON.stringify(dataObj)).then(function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Category updated successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureTicketsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+
+		},function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Server error in updating category',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureTicketsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+		});
+	}
+}]);
+
+
