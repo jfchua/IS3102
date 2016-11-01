@@ -983,10 +983,11 @@ public class PaymentPlanController {
 				invoice = String.valueOf(paymentId);
 			}
 			else{
-				Iterator iter = pays.iterator();
+				/*Iterator iter = pays.iterator();
 				while (iter.hasNext()){
 					invoice = ((Payment)iter.next()).getInvoice();
-				}
+				}*/
+				invoice = String.valueOf(paymentId + "-" + pays.size());
 				System.err.println(invoice);
 				parameters.put("number", invoice);
 			}
