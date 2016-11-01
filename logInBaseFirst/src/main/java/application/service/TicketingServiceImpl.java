@@ -85,11 +85,10 @@ public class TicketingServiceImpl implements TicketingService {
 			Category c = categoryRepository.findOne(id);
 			Event e = c.getEvent();
 			Set<Category> cats = e.getCategories();
-			cats.remove(c);			
-			e.setCategories(cats);
-			categoryRepository.delete(c);
-			eventRepository.save(e);
-
+			//cats.remove(c);			
+			//e.setCategories(cats);
+			//eventRepository.flush();
+			categoryRepository.delete(c);		
 			categoryRepository.flush();
 			return true;
 		}

@@ -29,7 +29,7 @@ app.controller('configureTicketsController', function ($scope, $rootScope, $http
 			$scope.requestedTicket = true;
 			alert('Deleted category successfully!');
 			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-			$state.go($state.current, {}, {reload: true}); 
+			//$state.go($state.current, {}, {reload: true}); 
 		},function(response){
 			alert("Did not delete category from server " + JSON.stringify(response) );
 			//console.log("response is : ")+JSON.stringify(response);
