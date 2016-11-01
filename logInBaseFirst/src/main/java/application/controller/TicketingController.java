@@ -164,7 +164,7 @@ public class TicketingController {
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == Event.class)||(clazz == Category.class);
+							return (clazz == Event.class)||(clazz == Ticket.class);
 						}
 						/**
 						 * Custom field exclusion goes here
