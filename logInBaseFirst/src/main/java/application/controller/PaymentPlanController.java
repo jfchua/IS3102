@@ -506,12 +506,12 @@ public class PaymentPlanController {
 
 	@RequestMapping(value = "/getPaymentPlan/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<PaymentPlan> getPaymentPlan(@PathVariable("id") String planId, HttpServletRequest rq) throws UserNotFoundException{
+	public ResponseEntity<String> getPaymentPlan(@PathVariable("id") String planId, HttpServletRequest rq) throws UserNotFoundException{
 		System.out.println("startADD");
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return new ResponseEntity<PaymentPlan>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 		try{
 			User user = usr.get();
@@ -541,10 +541,17 @@ public class PaymentPlanController {
 					 */
 					.serializeNulls()
 					.create();	
-			return new ResponseEntity<PaymentPlan>(policy, HttpStatus.OK);
+			NumberFormat formatter = new DecimalFormat("#0.00");   
+			JSONObject obj1 = new JSONObject();
+			obj1.put("id", policy.getId());
+			obj1.put("total", formatter.format(policy.getTotal()));
+			obj1.put("subsequent", formatter.format(policy.getSubsequent()));
+			obj1.put("nextPayment",formatter.format(policy.getNextPayment()));
+			System.out.println("TOTAL2");
+			return new ResponseEntity<String>(obj1.toString(), HttpStatus.OK);
 		}
 		catch (Exception e){
-			return new ResponseEntity<PaymentPlan>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 	}	
 
