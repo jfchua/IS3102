@@ -538,6 +538,49 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 		}
 		console.log("finish selecting units");		
 	}
+	$scope.checkAvail = function(){
+		console.log("start checking availability");
+		$scope.data = {};
+
+		if ( !$scope.maintenance|| !$scope.maintenance.start|| !$scope.maintenance.start){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Please make sure you have entered the starting and ending dates to check for availability and rent calculation",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.selectedUnits = [];
+					$scope.currentlySelectedUnit = '';
+				});
+			});
+			return;
+		}
+		var dataObj = {
+				units: $scope.selectedUnits,
+				start: ($scope.maintenance.start).toString(),
+				end: ($scope.maintenance.start).toString(),
+		};
+		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/maintenance/checkAvailability',
+			data    : dataObj //forms user object
+		});
+		$scope.avail = "";
+		send.success(function(){
+			$scope.avail = "AVAILABLE!";
+			console.log($scope.avail);
+		});
+		send.error(function(){
+			$scope.avail = "NOT AVAILABLE!";
+			console.log($scope.avail);
+		});
+	}
 	/*
 	$scope.getUnitsId = function(){
 		var dataObj ={id: $scope.selectedUnits};

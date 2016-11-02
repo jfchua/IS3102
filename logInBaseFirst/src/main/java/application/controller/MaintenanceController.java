@@ -119,6 +119,94 @@ public class MaintenanceController {
 		 }
   }
 
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/checkAvailability", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> checkAvailability(@RequestBody String eventJSON,
+			HttpServletRequest rq) throws UserNotFoundException {
+		System.out.println("start check availability for events");
+		DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+		Principal principal = rq.getUserPrincipal();
+		System.out.println(principal.getName());
+		Optional<User> usr1 = userService.getUserByEmail(principal.getName());
+		if ( !usr1.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+			User usr = usr1.get();
+			ClientOrganisation client = usr.getClientOrganisation();
+			System.out.println(usr.getName());
+			Object obj = parser.parse(eventJSON);
+			JSONObject jsonObject = (JSONObject) obj;
+			JSONArray units = (JSONArray)jsonObject.get("units");
+            String unitsId = "";
+            for(int i = 0; i < units.size(); i++){
+            	JSONObject unitObj = (JSONObject)units.get(i);		
+            	System.out.println(unitObj.toString());
+				long unitId = (Long)unitObj.get("id");
+				System.out.println(unitId);
+				unitsId = unitsId+unitId + " ";
+				System.out.println(unitsId);
+			}
+			Date start = sdf.parse((String)jsonObject.get("start"));
+			Date end = sdf.parse((String)jsonObject.get("end"));				
+			boolean bl = maintenanceService.checkAvailability(client, usr, unitsId, start, end);
+			if(!bl){
+				System.out.println("NOT AVAILABLE");
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}			
+		}
+		catch (Exception e){
+			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<Void>(HttpStatus.OK);	
+	}	
+
+    @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	@RequestMapping(value = "/checkAvailabilityForUpdate", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Void> checkAvailabilityForUpdate( String eventJSON,
+			HttpServletRequest rq) throws UserNotFoundException {
+		System.out.println("start check availability for events");
+		DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+		Principal principal = rq.getUserPrincipal();
+		System.out.println(principal.getName());
+		Optional<User> user1 = userService.getUserByEmail(principal.getName());
+		if ( !user1.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+			User user = user1.get();
+			ClientOrganisation client = user.getClientOrganisation();
+			System.out.println(user.getName());
+			Object obj = parser.parse(eventJSON);
+			JSONObject jsonObject = (JSONObject) obj;
+			long maintId = (Long)jsonObject.get("id");
+			JSONArray units = (JSONArray)jsonObject.get("units");
+            String unitsId = "";
+            for(int i = 0; i < units.size(); i++){
+            	JSONObject unitObj = (JSONObject)units.get(i);		
+            	System.out.println(unitObj.toString());
+				long unitId = (Long)unitObj.get("id");
+				System.out.println(unitId);
+				unitsId = unitsId+unitId + " ";
+				System.out.println(unitsId);
+			}
+			Date start = sdf.parse((String)jsonObject.get("start"));
+			Date end = sdf.parse((String)jsonObject.get("end"));				
+			boolean bl = maintenanceService.checkAvailabilityForUpdate(client, user, maintId, unitsId, start, end);
+			if(!bl){
+				System.out.println("NOT AVAILABLE");
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}			
+		}
+		catch (Exception e){
+			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<Void>(HttpStatus.OK);	
+	}	
 
 
 	// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
