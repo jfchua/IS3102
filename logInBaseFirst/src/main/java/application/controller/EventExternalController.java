@@ -252,6 +252,7 @@ public class EventExternalController {
 						unitsId = unitsId+unitId + " ";
 						System.out.println(unitsId);
 				 }
+				 System.err.println(unitsId);
 				 System.out.println("***finish formatting units id" + unitsId);
 				NumberFormat formatter = new DecimalFormat("#0.00");          
 	            Date event_start_date = sdf.parse((String)jsonObject.get("event_start_date"));
