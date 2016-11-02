@@ -87,7 +87,6 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 		});
 		send.success(function(response){
 			$scope.plan = response;
-			
 		});
 		send.error(function(response){
 			$scope.totalRent = response;
@@ -128,7 +127,8 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 				data    : dataObj1, 
 				responseType: 'arraybuffer'
 			});
-
+            console.log("BEFORE");
+            console.log(dataObj1);
 			console.log("DOWNLOADING");
 			send.success(function(data){
 				console.log(JSON.stringify(data));

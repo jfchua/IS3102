@@ -350,8 +350,9 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 					Set<BookingAppl> bookings = event.getBookings();
 					String unitsId = "";
 					for(BookingAppl b : bookings)
-						unitsId+=b.getUnit().getId();
+						unitsId+=b.getUnit().getId() + " "; 
 					rent = eventExternalService.checkRent(client, user, unitsId, start, end);
+					System.err.println("*******" +rent);
 				}
 				return rent*1.07;
 			}catch(Exception e){

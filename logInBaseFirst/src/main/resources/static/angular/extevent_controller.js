@@ -560,15 +560,15 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 				event_end_date: ($scope.event.event_end_date).toString(),
 		};
 		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		
 		var send = $http({
 			method  : 'POST',
 			url     : 'https://localhost:8443/event/checkComponents',
 			data    : dataObj //forms user object
 		});
-		//$scope.avail = "";	
 		send.success(function(response){
 			$scope.components = response;
-			$scope.order_item = "id";
+			$scope.order_item = "num";
 			$scope.order_reverse = false;
 			console.log($scope.components);
 			console.log("get component success");
@@ -577,7 +577,6 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			alert("get component failure");
 		});
 
-
 		var send1 = $http({
 			method  : 'POST',
 			url     : 'https://localhost:8443/event/checkRent',
@@ -585,7 +584,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		});
 		send1.success(function(response){
 			$scope.totalRent = response;
-			$scope.components = response.data;
+			//$scope.components = response.data;
 			$scope.totalRentAfter = response*1.07;
 			console.log($scope.totalRent);
 		});
@@ -594,6 +593,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			console.log($scope.totalRent);
 		});	
 	}
+	
 	$scope.eventTypes=[{'name':'Concert','eventType':'CONCERT'},
 	                   {'name':'Conference','eventType':'CONFERENCE'},
 	                   {'name':'Fair','eventType':'FAIR'},
@@ -741,6 +741,21 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 
 }]);
 
+app.filter('orderObjectBy', function() {
+	  return function(items, field, reverse) {
+	    var filtered = [];
+	    angular.forEach(items, function(item) {
+	      filtered.push(item);
+	    });
+	    filtered.sort(function (a, b) {
+	      return (a[field] > b[field] ? 1 : -1);
+	    });
+	    if(reverse) filtered.reverse();
+	    return filtered;
+	  };
+	});
+
+
 app.controller('updateEController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService){
 	angular.element(document).ready(function () {
 		//VIEW EVENT
@@ -750,7 +765,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 		var dataObj = {	
 				units:$scope.event1.units,
 				event_title: $scope.event1.event_title,
-				event_content: $scope.event1.event_type,
+				eventType: $scope.event1.eventType,
 				event_description: $scope.event1.event_description,
 				event_approval_status: $scope.event1.approvalStatus,	
 				event_start_date: $scope.event1.event_start_date,	
@@ -949,6 +964,54 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 		});
 	}
 
+	$scope.components={};
+	$scope.checkRent = function(){
+		console.log("start checking rent");
+		$scope.data = {};
+		if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date){
+			return;
+		}
+		var dataObj = {
+				units: $scope.selectedBookingsUnits,
+				event_start_date: ($scope.event.event_start_date).toString(),
+				event_end_date: ($scope.event.event_end_date).toString(),
+		};
+		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/event/checkComponents',
+			data    : dataObj //forms user object
+		});
+		//$scope.avail = "";	
+		send.success(function(response){
+			$scope.components = response;
+			$scope.order_item = "num";
+			$scope.order_reverse = false;
+			console.log($scope.components);
+			console.log("get component success");
+		});
+		send.error(function(response){
+			alert("get component failure");
+		});
+
+
+		var send1 = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/event/checkRent',
+			data    : dataObj //forms user object
+		});
+		send1.success(function(response){
+			$scope.totalRent = response;
+			$scope.totalRentAfter = response*1.07;
+			console.log($scope.totalRent);
+		});
+		send1.error(function(response){
+			$scope.totalRent = response;
+			console.log($scope.totalRent);
+		});	
+	}
+	
+	/*
 	$scope.checkRent = function(){
 		console.log("start checking rent");
 		$scope.data = {};
@@ -991,8 +1054,16 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			$scope.totalRent = response;
 			console.log($scope.totalRent);
 		});
-	}
+	}*/
 
+	$scope.eventTypes=[{'name':'Concert','eventType':'CONCERT'},
+	                   {'name':'Conference','eventType':'CONFERENCE'},
+	                   {'name':'Fair','eventType':'FAIR'},
+	                   {'name':'Family Entertainment','eventType':'FAMILY'},
+	                   {'name':'Lifestyle/Leisure','eventType':'LIFESTYLE'},
+	                   {'name':'Seminar/Workshop','eventType':'SEMINAR'}];
+	//$scope.eventType=$scope.eventTypes[0].eventType;
+	
 	$scope.updateEvent = function(){
 		console.log("Start updating");
 		var unitIdsString="";
@@ -1008,7 +1079,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 				id: $scope.event.id,
 				units: $scope.selectedBookingsUnits,		
 				event_title: $scope.event.event_title,
-				event_content: $scope.event.event_content,
+				event_content: $scope.event.eventType,
 				event_description: $scope.event.event_description,
 				event_approval_status: "PROCESSING",
 				event_start_date: ($scope.event.event_start_date).toString(),

@@ -261,11 +261,13 @@ public class EventExternalController {
 	    		Set<String[]> comps = eventExternalService.checkRateNum(client, unitsId, event_start_date, event_end_date);	    		
 	    		Iterator iter = comps.iterator();
 	    		System.out.println("***Set<String> size is " + comps.size());
+	    		int num = 1;
 	    		while (iter.hasNext()) {
                     String[] arr = (String[]) iter.next();
                     System.err.println(arr);
                    // String[] arr = str.split(" ");
 	            	JSONObject obj1 = new JSONObject();
+	            	obj1.put("num", num);
 					obj1.put("id", arr[0]);
 					System.out.println("id "+arr[0]);
 					obj1.put("base", formatter.format(Double.valueOf(arr[1])));
@@ -276,6 +278,7 @@ public class EventExternalController {
 					System.out.println("hour "+ arr[3]);
 					obj1.put("rental", formatter.format(Double.valueOf(arr[4])));
 					System.out.println("rental "+arr[4]);
+					num++;
 					jArray.add(obj1);
 				}
 				return new ResponseEntity<String>(jArray.toString(), HttpStatus.OK);	
@@ -610,13 +613,13 @@ public class EventExternalController {
 							JSONArray units = (JSONArray)jsonObject.get("units");
 				            String unitsId = "";
 				            for(int i = 0; i < units.size(); i++){
-				            	System.out.println("test1");
+				            	//System.out.println("test1");
 				            	JSONObject unitObj = (JSONObject)units.get(i);		
-				            	System.out.println("test2");
+				            	//System.out.println("test2");
 								long unitId = (Long)unitObj.get("id");
-								System.out.println("test3");
+								//System.out.println("test3");
 								unitsId = unitsId+unitId + " ";
-								System.out.println("test4");
+								//System.out.println("test4");
 							}
 							System.out.println(unitsId);
 							String event_title = (String)jsonObject.get("event_title");

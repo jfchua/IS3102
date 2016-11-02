@@ -18,20 +18,31 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import application.entity.Area;
 import application.entity.BookingAppl;
+import application.entity.Category;
 import application.entity.ClientOrganisation;
 import application.entity.Event;
 import application.entity.EventCreateForm;
 import application.entity.EventOrganizer;
 import application.entity.Message;
+import application.entity.Payment;
+import application.entity.PaymentPlan;
 import application.entity.Role;
+import application.entity.Square;
+import application.entity.Ticket;
 import application.entity.Unit;
 import application.entity.User;
 import application.enumeration.ApprovalStatus;
 import application.enumeration.PaymentStatus;
 import application.exception.EventNotFoundException;
+import application.repository.AreaRepository;
 import application.repository.BookingApplRepository;
+import application.repository.CategoryRepository;
 import application.repository.EventOrganizerRepository;
 import application.repository.EventRepository;
+import application.repository.PaymentPlanRepository;
+import application.repository.PaymentRepository;
+import application.repository.SquareRepository;
+import application.repository.TicketRepository;
 import application.repository.UnitRepository;
 import application.repository.UserRepository;
 
@@ -41,19 +52,34 @@ public class EventServiceImpl implements EventService {
 	private final EventRepository eventRepository;
 	private final UnitRepository unitRepository;
     private final BookingApplRepository bookingApplRepository;
+    private final AreaRepository areaRepository;
+	private final SquareRepository squareRepository;
     private final UserRepository userRepository;
+    private final PaymentPlanRepository paymentPlanRepository;
+    private final PaymentRepository paymentRepository;
+    private final CategoryRepository categoryRepository;
+    private final TicketRepository ticketRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
 	@Autowired
 	public EventServiceImpl(EventRepository eventRepository, UnitRepository unitRepository,
-			UserRepository userRepository, BookingApplRepository bookingRepository) {
+			UserRepository userRepository, BookingApplRepository bookingRepository,
+			AreaRepository areaRepository, SquareRepository squareRepository, 
+			PaymentPlanRepository paymentPlanRepository, PaymentRepository paymentRepository,
+			CategoryRepository categoryRepository,  TicketRepository ticketRepository) {
 		super();
 		this.eventRepository = eventRepository;
 		this.unitRepository = unitRepository;
 		this.userRepository=userRepository;
 		this.bookingApplRepository = bookingRepository;
 		//this.eventOrganizerRepository = eventOrganizerRepository;
+		this.areaRepository= areaRepository;
+	    this.squareRepository =squareRepository;
+	    this.paymentPlanRepository = paymentPlanRepository;
+	    this.paymentRepository =paymentRepository;
+	    this.categoryRepository= categoryRepository;
+	    this.ticketRepository= ticketRepository;
 
 	}
 
@@ -172,20 +198,60 @@ public class EventServiceImpl implements EventService {
 			Optional<Event> event1 = getEventById(id);
 			if(event1.isPresent()){	
 				Event event = event1.get();
+				System.out.println("*1");
 				if(checkEvent(client, id)){
-					Set<BookingAppl> bookings = event.getBookings();
-					if(!bookings.isEmpty()){
-					for(BookingAppl b: bookings){				
+					if(event.getBookings()!=null){
+						System.out.println("**2");
+						Set<BookingAppl> bookings=event.getBookings();
+					for(BookingAppl b: bookings){	
+						Set<Area> areas = b.getAreas();
+						for(Area a : areas){
+							System.out.println("***3");
+							Square sq = a.getSquare();
+							squareRepository.delete(sq);
+							areaRepository.flush();
+							areaRepository.delete(a);
+							bookingApplRepository.flush();
+						}
+						bookingApplRepository.flush();
 						Unit unit = b.getUnit();
 						Set<BookingAppl> bookings1 = unit.getBookings();
 						bookings1.remove(b);
 						unit.setBookings(bookings1);
 						unitRepository.flush();
-						//bookings.remove(b);
+						bookings.remove(b);
 						bookingApplRepository.delete(b);
 					}
 					event.setBookings(new HashSet<BookingAppl>());
 					}
+					if(event.getPaymentPlan()!= null){
+						System.out.println("****4");
+					PaymentPlan p1 = event.getPaymentPlan();
+					Set<Payment> ps = p1.getPayments();
+					for(Payment p : ps){
+						paymentRepository.delete(p);
+					}
+					paymentPlanRepository.delete(p1);
+					}
+					if(!event.getCategories().isEmpty()){
+						System.out.println("*****5");
+					Set<Category> cats = event.getCategories();
+					for(Category c : cats){
+						Set<Ticket> tics = c.getTickets();					
+						for(Ticket t : tics){
+							System.out.println("******6");
+							//t.setCategory(null);
+							//ticketRepository.flush();
+							tics.remove(t);
+							System.err.println("******6");
+							ticketRepository.delete(t);
+						}
+						System.err.println("*******7");
+						categoryRepository.flush();
+						categoryRepository.delete(c);
+					}
+					}
+					eventRepository.flush();
 					 User eventOrg1 = event.getEventOrg();
 				     Set<Event> events = eventOrg1.getEvents();
 			         events.remove(event);
