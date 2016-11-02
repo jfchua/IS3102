@@ -103,8 +103,8 @@ insert into message (message, sender_name,subject,recipient_id)values("Hello Wor
 insert into message (message, sender_name,subject,recipient_id)values("This event needs some modification, reply me asap.","event@localhost","Event Message",6);
 insert into message (message, sender_name,subject,recipient_id)values("The pricing model seems a little off, can we discuss this later?","finance@localhost","Finance matter",6);
 
-insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameMS", "MINGSHA", 123456,"SINGAPORE", 6, "");
-insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameHL", "HAILING", 234567,"SINGAPORE", 4, "");
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameMS", "MINGSHA", 123456,"SINGAPORE", 6, "expo.jpg");
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameHL", "HAILING", 234567,"SINGAPORE", 4, "max_atria.jpg");
 insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,1);
 insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,2);
 insert into vendor(contact, description, email, name)values("123", "good", "1@gmail.com", "MS");
@@ -112,7 +112,7 @@ insert into vendor(contact, description, email, name)values("456", "good", "2@gm
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,2);
 INSERT INTO level(file_path, length, level_num, width, building_id)
-VALUES('111',123,2,80,1);
+VALUES('floorplan2.PNG',123,2,80,1);
 INSERT INTO building_levels(building_id, levels_id)VALUES(1,1);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('coral', 100, 100, 100, './svg/rect.svg', 100, null);
@@ -180,3 +180,13 @@ insert into user_tickets values( 6,1);
 insert into user_tickets values( 6,2);
 insert into user_tickets values (6,6);
 insert into discount values ( 1,"12345","DISCOUNT MESSAGE", "STARHUB");
+
+
+INSERT INTO icon(icon_path, icon_type) VALUES('yard-fountain.svg','CUST');
+INSERT INTO client_organisation_icons VALUES (1, 1);
+INSERT INTO icon(icon_path, icon_type) VALUES('mall-information-sign.svg','CUST');
+INSERT INTO client_organisation_icons VALUES (1, 2);
+INSERT INTO icon(icon_path, icon_type) VALUES('mall-wifi-sign.svg','CUST');
+INSERT INTO client_organisation_icons VALUES (1, 3);
+INSERT INTO icon(icon_path, icon_type) VALUES('waiting-room-sign.svg','CUST');
+INSERT INTO client_organisation_icons VALUES (1, 4);
