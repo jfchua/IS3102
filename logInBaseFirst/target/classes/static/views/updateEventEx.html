@@ -78,15 +78,14 @@
 							ng-options="x as x.unitNumber for x in units| filter: { rentable : true }"
 							ng-change="selectUnit(); checkRent(); checkAvail()" class="form-control underline">
 						</select>
-					</div>
-
-					</div>
+					</div>					
 					<div>
 						<p>TOTAL RENT before GST(SGD): {{totalRent | currency}}</p>
 						<p>TOTAL RENT after GST(SGD): {{totalRentAfter | currency}}</p>
 						<table class="table table-hover">              
                         <thead>
                            <tr>
+                            <th><i></i> S/N </th>
                            <th><i></i> Unit ID </th>
                            <th><i></i> Basic Hourly Rent (Before GST)</th>
                            <th><i></i> Special Rate (x)</th>
@@ -96,6 +95,7 @@
                            </thead>
                          <tbody>
                          <tr ng-repeat="x in components | orderObjectBy:order_item:order_reverse">
+                            <td>{{ x.num }}</td>
                             <td>{{ x.id }}</td>
                             <td>{{ x.base }}</td>
                             <td>{{ x.rate }}</td>
@@ -105,8 +105,9 @@
                          </tbody>                       
                     </table>		
 					</div>
+					</div>					
 					<div class="form-group">
-						Select an event type: <select ng-model="eventType"
+						Select an event type: <select ng-model="event.eventType"
 							ng-options="x.eventType as x.name for x in eventTypes">
 						</select>
 					</div>

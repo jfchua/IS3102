@@ -765,7 +765,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 		var dataObj = {	
 				units:$scope.event1.units,
 				event_title: $scope.event1.event_title,
-				event_content: $scope.event1.event_type,
+				eventType: $scope.event1.eventType,
 				event_description: $scope.event1.event_description,
 				event_approval_status: $scope.event1.approvalStatus,	
 				event_start_date: $scope.event1.event_start_date,	
@@ -972,7 +972,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			return;
 		}
 		var dataObj = {
-				units: $scope.selectedUnits,
+				units: $scope.selectedBookingsUnits,
 				event_start_date: ($scope.event.event_start_date).toString(),
 				event_end_date: ($scope.event.event_end_date).toString(),
 		};
@@ -1056,6 +1056,14 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 		});
 	}*/
 
+	$scope.eventTypes=[{'name':'Concert','eventType':'CONCERT'},
+	                   {'name':'Conference','eventType':'CONFERENCE'},
+	                   {'name':'Fair','eventType':'FAIR'},
+	                   {'name':'Family Entertainment','eventType':'FAMILY'},
+	                   {'name':'Lifestyle/Leisure','eventType':'LIFESTYLE'},
+	                   {'name':'Seminar/Workshop','eventType':'SEMINAR'}];
+	//$scope.eventType=$scope.eventTypes[0].eventType;
+	
 	$scope.updateEvent = function(){
 		console.log("Start updating");
 		var unitIdsString="";
@@ -1071,7 +1079,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 				id: $scope.event.id,
 				units: $scope.selectedBookingsUnits,		
 				event_title: $scope.event.event_title,
-				event_content: $scope.event.event_content,
+				event_content: $scope.event.eventType,
 				event_description: $scope.event.event_description,
 				event_approval_status: "PROCESSING",
 				event_start_date: ($scope.event.event_start_date).toString(),
