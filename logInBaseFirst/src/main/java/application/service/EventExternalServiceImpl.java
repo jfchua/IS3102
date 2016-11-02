@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import application.entity.Area;
 import application.entity.BookingAppl;
 import application.entity.Building;
 import application.entity.Category;
@@ -35,6 +36,7 @@ import application.entity.Payment;
 import application.entity.PaymentPlan;
 import application.entity.Role;
 import application.entity.SpecialRate;
+import application.entity.Square;
 import application.entity.Ticket;
 import application.entity.Unit;
 import application.entity.User;
@@ -42,17 +44,20 @@ import application.enumeration.ApprovalStatus;
 import application.enumeration.EventType;
 import application.enumeration.IconType;
 import application.enumeration.PaymentStatus;
+import application.repository.AreaRepository;
 import application.repository.BookingApplRepository;
 import application.repository.EventOrganizerRepository;
 import application.repository.EventRepository;
 import application.repository.MaintenanceScheduleRepository;
+import application.repository.SquareRepository;
 import application.repository.UnitRepository;
 import application.repository.UserRepository;
 @Service
 public class EventExternalServiceImpl implements EventExternalService {
 	private final UserRepository userRepository;
 	private final EventRepository eventRepository;
-	//private final EventOrganizerRepository eventOrganizerRepository;
+	private final AreaRepository areaRepository;
+	private final SquareRepository squareRepository;
 	private final UnitRepository unitRepository;
 	private final BookingApplRepository bookingApplRepository;
 	private final MaintenanceScheduleRepository maintenanceScheduleRepository;
@@ -60,7 +65,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 
 	@Autowired
 	public EventExternalServiceImpl(EventRepository eventRepository, UserRepository userRepository, 
-			UnitRepository unitRepository, BookingApplRepository bookingApplRepository, MaintenanceScheduleRepository maintenanceScheduleRepository) {
+			UnitRepository unitRepository, BookingApplRepository bookingApplRepository, MaintenanceScheduleRepository maintenanceScheduleRepository,
+			AreaRepository areaRepository, SquareRepository squareRepository) {
 		//super();
 		this.eventRepository = eventRepository;
 		//this.eventOrganizerRepository = eventOrganizerRepository;
@@ -68,6 +74,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 		this.userRepository = userRepository;
 		this.bookingApplRepository = bookingApplRepository;
 		this.maintenanceScheduleRepository = maintenanceScheduleRepository;
+		this.areaRepository = areaRepository;
+		this.squareRepository = squareRepository;
 	}
 
 	@Override
@@ -283,28 +291,31 @@ public class EventExternalServiceImpl implements EventExternalService {
 				if(!doesHave)
 					return false;
 				Set<BookingAppl> bookings = event.getBookings();
-				for(BookingAppl b: bookings){				
-					Date d1 = b.getEvent_start_date_time();
-					Date d2 = b.getEvent_start_date_time();
+				for(BookingAppl b: bookings){	
+					Set<Area> areas = b.getAreas();
+					for(Area a : areas){
+						Square sq = a.getSquare();
+						squareRepository.delete(sq);
+						areaRepository.flush();
+						areaRepository.delete(a);
+						bookingApplRepository.flush();
+					}
+					bookingApplRepository.flush();
 					Unit unit = b.getUnit();
 					Set<BookingAppl> bookings1 = unit.getBookings();
 					bookings1.remove(b);
 					unit.setBookings(bookings1);
-					unitRepository.save(unit);
-					//bookings.remove(b);
+					//unitRepository.save(unit);
+					bookings.remove(b);
 					System.out.println("delete booking before");
 					bookingApplRepository.delete(b);
+					System.err.println("successful");
+					unitRepository.flush();
 					System.out.println("delete booking after");
 				}
-				bookingApplRepository.flush();
-				event.setBookings(new HashSet<BookingAppl>());
-				/*User eventOrg1 = event.getEventOrg();
-				Set<Event> events = eventOrg1.getEvents();
-				events.remove(event);
-				eventOrg1.setEvents(events);
-				event.setEvent_approval_status("cancelled");
-				userRepository.save(eventOrg1);	*/	   
-				eventRepository.save(event);
+				event.setBookings(null);
+				//bookingApplRepository.flush();
+				event.setApprovalStatus(ApprovalStatus.valueOf("CANCELLED"));
 				eventRepository.flush();
 				// userRepository.flush();
 			}

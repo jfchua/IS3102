@@ -24,14 +24,17 @@ import application.entity.EventCreateForm;
 import application.entity.EventOrganizer;
 import application.entity.Message;
 import application.entity.Role;
+import application.entity.Square;
 import application.entity.Unit;
 import application.entity.User;
 import application.enumeration.ApprovalStatus;
 import application.enumeration.PaymentStatus;
 import application.exception.EventNotFoundException;
+import application.repository.AreaRepository;
 import application.repository.BookingApplRepository;
 import application.repository.EventOrganizerRepository;
 import application.repository.EventRepository;
+import application.repository.SquareRepository;
 import application.repository.UnitRepository;
 import application.repository.UserRepository;
 
@@ -41,19 +44,24 @@ public class EventServiceImpl implements EventService {
 	private final EventRepository eventRepository;
 	private final UnitRepository unitRepository;
     private final BookingApplRepository bookingApplRepository;
+    private final AreaRepository areaRepository;
+	private final SquareRepository squareRepository;
     private final UserRepository userRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
 	@Autowired
 	public EventServiceImpl(EventRepository eventRepository, UnitRepository unitRepository,
-			UserRepository userRepository, BookingApplRepository bookingRepository) {
+			UserRepository userRepository, BookingApplRepository bookingRepository,
+			AreaRepository areaRepository, SquareRepository squareRepository) {
 		super();
 		this.eventRepository = eventRepository;
 		this.unitRepository = unitRepository;
 		this.userRepository=userRepository;
 		this.bookingApplRepository = bookingRepository;
 		//this.eventOrganizerRepository = eventOrganizerRepository;
+		this.areaRepository= areaRepository;
+	    this.squareRepository =squareRepository;
 
 	}
 
@@ -175,13 +183,22 @@ public class EventServiceImpl implements EventService {
 				if(checkEvent(client, id)){
 					Set<BookingAppl> bookings = event.getBookings();
 					if(!bookings.isEmpty()){
-					for(BookingAppl b: bookings){				
+					for(BookingAppl b: bookings){	
+						Set<Area> areas = b.getAreas();
+						for(Area a : areas){
+							Square sq = a.getSquare();
+							squareRepository.delete(sq);
+							areaRepository.flush();
+							areaRepository.delete(a);
+							bookingApplRepository.flush();
+						}
+						bookingApplRepository.flush();
 						Unit unit = b.getUnit();
 						Set<BookingAppl> bookings1 = unit.getBookings();
 						bookings1.remove(b);
 						unit.setBookings(bookings1);
 						unitRepository.flush();
-						//bookings.remove(b);
+						bookings.remove(b);
 						bookingApplRepository.delete(b);
 					}
 					event.setBookings(new HashSet<BookingAppl>());
