@@ -923,25 +923,17 @@ public class EventExternalServiceImpl implements EventExternalService {
 	}
 
 	@Override
-	public Set<String> checkRateNum(ClientOrganisation client, String unitsId, Date start, Date end) throws ParseException {
+	public Set<String[]> checkRateNum(ClientOrganisation client, String unitsId, Date start, Date end) throws ParseException {
 		long diff =end.getTime() - start.getTime();
 		long duration = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)+1;
 		Set<String> setS = new HashSet<String>();
+		Set<String[]> setA = new HashSet<String[]>();
 		System.out.println("**");
 		String[] units = unitsId.split(" ");
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(start);
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime(start);
-		/*int num = 1;
-		cal1.add(Calendar.DAY_OF_MONTH, 1);
-		for(int i = 0; i < duration; i ++){
-			if(!checkRate(client, cal.getTime()).equals(checkRate(client, cal1.getTime())))
-				num++;
-			cal.add(Calendar.DAY_OF_MONTH, 1);
-			cal1.add(Calendar.DAY_OF_MONTH, 1);
-		}
-		System.out.println("**num**"+num);*/
 		int k = 0;
 		int count = 0;
 		//cal.setTime(start);
@@ -960,19 +952,50 @@ public class EventExternalServiceImpl implements EventExternalService {
 			date.add(Calendar.DAY_OF_MONTH, 1);	
 			if(DateUtils.isSameDay(cal.getTime(),end)){
 				System.out.println("**first**if**");
-				String str = new String();
-				str += units[k] + " ";
-				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();
-				str += base + " " + checkRate(client, calRef.getTime())+ " ";
-				long first =end.getTime() - calRef.getTime().getTime();			
+				long first =end.getTime() - calRef.getTime().getTime();	
+				long durFirst = TimeUnit.HOURS.convert(first, TimeUnit.MILLISECONDS);
+				Double duration1 = Double.valueOf(durFirst);
+				String[] str = new String[5];	
+				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();			
+				String rate = String.valueOf(checkRate(client, calRef.getTime()));
+				if(!setA.isEmpty()){
+				for(String[] s : setA){		
+					System.err.println("rate "+ rate);
+					System.err.println("inside s rate"+ s[2]);
+				if (!s[2].equals(rate)){
+					System.out.println("NO duplicates in if");
+						str[0] = units[k];
+						str[1] = String.valueOf(base);
+						str[2] = rate;
+						str[3] = String.valueOf(duration1);
+						str[4] = String.valueOf(duration1 * base * checkRate(client, cal.getTime()));
+						setA.add(str);
+						break;
+					}
+				else if(s[2].equals(rate)&&s[0].equals(units[k])){
+					System.out.println("Duplicates in if");
+						Double orgDuration = Double.valueOf(s[3]);
+						s[3] = String.valueOf(orgDuration+duration1);
+						Double total = Double.valueOf(s[4]);
+						s[4] = String.valueOf(total+duration1 * base * checkRate(client, cal.getTime()));
+						break;
+					}
+						
+				}
+				}
+				else{
+					str[0] = units[k];
+					str[1] = String.valueOf(base);
+					str[2] = rate;
+					str[3] = String.valueOf(duration1);
+					str[4] = String.valueOf(duration1 * base * checkRate(client, cal.getTime()));
+					setA.add(str);
+				}
 				//System.out.println("*****END TIME IS "+end);
 				//System.out.println("*****REFEREBCE TIME IS "+ calRef.getTime());
-				long durFirst = TimeUnit.HOURS.convert(first, TimeUnit.MILLISECONDS);
+				
 				//System.out.println("FIRST ****" + durFirst);
-				Double duration1 = Double.valueOf(durFirst);
-				str += duration1 + " " + duration1 * base * checkRate(client, calRef.getTime()) + " ";	
 				System.out.println("******NOT SURE WHY WRONG " + str);
-				setS.add(str);
 				System.err.println("before k++" +k);
 				cal.setTime(start);
 				cal1.setTime(start);
@@ -981,26 +1004,54 @@ public class EventExternalServiceImpl implements EventExternalService {
 				k ++;
 			}
 			else if(!checkRate(client, cal.getTime()).equals(checkRate(client, cal1.getTime()))){
-				System.out.println("**if**");
-				String str = new String();
-				str += units[k] + " ";
-				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();
-				str += base + " " + checkRate(client, calRef.getTime())+ " ";
+				
 				long first =date.getTime().getTime() - calRef.getTime().getTime();			
 				long durFirst = TimeUnit.HOURS.convert(first, TimeUnit.MILLISECONDS);
+				Double durationX = Double.valueOf(durFirst);
+				
+				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();
+				String[] str = new String[5];
+				String rate = String.valueOf(checkRate(client, calRef.getTime()));
+				if(!setA.isEmpty()){
+				for(String[] s : setA){					
+					if (!s[2].equals(rate)){
+						System.out.println("NO duplicates in else if");
+						str[0] = units[k];
+						str[1] = String.valueOf(base);
+						str[2] = rate;
+						str[3] = String.valueOf(durationX);
+						str[4] = String.valueOf(durationX * base * checkRate(client, cal.getTime()));
+						setA.add(str);
+						break;
+					}
+					else if(s[2].equals(rate)&&units[k].equals(s[0])){
+						System.out.println("Duplicates in else if");
+						Double orgDuration = Double.valueOf(s[3]);
+						s[3] = String.valueOf(orgDuration+durationX);
+						Double total = Double.valueOf(s[4]);
+						s[4] = String.valueOf(total+durationX * base * checkRate(client, cal.getTime()));
+						break;
+					}
+						
+				}
+				}
+				else{
+					str[0] = units[k];
+					str[1] = String.valueOf(base);
+					str[2] = rate;
+					str[3] = String.valueOf(durationX);
+					str[4] = String.valueOf(durationX * base * checkRate(client, cal.getTime()));
+					setA.add(str);
+				}
 				//System.out.println("*****END TIME IS "+date.getTime());
 				//System.out.println("*****REFEREBCE TIME IS "+ calRef.getTime());
 				//System.out.println("FIRST ****" + durFirst);
-				//System.out.println("FIRST ****" + durFirst);
-				Double durationX = Double.valueOf(durFirst);
-				//System.out.println("FIRST DURATION****" + durationX);
-				str += durationX + " " + durationX * base * checkRate(client, cal.getTime()) + " ";
-				
+				//System.out.println("FIRST ****" + durFirst);				
+				//System.out.println("FIRST DURATION****" + durationX);			
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				cal1.add(Calendar.DAY_OF_MONTH, 1);
 				calRef.setTime(date.getTime());
-				System.out.println("**NOT SURE WHY WRONG " + str);
-				setS.add(str);
+				System.out.println("**NOT SURE WHY WRONG " + str);			
 				count ++;
 			}
 			else{
@@ -1011,6 +1062,6 @@ public class EventExternalServiceImpl implements EventExternalService {
 		}
 		System.err.println("K is " +k);
 		System.err.println("Count is " +count);
-		return setS;
+		return setA;
 	}
 }
