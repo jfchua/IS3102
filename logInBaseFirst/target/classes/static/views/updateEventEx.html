@@ -43,54 +43,67 @@
 								</li>
 							</ul>
 						</div>
-						<div ng-mouseover="checkAvail()">
+						<!--  <div ng-mouseover="checkAvail()">
 							<p>
 								Put mouse over to check Availability<br> Available?
 								{{avail}}
 							</p>
-						</div>
+						</div>-->
 					</div>
 					<p>
 						Want to change unit(s)?: <input type="checkbox" ng-model="myVar">
 					</p>
 					<div ng-show="myVar">
 						<div class="form-group">
-							<label for="building" class="control-label">Select
-								Building</label> <select name="building"
-								ng-model="currentlySelectedBuilding"
-								ng-options="x.id as x.name for x in buildings"
-								class="form-control">
-							</select>
-							<!-- <p>Building ID <input ng-model="currentlySelectedBuilding"> Selected</p>-->
-							<button ng-click="getLevel(currentlySelectedBuilding)">Apply</button>
-						</div>
+						<label for="building" class="control-label">Select
+							Building</label> <select name="building"
+							ng-model="currentlySelectedBuilding"
+							ng-options="x.id as x.name for x in buildings"
+							ng-change="getLevel(currentlySelectedBuilding)"
+							class="form-control underline">
+						</select>
+					</div>
+						<div class="form-group">
+						<label for="level" class="control-label">Select Level</label> <select
+							name="level" ng-model="currentlySelectedLevel"
+							ng-options="x.id as x.levelNum for x in levels"
+							ng-change="getUnit(currentlySelectedLevel)"
+							class="form-control underline">
+						</select>
+					</div>
 
 						<div class="form-group">
-							<label for="level" class="control-label">Select Level</label> <select
-								name="level" ng-model="currentlySelectedLevel"
-								ng-options="x.id as x.levelNum for x in levels"
-								class="form-control">
-							</select>
-							<!--  <p>Level ID <input ng-model="currentlySelectedLevel"> Selected</p>-->
-							<button ng-click="getUnit(currentlySelectedLevel)">Apply</button>
-						</div>
+						<label for="unit" class="control-label">Select Unit</label> <select
+							name="unit" ng-model="currentlySelectedUnit"
+							ng-options="x as x.unitNumber for x in units| filter: { rentable : true }"
+							ng-change="selectUnit(); checkRent(); checkAvail()" class="form-control underline">
+						</select>
+					</div>
 
-						<div class="form-group">
-							<label for="unit" class="control-label">Select Unit</label> <select
-								name="unit" ng-model="currentlySelectedUnit"
-								ng-options="x as x.unitNumber for x in units"
-								ng-change="selectUnit()" class="form-control">
-
-							</select>
-							<!-- <button ng-click = "checkAvail()">Check Availability</button>	-->
-						</div>
 					</div>
 					<div>
-						<button ng-click="checkRent()">Check total rent</button>
 						<p>TOTAL RENT before GST(SGD): {{totalRent | currency}}</p>
 						<p>TOTAL RENT after GST(SGD): {{totalRentAfter | currency}}</p>
-						<!--<label for="exampleInput">Total Rent</label>
-               <input type="number" step="0.01" value="{{totalRent}}"class="form-control underline">-->
+						<table class="table table-hover">              
+                        <thead>
+                           <tr>
+                           <th><i></i> Unit ID </th>
+                           <th><i></i> Basic Hourly Rent (Before GST)</th>
+                           <th><i></i> Special Rate (x)</th>
+                            <th><i></i> Number Of Hours </th>
+                            <th><i></i> Rental Before GST </th>
+                          </tr>
+                           </thead>
+                         <tbody>
+                         <tr ng-repeat="x in components | orderObjectBy:order_item:order_reverse">
+                            <td>{{ x.id }}</td>
+                            <td>{{ x.base }}</td>
+                            <td>{{ x.rate }}</td>
+                            <td>{{ x.hour }}</td>
+                            <td>{{ x.rental }}</td>
+                        </tr>
+                         </tbody>                       
+                    </table>		
 					</div>
 					<div class="form-group">
 						Select an event type: <select ng-model="eventType"
