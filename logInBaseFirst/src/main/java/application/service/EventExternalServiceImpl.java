@@ -235,6 +235,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 					System.out.println("after title");
 					event.setEventType(EventType.valueOf(event_content));
 					event.setEvent_description(event_description);
+					System.err.println(status);
 					event.setApprovalStatus(ApprovalStatus.valueOf(status));
 					event.setEvent_start_date(event_start_date);
 					event.setEvent_end_date(event_end_date);
@@ -930,7 +931,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 		Set<String[]> setA = new HashSet<String[]>();
 		System.out.println("**");
 		String[] units = unitsId.split(" ");
-		System.out.println("Units length is " + unitsId.length());
+		System.out.println("Units length is " + units.length);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(start);
 		Calendar cal1 = Calendar.getInstance();

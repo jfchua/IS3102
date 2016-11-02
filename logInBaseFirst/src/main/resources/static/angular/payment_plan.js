@@ -87,7 +87,6 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 		});
 		send.success(function(response){
 			$scope.plan = response;
-			
 		});
 		send.error(function(response){
 			$scope.totalRent = response;
