@@ -49,6 +49,6 @@ public interface UserService {
 
 	boolean checkOldPassword(Long id, String oldpass) throws OldPasswordInvalidException, UserNotFoundException;
 	
-	boolean registerNewUser(String name, String email, String pass) throws EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException;
+	
 
 }

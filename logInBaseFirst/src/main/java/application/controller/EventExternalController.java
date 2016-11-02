@@ -252,18 +252,19 @@ public class EventExternalController {
 						unitsId = unitsId+unitId + " ";
 						System.out.println(unitsId);
 				 }
+				 System.err.println(unitsId);
 				 System.out.println("***finish formatting units id" + unitsId);
 				NumberFormat formatter = new DecimalFormat("#0.00");          
 	            Date event_start_date = sdf.parse((String)jsonObject.get("event_start_date"));
 				System.out.println(event_start_date);
 				Date event_end_date = sdf.parse((String)jsonObject.get("event_end_date"));	
-	    		Set<String> comps = eventExternalService.checkRateNum(client, unitsId, event_start_date, event_end_date);	    		
+	    		Set<String[]> comps = eventExternalService.checkRateNum(client, unitsId, event_start_date, event_end_date);	    		
 	    		Iterator iter = comps.iterator();
 	    		System.out.println("***Set<String> size is " + comps.size());
 	    		while (iter.hasNext()) {
-	    		    System.out.println("***inside while***");
-                    String str = (String) iter.next();
-                    String[] arr = str.split(" ");
+                    String[] arr = (String[]) iter.next();
+                    System.err.println(arr);
+                   // String[] arr = str.split(" ");
 	            	JSONObject obj1 = new JSONObject();
 					obj1.put("id", arr[0]);
 					System.out.println("id "+arr[0]);

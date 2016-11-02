@@ -64,5 +64,5 @@ public interface EventExternalService {
 	
 	int getTicketNum(ClientOrganisation client, long eventId);
 	
-	Set<String> checkRateNum(ClientOrganisation client, String unitsId, Date start, Date end) throws ParseException;
+	Set<String[]> checkRateNum(ClientOrganisation client, String unitsId, Date start, Date end) throws ParseException;
 }

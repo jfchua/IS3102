@@ -9,9 +9,12 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SimpleTimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -21,13 +24,18 @@ import application.entity.Building;
 import application.entity.Category;
 import application.entity.Event;
 import application.entity.Level;
+import application.entity.Role;
 import application.entity.Ticket;
 import application.entity.Unit;
 import application.entity.User;
+import application.exception.EmailAlreadyExistsException;
 import application.exception.EventNotFoundException;
+import application.exception.InvalidEmailException;
+import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
 import application.repository.CategoryRepository;
 import application.repository.EventRepository;
+import application.repository.RoleRepository;
 import application.repository.TicketRepository;
 import application.repository.UserRepository;
 
@@ -37,17 +45,23 @@ public class TicketingServiceImpl implements TicketingService {
 	private final UserRepository userRepository;
 	private final EventService eventService;
 	private final AuditLogRepository auditLogRepository;
+	private final UserService userService;
 	private final EventRepository eventRepository;
 	private final CategoryRepository categoryRepository;
 	private final TicketRepository ticketRepository;
+	private final RoleRepository roleRepository;
+	private final EmailService emailService;
 
 	@Autowired
-	public TicketingServiceImpl(TicketRepository ticketRepository, CategoryRepository categoryRepository, EventRepository eventRepository, EventService eventService,AuditLogRepository auditLogRepository, UserRepository userRepository) {
+	public TicketingServiceImpl(EmailService emailService, RoleRepository roleRepository, UserService userService, TicketRepository ticketRepository, CategoryRepository categoryRepository, EventRepository eventRepository, EventService eventService,AuditLogRepository auditLogRepository, UserRepository userRepository) {
 		super();
 		this.auditLogRepository = auditLogRepository;
 		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
+		this.emailService = emailService;
 		this.eventService = eventService;
 		this.eventRepository = eventRepository;
+		this.userService = userService;
 		this.categoryRepository = categoryRepository;
 		this.ticketRepository = ticketRepository;
 	}
@@ -69,6 +83,23 @@ public class TicketingServiceImpl implements TicketingService {
 		}
 		catch ( Exception ex){
 			System.err.println("add category error" + ex.getMessage());
+		}
+
+		return false;
+	}
+	
+	@Override
+	public boolean updateCategory(Long catId, String catName, double price, int numTix) throws EventNotFoundException {
+		try{
+			Category c = categoryRepository.findOne(catId);
+			c.setCategoryName(catName);
+			c.setNumOfTickets(numTix);
+			c.setPrice(price);
+			categoryRepository.save(c);
+			return true;
+		}
+		catch ( Exception ex){
+			System.err.println("update category error" + ex.getMessage());
 		}
 
 		return false;
@@ -234,55 +265,52 @@ public class TicketingServiceImpl implements TicketingService {
 
 	}
 
-	/*	private class tempAddressObject{
-
-		private Building building;
-		private String levelNum;
-		private ArrayList<String> units;
-
-		public tempAddressObject(){
-
+	public boolean registerNewUser(String name, String userEmail, String password) throws EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException{
+		Pattern pat = Pattern.compile("^.+@.+\\..+$");
+		Matcher get = pat.matcher(userEmail);		
+		if(!get.matches()){
+			System.err.println("Invalid email exception");
+			throw new InvalidEmailException("The email " + userEmail + " is invalid");
+			//return false;
 		}
-
-		public Building getBuilding() {
-			return building;
-		}
-
-
-		public void setBuilding(Building building) {
-			this.building = building;
-		}
-
-
-
-		public String getLevelNum() {
-			return levelNum;
-		}
-
-		public void setLevelNum(String levelNum) {
-			this.levelNum = levelNum;
-		}
-
-		public ArrayList<String> getUnits() {
-			return units;
-		}
-
-		public void setUnits(ArrayList<String> units) {
-			this.units = units;
-		}
-
-		@Override
-		public String toString(){
-			StringBuilder sb = new StringBuilder();
-			sb.append(buildingName + " Level " + levelNum+ ", " );
-			for ( String unit : units){
-				sb.append(unit + ", ");
+		try{
+			if ( userService.getUserByEmail(userEmail).isPresent() ){
+				System.err.println("User already exists!");
+				throw new EmailAlreadyExistsException("User with email " + userEmail + " already exists");
 			}
-			String toReturn = sb.toString();
-			toReturn = toReturn.trim();
-			toReturn = toReturn.substring(0, toReturn.length()-1);
-			return toReturn;
 		}
+		catch ( UserNotFoundException e ){			
+		}
+		try{
+			//CREATE USER START
+			User user = new User();
+			user.setName(name);
+			Role r = roleRepository.getRoleByName("ROLE_EVEGOER");
+			Set<Role> roles = new HashSet<Role>();
+			roles.add(r);
+			user.setRoles(roles);
+			user.setEmail(userEmail);
+			user.setClientOrganisation(null);
+			user.setSecurity("");
 
-	}*/
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			String hashedPassword = encoder.encode(password);
+			user.setPasswordHash(hashedPassword); //add salt?
+			//Send created password to the new user's email
+
+			//REPOSITORY SAVING
+
+			userRepository.save(user);
+			System.out.println("Saved user");
+			emailService.sendEmail(userEmail, "Algattas account signup", "Hi " + name + "! Thank you for signing up for a new account. You may now log in with your new account.");
+
+		}
+		catch ( Exception e){
+			System.err.println("Exception at register new user "  + e.toString());
+			return false;
+		}
+		return true;
+
+
+	}
 }
