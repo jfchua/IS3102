@@ -341,7 +341,7 @@ app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareD
 
 }])
 
-app.controller('addEController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService){
+app.controller('addEController', ['$scope', '$http','$state','$routeParams','shareData','ModalService','Upload','$timeout', function ($scope, $http,$state, $routeParams, shareData,ModalService,Upload,$timeout){
 
 	$scope.checkDateErr = function(startDate,endDate) {
 		$scope.errMessage = '';
@@ -644,7 +644,75 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		});
 
 		console.log("SAVING THE Event");
-		send.success(function(){
+		send.success(function(eventId){
+			console.log("eventId "+eventId);
+			if ($scope.picFile != null && $scope.picFile != "") {
+				
+				$scope.picFile.upload = Upload.upload({
+					url: 'https://localhost:8443/event/saveEventImage',
+					data: { file: $scope.picFile,eventId:eventId},
+				});
+
+				$scope.picFile.upload.then(function (response) {
+					$timeout(function () {
+						$scope.picFile.result = response.data;
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'event and its associated image has been updated successfully',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewAllEventsEx");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+
+					});
+				}, function (response) {
+					if (response.status > 0){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: response.data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
+
+						//END SHOWMODAL
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+
+						$scope.errorMsg = response.status + ': ' + response.data;
+					}
+				}, function (evt) {
+					// Math.min is to fix IE which reports 200% sometimes
+					$scope.picFile.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+				})
+				/////////////////////////
+				return;
+			}
+			
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
