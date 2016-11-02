@@ -6,7 +6,7 @@
 		<ol class="breadcrumb no-bg no-m-t">
 			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
 			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
-			<li><a ui-sref="dashboard.viewAllEvents">View Events</a></li>
+			<li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
 			<li><a>Configure Tickets</a></li>
 		</ol>
 	</div>
@@ -44,6 +44,9 @@
 							<td>{{ x.categoryName }}</td>
 							<td>{{ x.price }}</td>
 							<td>{{ x.numOfTickets }}</td>
+<<<<<<< HEAD
+							<td></td>
+=======
 							<td><a ui-sref="dashboard.updateCategory"
 								ng-click="passCategory(x)" tooltip-placement="top"
 								tooltip="Update Category"><i
@@ -51,6 +54,7 @@
 								ng-click="deleteCat(x)" tooltip-placement="top"
 								tooltip="Delete category"><i
 									class="glyphicon glyphicon-trash"></i></a></td>
+>>>>>>> d24aca99197d2ef65568af29126f05a34f4b4aa4
 						</tr>
 					</tbody>
 				</table>

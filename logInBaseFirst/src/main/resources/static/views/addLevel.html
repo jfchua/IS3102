@@ -34,6 +34,20 @@
                                    <label for="exampleInput">Width(meter)</label>
                                    <input type="number" ng-model="level.width" class="form-control underline" id="address" placeholder="Enter width in meter">
                             </div>
+                            
+                            
+                            <div>
+						Logo: <input type="file" ngf-select ng-model="picFile" name="file"
+							accept="image/*" ngf-max-size="10MB"
+							ngf-model-invalid="errorFile"> <i
+							ng-show="myForm.file.$error.required">*required</i><br> <i
+							ng-show="myForm.file.$error.maxSize">File too large
+							{{errorFile.size / 1000000|number:1}}MB: max 2M</i> <img
+							ng-show="myForm.file.$valid" ngf-thumbnail="picFile"
+							class="thumb" height="100px" width="100px">
+						<button ng-click="picFile = null" ng-show="picFile">Remove</button>
+					</div>
+							<br>
                            <!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
                          <!--   <input type="submit" value="Submit">-->
                           <button class="progress-button primary-progress" data-style="shrink" data-horizontal>Submit</button> &nbsp;

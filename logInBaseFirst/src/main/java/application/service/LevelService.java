@@ -4,9 +4,10 @@ import java.util.Set;
 
 import application.entity.ClientOrganisation;
 import application.entity.Level;
+import application.exception.InvalidFileUploadException;
 //import application.domain.Building;
 public interface LevelService {
-	boolean create(ClientOrganisation client, long buildingId, int levelNum, int length, int width, String filePath);
+    Level create(ClientOrganisation client, long buildingId, int levelNum, int length, int width, String filePath);
 
 	Set<Level> getAllLevels(ClientOrganisation client, long buildingId);
 
@@ -23,4 +24,6 @@ public interface LevelService {
 	long getBuildingByLevelId(ClientOrganisation client, long levelId);
 	 
 	boolean checkLevel(ClientOrganisation client, long id);
+	
+	boolean saveImageToLevel(Long levelId, String iconPath) throws InvalidFileUploadException;
 }

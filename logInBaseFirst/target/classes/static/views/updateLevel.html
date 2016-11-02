@@ -10,11 +10,11 @@
 		                             
 		                        </ol>
 		</div> 
-      <div class="col-md-9">
+      <div class="col-md-6">
 			<div class="panel panel-primary">
 
 				<div class="panel-heading">
-					<h3 class="panel-title">Update building		  
+					<h3 class="panel-title">Update level		  
 						<div class="panel-control pull-right">
 							<a class="panelButton"><i class="fa fa-refresh"></i></a>
 							<a class="panelButton"><i class="fa fa-minus"></i></a>
@@ -25,21 +25,57 @@
 				<div class="panel-body">
         <form>
         <div class="form-group">
-               <label for="exampleInput">Level Number </label>
+               <label for="exampleInput">Level Number(meter) </label>
                <input type="number" ng-model="level.levelNum" class="form-control underline">
         </div>
         <div class="form-group">
-               <label for="exampleInput">Length</label>
+               <label for="exampleInput">Length(meter)</label>
                <input type="number" ng-model="level.length" class="form-control underline">
         </div>
         <div class="form-group">
                <label for="exampleInput">Width</label>
                <input type="number" ng-model="level.width" class="form-control underline">
         </div>
+        
+        	<div>
+						Logo: <input type="file" ngf-select ng-model="picFile" name="file"
+							accept="image/*" ngf-max-size="10MB" ngf-model-invalid="errorFile">
+						<i ng-show="myForm.file.$error.required">*required</i><br> <i
+							ng-show="myForm.file.$error.maxSize">File too large
+							{{errorFile.size / 1000000|number:1}}MB: max 2M</i> <img
+							ng-show="myForm.file.$valid" ngf-thumbnail="picFile"
+							class="thumb" height="100px" width="100px">
+						<button ng-click="picFile = null" ng-show="picFile">Remove</button>
+					</div>
+					
         <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "updateLevel()">Submit</button> &nbsp;
                     
 
       </form>      
+				</div>
+			</div>
+        </div>
+        
+          <div class="col-md-6">
+			<div class="panel panel-primary">
+
+				<div class="panel-heading">
+					<h3 class="panel-title">Current image  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body">
+						<carousel interval="5000">
+						<slide active="slide.active">
+							<img src="{{level.filePath}}" alt="">
+						</slide>
+						
+					</carousel>
+     
 				</div>
 			</div>
         </div>
