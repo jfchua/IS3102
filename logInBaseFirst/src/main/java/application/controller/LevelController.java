@@ -1,4 +1,6 @@
 package application.controller;
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Optional;
@@ -18,7 +20,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.ExclusionStrategy;
@@ -31,8 +36,11 @@ import application.entity.Icon;
 import application.entity.Level;
 import application.entity.Unit;
 import application.entity.User;
+import application.exception.InvalidFileUploadException;
+import application.exception.InvalidIconException;
 import application.exception.UserNotFoundException;
 import application.service.BuildingService;
+import application.service.FileUploadCheckingService;
 import application.service.LevelService;
 import application.service.UserService;
 
@@ -44,13 +52,16 @@ public class LevelController {
 	private final LevelService levelService;
 	private final UserService userService;
 	private JSONParser parser = new JSONParser();
+	private final FileUploadCheckingService fileService;
+	private Gson geeson= new Gson();
 
 	@Autowired
-	public LevelController(LevelService levelService, UserService userService,BuildingService buildingService) {
+	public LevelController(LevelService levelService, UserService userService,BuildingService buildingService,FileUploadCheckingService fileService) {
 		super();
 		this.buildingService = buildingService;
 		this.levelService = levelService;
 		this.userService = userService;
+		this.fileService=fileService;
 	}
 	
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY', 'ROLE_EXTEVE')")
@@ -226,7 +237,7 @@ public class LevelController {
 			//Call $http.post(URL,stringToAdd);
 			@RequestMapping(value = "/addLevel", method = RequestMethod.POST)
 			@ResponseBody
-			public ResponseEntity<Void> addLevel(@RequestBody String levelJSON,
+			public ResponseEntity<String> addLevel(@RequestBody String levelJSON,
 					HttpServletRequest rq) throws UserNotFoundException {
 				Principal principal = rq.getUserPrincipal();
 				Optional<User> usr = userService.getUserByEmail(principal.getName());
@@ -249,19 +260,22 @@ public class LevelController {
 					
 					long buildingId = (Long)jsonObject.get("id");
 					
-					boolean bl = levelService.create(client, buildingId, levelNum, length, width, filePath);
+					Level level = levelService.create(client, buildingId, levelNum, length, width, filePath);
 					//levelService.updateBuilding(buildingId, level.getId());
 					System.out.println("adding level " + levelNum);
-					if(!bl){
+					if(level==null){
 						System.out.println("out of range");
-						return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+						return new ResponseEntity<String>(HttpStatus.CONFLICT);
+					}else{
+						String levelIdToReturn = Long.toString(level.getId());
+						return new ResponseEntity<String>(levelIdToReturn ,HttpStatus.OK);
 					}				
 				}
 				catch (Exception e){
 					System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+					return new ResponseEntity<String>(HttpStatus.CONFLICT);
 				}
-				return new ResponseEntity<Void>(HttpStatus.OK);
+				//return new ResponseEntity<String>(HttpStatus.OK);
 			
 			}	
 			
@@ -404,4 +418,47 @@ public class LevelController {
 				//return new ResponseEntity<Void>(HttpStatus.OK);
 			}
 			
+	         
+	         @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
+	     	@RequestMapping(value = "/saveLevelImage",  method = RequestMethod.POST)
+	     	@ResponseBody
+	     	public ResponseEntity<String> saveLevelImage(@RequestParam("file") MultipartFile file,String levelId, HttpServletRequest request ) throws IOException, UserNotFoundException, InvalidIconException {
+
+	     		Principal p = request.getUserPrincipal();
+	     		User curUser = userService.getUserByEmail(p.getName()).get();
+	     		//CHECKING FOR FILE VALIDITY
+	     		if ( levelId == null || levelId.equals("")){
+	     			return new ResponseEntity<String>(geeson.toJson("Server error in saving building information"),HttpStatus.INTERNAL_SERVER_ERROR);
+	     		}
+	     		try{
+	     			fileService.checkFile(file);
+	     			//GET RELATIVE PATH SINCE EVERYONE COMPUTER DIFFERENT
+	     			String iconPath = request.getSession().getServletContext().getRealPath("/");
+	     			System.out.println(iconPath);
+	     			File toTrans = new File(iconPath,file.getOriginalFilename());
+	     			toTrans.setExecutable(true);
+	     			toTrans.setWritable(true);
+	     			file.transferTo(toTrans);
+	     			System.err.println("saveLevelImage in controller saving to " + Long.valueOf(levelId));
+	     			boolean OK = levelService.saveImageToLevel(Long.valueOf(levelId), file.getOriginalFilename());
+	     			if(OK){
+	     				System.out.println("Level image is created");
+	     				
+	     			}else{
+	     				System.out.println("Level image is not created");
+	     			}
+	     			//clientOrganisationRepository.saveAndFlush(client);
+	     			System.out.println("Saved Level image");
+	     		}
+	     		catch ( InvalidFileUploadException e ){
+	     			System.err.println(e.getMessage());
+	     			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+	     		}
+	     		catch ( Exception e){
+	     			System.err.println(e.getMessage());
+	     			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+	     		}
+	     		System.err.println(String.format("received %s", file.getOriginalFilename()));
+	     		return new ResponseEntity<String>(HttpStatus.OK);
+	     	}
 }

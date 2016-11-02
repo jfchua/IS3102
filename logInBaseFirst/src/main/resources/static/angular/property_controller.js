@@ -576,7 +576,7 @@ app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$
 }])
 
 //ADD A LEVEL,UPDATE A LEVEL
-app.controller('addLevelController', ['$scope', '$http','shareData','$state','ModalService', function ($scope, $http, shareData,$state,ModalService) {
+app.controller('addLevelController', ['$scope', '$http','shareData','$state','ModalService','Upload','$timeout', function ($scope, $http, shareData,$state,ModalService, Upload,$timeout) {
 	$scope.addLevel = function(){
 		//alert("SUCCESS");
 		console.log("start adding");
@@ -601,7 +601,74 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state','Mo
 		});
 
 		console.log("SAVING THE LEVEL");
-		send.success(function(){
+		send.success(function(levelId){
+			if ($scope.picFile != null && $scope.picFile != "") {
+				$scope.levelId = levelId;
+				$scope.picFile.upload = Upload.upload({
+					url: 'https://localhost:8443/level/saveLevelImage',
+					data: { file: $scope.picFile,levelId:$scope.levelId},
+				});
+
+				$scope.picFile.upload.then(function (response) {
+					$timeout(function () {
+						$scope.picFile.result = response.data;
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Level and its associated image has been saved successfully',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewBuilding");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+
+					});
+				}, function (response) {
+					if (response.status > 0){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: response.data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
+
+						//END SHOWMODAL
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+
+						$scope.errorMsg = response.status + ': ' + response.data;
+					}
+				}, function (evt) {
+					// Math.min is to fix IE which reports 200% sometimes
+					$scope.picFile.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+				})
+				/////////////////////////
+				return;
+			}
+			
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
@@ -636,7 +703,7 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state','Mo
 }])
 
 //DELETE A LEVEL,UPDATE A LEVEL
-app.controller('levelController', ['$scope', '$http','shareData','$state','ModalService', function ($scope, $http, shareData,$state,ModalService) {
+app.controller('levelController', ['$scope', '$http','shareData','$state','ModalService','Upload','$timeout', function ($scope, $http, shareData,$state,ModalService,Upload,$timeout) {
 	var building;
 
 	//VIEW LEVELS WHEN PAGE LOADED
@@ -691,6 +758,74 @@ app.controller('levelController', ['$scope', '$http','shareData','$state','Modal
 		console.log("UPDATING THE LEVEL");
 		send.success(function(){
 			shareData.addData(building); 
+			if ($scope.picFile != null && $scope.picFile != "") {
+				
+				$scope.picFile.upload = Upload.upload({
+					url: 'https://localhost:8443/level/saveLevelImage',
+					data: { file: $scope.picFile,levelId:$scope.level.id},
+				});
+
+				$scope.picFile.upload.then(function (response) {
+					$timeout(function () {
+						$scope.picFile.result = response.data;
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Level and its associated image has been updated successfully',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewLevels");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+
+					});
+				}, function (response) {
+					if (response.status > 0){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: response.data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
+
+						//END SHOWMODAL
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+
+						$scope.errorMsg = response.status + ': ' + response.data;
+					}
+				}, function (evt) {
+					// Math.min is to fix IE which reports 200% sometimes
+					$scope.picFile.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+				})
+				/////////////////////////
+				return;
+			}
+			
+			
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",

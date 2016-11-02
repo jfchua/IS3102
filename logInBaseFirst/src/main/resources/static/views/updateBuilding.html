@@ -9,7 +9,7 @@
 			<li><a>Upate Buildings</a></li>
 		</ol>
 	</div>
-	<div class="col-md-9">
+	<div class="col-md-6">
 		<div class="panel panel-primary">
 
 			<div class="panel-heading">
@@ -66,6 +66,30 @@
 					&nbsp;
 					<!--   <button ng-click = "updateBuilding()"><input type="submit" value="Submit"></button>-->
 				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-6">
+		<div class="panel panel-primary">
+
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Current image
+					<div class="panel-control pull-right">
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body">
+					<carousel interval="5000">
+						
+						<slide>
+							<img src="{{building.picPath}}" alt="">
+						</slide>
+					</carousel>
 			</div>
 		</div>
 	</div>

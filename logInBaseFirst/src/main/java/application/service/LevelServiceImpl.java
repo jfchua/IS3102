@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import application.entity.Building;
 import application.entity.ClientOrganisation;
 import application.entity.Level;
+import application.exception.InvalidFileUploadException;
 import application.repository.BuildingRepository;
 import application.repository.LevelRepository;
 @Service
@@ -29,8 +30,9 @@ public class LevelServiceImpl implements LevelService {
 	}
 	
 	@Override
-	public boolean create(ClientOrganisation client, long buildingId, int levelNum, int length, int width, String filePath){
+	public Level create(ClientOrganisation client, long buildingId, int levelNum, int length, int width, String filePath){
 		// TODO Auto-generated method stub
+		Level level=null;
 		try{
 		Optional<Building> building1 = Optional.ofNullable(buildingRepository.findOne(buildingId));
 		if(building1.isPresent()&&client.getBuildings().contains(building1.get())){
@@ -45,9 +47,9 @@ public class LevelServiceImpl implements LevelService {
 			}				
 		}
 		if((levelNum>numFloor)||(!isExist)){
-			return false;
+			return null;
 		}
-		Level level = new Level();
+		level = new Level();
 		level.setLevelNum(levelNum);
 		level.setLength(length);
 		level.setWidth(width);
@@ -60,9 +62,9 @@ public class LevelServiceImpl implements LevelService {
 		buildingRepository.save(building);
 		}
 		}catch (Exception e){
-			return false;
+			return null;
 		}
-		return true;
+		return level;
 	}
 
 	@Override
@@ -227,5 +229,27 @@ public class LevelServiceImpl implements LevelService {
 			}
 		return doesHave;
 	}
-
+	
+	
+	
+	@Override
+	public boolean saveImageToLevel(Long levelId, String iconPath) throws InvalidFileUploadException {
+		String t = iconPath.toUpperCase();
+		System.err.println("creating icon: " + t);
+		if ( !t.contains(".JPG") && !t.contains(".JPEG")&& !t.contains(".SVG") && !t.contains(".TIF") && !t.contains(".PNG") ){
+			System.err.println("Invalid icon: " + t);
+			throw new InvalidFileUploadException("Building image uploaded is invalid");
+		}
+		try{		
+			Level level=levelRepository.getOne(levelId);
+			level.setFilePath(iconPath);
+			System.err.println("Level pic path saved as " + iconPath);
+			levelRepository.saveAndFlush(level);
+			return true;
+		}catch(Exception e){
+			System.err.println("Error at creating building image " + e.getMessage());
+			return false;
+		
+	}
+	}
 }
