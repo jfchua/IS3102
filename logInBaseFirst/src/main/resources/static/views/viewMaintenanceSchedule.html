@@ -1,0 +1,58 @@
+ 
+	<div ng-cloak ng-controller="scheduleController as scheduleCtrl" >
+        
+        	<div class="clearfix">
+                            <ol class="breadcrumb no-bg no-m-t">
+                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="dashboard.viewMaintenance" ng-click="passMaintenance()">View Maintenance Requests</a></li>                          
+                                <li><a>View Maintenance Schedule</a></li>
+                            </ol>
+            </div>
+      <div class="col-md-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Maintenance Schedules  
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+					<table class="table table-hover">
+						<thead>
+
+                               <tr>
+                               <th><i></i> Booking ID </th>
+                               <th><i></i> Event Id </th>
+                               <th><i></i> Start Date </th>
+                               <th><i></i> End Date </th>
+                               <th><i></i> Unit Booked </th>
+                               <!-- <th><i></i> Change Unit </th>-->
+                               <th><i></i> Action </th>
+                               
+                               </tr>
+                        </thead>
+                            <tbody>
+                             <tr ng-repeat="x in bookings">
+                             <td>{{ x.id }}</td>
+                             <td>{{ x.owner}}</td>
+                             <td>{{ x.event_start_date_time }}</td>
+                             <td>{{ x.event_end_date_time }}</td>
+                             <td>{{ x.room }}</td>
+                             <!-- <td><a ng-model="myValue" href="/#/updateBookingEx" ng-click="updateBooking(x.id)">Update</a></td>-->
+                               <td>
+                             		<a   ng-click="deleteBooking(x.id)" tooltip-placement="top" tooltip="Delete Booking"><i class="glyphicon glyphicon-trash"></i></a>
+                             		<a ng-show="x.event.approvalStatus==='APPROVED'||x.event.approvalStatus==='SUCCESSFUL'"     ui-sref="dashboard.viewUnitPlanEx" ng-click="passBooking(x)" tooltip-placement="top" tooltip="Add unit plan"><i class="glyphicon glyphicon-eye-open"></i></a>
+                             </td>
+                             </tr>
+                             </tbody>
+                          </table>
+                    </div>
+			</div>
+		</div>
+	</div>
