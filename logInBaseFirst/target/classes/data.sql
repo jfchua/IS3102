@@ -21,12 +21,18 @@ insert into role (name)values ("ROLE_EVEGOER");
 INSERT INTO payment_policy(deposit_rate, interim_period, due_days, subsequent_number)
 VALUES(0.4, 2, 2, 2);
 
-insert into client_organisation (organisation_name, address, postal, phone, payment_policy_id) 
-values ("Expo", "1 Expo Dr", "486150", "64032160", 1);
-insert into client_organisation (organisation_name, address, postal, phone) 
-values ("Suntec", "3 Temasek Boulevard","038983", "68221537");
+insert into client_organisation (organisation_name, address, postal, phone, payment_policy_id,themecolour,logo_file_path) 
+values ("Expo", "1 Expo Dr", "486150", "64032160", 1,"midnight-blue","expoLogo.png");
+insert into client_organisation (organisation_name, address, postal, phone,themecolour,logo_file_path) 
+values ("Suntec", "3 Temasek Boulevard","038983", "68221537","green","suntecLogo.png");
+
+--Algattas is client_organisation 3
+insert into client_organisation (organisation_name, address, postal, phone,themecolour,logo_file_path) 
+values ("Algattas", "73 Ubi Road 1","408733", "31580456","red","algattasLogo.png");
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1 ,'Kenneth LIM' , '2');
+VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',3 ,'Kenneth LIM' , '2');
+--Algattas superadmin is user 1
+
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('admin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Jin Fa CHUA' , '3');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
@@ -75,7 +81,7 @@ INSERT into users_roles values( 8,7);
 INSERT into users_roles values( 8,3);
 INSERT into users_roles values( 9,8);
 INSERT into users_roles values( 9,3);
-INSERT into users_roles values( 10,1);
+INSERT into users_roles values( 10,2);
 INSERT into users_roles values( 10,3);
 INSERT into users_roles values( 11,3);
 INSERT into users_roles values( 11,4);
@@ -118,16 +124,16 @@ insert into vendor(contact, description, email, name)values("456", "good", "2@gm
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,2);
 INSERT INTO level(file_path, length, level_num, width, building_id)
-VALUES('floorplan2.PNG',123,2,80,1);
+VALUES('flooPlan1.png',123,2,80,1);
 INSERT INTO building_levels(building_id, levels_id)VALUES(1,1);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
-VALUES('coral', 100, 100, 100, './svg/rect.svg', 100, null);
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
-VALUES('coral', 100, 250, 250, './svg/rect.svg', 100, null);
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('123',10,100,true,'unit1', 10 , 10 , 10 , 1, 1);
+VALUES('Hall',38,100,true,'HALL C', 50 , 71 , 7 , 1, 1);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('123',10,100,true,'unit2',10,25,25, 1, 2);
+VALUES('Hall',18,100,true,'HALL B',51,52,7, 1, 2);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
 VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party', 'CONCERT', null, 1, 'UNPAID', 12);
 --INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		
