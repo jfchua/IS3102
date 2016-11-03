@@ -60,7 +60,7 @@ import application.service.UserService;
 @Controller
 public class TicketingController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
-	private final EventExternalService eventExternalService;
+	private final EventExternalService eventExternalService; 
 	private final BookingService bookingService;
 	private final UserService userService;
 	private final TicketingService ticketingService;
@@ -378,13 +378,14 @@ public class TicketingController {
 			System.err.println(ticketsJSON);
 
 			Object obj1 = parser.parse(ticketsJSON);
-			JSONObject jsonObject = (JSONObject) obj1;
-			JSONArray id = (JSONArray)jsonObject.get("ticketsJSON");
-			String paymentId = (String) jsonObject.get("paymentId");
-			for ( Object j : id){
+			JSONArray jsonObject = (JSONArray) obj1;
+			//JSONArray id = (JSONArray)jsonObject.get("ticketsJSON");
+
+			for ( Object j : jsonObject){
 				JSONObject ticketInfo = (JSONObject) j;
 				Long numTickets = (Long)ticketInfo.get("numTickets");
 				Long categoryId = (Long)ticketInfo.get("categoryId");
+				String paymentId = (String) ticketInfo.get("paymentId");
 				System.err.println("CALLED TICKETING SERVICE ONCE");
 				ticketingService.generateTicket(usr.get(), paymentId, numTickets.intValue(), categoryId);
 			}
