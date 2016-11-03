@@ -43,10 +43,14 @@
                              <td>{{ x.maint}}</td>
                              <td>{{ x.start }}</td>
                              <td>{{ x.end }}</td>
-                             <td>{{ x.units }}</td>
+                             <td>{{ x.unit }}</td>
                              <td>{{ x.vendors }}</td>
                                <td>
-                             		<a ng-click="deleteSchedule(x.id)" tooltip-placement="top" tooltip="Delete Maintenance Schedule"><i class="glyphicon glyphicon-trash"></i></a>
+                               <button class="naviaBtn naviaBlue" ng-click="alertShow = (alertShow == 4 ? -1 : 4)"><i class="fa fa-exclamation-circle fa-2x" ng-show="ppt.checkDate(ppt.Dates[index].key)"></i>recent denials</button> 
+                               
+                             		<a ng-show="checkDateBefore(x.start)||checkDateAfer(x.end)" 
+                             		ng-click="deleteSchedule(x.id)" tooltip-placement="top" tooltip="Delete Maintenance Schedule">
+                             		<i class="glyphicon glyphicon-trash"></i></a>   
                              </td>
                              </tr>
                              </tbody>

@@ -1035,64 +1035,71 @@ app.controller('maintenanceController',['$scope', '$http','$state','$routeParams
 
 }]);
 
-app.controller('maintenanceController', ['$scope','$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService) {
+app.controller('scheduleController', ['$scope','$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService) {
 	angular.element(document).ready(function () {	
 		//console.log(tempObj)
 		console.log("DISPLAY ALL MAINTENANCES");
 		$scope.maint = shareData.getData();
 		var id=$scope.maint.id;
 
-		$scope.url = "https://localhost:8443/booking/viewAllBookings/"+id;
+		$scope.url = "https://localhost:8443/maintenance/viewAllSchedules/"+id;
 		//$scope.dataToShare = [];
 		console.log("GETTING THE EVENT INFO")
 		var getBookings = $http({
 			method  : 'GET',
-			url     : 'https://localhost:8443/booking/viewAllBookings/' + id        
+			url     : 'https://localhost:8443/maintenance/viewAllSchedules/' + id        
 		});
-		console.log("Getting the bookings using the url: " + $scope.url);
+		console.log("Getting the maintenances using the url: " + $scope.url);
 		getBookings.success(function(response){
-			//$scope.dataToShare.push(id);
-			//$location.path("/viewLevels/"+id);
-			console.log('GET Booking SUCCESS! ' + JSON.stringify(response));
+			console.log('GET MAINTENANCES SUCCESS! ' + JSON.stringify(response));
 			console.log("ID IS " + id);
-			$scope.bookings = response;
-
-			//$location.path("/viewLevels");
+			$scope.schedules = response;
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
-			console.log('GET Booking FAILED! ' + JSON.stringify(response));
+			$state.go("dashboard.viewMaintenance");
+			console.log('GET MAINTENANCES FAILED! ' + JSON.stringify(response));
 		});
 
-		var url = "https://localhost:8443/booking/viewAllBookings";	
-		console.log("BOOKING DATA ARE OF THE FOLLOWING: " + $scope.bookings);	
+		//var url = "https://localhost:8443/maintenance/viewAllBookings";	
+		//console.log("BOOKING DATA ARE OF THE FOLLOWING: " + $scope.bookings);	
 	});
 
-	$scope.deleteBooking = function(id){
+	$scope.deleteSchedule = function(id){
 		var r = confirm("Confirm cancel? \nEither OK or Cancel.");
 		if (r == true) {
-			$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
+			$scope.url = "https://localhost:8443/maintenance/deleteSchedule/"+id;
 			var deleteBooking = $http({
 				method  : 'POST',
-				url     : 'https://localhost:8443/booking/deleteBooking/' + id        
+				url     : 'https://localhost:8443/maintenance/deleteSchedule/' + id        
 			});
-			console.log("Deleting the event using the url: " + $scope.url);
+			console.log("Deleting the maintenance using the url: " + $scope.url);
 			deleteBooking.success(function(response){
-				alert('DELETE BOOKING SUCCESS! ');
+				alert('DELETE SCHEDULE SUCCESS! ');
 				console.log("ID IS " + id);
-				$state.go("dashboard.viewAllEventsEx");
+				$state.go("dashboard.viewMaintenance");
 			});
 			deleteBooking.error(function(response){
-				alert('DELETE BOOKING FAIL! ');
-				$state.go("dashboard.viewAllEventsEx");
+				alert('DELETE SCHEDULE FAIL! ');
+				$state.go("dashboard.viewMaintenance");
 				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
 			});
 		} else {
-			alert("Cancel deleting booking");
+			alert("Cancel deleting");
 		}
 	}
 
-	$scope.passBooking=function(booking){
+	this.checkDateBefore = function (dateString) {
+	    var daysAgo = new Date();
+	    return (new Date(dateString) < daysAgo);
+	}
+	
+	this.checkDateAfter = function (dateString) {
+	    var daysAgo = new Date();
+	    return (new Date(dateString) > daysAgo);
+	}
+	
+	
+	$scope.passSchedule=function(booking){
 		console.log(booking);
 		var obj={
 				event:$scope.event,

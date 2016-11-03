@@ -35,6 +35,8 @@ public interface MaintenanceService {
    boolean checkAvailability(ClientOrganisation client, User user, String unitsId, Date start, Date end);
 	
 	boolean checkAvailabilityForUpdate(ClientOrganisation client, User user,long maintId, String unitsId, Date start, Date end);
-
 	
+	boolean deleteSchedule(ClientOrganisation client, long scheduleId);
+	
+	Optional<MaintenanceSchedule> getScheduleById(long id);
 }

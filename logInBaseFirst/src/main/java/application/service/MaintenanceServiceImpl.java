@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import application.entity.BookingAppl;
 import application.entity.Building;
 import application.entity.ClientOrganisation;
+import application.entity.Event;
 import application.entity.Level;
 import application.entity.Maintenance;
 import application.entity.MaintenanceSchedule;
@@ -479,6 +480,40 @@ public boolean checkAvailabilityForUpdate(ClientOrganisation client, User user, 
 		Date start, Date end) {
 	// TODO Auto-generated method stub
 	return false;
+}
+
+@Override
+public boolean deleteSchedule(ClientOrganisation client, long scheduleId) {
+	Set<User> eventOrgs = userRepository.getAllUsers(client);
+	boolean doesHave = false;
+	  try{		
+			Optional<MaintenanceSchedule> sche1 = getScheduleById(scheduleId);
+			MaintenanceSchedule sche = null;
+			if(sche1.isPresent()){		
+				System.out.println("inside TRY");				
+				 sche =sche1.get();
+				Maintenance mt = sche.getMaintenance();
+				Set<MaintenanceSchedule> sches = mt.getMaintenanceSchedule();
+				Unit unit = sche.getUnit();
+				Set<MaintenanceSchedule> sches1 = unit.getMaintenanceSchedule();
+					sches.remove(sche);
+					mt.setMaintenanceSchedule(sches);
+					sches1.remove(sche);
+					unit.setMaintenanceSchedule(sches1);
+					unitRepository.flush();
+					maintenanceRepository.flush();
+					maintenanceScheduleRepository.delete(sche);
+			}
+			}catch(Exception e){
+				return false;
+			}
+			return true;
+			}
+
+@Override
+public Optional<MaintenanceSchedule> getScheduleById(long id) {
+	LOGGER.debug("Getting booking={}", id);
+	return Optional.ofNullable(maintenanceScheduleRepository.findOne(id));
 }
 
 
