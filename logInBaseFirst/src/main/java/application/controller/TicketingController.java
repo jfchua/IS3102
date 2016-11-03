@@ -383,7 +383,8 @@ public class TicketingController {
 
 			for ( Object j : jsonObject){
 				JSONObject ticketInfo = (JSONObject) j;
-				Long numTickets = (Long)ticketInfo.get("numTickets");
+				String numTicketsString = (String)ticketInfo.get("numTickets");
+				Long numTickets = Long.valueOf(numTicketsString);
 				Long categoryId = (Long)ticketInfo.get("categoryId");
 				String paymentId = (String) ticketInfo.get("paymentId");
 				System.err.println("CALLED TICKETING SERVICE ONCE");
