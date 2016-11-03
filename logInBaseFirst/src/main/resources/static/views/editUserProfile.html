@@ -59,7 +59,7 @@
 						<label for="exampleInput">Enter your old password</label> <input
 							type="password" ng-model="userProfile.password0"
 							class="form-control" id="password0"
-							placeholder="Enter new password" required>
+							placeholder="Enter old password" required>
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">Enter new password</label> <input
@@ -76,6 +76,51 @@
 					<!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
 					<button class="progress-button primary-progress"
 						data-style="shrink" data-horizontal ng-click="submitChangePass()">Submit</button>
+					&nbsp;
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div ng-cloak ng-controller="userProfileController as userProfileCtrl2">
+	<div class="col-md-6">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Update Security Answer
+					<div class="panel-control pull-right">
+
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<form>
+					<div class="form-group">
+						<label for="exampleInput">Enter your old security answer</label> <input
+							type="password" ng-model="userProfile.security0"
+							class="form-control" id="security0"
+							placeholder="Enter your old security answer" required>
+					</div>
+					<div class="form-group">
+						<label for="exampleInput">Enter new security answer</label> <input
+							type="password" ng-model="userProfile.security1"
+							class="form-control" id="security1"
+							placeholder="Enter new security answer" required>
+					</div>
+					<div class="form-group">
+						<label for="exampleInput">Enter your new security answer again</label> <input
+							type="password" ng-model="userProfile.security2"
+							class="form-control" id="security2"
+							placeholder="Enter your new security answer again" required>
+					</div>
+					<!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
+					<button class="progress-button primary-progress"
+						data-style="shrink" data-horizontal ng-click="submitChangeSecurity()">Submit</button>
 					&nbsp;
 				</form>
 			</div>
