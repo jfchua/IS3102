@@ -43,7 +43,7 @@
 							ng-model="currentlySelectedBuilding"
 							ng-options="x.id as x.name for x in buildings"
 							ng-change="getLevel(currentlySelectedBuilding)"
-							class="form-control">
+							class="form-control underline">
 						</select>
 						<!-- <p>Building ID <input ng-model="currentlySelectedBuilding"> Selected</p>-->
 					</div>
@@ -52,14 +52,14 @@
 						<label for="level" class="control-label">Select Level</label> <select
 							name="level" ng-model="currentlySelectedLevel"
 							ng-options="x.id as x.levelNum for x in levels"
-							ng-change="getUnit(currentlySelectedLevel)"
-							class="form-control">
+							ng-change="getUnit(currentlySelectedLevel)" class="form-control underline">
 						</select>
 
 					</div>
 					<div class="form-group">
 						<ul class="list-group" name="units">
-							<li ng-repeat="unit in selectedUnits" class="list-group-item">{{unit.unitNumber}}
+							<li ng-repeat="unit in selectedUnits" class="list-group-item"
+								style="display: inline;">{{unit.unitNumber}}
 								<button ng-click="deleteUnit(unit)">
 									<i class="glyphicon glyphicon-trash"></i>
 								</button>
@@ -69,21 +69,24 @@
 					<div class="form-group">
 						<label for="unit" class="control-label">Select Unit</label> <select
 							name="unit" ng-model="currentlySelectedUnit"
-							ng-options="x as x.unitNumber for x in units | filter: { rentable : true }"
-							ng-change="selectUnit()" class="form-control">
+							ng-options="x as x.unitNumber for x in units| filter: { rentable : true }"
+							ng-change="selectUnit(); checkAvail()"
+							class="form-control underline">
+
 						</select>
-						<div ng-mouseover="checkAvail()">
-							<p>
-								Put mouse over to check Availability<br> Available?
-								{{avail}}
-							</p>
-						</div>
+						<!--  <select
+							name="unit" ng-model="currentlySelectedUnit"
+							ng-options="x as x.unitNumber for x in units"
+							ng-change="selectUnit(); checkAvail()" class="form-control underline">
+
+						</select>-->
+
 					</div>
-					<br>
 					<!--  <button  ng-click="getAllVendors()">Get List of Vendors</button>-->
 					<div class="form-group">
 						<ul class="list-group" name="vendors">
-							<li ng-repeat="vendor in selectedVendors" class="list-group-item">{{vendor.name}}
+							<li ng-repeat="vendor in selectedVendors" class="list-group-item"
+								style="display: inline;">{{vendor.name}}
 								<button ng-click="deleteVendor(vendor)">
 									<i class="glyphicon glyphicon-trash"></i>
 								</button>
@@ -94,18 +97,11 @@
 						<label for="vendor" class="control-label">Select Vendor</label> <select
 							name="vendor" ng-model="currentlySelectedVendor"
 							ng-options="x as x.name for x in vendors"
-							ng-change="selectVendor()" class="form-control">
+							ng-change="selectVendor()" class="form-control underline">
 							<option ng-repeat="vendor in vendors">{{vendor}}</option>
 						</select>
 					</div>
-
-
-					<!--  <div class="form-group">
-                   <label for="exampleInput">Vendor Id</label>
-                   <input type="text" ng-model="maintenance.vendorId" class="form-control" placeholder="Enter vendor id">
-            </div>-->
-
-					<div class="form-group">
+			<div class="form-group">
 						<label for="exampleInput"> Description </label> <input type="text"
 							ng-model="maintenance.description" class="form-control"
 							placeholder="Enter description">
@@ -118,11 +114,27 @@
 					&nbsp;
 
 				</form>
-
-
-
-
 			</div>
 		</div>
+	</div>
+	<!-- 
+	<div class="col-lg-6 col-md-8">
+		<div class="conter-wrapper">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div ui-calendar="uiConfig.calendar" ng-model="haha"></div>
+				</div>
+			</div>
+		</div>
+	</div> -->
+	<div class="col-md-3">
+		<growl-notifications> <growl-notification
+			ng-if="avail == 'AVAILABLE!'"
+			class="growl-success alert-success fading"> <a
+			href="#" ng-click="$growlNotification.remove()" class="close"><i
+			class="fa fa-times"></i></a> Selected units are available</growl-notification> <growl-notification
+			ng-if="avail == 'NOT AVAILABLE!'" class="growl-error">
+		<a href="#" ng-click="$growlNotification.remove()" class="close"><i
+			class="fa fa-times"></i></a> Selected units are not available </growl-notification> </growl-notifications>
 	</div>
 </div>

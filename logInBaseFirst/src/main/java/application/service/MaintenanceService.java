@@ -7,6 +7,7 @@ import application.entity.ClientOrganisation;
 import application.entity.Maintenance;
 import application.entity.MaintenanceSchedule;
 import application.entity.Unit;
+import application.entity.User;
 
 public interface MaintenanceService {
 	boolean createMaintenance(ClientOrganisation client, String unitId, String vendorId, Date start, Date end, String description);
@@ -31,4 +32,11 @@ public interface MaintenanceService {
 	
 	Set<MaintenanceSchedule> getMaintenanceSchedule(ClientOrganisation client, long id);
 	
+   boolean checkAvailability(ClientOrganisation client, User user, String unitsId, Date start, Date end);
+	
+	boolean checkAvailabilityForUpdate(ClientOrganisation client, User user,long maintId, String unitsId, Date start, Date end);
+	
+	boolean deleteSchedule(ClientOrganisation client, long scheduleId);
+	
+	Optional<MaintenanceSchedule> getScheduleById(long id);
 }

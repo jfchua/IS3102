@@ -538,6 +538,49 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 		}
 		console.log("finish selecting units");		
 	}
+	$scope.checkAvail = function(){
+		console.log("start checking availability");
+		$scope.data = {};
+
+		if ( !$scope.maintenance|| !$scope.maintenance.start|| !$scope.maintenance.start){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Please make sure you have entered the starting and ending dates to check for availability and rent calculation",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.selectedUnits = [];
+					$scope.currentlySelectedUnit = '';
+				});
+			});
+			return;
+		}
+		var dataObj = {
+				units: $scope.selectedUnits,
+				start: ($scope.maintenance.start).toString(),
+				end: ($scope.maintenance.start).toString(),
+		};
+		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/maintenance/checkAvailability',
+			data    : dataObj //forms user object
+		});
+		$scope.avail = "";
+		send.success(function(){
+			$scope.avail = "AVAILABLE!";
+			console.log($scope.avail);
+		});
+		send.error(function(){
+			$scope.avail = "NOT AVAILABLE!";
+			console.log($scope.avail);
+		});
+	}
 	/*
 	$scope.getUnitsId = function(){
 		var dataObj ={id: $scope.selectedUnits};
@@ -990,10 +1033,88 @@ app.controller('maintenanceController',['$scope', '$http','$state','$routeParams
 		//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
 	}
 
-
-
-
 }]);
+
+app.controller('scheduleController', ['$scope','$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService) {
+	angular.element(document).ready(function () {	
+		//console.log(tempObj)
+		console.log("DISPLAY ALL MAINTENANCES");
+		$scope.maint = shareData.getData();
+		var id=$scope.maint.id;
+
+		$scope.url = "https://localhost:8443/maintenance/viewAllSchedules/"+id;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE EVENT INFO")
+		var getBookings = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/maintenance/viewAllSchedules/' + id        
+		});
+		console.log("Getting the maintenances using the url: " + $scope.url);
+		getBookings.success(function(response){
+			console.log('GET MAINTENANCES SUCCESS! ' + JSON.stringify(response));
+			console.log("ID IS " + id);
+			$scope.schedules = response;
+		});
+		getBookings.error(function(response){
+			$state.go("dashboard.viewMaintenance");
+			console.log('GET MAINTENANCES FAILED! ' + JSON.stringify(response));
+		});
+
+		//var url = "https://localhost:8443/maintenance/viewAllBookings";	
+		//console.log("BOOKING DATA ARE OF THE FOLLOWING: " + $scope.bookings);	
+	});
+
+	$scope.deleteSchedule = function(id){
+		var r = confirm("Confirm cancel? \nEither OK or Cancel.");
+		if (r == true) {
+			$scope.url = "https://localhost:8443/maintenance/deleteSchedule/"+id;
+			var deleteBooking = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/maintenance/deleteSchedule/' + id        
+			});
+			console.log("Deleting the maintenance using the url: " + $scope.url);
+			deleteBooking.success(function(response){
+				alert('DELETE SCHEDULE SUCCESS! ');
+				console.log("ID IS " + id);
+				$state.go("dashboard.viewMaintenance");
+			});
+			deleteBooking.error(function(response){
+				alert('DELETE SCHEDULE FAIL! ');
+				$state.go("dashboard.viewMaintenance");
+				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
+			});
+		} else {
+			alert("Cancel deleting");
+		}
+	}
+
+	$scope.checkDateBefore = function (dateString) {
+	    var daysAgo = new Date();
+	    console.log(daysAgo);
+	    console.log("*******");
+	    console.log(dateString);
+	    return (new Date(dateString) < daysAgo);
+	}
+	/*
+	$scope.checkDateAfter = function (dateString) {
+	    var daysAgo = new Date();
+	    console.log(daysAgo);
+	    console.log("*******");
+	    console.log(dateString);
+	    return (new Date(dateString) > daysAgo);
+	}*/
+	
+	
+	$scope.passSchedule=function(booking){
+		console.log(booking);
+		var obj={
+				event:$scope.event,
+				booking:booking
+		};
+		shareData.addData(obj);
+	}
+}])
+
 
 
 
