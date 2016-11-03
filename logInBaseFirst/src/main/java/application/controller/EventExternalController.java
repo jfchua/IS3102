@@ -598,6 +598,76 @@ public class EventExternalController {
 					}
 					
 	              @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	      		// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
+	      				// Each object (building) will contain... long id, .
+	      					@RequestMapping(value = "/viewAllCategories/{id}",  method = RequestMethod.GET)
+	      					@ResponseBody
+	      					public String viewAllBookings(@PathVariable("id") String bId, HttpServletRequest rq) throws UserNotFoundException {
+	      					    System.out.println("start view");
+	      					    Principal principal = rq.getUserPrincipal();
+	      					    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+	      						if ( !eventOrg1.isPresent() ){
+	      							return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+	      						}
+	      						try{
+	      						//EventOrganizer eventOrg = eventOrg1.get();	
+	      						User eventOrg = eventOrg1.get();
+	      						ClientOrganisation client = eventOrg.getClientOrganisation();
+	      						System.out.println(eventOrg.getId());
+	      						long id = Long.parseLong(bId);
+	      						Set<Category> cats = eventExternalService.getCategories(client,id);	
+	      						System.out.println("There are " + cats.size() + " events under this organizer");
+	      						//Set<BookingAppl> bookingsWithUnits=new HashSet<BookingAppl>();
+	      						//Gson gson = new Gson();
+	      						//String json = gson.toJson(levels);
+	      					    //System.out.println("Returning levels with json of : " + json);
+	      						//return json;
+	      						if(cats != null){
+	      						for(Category c: cats){
+	      							c.getEvent().setBookings(null);
+	      							c.getEvent().setCategories(null);
+	      							c.getEvent().setEventOrg(null);
+	      							c.getEvent().setPaymentPlan(null);
+	      							Set<Ticket> tics = c.getTickets();
+	      							for(Ticket t : tics){
+	      							t.setCategory(null);
+	      							}
+	      						}
+	      						}
+	      						Gson gson2 = new GsonBuilder()
+	      							    .setExclusionStrategies(new ExclusionStrategy() {
+	      							        public boolean shouldSkipClass(Class<?> clazz) {
+	      							            return (clazz == Area.class)||(clazz == MaintenanceSchedule.class);
+	      							        }
+
+	      							        /**
+	      							          * Custom field exclusion goes here
+	      							          */
+
+	      									@Override
+	      									public boolean shouldSkipField(FieldAttributes f) {
+	      										//TODO Auto-generated method stub
+	      										return false;
+	      												//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+	      									}
+
+	      							     })
+	      							    /**
+	      							      * Use serializeNulls method if you want To serialize null values 
+	      							      * By default, Gson does not serialize null values
+	      							      */
+	      							    .serializeNulls()
+	      							    .create();			    
+	      					    String json = gson2.toJson(cats);
+	      					    System.out.println(json);
+	      					    return json;
+	      						}
+	      						catch (Exception e){
+	      							return "cannot fetch";
+	      						}
+	      					}
+	              
+	              @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 					//This method takes in a JSON format which contains an object with 5 attributes
 					//Long/String id, int levelNum, int length, int width, String filePath
 					//Call $httpPost(Url,JSONData);

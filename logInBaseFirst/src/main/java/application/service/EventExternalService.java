@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import application.entity.BookingAppl;
+import application.entity.Category;
 import application.entity.ClientOrganisation;
 import application.entity.Event;
 import application.entity.EventCreateForm;
@@ -68,4 +69,6 @@ public interface EventExternalService {
 	Set<String[]> checkRateNum(ClientOrganisation client, String unitsId, Date start, Date end) throws ParseException;
 	
 	boolean saveImageToEvent(Long eventId, String filePath) throws InvalidFileUploadException;
+	
+	Set<Category> getCategories(ClientOrganisation client, long id);
 }
