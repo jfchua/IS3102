@@ -472,6 +472,7 @@ public boolean checkAvailability(ClientOrganisation client, User user, String un
 			}
 		}
 	}
+	System.err.println(isAvailable);
 	return isAvailable;
 }
 

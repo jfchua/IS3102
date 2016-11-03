@@ -649,7 +649,28 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 
 		console.log("start adding");
 		$scope.data = {};
+/*
+		if ( !$scope.maintenance || !$scope.selectedUnits || !$scope.selectedVendors || !$scope.maintenance.start ||
+				!$scope.maintenance.end || !$scope.maintenance.description){
+			ModalService.showModal({
 
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Please make sure you have entered all the fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.selectedUnits = [];
+					$scope.currentlySelectedUnit = '';
+				});
+			});
+			return;
+		}*/
+		//EEPTOINjava.lang.NumberFormatException: For input string: ""   For input string: ""
+		
 		var dataObj = {
 				units: $scope.selectedUnits,
 				vendors: $scope.selectedVendors,
@@ -984,6 +1005,26 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 
 	$scope.updateMaintenance = function(){
 		console.log("Start updating");
+		/*
+		if ( !$scope.maintenance || !$scope.selectedUnits || !$scope.selectedVendors || !$scope.maintenance.start ||
+				!$scope.maintenance.end || !$scope.maintenance.description){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Please make sure you have entered all the fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.selectedUnits = [];
+					$scope.currentlySelectedUnit = '';
+				});
+			});
+			return;
+		}*/
 		$scope.data = {};
 		//$scope.event = JSON.parse(shareData.getData());
 		console.log($scope.maintenance.id);
@@ -1092,8 +1133,7 @@ app.controller('maintenanceController',['$scope', '$http','$state','$routeParams
 		
 		$scope.checkDateBefore = function (dateString) {
 	    var daysAgo = new Date();
-	    console.log(new Date(dateString) > daysAgo);
-	    return (new Date(dateString) > daysAgo);
+        return (new Date(dateString) > daysAgo);
 	}
 	});
 	$scope.getMaintenance = function(id){		
@@ -1155,7 +1195,7 @@ app.controller('scheduleController', ['$scope','$http','$state','$routeParams','
 		console.log("DISPLAY ALL MAINTENANCES");
 		$scope.maint = shareData.getData();
 		var id=$scope.maint.id;
-
+		$scope.schedules = {};
 		$scope.url = "https://localhost:8443/maintenance/viewAllSchedules/"+id;
 		//$scope.dataToShare = [];
 		$scope.order_item = "id";
@@ -1205,20 +1245,12 @@ app.controller('scheduleController', ['$scope','$http','$state','$routeParams','
 
 	$scope.checkDateBefore = function (dateString) {
 	    var daysAgo = new Date();
-	    console.log(daysAgo);
-	    console.log("*******");
-	    console.log(dateString);
-	    console.log(new Date(dateString) > daysAgo);
 	    return (new Date(dateString) > daysAgo);
 	}
-	/*
-	$scope.checkDateAfter = function (dateString) {
-	    var daysAgo = new Date();
-	    console.log(daysAgo);
-	    console.log("*******");
-	    console.log(dateString);
-	    return (new Date(dateString) > daysAgo);
-	}*/
+
+	$scope.checkSchedule = function () {
+	    return ($scope.schedules.length > 1);
+	}
 	
 	
 	$scope.passSchedule=function(booking){
