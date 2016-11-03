@@ -23,6 +23,7 @@ import application.entity.User;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.InvalidEmailException;
 import application.exception.OldPasswordInvalidException;
+import application.exception.OldSecurityInvalidException;
 import application.exception.PasswordResetTokenNotFoundException;
 import application.exception.UserNotFoundException;
 import application.repository.ClientOrganisationRepository;
@@ -159,6 +160,33 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	public boolean changeSecurity(long id, String security) throws UserNotFoundException{
+
+
+		try{
+			Optional<User> user = getUserById(id);
+			System.out.println("Setting user with ID" + user.get().getId() + "to security " + security);
+			BCryptPasswordEncoder t = new BCryptPasswordEncoder();
+			String newSecurity = t.encode(security);
+			user.get().setSecurity(newSecurity);	
+			System.out.println("Set user with new security answer of " + newSecurity);
+			userRepository.saveAndFlush(user.get());
+			System.out.println("Set new password to " + user.get().getPasswordHash());
+
+		}
+		catch ( UserNotFoundException e){
+			throw e;
+		}
+		catch(Exception e){
+			System.err.println("EXCEPTION AT CHANGE PASSWORD" + e.getMessage());
+		}
+
+
+		System.out.println("LINE 90 AT USER SERVICE IMPL");
+		return true;
+
+	}
+	
 	public boolean createNewUser(ClientOrganisation clientOrg, String name, String userEmail, Set<Role> roles) throws EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException{
 		Pattern pat = Pattern.compile("^.+@.+\\..+$");
 		Matcher get = pat.matcher(userEmail);		
@@ -320,7 +348,21 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	@Override
+	public boolean checkOldSecurity(Long id, String oldSec) throws OldSecurityInvalidException, UserNotFoundException {
 
+		Optional<User> user = this.getUserById(id);
+		String oldSecurity = user.get().getSecurity();
+
+		BCryptPasswordEncoder t = new BCryptPasswordEncoder();
+		if ( !t.matches(oldSec, oldSecurity)){
+			System.err.println("invalid old security answer");
+			throw new OldSecurityInvalidException("The old security answer entered was invalid");
+		}
+		return true;
+
+
+	}
 
 
 }

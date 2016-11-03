@@ -46,6 +46,7 @@ import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.InvalidEmailException;
 import application.exception.OldPasswordInvalidException;
+import application.exception.OldSecurityInvalidException;
 import application.exception.OrganisationNameAlreadyExistsException;
 import application.exception.UserNotFoundException;
 import application.repository.AuditLogRepository;
@@ -646,6 +647,50 @@ public class UserController {
 		catch(Exception e){
 			System.out.println("ERROR IN CHANGING PASSWORD" + e.getMessage());
 			return new ResponseEntity<String>(gson.toJson("Server error in changing password"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
+
+	}
+	
+	//Change security question
+	@RequestMapping(value = "user/changeSecurity", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> changeSecurity(@RequestBody String userJSON, HttpServletRequest rq) {
+		Gson gson = new Gson();
+		try{
+			Object obj = parser.parse(userJSON);
+			JSONObject jsonObject = (JSONObject) obj;
+			String security = (String)jsonObject.get("password");
+			String oldSecurity = (String)jsonObject.get("oldpassword");
+			Principal principal = rq.getUserPrincipal();
+			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
+			userService.checkOldSecurity(currUser.getId(),oldSecurity);
+			if ( !userService.changeSecurity(currUser.getId(), security) ){
+				return new ResponseEntity<String>(gson.toJson("Server error in changing security answer"),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			//BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			//String hashedPassword = encoder.encode(pass);
+			//currUser.setPasswordHash(hashedPassword); //add salt?
+			////userRepository.saveAndFlush(currUser);
+
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("User Management");
+			al.setAction("Changed password");
+			al.setUser(currUser);
+			al.setUserEmail(currUser.getEmail());
+			auditLogRepository.save(al);
+
+		}
+		catch ( UserNotFoundException e){
+			return new ResponseEntity<String>(gson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch ( OldSecurityInvalidException e){
+			return new ResponseEntity<String>(gson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch(Exception e){
+			System.out.println("ERROR IN CHANGING SECURITY ANSWER" + e.getMessage());
+			return new ResponseEntity<String>(gson.toJson("Server error in changing security answer"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 
