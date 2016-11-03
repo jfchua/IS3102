@@ -634,7 +634,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 						Unit unit1 = unitNew.get();		
 						unitsNew.add(unit1);
 						int count = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
-						int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+						int count2 = maintenanceScheduleRepository.getNumberOfMaintenanceSchedules(Long.valueOf(units[i]), d1, d2);
 						System.out.println(count);
 						if((count != 0)||(count2!=0)){
 							isAvailable = false;

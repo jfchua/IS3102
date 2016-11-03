@@ -38,7 +38,7 @@
                                </tr>
                         </thead>
                             <tbody>
-                             <tr ng-repeat="x in  |orderObjectBy:order_item:order_reverse">
+                             <tr ng-repeat="x in schedules | orderObjectBy:order_item:order_reverse">
                              <td>{{ x.id }}</td>
                              <td>{{ x.maint}}</td>
                              <td>{{ x.start }}</td>

@@ -33,7 +33,7 @@
                            </tr>
                             </thead>
                         <tbody>
-                         <tr ng-repeat="x in maintenance_requests">
+                         <tr ng-repeat="x in maintenance_requests|orderObjectBy:order_item:order_reverse">
                          <td>{{ x.id }}</td>
                          <td>{{ x.start }}</td>
                          <td>{{ x.end }}</td>
