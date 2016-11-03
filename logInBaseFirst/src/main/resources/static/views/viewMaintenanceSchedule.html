@@ -38,16 +38,14 @@
                                </tr>
                         </thead>
                             <tbody>
-                             <tr ng-repeat="x in schedules">
+                             <tr ng-repeat="x in schedules | orderObjectBy:order_item:order_reverse">
                              <td>{{ x.id }}</td>
                              <td>{{ x.maint}}</td>
                              <td>{{ x.start }}</td>
                              <td>{{ x.end }}</td>
                              <td>{{ x.unit }}</td>
                              <td>{{ x.vendors }}</td>
-                               <td>
-                               <button class="naviaBtn naviaBlue" ng-click="alertShow = (alertShow == 4 ? -1 : 4)"><i class="fa fa-exclamation-circle fa-2x" ng-show="ppt.checkDate(ppt.Dates[index].key)"></i>recent denials</button> 
-                               
+                               <td>                               
                              		<a ng-show="checkDateBefore(x.start)" 
                              		ng-click="deleteSchedule(x.id)" tooltip-placement="top" tooltip="Delete Maintenance Schedule">
                              		<i class="glyphicon glyphicon-trash"></i></a>   

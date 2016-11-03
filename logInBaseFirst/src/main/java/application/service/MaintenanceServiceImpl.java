@@ -101,7 +101,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
 
 		if(isAvailable){
-			 Set<Vendor> vendorList = new HashSet<Vendor>();
+			 Set<Vendor> vendorList = maint.getVendors();
 			for(int i = 0; i<vendors.length; i ++){
 				long vId=Long.valueOf(vendors[i]);
 	        Optional<Vendor> ven1 = vendorRepository.getVendorById(vId);
@@ -135,7 +135,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         	  maint.setDescription(description);
         	  maint.setStart(start);
         	  maint.setEnd(end);        	 
-        	  maint.setVendors(vendorList);
+        	  //maint.setVendors(vendorList);
         	  maintenanceRepository.save(maint);      	  
 			}
 			return isAvailable;  
@@ -147,32 +147,20 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 	public boolean editMaintenance(ClientOrganisation client, long id,String unitsId, String vendorsId, Date start, Date end, String description) {
 		// TODO Auto-generated method stub
 		String[] vendors = vendorsId.split(" ");
-		/*
-		Set<User> eventOrgs = userRepository.getAllUsers(client);
-		boolean doesHave = false;
-		for(User u: eventOrgs){
-			 Set<Role> roles = u.getRoles();
-			   for(Role r: roles){
-			    if(r.getName().equals("ROLE_PROPERTY") && u.equals(eventOrg))
-			    doesHave = true;
-			   }
-		}
-		if(!doesHave)
-			return false;*/
-		System.out.println("1");
 
 		Date d1 = start;
 		Date d2 = end;
 		if(d1.compareTo(d2)>0)
 			return false;
-		System.out.println("1");
 		boolean isAvailable = true;
-		
+		Date d3 = null;
+		Date d4 = null;
 		try{
-			//Optional<Vendor> vendor1 = Optional.ofNullable(vendorRepository.findOne(vendorId));
 	        Optional<Maintenance> maint1 = Optional.ofNullable(maintenanceRepository.findOne(id));
 	    	if(maint1.isPresent()&&isAvailable){			
 				Maintenance maint = maint1.get();
+				d3 = maint.getStart();
+				d4 = maint.getEnd();
 				Set<MaintenanceSchedule> maintenances = maint.getMaintenanceSchedule();
 				Set<Unit> unitsOld = new HashSet<Unit>();
 				for(MaintenanceSchedule m: maintenances)
@@ -216,6 +204,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 		            }
 				}
 				}
+				System.err.println("is available"+isAvailable);
 				if(isAvailable){
 			//check vendor 
 			 Set<Vendor> vendorList = new HashSet<Vendor>();
@@ -234,17 +223,26 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 					if(!unitsNew.contains(unit)){
 					Set<MaintenanceSchedule> maintFromUnit = unit.getMaintenanceSchedule();
 					maintFromUnit.remove(m1);
-					//maintenances.remove(m1);
+					maintenances.remove(m1);
+					System.err.println("before delete");
 					maintenanceScheduleRepository.delete(m1);
+					System.err.println("after delete");
+					}
+					else{
+					m1.setStart_time(start);
+					m1.setEnd_time(end);
+					System.err.println("setting date");
 					}
 				}
+			/*
 			for(MaintenanceSchedule m2: maintenances){
 				m2.setStart_time(start);
 				m2.setEnd_time(end);
-				
-			}
-
+				System.err.println("setting date");
+			}*/
+			System.out.println("******");
 			for(Unit i : unitsNew){
+				System.err.println("inside another loop");
 				if(!unitsOld.contains(i)){
 					MaintenanceSchedule maintSchedule = new MaintenanceSchedule();
 					maintSchedule.setStart_time(start);
@@ -253,11 +251,13 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 					maintSchedule.setMaintenance(maint);
 					maintSchedule.setRoom(i.getId());
 					maintenances.add(maintSchedule);
+					System.err.println("adding new stuff");
 			        Set<MaintenanceSchedule> maintList = i.getMaintenanceSchedule();
 			        maintList.add(maintSchedule);
 			        maintenances.add(maintSchedule);		
 				}
 			}
+			System.err.println("end of second for loop");	
         	  maint.setDescription(description);
         	  maint.setStart(start);
         	  maint.setEnd(end);        	 
@@ -478,8 +478,83 @@ public boolean checkAvailability(ClientOrganisation client, User user, String un
 @Override
 public boolean checkAvailabilityForUpdate(ClientOrganisation client, User user, long maintId, String unitsId,
 		Date start, Date end) {
-	// TODO Auto-generated method stub
-	return false;
+	boolean isAvailable = true;
+	Set<User> eventOrgs = userRepository.getAllUsers(client);
+
+	// does the user belong to client organization and does the user have role of "external event organizer"
+	boolean doesHave = false;
+	for(User u: eventOrgs){
+		Set<Role> roles = u.getRoles();
+		for(Role r: roles){
+			if(r.getName().equals("ROLE_PROPERTY") && u.equals(user))
+				doesHave = true;
+		}
+	}
+	if(!doesHave)
+		return false;
+	System.out.println("1");
+
+	//is the ending date after the starting date?
+	Date d1 = start;
+	Date d2 = end;
+	if(d1.compareTo(d2)>0)
+		return false;
+	System.out.println("2");
+
+	try{		
+		Optional<Maintenance> maint1 = getMaintenanceById(maintId);
+		if(maint1.isPresent()&&isAvailable){			
+			Maintenance maint =maint1.get();
+			System.out.println("3");
+			Set<MaintenanceSchedule> schedules = maint.getMaintenanceSchedule();
+			Set<Unit> unitsOld = new HashSet<Unit>();
+
+			// unitsOld is the set of units booked previously, unitsNew is the set of units booked now
+			for(MaintenanceSchedule ms: schedules)
+				unitsOld.add(ms.getUnit());
+			System.out.println("4");
+			String[] units = unitsId.split(" ");
+			Set<Unit> unitsNew = new HashSet<Unit>();
+			System.out.println(units.length);
+
+			//check availability of units
+			for(int i = 0; i<units.length; i ++){
+				System.out.println("inside the loop now");
+				if(!checkUnit(client, Long.valueOf(units[i])))
+					return false;
+				Optional<Unit> unitNew = unitRepository.getUnitById(Long.valueOf(units[i]));
+				if(unitNew.isPresent()&&(!unitsOld.contains(unitNew.get()))){	
+					System.out.println("iffff");
+					Unit unit1 = unitNew.get();		
+					unitsNew.add(unit1);
+					int count = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+					int count2 = maintenanceScheduleRepository.getNumberOfMaintenanceSchedules(Long.valueOf(units[i]), d1, d2);
+					System.out.println(count);
+					if((count != 0)||(count2!=0)){
+						isAvailable = false;
+						break;
+					}		
+				}//DONE
+				else if (unitNew.isPresent()&&(unitsOld.contains(unitNew.get()))){
+					Unit unit1 = unitNew.get();
+					unitsNew.add(unit1);
+					System.out.println("elseeee");
+					BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
+					MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
+					System.out.println(b.getId());
+					Maintenance maintFromM = m.getMaintenance();          
+					if(!(maint.getId().equals(maintFromM.getId()))||(m!=null)){
+						isAvailable = false;
+						break;
+					}
+				}
+				System.out.println("5");
+			}
+		}
+	}catch(Exception e){
+		return false;
+	}
+	return isAvailable;
 }
 
 @Override

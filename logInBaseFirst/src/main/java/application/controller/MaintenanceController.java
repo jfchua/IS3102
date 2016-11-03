@@ -431,6 +431,7 @@ public class MaintenanceController {
 			System.out.println("end of controller");
 			boolean bl = maintenanceService.editMaintenance(client, id, unitsId, vendorsId, start, end, description);
 			//levelService.editLevelInfo(levelId,levelNum, length, width, filePath);
+			System.err.println("success????"+bl);
 			if(!bl){
 				System.out.println("cannot update maintenance");
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
@@ -560,12 +561,12 @@ public class MaintenanceController {
 	// Each object (building) will contain... long id, .
 	@RequestMapping(value = "/viewAllSelectedUnits/{id}",  method = RequestMethod.GET)
 	@ResponseBody
-	public String viewAllSelectedUnits(@PathVariable("id") String bId, HttpServletRequest rq) throws UserNotFoundException {
+	public  ResponseEntity<String> viewAllSelectedUnits(@PathVariable("id") String bId, HttpServletRequest rq) throws UserNotFoundException {
 		System.out.println("start view");
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
 		if ( !eventOrg1.isPresent() ){
-			return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 		try{
 			//EventOrganizer eventOrg = eventOrg1.get();	
@@ -588,13 +589,15 @@ public class MaintenanceController {
 				schedule.getUnit().setSquare(null);
 				schedule.getUnit().setLevel(null);
 				units.add(schedule.getUnit());
+				System.err.println(units.size());
+				System.err.println("*******");
 			}
 			Gson gson = new Gson();
 			String json = gson.toJson(units);
-			return json;
+			return new ResponseEntity<String>(json, HttpStatus.OK);
 		}
 		catch (Exception e){
-			return "cannot fetch";
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 	}
 
