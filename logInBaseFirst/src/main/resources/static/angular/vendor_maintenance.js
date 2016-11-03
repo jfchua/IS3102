@@ -965,7 +965,19 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 }]);
 
 
-
+app.filter('orderObjectBy', function() {
+	  return function(items, field, reverse) {
+	    var filtered = [];
+	    angular.forEach(items, function(item) {
+	      filtered.push(item);
+	    });
+	    filtered.sort(function (a, b) {
+	      return (a[field] > b[field] ? 1 : -1);
+	    });
+	    if(reverse) filtered.reverse();
+	    return filtered;
+	  };
+	});
 
 
 
@@ -974,6 +986,8 @@ app.controller('maintenanceController',['$scope', '$http','$state','$routeParams
 	angular.element(document).ready(function () {
 
 		$scope.data = {};	
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
 		$http.get("//localhost:8443/maintenance/viewMaintenance").then(function(response){
 			$scope.maintenance_requests = response.data;
 			console.log("DISPLAY ALL maintenance requests");
@@ -981,6 +995,12 @@ app.controller('maintenanceController',['$scope', '$http','$state','$routeParams
 			alert("did not view maintenance requests");
 		}	
 		)
+		
+		$scope.checkDateBefore = function (dateString) {
+	    var daysAgo = new Date();
+	    console.log(new Date(dateString) > daysAgo);
+	    return (new Date(dateString) > daysAgo);
+	}
 	});
 	$scope.getMaintenance = function(id){		
 		$scope.dataToShare = [];	  
@@ -1044,7 +1064,8 @@ app.controller('scheduleController', ['$scope','$http','$state','$routeParams','
 
 		$scope.url = "https://localhost:8443/maintenance/viewAllSchedules/"+id;
 		//$scope.dataToShare = [];
-		console.log("GETTING THE EVENT INFO")
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
 		var getBookings = $http({
 			method  : 'GET',
 			url     : 'https://localhost:8443/maintenance/viewAllSchedules/' + id        
@@ -1093,7 +1114,8 @@ app.controller('scheduleController', ['$scope','$http','$state','$routeParams','
 	    console.log(daysAgo);
 	    console.log("*******");
 	    console.log(dateString);
-	    return (new Date(dateString) < daysAgo);
+	    console.log(new Date(dateString) > daysAgo);
+	    return (new Date(dateString) > daysAgo);
 	}
 	/*
 	$scope.checkDateAfter = function (dateString) {

@@ -101,7 +101,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
 
 		if(isAvailable){
-			 Set<Vendor> vendorList = new HashSet<Vendor>();
+			 Set<Vendor> vendorList = maint.getVendors();
 			for(int i = 0; i<vendors.length; i ++){
 				long vId=Long.valueOf(vendors[i]);
 	        Optional<Vendor> ven1 = vendorRepository.getVendorById(vId);
@@ -135,7 +135,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         	  maint.setDescription(description);
         	  maint.setStart(start);
         	  maint.setEnd(end);        	 
-        	  maint.setVendors(vendorList);
+        	  //maint.setVendors(vendorList);
         	  maintenanceRepository.save(maint);      	  
 			}
 			return isAvailable;  

@@ -31,7 +31,7 @@ public class Maintenance {
 	    private Boolean fullday;
 	 */
 	 
-	 @OneToMany
+	 @ManyToMany
 	 @Column(name = "vendors", nullable = false)
 	 @JsonIgnore
 	 private Set<Vendor> vendors = new HashSet<Vendor>();

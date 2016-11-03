@@ -40,9 +40,9 @@
                          <td>{{ x.description }}</td>
                         
                              <td>
-                             		<a  ui-sref="dashboard.updateMaintenance" ng-click="passMaintenance(x)" 
+                             		<a ng-show="checkDateBefore(x.start)"  ui-sref="dashboard.updateMaintenance" ng-click="passMaintenance(x)" 
                              		tooltip-placement="top" tooltip="Update Maintenance"><i class="glyphicon glyphicon-pencil"></i></a>
-                             		<a  ui-sref="dashboard.deleteMaintenance" ng-click="passMaintenance(x)" 
+                             		<a ng-show="checkDateBefore(x.start)" ui-sref="dashboard.deleteMaintenance" ng-click="passMaintenance(x)" 
                              		tooltip-placement="top" tooltip="Delete Maintenance"><i class="glyphicon glyphicon-trash"></i></a>
                              		<a ui-sref="dashboard.viewMaintenanceSchedule" ng-click="passMaintenance(x)" 
 								    tooltip-placement="top" tooltip="View Maintenance Schedule"><i class="glyphicon glyphicon-eye-open"></i></a>
