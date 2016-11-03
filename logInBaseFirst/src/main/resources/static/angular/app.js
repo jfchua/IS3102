@@ -84,7 +84,7 @@
 var app = angular.module('app', [ 'ui.router',
                                   'ngAnimate', 
                                   'ui.calendar',
-                                  'ngStorage', 
+                                 'ngStorage', 
                                   'ngRoute',
                                   'ngResource',
                                   'chart.js',
@@ -105,943 +105,823 @@ var app = angular.module('app', [ 'ui.router',
                                   'color.picker',
                                   'gridster'
                                   ])
-
-//                                Declaring Constants
-                                  .constant('USER_ROLES', {
-                                	  all: '*',
-                                	  admin: 'ROLE_ADMIN',
-                                	  event : 'ROLE_EVENT',
-                                	  user: 'ROLE_USER',
-                                	  superadmin: 'ROLE_SUPERADMIN',
-                                	  finance: 'ROLE_FINANCE',
-                                	  ticket: 'ROLE_TICKET',
-                                	  property: 'ROLE_PROPERTY',
-                                	  organiser: 'ROLE_EXTEVE'
-                                  })
-
-                                  .constant('AUTH_EVENTS', {
-                                	  loginSuccess: 'auth-login-success',
-                                	  loginFailed: 'auth-login-failed',
-                                	  logoutSuccess: 'auth-logout-success',
-                                	  sessionTimeout: 'auth-session-timeout',
-                                	  notAuthenticated: 'auth-not-authenticated',
-                                	  notAuthorized: 'auth-not-authorized'
-                                  })
-//                                All UIRouters
-                                  app.config(
-                                		  function($stateProvider, $urlRouterProvider, $httpProvider, USER_ROLES) { 
-
-                                			  $stateProvider
-                                			  .state('/login',{
-                                				  url:'/login',
-                                				  templateUrl: '/views/mainlogin.html',
-                                				  controller: 'usersController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.all],
-                                				  }
-
-                                			  })
-                                			  .state('/reset',{
-                                				  url:'/reset',
-                                				  templateUrl: '/views/resetPassword.html',
-                                				  controller: 'usersController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.all]
-                                				  }
-                                			  })
-                                			  .state('/resetPassword',{
-                                				  url:'/resetPassword/:id/:token',
-                                				  templateUrl: '/views/resetChangePass.html',
-                                				  controller: 'usersController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.all]
-                                				  }
-                                			  })
-                                			  .state('dashboard',{
-                                				  url:'/dashboard/:org',
-                                				  templateUrl: 'views/index.html',
-                                				  controller: function($scope, $stateParams, $state, $sessionStorage) {
-                                					    $scope.headingTitle = "Pass List";
-                                					    if ($stateParams.org != sessionStorage.getItem('clientOrg')){
-                    										event.preventDefault();
-                                					    	$stateParams.org = sessionStorage.getItem('clientOrg');
-                                					    	
-                                					    	$state.reload();
-                                					    }
-                                					  },
-                                					 
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.user]
-                                				  }
-                                				
-                                			  })
-                                			  .state('dashboard.workspace',{
-                                				  url:'/workspace',
-                                				  templateUrl: 'views/workspace.html',
-                                				  controller: 'workspaceController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.user]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewIcon',{
-                                				  url: '/viewIcon',
-                                				  templateUrl: '/views/viewIcon.html',
-                                				  controller: 'iconController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addIcon',{
-                                				  url: '/addIcon',
-                                				  templateUrl: '/views/addIcon.html',
-                                				  controller: 'addIconController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateIcon',{
-                                				  url: '/updateIcon',
-                                				  templateUrl: '/views/updateIcon.html',
-                                				  controller: 'updateIconController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.uploadCSV',{
-                                				  url: '/uploadCSV',
-                                				  templateUrl: '/views/uploadCSV.html',
-                                				  controller: 'csvController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateRent',{
-                                				  url: '/updateRent',
-                                				  templateUrl: '/views/updateRent.html',
-                                				  controller: 'rentController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addBuilding',{
-                                				  url: '/addBuilding',
-                                				  templateUrl: '/views/addBuilding.html',
-                                				  controller: 'buildingController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewBuilding',{
-                                				  url: '/viewBuilding',
-                                				  templateUrl: '/views/viewBuilding.html',
-                                				  controller: 'buildingController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateBuilding',{
-                                				  url: '/updateBuilding',		
-                                				  templateUrl: '/views/updateBuilding.html',
-                                				  controller: 'updateBuildingController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.deleteBuilding',{
-                                				  url: '/deleteBuilding',
-                                				  templateUrl: '/views/deleteBuilding.html',
-                                				  controller: 'deleteBuildingController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewLevels',{
-                                				  url: '/viewLevels',
-                                				  templateUrl: '/views/viewLevels.html',
-                                				  controller: 'viewLevelController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addLevel',{
-                                				  url: '/addLevel',
-                                				  templateUrl: '/views/addLevel.html',
-                                				  controller: 'addLevelController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateLevel',{
-                                				  url: '/updateLevel',
-                                				  templateUrl: '/views/updateLevel.html',
-                                				  controller: 'levelController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.deleteLevel',{
-                                				  url: '/deleteLevel',
-                                				  templateUrl: '/views/deleteLevel.html',
-                                				  controller: 'levelController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addSpecialRate',{
-                                				  url: '/addSpecialRate',
-                                				  templateUrl: '/views/addSpecialRate.html',
-                                				  controller: 'rateController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewAllRates',{
-                                				  url: '/viewAllRates',
-                                				  templateUrl: '/views/viewAllRates.html',
-                                				  controller: 'rateController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateSpecialRate',{
-                                				  url: '/updateSpecialRate',		
-                                				  templateUrl: '/views/updateSpecialRate.html',
-                                				  controller: 'updateRateController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.deleteSpecialRate',{
-                                				  url: '/deleteSpecialRate',
-                                				  templateUrl: '/views/deleteSpecialRate.html',
-                                				  controller: 'deleteRateController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addEvent',{
-                                				  url:'/addEvent',
-                                				  templateUrl: '/views/addEvent.html',
-                                				  controller: 'eventController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.uploadCompanyLogo',{
-                                				  url:'/uploadCompanyLogo',
-                                				  templateUrl: '/views/uploadCompanyLogo.html',
-                                				  controller: 'logoController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.admin]
-                                				  }
-                                			  })
-
-                                			  .state('dashboard.messageList',{
-                                				  url:'/messageList',
-                                				  templateUrl: '/message/message.html',
-                                				  controller: 'ListController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.user]
-                                				  }
-                                			  })
-                                			  .state('dashboard.view/:id',{
-                                				  url:'/view/:id',
-                                				  templateUrl: '/message/detail.html',
-                                				  controller: 'DetailController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.user]
-                                				  }
-                                			  })
-                                			  .state('dashboard.new',{
-                                				  url:'/new',
-                                				  templateUrl: '/message/new.html',
-                                				  controller: 'NewMailController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.user]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addClientOrg',{
-                                				  url:'/addClientOrg',
-                                				  templateUrl: '/views/addClientOrg.html',
-                                				  controller: 'clientOrgController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.superadmin]
-                                				  }
-                                			  })	
-                                			  .state('dashboard.viewClientOrgs',{
-                                				  url:'/viewClientOrgs',
-                                				  templateUrl: '/views/viewClientOrgs.html',
-                                				  controller: 'viewClientOrgs',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.superadmin]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewDataVisual',{
-                                				  url:'/viewDataVisual',
-                                				  templateUrl: '/views/viewDataVisual.html',
-                                				  controller: 'ChartCtrl',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.user]
-                                				  }
-                                			  })
-                                			  .state('dashboard.createFloorPlan',{
-                                				  url:'/createFloorPlan',
-                                				  templateUrl: '/views/floorPlanAngular.html',
-                                				  controller: 'floorPlanController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })	
-                                			  .state('dashboard.viewFloorPlan',{
-                                				  url:'/viewFloorPlan',
-                                				  templateUrl: '/views/viewFloorPlan.html',
-                                				  controller: 'viewFloorPlanController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			   .state('dashboard.createUnitPlanDefault',{
-                                				  url:'/createUnitPlanDefault',
-                                				  templateUrl: '/views/createUnitPlanDefault.html',
-                                				  controller: 'defaultUnitPlanController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })	
-                                			  .state('dashboard.viewUnitPlanDefault',{
-                                				  url:'/viewUnitPlanDefault',
-                                				  templateUrl: '/views/viewUnitPlanDefault.html',
-                                				  controller: 'viewDefaultUnitPlanController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewMaintenance',{
-                                				  url:'/viewMaintenance',	
-                                				  templateUrl: '/views/viewMaintenance.html',
-                                				  controller: 'maintenanceController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewMaintenanceSchedule',{
-                                				  url:'/viewMaintenanceSchedule',	
-                                				  templateUrl: '/views/viewMaintenanceSchedule.html',
-                                				  controller: 'scheduleController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewBuildingMtn',{
-                                				  url:'/viewBuildingMtn',
-                                				  templateUrl: '/views/viewBuildingMtn.html',
-                                				  controller: 'buildingController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewLevelsMtn',{
-                                				  url:'/viewLevelsMtn',
-                                				  templateUrl: '/views/viewLevelsMtn.html',
-                                				  controller: 'buildingController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewFloorPlanMtn',{
-                                				  url:'/viewFloorPlanMtn',
-                                				  templateUrl: '/views/viewFloorPlanMtn.html',
-                                				  controller: 'floorPlanController',//hailing test hahahahha
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addMaintenance',{
-                                				  url:'/addMaintenance',	
-                                				  templateUrl: '/views/addMaintenance.html',
-                                				  controller: 'addMaintenanceController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateMaintenance',{
-                                				  url:'/updateMaintenance',
-                                				  templateUrl: '/views/updateMaintenance.html',
-                                				  controller: 'updateMaintenanceController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.deleteMaintenance',{
-                                				  url:'/deleteMaintenance',
-                                				  templateUrl: '/views/deleteMaintenance.html',
-                                				  controller: 'deleteMaintenanceController',
-                                				  data:{
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewAllVendors',{
-                                				  url:'/viewAllVendors',
-                                				  templateUrl: '/views/viewAllVendors.html',
-                                				  controller: 'vendorController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addVendor',{
-                                				  url:'/addVendor',	
-                                				  templateUrl: '/views/addVendor.html',
-                                				  controller: 'vendorController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateVendor',{
-                                				  url:'/updateVendor',
-                                				  templateUrl: '/views/updateVendor.html',
-                                				  controller: 'updateVendorController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.deleteVendor',{
-                                				  url:'/deleteVendor',
-                                				  templateUrl: '/views/deleteVendor.html',
-                                				  controller: 'updateVendorController',
-                                				  data:{
-                                					  authorizedRoles: [USER_ROLES.property]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addEventEx',{
-                                				  url:'/addEventEx',
-                                				  templateUrl: '/views/addEventEx.html',
-                                				  //controller: 'eventExternalController',
-                                				  controller: 'addEController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewBuildingEx',{
-                                				  url:'/viewBuildingEx',
-                                				  templateUrl: '/views/viewBuildingEx.html',
-                                				  controller: 'buildingController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewLevelsEx',{
-                                				  url:'/viewLevelsEx',
-                                				  templateUrl: '/views/viewLevelsEx.html',
-                                				  controller: 'buildingController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewFloorPlanEx',{
-                                				  url:'/viewFloorPlanEx',
-                                				  templateUrl: '/views/viewFloorPlanEx.html',
-                                				  controller: 'floorPlanController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.createUnitPlanEx',{
-                                				  url:'/createUnitPlanEx',
-                                				  templateUrl: '/views/createUnitPlanEx.html',
-                                				  controller: 'areaPlanController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewUnitPlanEx',{
-                                				  url:'/viewUnitPlanEx',
-                                				  templateUrl: '/views/viewUnitPlanEx.html',
-                                				  controller: 'viewAreaPlanController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateEventEx',{
-                                				  url:'/updateEventEx',
-                                				  templateUrl: '/views/updateEventEx.html',
-                                				  //controller: 'eventExternalController',
-                                				  controller: 'updateEController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.cancelEventEx',{
-                                				  url:'/cancelEventEx',
-                                				  templateUrl: '/views/cancelEventEx.html',
-                                				  controller: 'deleteEventExController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateCategory',{
-                                				  url:'/updateCategoryEx',
-                                				  templateUrl: '/views/updateCategory.html',
-                                				  controller: 'configureTicketsController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.feedbackEx',{
-                                				  url:'/viewFeedbackEx',
-                                				  templateUrl: '/views/viewFeedback.html',
-                                				  controller: 'eventExternalController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addCategoryEx',{
-                                				  url:'/addCategoryEx',
-                                				  templateUrl: '/views/addCategoryEx.html',
-                                				  controller: 'configureTicketsController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.configureTicketsEx',{
-                                				  url:'/configureTicketsEx',
-                                				  templateUrl: '/views/configureTicketsEx.html',
-                                				  controller: 'configureTicketsController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewAllEventsEx',{
-                                				  url:'/viewAllEventsEx',
-                                				  templateUrl: '/views/viewAllEventsEx.html',
-                                				  controller: 'eventExternalController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewApprovedEventsEx',{
-                                				  url:'/viewApprovedEventsEx',
-                                				  templateUrl: '/views/viewApprovedEventsEx.html',
-                                				  controller: 'viewApprovedEventsController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewToBeApprovedEvents',{
-                                				  url:'/viewToBeApprovedEvents',
-                                				  templateUrl: '/views/viewToBeApprovedEvents.html',
-                                				  controller: 'viewToBeApprovedEventController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewBookingEx',{
-                                				  url:'/viewBookingEx',
-                                				  templateUrl: '/views/viewBookingEx.html',
-                                				  controller: 'bookingController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewPaymentPlansEx',{
-                                				  url:'/viewPaymentPlansEx',
-                                				  templateUrl: '/views/viewPaymentPlansEx.html',
-                                				  controller: 'paymentExController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewPaymentHistoryEx',{
-                                				  url:'/viewPaymentHistoryEx',
-                                				  templateUrl: '/views/viewPaymentHistoryEx.html',
-                                				  controller: 'paymentHistoryExController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewPaymentDetailsEx',{
-                                				  url:'/viewPaymentDetailsEx',
-                                				  templateUrl: '/views/viewPaymentDetailsEx.html',
-                                				  controller: 'paymentDetailsExController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewTicketSalesEx',{
-                                				  url:'/viewTicketSalesEx',
-                                				  templateUrl: '/views/viewTicketSalesEx.html',
-                                				  controller: 'ticketSaleExController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.organiser]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewNotifications',{
-                                				  url:'/viewNotifications',
-                                				  templateUrl: '/views/viewNotifications.html',
-                                				  controller: 'notificationController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateEventStatus',{
-                                				  url:'/updateEventStatus',
-                                				  templateUrl: '/views/updateEventStatus.html',
-                                				  controller: 'viewEventDetailsController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.deleteEvent',{
-                                				  url:'/deleteEvent',
-                                				  templateUrl: '/views/deleteEvent.html',
-                                				  controller: 'deleteEventController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewAllEvents',{
-                                				  url:'/viewAllEvents',
-                                				  templateUrl: '/views/viewAllEvents.html',
-                                				  controller: 'eventController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewApprovedEvents',{
-                                				  url:'/viewApprovedEvents',
-                                				  templateUrl: '/views/viewApprovedEvents.html',
-                                				  controller: 'viewApprovedEventController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewEventDetails',{
-                                				  url:'/viewEventDetails',
-                                				  templateUrl: '/views/viewEventDetails.html',
-                                				  controller: 'viewEventDetailsController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewEventDetailsApproved',{
-                                				  url:'/viewEventDetailsApproved',
-                                				  templateUrl: '/views/viewEventDetailsApproved.html',
-                                				  controller: 'viewEventDetailsController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewEventOrganizers',{
-                                				  url:'/viewEventOrganizers',
-                                				  templateUrl: '/views/viewEventOrganizers.html',
-                                				  controller: 'viewEventOrganiserController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewTicketSales',{
-                                				  url:'/viewTicketSales',
-                                				  templateUrl: '/views/viewTicketSales.html',
-                                				  controller: 'ticketSalesController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewTicketSaleDetailsEvent',{
-                                				  url:'/viewTicketSaleDetailsEvent',
-                                				  templateUrl: '/views/viewTicketSaleDetailsEvent.html',
-                                				  controller: 'ticketSaleDetailsController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.event]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewAllPaymentPlans',{
-                                				  url:'/viewAllPaymentPlans',
-                                				  templateUrl: '/views/viewAllPaymentPlans.html',
-                                				  controller: 'paymentController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addPaymentPlan',{
-                                				  url:'/addPaymentPlan',
-                                				  templateUrl: '/views/addPaymentPlan.html',
-                                				  controller: 'addPaymentController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updatePaymentPlan',{
-                                				  url:'/updatePaymentPlan',
-                                				  templateUrl: '/views/updatePaymentPlan.html',
-                                				  controller: 'updatePaymentController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewPaymentPolicy',{
-                                				  url:'/viewPaymentPolicy',
-                                				  templateUrl: '/views/viewPaymentPolicy.html',
-                                				  controller: 'policyController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.addPaymentPolicy',{
-                                				  url:'/addPaymentPolicy',
-                                				  templateUrl: '/views/addPaymentPolicy.html',
-                                				  controller: 'policyController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updatePaymentPolicy',{
-                                				  url:'/updatePaymentPolicy',
-                                				  templateUrl: '/views/updatePaymentPolicy.html',
-                                				  controller: 'updatePolicyController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewAllOutstandingBalance',{
-                                				  url:'/viewAllOutstandingBalance',
-                                				  templateUrl: '/views/viewAllOutstandingBalance.html',
-                                				  controller: 'balanceController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewListOfEvents',{
-                                				  url:'/viewListOfEvents',
-                                				  templateUrl: '/views/viewListOfEvents.html',
-                                				  controller: 'eventListController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateReceivedPayment',{
-                                				  url:'/updateReceivedPayment',
-                                				  templateUrl: '/views/updateReceivedPayment.html',
-                                				  controller: 'receivedPController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewEventsWithTicketSales',{
-                                				  url:'/viewEventsWithTicketSales',
-                                				  templateUrl: '/views/viewEventsWithTicketSales.html',
-                                				  controller: 'eventWithTicketController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateTicketRevenue',{
-                                				  url:'/updateTicketRevenue',
-                                				  templateUrl: '/views/updateTicketRevenue.html',
-                                				  controller: 'ticketRController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.updateOutgoingPayment',{
-                                				  url:'/updateOutgoingPayment',
-                                				  templateUrl: '/views/updateOutgoingPayment.html',
-                                				  controller: 'outgoingController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewPaymentHistory',{
-                                				  url:'/viewPaymentHistory',
-                                				  templateUrl: '/views/viewPaymentHistory.html',
-                                				  controller: 'paymentHistoryController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('dashboard.generateInvoice',{
-                                				  url:'/generateInvoice',
-                                				  templateUrl: '/views/generateInvoice.html',
-                                				  controller: 'invoiceController',
-                                				  data:{
-                                					  authorizedRoles:[USER_ROLES.finance]
-                                				  }
-                                			  })
-                                			  .state('/401',{
-                                				  url:'/401',
-                                				  templateUrl: '/views/401.html',
-                                				  controller: 'passController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.all]
-                                				  }
-                                			  })	
-                                			  .state('dashboard.createNewUser',{
-                                				  url:'/createNewUser',
-                                				  templateUrl: '/views/createUser.html',
-                                				  controller: 'createNewUserController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.user]
-                                				  }
-                                			  })	
-                                			  .state('dashboard.viewUserList',{
-                                				  url:'/viewUserList',
-                                				  templateUrl: '/views/viewUserList.html',
-                                				  controller: 'viewUserList',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.admin]
-                                				  }
-                                			  })	
-                                			  .state('dashboard.viewAuditLog',{
-                                				  url:'/viewAuditLog',
-                                				  templateUrl: '/views/viewAuditLog.html',
-                                				  controller: 'auditLogController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.admin]
-                                				  }
-                                			  })
-                                			  .state('dashboard.viewUserProfile',{
-                                				  url:'/viewUserProfile',
-                                				  templateUrl: '/views/viewUserProfile.html',
-                                				  controller: 'userProfileController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.user]
-                                				  }
-                                			  })
-                                			  .state('dashboard.editUserProfile',{
-                                				  url:'/editUserProfile',
-                                				  templateUrl: '/views/editUserProfile.html',
-                                				  controller: 'userProfileController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.user]
-                                				  }
-                                			  })
-
-                                			  $urlRouterProvider.otherwise('/login');
-
-
-                                			  /*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
-                                		  })
-                                		  app.factory('httpAuthInterceptor', function ($q, $location) {
-                                			  return {
-                                				  'response': function(response) {
-                                					  return response;
-                                				  },
-                                				  'responseError': function (response) {
-                                					  // NOTE: detect error because of unauthenticated user
-                                					  if ([401, 403].indexOf(response.status) >= 0) {
-                                						  // redirecting to login page
-                                						  event.preventDefault();
-                                						  $location.path("/login");
-                                						  ModalService.showModal({
-
-                                							  templateUrl: "views/errorMessageTemplate.html",
-                                							  controller: "errorMessageModalController",
-                                							  inputs: {
-                                								  message: 'Session timeout!',
-                                							  }
-                                						  }).then(function(modal) {
-                                							  modal.element.modal();
-                                							  modal.close.then(function(result) {
-                                								  console.log("OK");
-                                							  });
-                                						  });
-                                						  $scope.dismissModal = function(result) {
-                                							  close(result, 200); // close, but give 200ms for bootstrap to animate
-
-                                							  console.log("in dissmiss");
-                                						  };
-                                						  $window.location.reload();
-                                						  return response;
-                                					  } else {
-                                						  return $q.reject(response);
-                                					  }
-                                				  }
-                                			  };
-
-
-                                			  $urlRouterProvider.otherwise('/login');
-
-
-                                			  /*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
-                                		  })
-                                		  app.factory('httpAuthInterceptor', function ($q) {
-                                			  return {
-                                				  'response': function(response) {
-                                					  return response;
-                                				  },
-                                				  'responseError': function (response) {
-                                					  // NOTE: detect error because of unauthenticated user
-                                					  if ([401, 403].indexOf(response.status) >= 0) {
-                                						  // redirecting to login page
-                                						  event.preventDefault();
-                                						  $location.path("/login");
-                                						  ModalService.showModal({
-
-                                							  templateUrl: "views/errorMessageTemplate.html",
-                                							  controller: "errorMessageModalController",
-                                							  inputs: {
-                                								  message: 'Session timeout!',
-                                							  }
-                                						  }).then(function(modal) {
-                                							  modal.element.modal();
-                                							  modal.close.then(function(result) {
-                                								  console.log("OK");
-                                							  });
-                                						  });
-                                						  $scope.dismissModal = function(result) {
-                                							  close(result, 200); // close, but give 200ms for bootstrap to animate
-
-                                							  console.log("in dissmiss");
-                                						  };
-                                						  $window.location.reload();
-                                						  return response;
-                                					  } else {
-                                						  return $q.reject(response);
-                                					  }
-                                				  }
-                                			  };
-                                		  })
-
-                                		  app.config(function ($httpProvider) {
-                                			  $httpProvider.interceptors.push('httpAuthInterceptor');
-                                		  });
-
-app.service('Session',  function () {
-	this.create = function (sessionId, userId, userRole) {
-		this.id = sessionId;
-		this.userId = userId;
-		this.userRole = userRole;
-	};
-	this.destroy = function () {
-		this.id = null;
-		this.userId = null;
-		this.userRole = null;
-	};
-
+//Declaring Constants
+.constant('USER_ROLES', {
+	all: '*',
+	admin: 'ROLE_ADMIN',
+	event : 'ROLE_EVENT',
+	user: 'ROLE_USER',
+	superadmin: 'ROLE_SUPERADMIN',
+	finance: 'ROLE_FINANCE',
+	ticket: 'ROLE_TICKET',
+	property: 'ROLE_PROPERTY',
+	organiser: 'ROLE_EXTEVE'
 })
 
+.constant('AUTH_EVENTS', {
+	loginSuccess: 'auth-login-success',
+	loginFailed: 'auth-login-failed',
+	logoutSuccess: 'auth-logout-success',
+	sessionTimeout: 'auth-session-timeout',
+	notAuthenticated: 'auth-not-authenticated',
+	notAuthorized: 'auth-not-authorized'
+})
+//All UIRouters
+app.config(
+		function($stateProvider, $urlRouterProvider, $httpProvider, USER_ROLES) { 
+
+			$stateProvider
+			.state('/login',{
+				url:'/login',
+				templateUrl: '/views/mainlogin.html',
+				controller: 'passController',
+				data: {
+					authorizedRoles: [USER_ROLES.all],
+				}
+
+			})
+			.state('/reset',{
+				url:'/reset',
+				templateUrl: '/views/resetPassword.html',
+				controller: 'passController',
+				data: {
+					authorizedRoles: [USER_ROLES.all]
+				}
+			})
+			.state('/resetPassword',{
+				url:'/resetPassword/:id/:token',
+				templateUrl: '/views/resetChangePass.html',
+				controller: 'passController',
+				data: {
+					authorizedRoles: [USER_ROLES.all]
+				}
+			})
+			.state('dashboard',{
+				url:'/dashboard',
+				templateUrl: 'views/index.html',
+				controller: 'passController',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})
+			.state('dashboard.workspace',{
+				url:'/workspace',
+				templateUrl: 'views/workspace.html',
+				controller: 'workspaceController',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})
+			.state('dashboard.viewIcon',{
+				url: '/viewIcon',
+				templateUrl: '/views/viewIcon.html',
+				controller: 'iconController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.addIcon',{
+				url: '/addIcon',
+				templateUrl: '/views/addIcon.html',
+				controller: 'addIconController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.updateIcon',{
+				url: '/updateIcon',
+				templateUrl: '/views/updateIcon.html',
+				controller: 'updateIconController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.uploadCSV',{
+				url: '/uploadCSV',
+				templateUrl: '/views/uploadCSV.html',
+				controller: 'csvController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.updateRent',{
+				url: '/updateRent',
+				templateUrl: '/views/updateRent.html',
+				controller: 'rentController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.addBuilding',{
+				url: '/addBuilding',
+				templateUrl: '/views/addBuilding.html',
+				controller: 'buildingController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.viewBuilding',{
+				url: '/viewBuilding',
+				templateUrl: '/views/viewBuilding.html',
+				controller: 'buildingController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.updateBuilding',{
+				url: '/updateBuilding',		
+				templateUrl: '/views/updateBuilding.html',
+				controller: 'updateBuildingController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.deleteBuilding',{
+				url: '/deleteBuilding',
+				templateUrl: '/views/deleteBuilding.html',
+				controller: 'deleteBuildingController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.viewLevels',{
+				url: '/viewLevels',
+				templateUrl: '/views/viewLevels.html',
+				controller: 'viewLevelController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.addLevel',{
+				url: '/addLevel',
+				templateUrl: '/views/addLevel.html',
+				controller: 'addLevelController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.updateLevel',{
+				url: '/updateLevel',
+				templateUrl: '/views/updateLevel.html',
+				controller: 'levelController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.deleteLevel',{
+				url: '/deleteLevel',
+				templateUrl: '/views/deleteLevel.html',
+				controller: 'levelController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+            .state('dashboard.addSpecialRate',{
+				url: '/addSpecialRate',
+				templateUrl: '/views/addSpecialRate.html',
+				controller: 'rateController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.viewAllRates',{
+				url: '/viewAllRates',
+				templateUrl: '/views/viewAllRates.html',
+				controller: 'rateController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.updateSpecialRate',{
+				url: '/updateSpecialRate',		
+				templateUrl: '/views/updateSpecialRate.html',
+				controller: 'updateRateController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.deleteSpecialRate',{
+				url: '/deleteSpecialRate',
+				templateUrl: '/views/deleteSpecialRate.html',
+				controller: 'deleteRateController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.addEvent',{
+				url:'/addEvent',
+				templateUrl: '/views/addEvent.html',
+				controller: 'eventController',
+				data: {
+					authorizedRoles: [USER_ROLES.event]
+				}
+			})
+			.state('dashboard.uploadCompanyLogo',{
+				url:'/uploadCompanyLogo',
+				templateUrl: '/views/uploadCompanyLogo.html',
+				controller: 'logoController',
+				data: {
+					authorizedRoles: [USER_ROLES.admin]
+				}
+			})
+
+			.state('dashboard.messageList',{
+				url:'/messageList',
+				templateUrl: '/message/message.html',
+				controller: 'ListController',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})
+			.state('dashboard.view/:id',{
+				url:'/view/:id',
+				templateUrl: '/message/detail.html',
+				controller: 'DetailController',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})
+			.state('dashboard.new',{
+				url:'/new',
+				templateUrl: '/message/new.html',
+				controller: 'NewMailController',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})
+			.state('dashboard.addClientOrg',{
+				url:'/addClientOrg',
+				templateUrl: '/views/addClientOrg.html',
+				controller: 'clientOrgController',
+				data: {
+					authorizedRoles: [USER_ROLES.superadmin]
+				}
+			})	
+			.state('dashboard.viewClientOrgs',{
+				url:'/viewClientOrgs',
+				templateUrl: '/views/viewClientOrgs.html',
+				controller: 'viewClientOrgs',
+				data: {
+					authorizedRoles: [USER_ROLES.superadmin]
+				}
+			})
+			.state('dashboard.viewDataVisual',{
+				url:'/viewDataVisual',
+				templateUrl: '/views/viewDataVisual.html',
+				controller: 'ChartCtrl',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})
+			.state('dashboard.createFloorPlan',{
+				url:'/createFloorPlan',
+				templateUrl: '/views/floorPlanAngular.html',
+				controller: 'floorPlanController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})	
+			.state('dashboard.viewFloorPlan',{
+ 			url:'/viewFloorPlan',
+ 				templateUrl: '/views/viewFloorPlan.html',
+ 				controller: 'viewFloorPlanController',
+ 				data: {
+ 					authorizedRoles: [USER_ROLES.property]
+ 				}
+ 		})
+			.state('dashboard.viewMaintenance',{
+				url:'/viewMaintenance',	
+				templateUrl: '/views/viewMaintenance.html',
+				controller: 'maintenanceController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.viewBuildingMtn',{
+				url:'/viewBuildingMtn',
+				templateUrl: '/views/viewBuildingMtn.html',
+				controller: 'buildingController',
+				data:{
+					authorizedRoles:[USER_ROLES.property]
+				}
+			})
+			.state('dashboard.viewLevelsMtn',{
+				url:'/viewLevelsMtn',
+				templateUrl: '/views/viewLevelsMtn.html',
+				controller: 'buildingController',
+				data:{
+					authorizedRoles:[USER_ROLES.property]
+				}
+			})
+			.state('dashboard.viewFloorPlanMtn',{
+				url:'/viewFloorPlanMtn',
+				templateUrl: '/views/viewFloorPlanMtn.html',
+				controller: 'floorPlanController',//hailing test hahahahha
+				data:{
+					authorizedRoles:[USER_ROLES.property]
+				}
+			})
+			.state('dashboard.addMaintenance',{
+				url:'/addMaintenance',	
+				templateUrl: '/views/addMaintenance.html',
+				controller: 'addMaintenanceController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.updateMaintenance',{
+				url:'/updateMaintenance',
+				templateUrl: '/views/updateMaintenance.html',
+				controller: 'updateMaintenanceController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.deleteMaintenance',{
+				url:'/deleteMaintenance',
+				templateUrl: '/views/deleteMaintenance.html',
+				controller: 'deleteMaintenanceController',
+				data:{
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.viewAllVendors',{
+				url:'/viewAllVendors',
+				templateUrl: '/views/viewAllVendors.html',
+				controller: 'vendorController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.addVendor',{
+				url:'/addVendor',	
+				templateUrl: '/views/addVendor.html',
+				controller: 'vendorController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.updateVendor',{
+				url:'/updateVendor',
+				templateUrl: '/views/updateVendor.html',
+				controller: 'updateVendorController',
+				data: {
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.deleteVendor',{
+				url:'/deleteVendor',
+				templateUrl: '/views/deleteVendor.html',
+				controller: 'updateVendorController',
+				data:{
+					authorizedRoles: [USER_ROLES.property]
+				}
+			})
+			.state('dashboard.addEventEx',{
+				url:'/addEventEx',
+				templateUrl: '/views/addEventEx.html',
+				//controller: 'eventExternalController',
+				controller: 'addEController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.viewBuildingEx',{
+				url:'/viewBuildingEx',
+				templateUrl: '/views/viewBuildingEx.html',
+				controller: 'buildingController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.viewLevelsEx',{
+				url:'/viewLevelsEx',
+				templateUrl: '/views/viewLevelsEx.html',
+				controller: 'buildingController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.viewFloorPlanEx',{
+				url:'/viewFloorPlanEx',
+				templateUrl: '/views/viewFloorPlanEx.html',
+				controller: 'floorPlanController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.createUnitPlanEx',{
+				url:'/createUnitPlanEx',
+				templateUrl: '/views/createUnitPlanEx.html',
+				controller: 'areaPlanController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.updateEventEx',{
+				url:'/updateEventEx',
+				templateUrl: '/views/updateEventEx.html',
+				//controller: 'eventExternalController',
+				controller: 'updateEController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.cancelEventEx',{
+				url:'/cancelEventEx',
+				templateUrl: '/views/cancelEventEx.html',
+				controller: 'deleteEventExController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.updateCategoryEx',{
+				url:'/updateCategoryEx',
+				templateUrl: '/views/updateCategoryEx.html',
+				controller: 'configureTicketsController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.feedbackEx',{
+				url:'/viewFeedbackEx',
+				templateUrl: '/views/viewFeedback.html',
+				controller: 'eventExternalController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.addCategoryEx',{
+				url:'/addCategoryEx',
+				templateUrl: '/views/addCategoryEx.html',
+				controller: 'configureTicketsController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.configureTicketsEx',{
+				url:'/configureTicketsEx',
+				templateUrl: '/views/configureTicketsEx.html',
+				controller: 'configureTicketsController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.viewAllEventsEx',{
+				url:'/viewAllEventsEx',
+				templateUrl: '/views/viewAllEventsEx.html',
+				controller: 'eventExternalController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.viewApprovedEventsEx',{
+				url:'/viewApprovedEventsEx',
+				templateUrl: '/views/viewApprovedEventsEx.html',
+				controller: 'viewApprovedEventsController',
+				data:{
+					authorizedRoles:[USER_ROLES.organiser]
+				}
+			})
+			.state('dashboard.viewToBeApprovedEvents',{
+				url:'/viewToBeApprovedEvents',
+				templateUrl: '/views/viewToBeApprovedEvents.html',
+				controller: 'viewToBeApprovedEventController',
+				data:{
+					authorizedRoles:[USER_ROLES.event]
+				}
+			})
+			.state('dashboard.viewBookingEx',{
+ 				url:'/viewBookingEx',
+ 				templateUrl: '/views/viewBookingEx.html',
+ 				controller: 'bookingController',
+ 				data:{
+ 					authorizedRoles:[USER_ROLES.organiser]
+ 				}
+ 			})
+ 			.state('dashboard.viewPaymentPlansEx',{
+ 				url:'/viewPaymentPlansEx',
+ 				templateUrl: '/views/viewPaymentPlansEx.html',
+ 				controller: 'paymentExController',
+ 				data:{
+ 					authorizedRoles:[USER_ROLES.organiser]
+ 				}
+ 			})
+ 			.state('dashboard.viewPaymentHistoryEx',{
+ 				url:'/viewPaymentHistoryEx',
+ 				templateUrl: '/views/viewPaymentHistoryEx.html',
+ 				controller: 'paymentHistoryExController',
+ 				data:{
+ 					authorizedRoles:[USER_ROLES.organiser]
+ 				}
+ 			})
+ 			.state('dashboard.viewPaymentDetailsEx',{
+ 				url:'/viewPaymentDetailsEx',
+ 				templateUrl: '/views/viewPaymentDetailsEx.html',
+ 				controller: 'paymentDetailsExController',
+ 				data:{
+ 					authorizedRoles:[USER_ROLES.organiser]
+ 				}
+ 			})
+			.state('dashboard.viewNotifications',{
+				url:'/viewNotifications',
+				templateUrl: '/views/viewNotifications.html',
+				controller: 'notificationController',
+				data: {
+					authorizedRoles: [USER_ROLES.event]
+				}
+			})
+			.state('dashboard.updateEventStatus',{
+				url:'/updateEventStatus',
+				templateUrl: '/views/updateEventStatus.html',
+				controller: 'viewEventDetailsController',
+				data:{
+					authorizedRoles:[USER_ROLES.event]
+				}
+			})
+			.state('dashboard.deleteEvent',{
+				url:'/deleteEvent',
+				templateUrl: '/views/deleteEvent.html',
+				controller: 'deleteEventController',
+				data:{
+					authorizedRoles:[USER_ROLES.event]
+				}
+			})
+			.state('dashboard.viewAllEvents',{
+				url:'/viewAllEvents',
+				templateUrl: '/views/viewAllEvents.html',
+				controller: 'eventController',
+				data:{
+					authorizedRoles:[USER_ROLES.event]
+				}
+			})
+			.state('dashboard.viewApprovedEvents',{
+				url:'/viewApprovedEvents',
+				templateUrl: '/views/viewApprovedEvents.html',
+				controller: 'viewApprovedEventController',
+				data:{
+					authorizedRoles:[USER_ROLES.event]
+				}
+			})
+			.state('dashboard.viewEventDetails',{
+				url:'/viewEventDetails',
+				templateUrl: '/views/viewEventDetails.html',
+				controller: 'viewEventDetailsController',
+				data:{
+					authorizedRoles:[USER_ROLES.event]
+				}
+			})
+			.state('dashboard.viewEventDetailsApproved',{
+				url:'/viewEventDetailsApproved',
+				templateUrl: '/views/viewEventDetailsApproved.html',
+				controller: 'viewEventDetailsController',
+				data:{
+					authorizedRoles:[USER_ROLES.event]
+				}
+			})
+			.state('dashboard.viewEventOrganizers',{
+				url:'/viewEventOrganizers',
+				templateUrl: '/views/viewEventOrganizers.html',
+				controller: 'viewEventOrganiserController',
+				data:{
+					authorizedRoles:[USER_ROLES.event]
+				}
+			})
+			.state('dashboard.viewAllPaymentPlans',{
+				url:'/viewAllPaymentPlans',
+				templateUrl: '/views/viewAllPaymentPlans.html',
+				controller: 'paymentController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.addPaymentPlan',{
+				url:'/addPaymentPlan',
+				templateUrl: '/views/addPaymentPlan.html',
+				controller: 'addPaymentController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.updatePaymentPlan',{
+				url:'/updatePaymentPlan',
+				templateUrl: '/views/updatePaymentPlan.html',
+				controller: 'updatePaymentController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.viewPaymentPolicy',{
+				url:'/viewPaymentPolicy',
+				templateUrl: '/views/viewPaymentPolicy.html',
+				controller: 'policyController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.addPaymentPolicy',{
+				url:'/addPaymentPolicy',
+				templateUrl: '/views/addPaymentPolicy.html',
+				controller: 'policyController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.updatePaymentPolicy',{
+				url:'/updatePaymentPolicy',
+				templateUrl: '/views/updatePaymentPolicy.html',
+				controller: 'updatePolicyController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.viewAllOutstandingBalance',{
+				url:'/viewAllOutstandingBalance',
+				templateUrl: '/views/viewAllOutstandingBalance.html',
+				controller: 'balanceController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.viewListOfEvents',{
+				url:'/viewListOfEvents',
+				templateUrl: '/views/viewListOfEvents.html',
+				controller: 'eventListController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+            .state('dashboard.updateReceivedPayment',{
+				url:'/updateReceivedPayment',
+				templateUrl: '/views/updateReceivedPayment.html',
+				controller: 'receivedPController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.viewEventsWithTicketSales',{
+				url:'/viewEventsWithTicketSales',
+				templateUrl: '/views/viewEventsWithTicketSales.html',
+				controller: 'eventWithTicketController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.updateTicketRevenue',{
+				url:'/updateTicketRevenue',
+				templateUrl: '/views/updateTicketRevenue.html',
+				controller: 'ticketRController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.updateOutgoingPayment',{
+				url:'/updateOutgoingPayment',
+				templateUrl: '/views/updateOutgoingPayment.html',
+				controller: 'outgoingController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.viewPaymentHistory',{
+				url:'/viewPaymentHistory',
+				templateUrl: '/views/viewPaymentHistory.html',
+				controller: 'paymentHistoryController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('dashboard.generateInvoice',{
+				url:'/generateInvoice',
+				templateUrl: '/views/generateInvoice.html',
+				controller: 'invoiceController',
+				data:{
+					authorizedRoles:[USER_ROLES.finance]
+				}
+			})
+			.state('/401',{
+				url:'/401',
+				templateUrl: '/views/401.html',
+				controller: 'passController',
+				data: {
+					authorizedRoles: [USER_ROLES.all]
+				}
+			})	
+			.state('dashboard.createNewUser',{
+				url:'/createNewUser',
+				templateUrl: '/views/createUser.html',
+				controller: 'createNewUserController',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})	
+			.state('dashboard.viewUserList',{
+				url:'/viewUserList',
+				templateUrl: '/views/viewUserList.html',
+				controller: 'viewUserList',
+				data: {
+					authorizedRoles: [USER_ROLES.admin]
+				}
+			})	
+			.state('dashboard.viewAuditLog',{
+				url:'/viewAuditLog',
+				templateUrl: '/views/viewAuditLog.html',
+				controller: 'auditLogController',
+				data: {
+					authorizedRoles: [USER_ROLES.admin]
+				}
+			})
+			.state('dashboard.viewUserProfile',{
+				url:'/viewUserProfile',
+				templateUrl: '/views/viewUserProfile.html',
+				controller: 'userProfileController',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})
+			.state('dashboard.editUserProfile',{
+				url:'/editUserProfile',
+				templateUrl: '/views/editUserProfile.html',
+				controller: 'userProfileController',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})
+			.state('dashboard.dataVisual',{
+				url:'/dataVisual',
+				templateUrl: 'views/datavisual.html',
+				controller: 'dataVisualController',
+				data: {
+					authorizedRoles: [USER_ROLES.user]
+				}
+			})
+
+			$urlRouterProvider.otherwise('/login');
 
 
-
-
-
-
-
-
-
-
-app.controller('ApplicationController', function ($scope,
-		USER_ROLES,
-		Auth) {
-	$scope.currentUser = null;
-	$scope.userRoles = USER_ROLES;
-	$scope.isAuthorized = Auth.isAuthorized;
-
-	$scope.setCurrentUser = function (user) {
-		$scope.currentUser = user;
-	};
+			/*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
+		})
+app.factory('httpAuthInterceptor', function ($q) {
+		return {
+		'response': function(response) {
+		                    return response;
+		                 },
+		  'responseError': function (response) {
+		    // NOTE: detect error because of unauthenticated user
+		    if ([401, 403].indexOf(response.status) >= 0) {
+		      // redirecting to login page
+		  	  event.preventDefault();
+		  	  $location.path("/login");
+		  	  alert("Session Timeout!");
+		  	  $window.location.reload();
+		      return response;
+		    } else {
+		      return $q.reject(response);
+		    }
+		  }
+		};
 })
 
-/*    authorised: function(role){
+app.config(function ($httpProvider) {
+		$httpProvider.interceptors.push('httpAuthInterceptor');
+});
+
+		app.service('Session',  function () {
+			this.create = function (sessionId, userId, userRole) {
+				this.id = sessionId;
+				this.userId = userId;
+				this.userRole = userRole;
+			};
+			this.destroy = function () {
+				this.id = null;
+				this.userId = null;
+				this.userRole = null;
+			};
+		})
+
+
+
+
+
+
+
+
+
+
+
+		app.controller('ApplicationController', function ($scope,
+				USER_ROLES,
+				Auth) {
+			$scope.currentUser = null;
+			$scope.userRoles = USER_ROLES;
+			$scope.isAuthorized = Auth.isAuthorized;
+
+			$scope.setCurrentUser = function (user) {
+				$scope.currentUser = user;
+			};
+		})
+		
+		/*    authorised: function(role){
 	    for (i = 0; i<user.authorities.length;i++){
 	    	console.log("Authority present is " + user.authorities[i].authority);
 	    	if (role == user.authorities[i].authority){
@@ -1050,14 +930,16 @@ app.controller('ApplicationController', function ($scope,
 	    }
 	    return false;
 	    }
+
 	}*/
 
 
 
+		
 
-
-/*		app.controller('eventController', ["$scope",'$http', function ($scope, $http){
+		/*		app.controller('eventController', ["$scope",'$http', function ($scope, $http){
 			$scope.viewEvents = function(event){
+
 				console.log("start ALL events");
 				$http.get('//localhost:8443/event/user/view').then(function(response){
 					console.log("DISPLAY ALL events");
@@ -1069,27 +951,28 @@ app.controller('ApplicationController', function ($scope,
 				)
 			}
 		}])
- */
+		 */
 
 
 
-/*dashboard*/
-app.controller('MyController',['$scope','$http','ModalService', function ($scope, $http,ModalService) {
-	var urlBase = "https://localhost:8443/user";
-	function findAllNotifications() {
-		//get all notifications to display
-		$http.get(urlBase + '/notifications/findAllNotifications')
-		.then(function(res){
-			$scope.notifications = res.data;
-		});
-	}
-	/*       success(function (data) {
+		/*dashboard*/
+		app.controller('MyController', function ($scope, $http) {
+			var urlBase = "https://localhost:8443/user";
+			function findAllNotifications() {
+				//get all notifications to display
+				$http.get(urlBase + '/notifications/findAllNotifications')
+				.then(function(res){
+					$scope.notifications = res.data;
+				});
+			}
+			/*       success(function (data) {
 	                if (data._embedded != undefined) {
 	                    $scope.notifications = data._embedded.notifications;
 	                } else {
 	                    $scope.notifications = [];
 	                }
 	                for (var i = 0; i < $scope.notifications.length; i++) {
+
 	                }
 	                $scope.taskName="";
 	                $scope.taskDesc="";
@@ -1100,9 +983,9 @@ app.controller('MyController',['$scope','$http','ModalService', function ($scope
 	            	$scope.notification = res.data;
 	            });*/
 
-	findAllNotifications();
+			findAllNotifications();
 
-	/*	$scope.notifications = [{
+			/*	$scope.notifications = [{
 		Id: 1,
 		Name: 'Kenneth',
 		Selected: false
@@ -1115,7 +998,7 @@ app.controller('MyController',['$scope','$http','ModalService', function ($scope
 		Name: 'IS3102',
 		Selected: false
 	}];*/
-}]);
+		});
 
 /* Precontent
  * CREATE NEW USER
@@ -1142,9 +1025,9 @@ app.controller('MyController',['$scope','$http','ModalService', function ($scope
  */
 //CREATING USER VERSION 2
 
-app.controller("userCtrl",['$scope','ModalService',
+app.controller("userCtrl",
 
-                           function userCtrl($scope,ModalService) {
+		function userCtrl($scope) {
 
 
 
@@ -1210,7 +1093,7 @@ app.controller("userCtrl",['$scope','ModalService',
 	$scope.reset = function () {
 		$scope.model.selected = {};
 	};
-}]);
+});
 
 
 //END OF CREATE NEW USER VER 2
@@ -1219,7 +1102,7 @@ app.controller("userCtrl",['$scope','ModalService',
 
 //Create new user
 
-app.controller('createNewUserController', ['$scope','$http','ModalService',function($scope, $http,ModalService){
+app.controller('createNewUserController', function($scope, $http){
 
 	$scope.genders=['ROLE_USER','ROLE_EVENT','ROlE_ADMIN','ROLE_PROPERTY','ROLE_FINANCE','ROLE_TICKETING','ROLE_EXTEVE'];
 	$scope.selection=[];
@@ -1255,47 +1138,13 @@ app.controller('createNewUserController', ['$scope','$http','ModalService',funct
 			data    :  dataObj//forms user object
 		});
 		create.success(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'New user successfully created',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert("Create New User SUCCESS   "  + JSON.stringify(dataObj))
 		});
 		create.error(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: data,
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert("Error, " + data);
 		});
 	}
-}]);
+});
 
 
 //VIEW USER START
@@ -1336,22 +1185,22 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 
 
 	$scope.checkRole =function(role,profile){
-		var roles=profile.roles;
-		var hasRole=false;
-		var index = 0;
-		angular.forEach(roles, function(item){             
-			if(hasRole==false&&role == roles[index].name){	
-				hasRole=true;
-				console.log(hasRole);
-			}else{
-				index = index + 1;
-			}
-		});      
-		return hasRole;
-
+		     var roles=profile.roles;
+			 var hasRole=false;
+		     var index = 0;
+			  angular.forEach(roles, function(item){             
+			   if(hasRole==false&&role == roles[index].name){	
+					 hasRole=true;
+					  console.log(hasRole);
+			   }else{
+				   index = index + 1;
+			   }
+			  });      
+			  return hasRole;
+			
 	} ;
 
-
+	
 	$scope.Profiles = [];
 
 	$scope.send = function(){
@@ -1368,7 +1217,7 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 
 			$scope.Profiles = response;
 			console.log($scope.Profiles);
-			//	alert('FETCHED ALL USERS SUCCESS!!! ' + JSON.stringify(response));
+		//	alert('FETCHED ALL USERS SUCCESS!!! ' + JSON.stringify(response));
 		});
 		fetch.error(function(response){
 			//alert('FETCH ALL USERS FAILED!!!');
@@ -1431,46 +1280,12 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 		console.log("fetching the user list......." + JSON.stringify(Edit));
 		toEdit.success(function(response){
 
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'User successfully updated',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('Successfully updated the user');
 			$scope.send();
 
 		});
 		toEdit.error(function(response){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: "Server error in updating user",
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('Error, ');
 		});
 
 
@@ -1506,44 +1321,10 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 		console.log("fetching the user list.......");
 		del.success(function(response){
 			//$scope.Profiles = response;
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'User deleted successfully',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('Succesfully deleted the user');
 		});
 		del.error(function(response){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: response,
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('Error deleting user, ' + response);
 		});
 
 
@@ -1569,7 +1350,7 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 //EDIT USER PROFILE
 
 //USER PROFILE CONTROLLER
-app.controller('userProfileController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
+app.controller('userProfileController', ['$scope', '$http', function ($scope, $http) {
 
 	$scope.submit = function(){
 		//alert("SUCCESS");
@@ -1589,206 +1370,40 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 
 		console.log("SAVING THE USER PROFILE");
 		send.success(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'User profile successfully updated',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('User profile successfully changed');
 		});
 		send.error(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: data,
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('Error, ' + data);
 		});
 	};
 
 	$scope.submitChangePass = function(){
 		//alert("SUCCESS");
 		if ( $scope.userProfile.password1 != $scope.userProfile.password2 ){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'The 2 passwords do not match',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert("2 Passwords do not match!");
 			return;
 		}
-		else{
-			var dataObj = {
-					password: $scope.userProfile.password1,
-					oldpassword: $scope.userProfile.password0,
-			};
-			console.log("** Passing data object of " + dataObj);
-
-			var send = $http({
-				method  : 'POST',
-				url     : 'https://localhost:8443/user/changePassword',
-				data    : dataObj //forms user object
-			});
-
-			console.log("SAVING THE USER PROFILE");
-			send.success(function(){
-				ModalService.showModal({
-
-					templateUrl: "views/popupMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: 'Password successfully updated',
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-					});
-				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
-
-					console.log("in dissmiss");
-				};
-			});
-			send.error(function(data){
-				ModalService.showModal({
-
-					templateUrl: "views/popupMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: data,
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-					});
-				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
-
-					console.log("in dissmiss");
-				};
-			});
+		var dataObj = {
+				password: $scope.userProfile.password1,
+				oldpassword: $scope.userProfile.password0,
 		};
-	}
-	
-	$scope.submitChangeSecurity = function(){
-		//alert("SUCCESS");
-		if ( $scope.userProfile.security1 != $scope.userProfile.security2 ){
-			ModalService.showModal({
+		console.log("** Passing data object of " + dataObj);
 
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'The security answers do not match',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/user/changePassword',
+			data    : dataObj //forms user object
+		});
 
-				console.log("in dissmiss");
-			};
-			return;
-		}
-		else{
-			var dataObj = {
-					password: $scope.userProfile.security1,
-					oldpassword: $scope.userProfile.security0,
-			};
-			
+		console.log("SAVING THE USER PROFILE");
+		send.success(function(){
+			alert('You have successfully changed your password');
+		});
+		send.error(function(data){
+			alert('Error, ' + data);
+		});
+	};
 
-			var send = $http({
-				method  : 'POST',
-				url     : 'https://localhost:8443/user/changeSecurity',
-				data    : dataObj //forms user object
-			});
-			
-			send.success(function(){
-				ModalService.showModal({
-
-					templateUrl: "views/popupMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: 'Security Answer successfully updated',
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-					});
-				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
-
-					console.log("in dismiss");
-				};
-			});
-			send.error(function(data){
-				ModalService.showModal({
-
-					templateUrl: "views/popupMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: data,
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-					});
-				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
-
-					console.log("in dissmiss");
-				};
-			});
-		};
-	}
-	
 	$scope.getUserProfileRoles = function(){
 		//alert("SUCCESS");
 
@@ -1846,14 +1461,15 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 
 
 /*1. TO DO LIST*/
-app.controller('taskController',['$scope','$http','$route','$state','ModalService', function($scope, $http, $route,$state,ModalService) {
-
-
-}]);
+app.controller('taskController', function($scope, $http, $route,$state) {
+	
+	  
+});
 /*
 app.controller('DemoCtrl', function ($scope, $http) {
 	$scope.selectedNotifications = null;
 	$scope.testNotifications = [];
+
 	$http({
 		method: 'GET',
 		url: 'https://localhost:8443/todo/getToDoList'
@@ -1867,7 +1483,7 @@ app.controller('DemoCtrl', function ($scope, $http) {
 		alert(result);
 	})
 });
- */
+*/
 //2. ALERT NOTIFICATIONS
 
 app.factory('datfactory', function ($http, $q){
@@ -1887,100 +1503,100 @@ app.factory('datfactory', function ($http, $q){
 	return this;
 });
 
-//DIRECTIVE AND CONTROLLER FOR UI
+// DIRECTIVE AND CONTROLLER FOR UI
 app.directive('topnav',function(){
 	return {
-		templateUrl:'views/topnav.html?v='+window.app_version,
-		restrict: 'E',
-		replace: true,
-		controller: function($scope){
+    templateUrl:'views/topnav.html?v='+window.app_version,
+    restrict: 'E',
+    replace: true,
+    controller: function($scope){
 
-			$scope.showMenu = function(){
+    	$scope.showMenu = function(){
 
-				$('.dashboard-page').toggleClass('push-right');
+	        $('.dashboard-page').toggleClass('push-right');
 
-			}
-			$scope.changeTheme = function(setTheme){
+    	}
+    	$scope.changeTheme = function(setTheme){
 
-				$('<link>')
-				.appendTo('head')
-				.attr({type : 'text/css', rel : 'stylesheet'})
-				.attr('href', 'styles/app-'+setTheme+'.css?v='+window.app_version);
+			$('<link>')
+			  .appendTo('head')
+			  .attr({type : 'text/css', rel : 'stylesheet'})
+			  .attr('href', 'styles/app-'+setTheme+'.css?v='+window.app_version);
 
-				// $.get('/api/change-theme?setTheme='+setTheme);
-
-			}
-			$scope.rightToLeft = function(){
-				// alert('message');
-				$('body').toggleClass('rtl');
-
-				// var t = $('body').hasClass('rtl');
-				// console.log(t);
-
-				if($('body').hasClass('rtl')) {
-					$('.stat').removeClass('hvr-wobble-horizontal');
-				}
-
-
-			}
-
-
+			// $.get('/api/change-theme?setTheme='+setTheme);
 
 		}
-	}
+		$scope.rightToLeft = function(){
+			// alert('message');
+			$('body').toggleClass('rtl');
+
+			// var t = $('body').hasClass('rtl');
+			// console.log(t);
+			
+			if($('body').hasClass('rtl')) {
+				$('.stat').removeClass('hvr-wobble-horizontal');
+			}
+			
+
+		}
+
+
+		
+    }
+}
 });
 
 app.directive('sidebar',function(){
 	return {
-		templateUrl:'views/sidebar.html',
-		restrict: 'E',
-		replace: true,
+    templateUrl:'views/sidebar.html',
+    restrict: 'E',
+    replace: true,
 
-		controller: function($scope){
+    controller: function($scope){
 
-			setTimeout(function(){
-				$('.sidenav-outer').perfectScrollbar();
-			}, 100);
-
-		}
+		setTimeout(function(){
+			$('.sidenav-outer').perfectScrollbar();
+		}, 100);
+		
 	}
+}
 });
 app.directive('menubar',function(){
-	return {
-		templateUrl:'views/menu-bar.html',
-		restrict: 'E',
-		replace: true,
-	}
+		return {
+        templateUrl:'views/menu-bar.html',
+        restrict: 'E',
+        replace: true,
+    }
 })
 app.directive('sidebarwidgets',function(){
-	return {
-		templateUrl:'views/sidebar-widgets.html',
-		restrict: 'E',
-		replace: true,
+		return {
+        templateUrl:'views/sidebar-widgets.html',
+        restrict: 'E',
+        replace: true,
 	}
 });
 app.directive('sidebarProfile',function(){
-	return {
-		templateUrl:'views/sidebar-profile.html',
-		restrict: 'E',
-		replace: true,
-	}
-});
+		return {
+        templateUrl:'views/sidebar-profile.html',
+        restrict: 'E',
+        replace: true,
+    	}
+	});
 app	.directive('sidebarCalendar',function(){
-	return {
-		templateUrl:'views/sidebar-calendar.html',
-		restrict: 'E',
-		replace: true,
-	}
-});
+		return {
+        templateUrl:'views/sidebar-calendar.html',
+        restrict: 'E',
+        replace: true,
+    	}
+	});
 app.directive('sidebarNewsfeed',function(){
-	return {
-		templateUrl:'views/sidebar-newsfeed.html',
-		restrict: 'E',
-		replace: true,
-	}
-});
-app.controller('AlertDemoCtrl',[ '$scope','datfactory','$http','ModalService', function ($scope, datfactory, $http,ModalService){
+		return {
+        templateUrl:'views/sidebar-newsfeed.html',
+        restrict: 'E',
+        replace: true,
+    	}
+	});
+app.controller('AlertDemoCtrl', function ($scope, datfactory, $http){
 	datfactory.getlist()
 	.then(function(arrItems){
 		//$scope.alerts = arrItems;
@@ -1998,48 +1614,18 @@ app.controller('AlertDemoCtrl',[ '$scope','datfactory','$http','ModalService', f
 
 			$scope.alerts.push(arrItems[key].senderName + ": "  + arrItems[key].subject + " - " + arrItems[key].message);
 			$scope.alertsForTopNav.push({'senderName':arrItems[key].senderName,
-				'subject':arrItems[key].subject,
-				'message':arrItems[key].message
-			});
-
+											'subject':arrItems[key].subject,
+											'message':arrItems[key].message
+										});
+			
 			$scope.getId.push(arrItems[key].id);
 			console.log($scope.alerts);
-
+			
 			//$scope.numberOfNotification=$scope.alerts.length;
 		}
 		$scope.numberOfNotification=$scope.alerts.length;
 
 	});
-	
-	 //MODAL FOR VIEWING ONE MESSAGE
-	  $scope.complexResult = null;
-		 $scope.showModal = function(message) {
-			 console.log(message);
-			    // Just provide a template url, a controller and call 'showModal'.
-			    ModalService.showModal({
-			    	
-			    	      templateUrl: "views/viewMessageTemplate.html",
-			    	      controller: "viewMessageController",
-			    	      inputs: {
-			    	        title: "View Message",
-			    	        message:message
-			    	      }
-			    	    }).then(function(modal) {
-			    	      modal.element.modal();
-			    	      modal.close.then(function(result) {
-			    	     console.log("FINISHED VIEWING UNIT");
-			    	      });
-			    	    });
-
-			  };//END SHOWMODAL
-			  
-			  $scope.dismissModal = function(result) {
-				    close(result, 200); // close, but give 200ms for bootstrap to animate
-			
-				    console.log("in dissmiss");
-				 };
-				 
-	
 	$scope.closeAlert = function(index) {
 
 		console.log("ID: " + $scope.getId[index]);
@@ -2049,107 +1635,36 @@ app.controller('AlertDemoCtrl',[ '$scope','datfactory','$http','ModalService', f
 			data    :  $scope.getId[index] //forms user object
 		});
 		del.success(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Notification deleted successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert("Notification deleted")
 			$scope.alerts.splice(index, 1);
 		});
 		del.error(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: data,
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert(data);
 		});
 
 	};
-}]);
-
-//VIEW MESSAGE MODAL
-app.controller('viewMessageController', ['$scope', '$element', 'title', 'close', 'message',
-                                                function($scope, $element, title, close,message) {
-	
-
-		  $scope.title = title;
-		  $scope.message=message;
-		  console.log(title);
-		  console.log(close);
-		  console.log($element);
-		  //  This close function doesn't need to use jQuery or bootstrap, because
-		  //  the button has the 'data-dismiss' attribute.
-		  $scope.close = function() {
-		 	  close({
-		     
-		    }, 500); // close, but give 500ms for bootstrap to animate
-		  };
-
-		  //  This cancel function must use the bootstrap, 'modal' function because
-		  //  the doesn't have the 'data-dismiss' attribute.
-		  $scope.cancel = function() {
-
-		    //  Manually hide the modal.
-		    $element.modal('hide');
-		    
-		    //  Now call close, returning control to the caller.
-		    close({
-		    	
-		    }, 500); // close, but give 500ms for bootstrap to animate
-		  };
-
-		  
-
-	
-}])
-
+});
 app.controller('DropdownCtrl', function ($scope, $log) {
-	$scope.items = [
-	                'The first choice!',
-	                'And another choice for you.',
-	                'but wait! A third!'
+	  $scope.items = [
+	                  'The first choice!',
+	                  'And another choice for you.',
+	                  'but wait! A third!'
 	                ];
 
-	$scope.status = {
-			isopen: false
-	};
+	                $scope.status = {
+	                  isopen: false
+	                };
 
-	$scope.toggled = function(open) {
-		$log.log('Dropdown is now: ', open);
-	};
+	                $scope.toggled = function(open) {
+	                  $log.log('Dropdown is now: ', open);
+	                };
 
-	$scope.toggleDropdown = function($event) {
-		$event.preventDefault();
-		$event.stopPropagation();
-		$scope.status.isopen = !$scope.status.isopen;
-	};
-});
+	                $scope.toggleDropdown = function($event) {
+	                  $event.preventDefault();
+	                  $event.stopPropagation();
+	                  $scope.status.isopen = !$scope.status.isopen;
+	                };
+	              });
 app.controller('sidenavCtrl', function($scope, $location){
 	$scope.selectedMenu = 'dashboard';
 	$scope.collapseVar = 0;
@@ -2171,16 +1686,16 @@ app.controller('sidenavCtrl', function($scope, $location){
 });
 
 app.controller('ButtonsCtrl', function ($scope) {
-	$scope.singleModel = 1;
+	  $scope.singleModel = 1;
 
-	$scope.radioModel = 'Middle';
+	  $scope.radioModel = 'Middle';
 
-	$scope.checkModel = {
-			left: false,
-			middle: true,
-			right: false
-	};
-});
+	  $scope.checkModel = {
+	    left: false,
+	    middle: true,
+	    right: false
+	  };
+	});
 app.controller('progressCtrl', function($scope) {
 	[].slice.call( document.querySelectorAll( 'button.progress-button' ) ).forEach( function( bttn ) {
 		new ProgressButton( bttn, {
@@ -2199,59 +1714,59 @@ app.controller('progressCtrl', function($scope) {
 	});
 });	
 app.controller('ProgressDemoCtrl', function ($scope) {
-	$scope.max = 200;
+	  $scope.max = 200;
 
-	$scope.random = function() {
-		var value = Math.floor((Math.random() * 100) + 1);
-		var type;
+	  $scope.random = function() {
+	    var value = Math.floor((Math.random() * 100) + 1);
+	    var type;
 
-		if (value < 25) {
-			type = 'success';
-		} else if (value < 50) {
-			type = 'info';
-		} else if (value < 75) {
-			type = 'warning';
-		} else {
-			type = 'danger';
-		}
+	    if (value < 25) {
+	      type = 'success';
+	    } else if (value < 50) {
+	      type = 'info';
+	    } else if (value < 75) {
+	      type = 'warning';
+	    } else {
+	      type = 'danger';
+	    }
 
-		$scope.showWarning = (type === 'danger' || type === 'warning');
+	    $scope.showWarning = (type === 'danger' || type === 'warning');
 
-		$scope.dynamic = value;
-		$scope.type = type;
-	};
-	$scope.random();
+	    $scope.dynamic = value;
+	    $scope.type = type;
+	  };
+	  $scope.random();
 
-	$scope.randomStacked = function() {
-		$scope.stacked = [];
-		var types = ['success', 'info', 'warning', 'danger'];
+	  $scope.randomStacked = function() {
+	    $scope.stacked = [];
+	    var types = ['success', 'info', 'warning', 'danger'];
 
-		for (var i = 0, n = Math.floor((Math.random() * 4) + 1); i < n; i++) {
-			var index = Math.floor((Math.random() * 4));
-			$scope.stacked.push({
-				value: Math.floor((Math.random() * 30) + 1),
-				type: types[index]
-			});
-		}
-	};
-	$scope.randomStacked();
-});
+	    for (var i = 0, n = Math.floor((Math.random() * 4) + 1); i < n; i++) {
+	        var index = Math.floor((Math.random() * 4));
+	        $scope.stacked.push({
+	          value: Math.floor((Math.random() * 30) + 1),
+	          type: types[index]
+	        });
+	    }
+	  };
+	  $scope.randomStacked();
+	});
 app.controller('CollapseDemoCtrl', function ($scope) {
-	$scope.isCollapsed = false;
+  $scope.isCollapsed = false;
 });
 
 app.directive('todolist',function(){
-	return {
-		templateUrl:'views/to-do.html?v='+window.app_version,
-		restrict: 'E',
-		replace: true,
-		controller: function($scope){
+		return {
+	    templateUrl:'views/to-do.html?v='+window.app_version,
+	    restrict: 'E',
+	    replace: true,
+    	controller: function($scope){
 
 			setTimeout(function(){
-				$('.todo-list-wrap').perfectScrollbar();
+    			$('.todo-list-wrap').perfectScrollbar();
 			}, 100);
 
-		}
+        }
 	}
 });
 app.controller('calendarCtrl', function ($scope,$http) {
@@ -2259,112 +1774,59 @@ app.controller('calendarCtrl', function ($scope,$http) {
 	var next = new Date();
 	next.setDate(next.getDate() + 3); 
 
-	//$scope.eventSources =[[{start:today,title:"haha"}]];
-	// $scope.eventSources.push([{start:today,end:next,title:"haha",allDay: false}]);
-	//console.log($scope.eventSources);
-	$scope.uiConfig = {
-			calendar:{
-				width: 600,
-				editable: true,
-				header:{
-					left: 'month agendaWeek agendaDay',
-					center: 'title',
-					right: 'today prev,next'
-				},
-				eventClick: $scope.alertEventOnClick,
-				eventDrop: $scope.alertOnDrop,
-				eventResize: $scope.alertOnResize
-			}
-	};
-
-});
+	   //$scope.eventSources =[[{start:today,title:"haha"}]];
+	  // $scope.eventSources.push([{start:today,end:next,title:"haha",allDay: false}]);
+	   //console.log($scope.eventSources);
+	   $scope.uiConfig = {
+			      calendar:{
+			        width: 600,
+			        editable: true,
+			        header:{
+			          left: 'month agendaWeek agendaDay',
+			          center: 'title',
+			          right: 'today prev,next'
+			        },
+			        eventClick: $scope.alertEventOnClick,
+			        eventDrop: $scope.alertOnDrop,
+			        eventResize: $scope.alertOnResize
+			      }
+			    };
+	    
+	});
 
 //FOR MOCK UP DATA VISUAL//NEED TO DELETE LATER
-app.controller('ChartCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
+app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $timeout,$http) {
 	$scope.menuOptions = [
+	                      
+	                              // Dividier
+	                        ['Cat 1', function ($itemScope, $event, modelValue, text, $li) {
+	                           
+	                        }],
+	                     
+	                        ['Cat 2', function ($itemScope, $event, modelValue, text, $li) {
+	                           
+	                        }],
+	                       ,
+	                    ];
 
-	                      // Dividier
-	                      ['All 6 Levels', function ($itemScope, $event, modelValue, text, $li) {
-
-	                      }],
-	                      null, 
-	                      ['Level 1', function ($itemScope, $event, modelValue, text, $li) {
-
-	                      }],
-	                      ['Level 2', function ($itemScope, $event, modelValue, text, $li) {                     
-
-	                      }],
-	                      ['Level 3', function ($itemScope, $event, modelValue, text, $li) {                      
-
-	                      }],
-	                      ['Level 4', function ($itemScope, $event, modelValue, text, $li) {                      
-
-	                      }],
-	                      ['Level 5', function ($itemScope, $event, modelValue, text, $li) {                        
-
-	                      }],
-	                      ['Level 6', function ($itemScope, $event, modelValue, text, $li) {                  
-
-	                      }],
-	                      ];
-
-	$scope.xaxis=[
-
-	              // null,        // Dividier
+     $scope.pie = {
+    	labels : ["Cat 1", "Cat 2", "Unsold"],
+    		data: [24, 36, 15],
+    	     // data : [$http.get('//localhost:8443/BI/dataVisual')],
+    		colours: ['#3CA2E0','#F0AD4E','#7AB67B']
+     
+    };
 
 
-	              ['Units', function ($itemScope, $event, modelValue, text, $li) {
+    $scope.datapoints=[{"x":10,"top-1":10,"top-2":15},
+                       {"x":20,"top-1":100,"top-2":35},
+                       {"x":30,"top-1":15,"top-2":75},
+                       {"x":40,"top-1":50,"top-2":45}];
+    $scope.datacolumns=[{"id":"top-1","type":"spline"},
+                        {"id":"top-2","type":"spline"}];
+    $scope.datax={"id":"x"};
 
-	              }],
-	              ['Time', function ($itemScope, $event, modelValue, text, $li) {                     
-
-	              }],
-	              ];
-	$scope.line = {
-			labels: ['1', '2', '3', '4', '5', '6'],
-			data: [
-			       [65, 59, 80, 81, 56, 55, 80]
-
-			       ],
-			       colours: ['#3CA2E0','#F0AD4E','#7AB67B','#D9534F','#3faae3'],
-			       onClick: function (points, evt) {
-			    	   console.log(points, evt);
-			       }
-
-	};
-
-	$scope.bar = {
-			labels: ['2006', '2007', '2008', '2009', '2010', '2011', '2012'],
-			data: [
-			       [65, 59, 80, 81, 56, 55, 40],
-			       [28, 48, 40, 19, 86, 27, 90]
-			       ],
-			       colours: ['#3CA2E0','#F0AD4E','#7AB67B','#D9534F','#3faae3']
-
-	};
-
-	$scope.donut = {
-			labels: ["Download Sales", "In-Store Sales", "Mail-Order Sales"],
-			data: [300, 500, 100],
-			colours: ['#3CA2E0','#F0AD4E','#7AB67B','#D9534F','#3faae3']
-	};
-
-	$scope.pie = {
-			labels : ["Download Sales", "In-Store Sales", "Mail-Order Sales"],
-			data : [300, 500, 100],
-			colours: ['#3CA2E0','#F0AD4E','#7AB67B','#D9534F','#3faae3']
-	};
-
-
-	$scope.datapoints=[{"x":10,"top-1":10,"top-2":15},
-	                   {"x":20,"top-1":100,"top-2":35},
-	                   {"x":30,"top-1":15,"top-2":75},
-	                   {"x":40,"top-1":50,"top-2":45}];
-	$scope.datacolumns=[{"id":"top-1","type":"spline"},
-	                    {"id":"top-2","type":"spline"}];
-	$scope.datax={"id":"x"};
-
-
+    
 }]);
 
 
@@ -2407,7 +1869,7 @@ app.controller('DetailController', function($scope, $routeParams){
 	$scope.message = messages[$routeParams.id];
 });
 
-app.controller('NewMailController',['$scope','$state','$http','ModalService', function($scope, $state, $http,ModalService){
+app.controller('NewMailController', function($scope, $state, $http){
 	var getMsg = $http({
 		method  : 'GET',
 		url     : 'https://localhost:8443/getUsersToSendTo',
@@ -2424,43 +1886,26 @@ app.controller('NewMailController',['$scope','$state','$http','ModalService', fu
 		console.log('Senders Gotten');
 	});
 	getMsg.error(function(data){
-		ModalService.showModal({
-
-			templateUrl: "views/errorMessageTemplate.html",
-			controller: "errorMessageModalController",
-			inputs: {
-				message: data,
-			}
-		}).then(function(modal) {
-			modal.element.modal();
-			modal.close.then(function(result) {
-				console.log("OK");
-			});
-		});
-		$scope.dismissModal = function(result) {
-			close(result, 200); // close, but give 200ms for bootstrap to animate
-
-			console.log("in dissmiss");
-		};
+		alert(data);
 	});
 
 	$scope.currentlySelected = null;
 
 	$scope.selectRecipient = function(){
-
+		
 		var duplicate = false;
 		var index = 0;
-		angular.forEach($scope.selectedContacts, function() {
-			if(duplicate==false&&$scope.currentlySelected == $scope.selectedContacts[index])
-				duplicate = true;
-			else
-				index = index + 1;
-		});
-		console.log(duplicate);
+	    angular.forEach($scope.selectedContacts, function() {
+	        if(duplicate==false&&$scope.currentlySelected == $scope.selectedContacts[index])
+	        	duplicate = true;
+	        else
+	        	index = index + 1;
+	    });
+	    console.log(duplicate);
 		if(!duplicate){
 			$scope.selectedContacts.push($scope.currentlySelected);
 		}
-
+		
 	}
 
 	$scope.deleteRecipient = function(recipient){
@@ -2468,28 +1913,6 @@ app.controller('NewMailController',['$scope','$state','$http','ModalService', fu
 	}
 
 	$scope.send = function(){
-
-		if ( $scope.selectedContacts < 1 ){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Please select at least 1 user to send a message to',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			}; 
-			return;
-		}
 		var dataObj = {
 				subject: $scope.mail.subject,
 				recipient: $scope.selectedContacts,
@@ -2508,50 +1931,16 @@ app.controller('NewMailController',['$scope','$state','$http','ModalService', fu
 
 		console.log("Sending the message");
 		sendMsg.success(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Message sent successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('Message sent successfully!');
 		});
 		sendMsg.error(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: data,
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert(data);
 		});
 
 		//alert('message sent');
 		$state.go('dashboard.workspace');
 	};
-}]);
+});
 
 //===========================================================================
 //fake emails:
@@ -2645,198 +2034,7 @@ app.service('shareData', function($window) {
 //========Test================
 
 //========Event================
-app.controller('addEController', ['$scope', '$http','$location','$routeParams','shareData','ModalService', function ($scope, $http,$location, $routeParams, shareData,ModalService){
-	console.log("start selecting venue");
-	var getBuild = $http({
-		method  : 'GET',
-		url     : 'https://localhost:8443/building/viewBuildings',
-	});
-	console.log("GETTING THE BUILDINGS");
-	getBuild.success(function(response){
-		$scope.buildings = response;
-		$scope.selectedBuilding;
-		console.log("RESPONSE IS" + JSON.stringify(response));
-
-		console.log('Buildings Gotten');
-	});
-	getBuild.error(function(){
-		ModalService.showModal({
-
-			templateUrl: "views/errorMessageTemplate.html",
-			controller: "errorMessageModalController",
-			inputs: {
-				message: 'Error in getting building!',
-			}
-		}).then(function(modal) {
-			modal.element.modal();
-			modal.close.then(function(result) {
-				console.log("OK");
-			});
-		});
-		$scope.dismissModal = function(result) {
-			close(result, 200); // close, but give 200ms for bootstrap to animate
-
-			console.log("in dissmiss");
-		};
-	});
-	$scope.currentlySelectedBuilding;
-	$scope.selectBuild = function(){
-		$scope.selectedBuilding=$scope.currentlySelectedBuilding;
-	}
-	console.log("finish selecting building");
-
-	$scope.getLevel = function(id){
-		$scope.dataToShare = [];
-		//var id = $scope.currentlySelected;
-		$scope.url = "https://localhost:8443/level/viewLevels/"+id;
-		//$scope.dataToShare = [];
-		console.log("GETTING THE ALL LEVELS INFO")
-		var getLevels = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/level/viewLevels/'+id,
-		});
-		console.log("Getting the levels using the url: " + $scope.url);
-		getLevels.success(function(response){
-			$scope.levels = response;
-			$scope.selectedLevel;
-			console.log("RESPONSE IS" + JSON.stringify(response));
-
-			console.log('Levels Gotten');
-		});
-		getLevels.error(function(){
-			alert('Get levels error!!!!!!!!!!');
-		});		
-		$scope.currentlySelectedLevel;
-		$scope.selectLevel = function(){
-			$scope.selectedLevel=$scope.currentlySelectedLevel;
-		}
-		console.log("finish selecting level");		
-	}
-
-	$scope.selectedUnits=[];
-	$scope.getUnit = function(levelId){
-		//$scope.url = "https://localhost:8443/property/viewUnits/";
-
-		$scope.levelID = levelId; 
-		var dataObj = {id: $scope.levelID};
-		console.log("GETTING THE ALL UNITS INFO")
-		var getUnits = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/property/viewUnits/',
-			data    : dataObj,
-		});
-		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
-		getUnits.success(function(response){
-			$scope.units = response;
-			console.log("RESPONSE IS" + JSON.stringify(response));
-
-			console.log('Units Gotten');
-		});
-		getUnits.error(function(){
-			alert('Get units error!!!!!!!!!!');
-		});		
-
-		$scope.currentlySelectedUnit;
-		$scope.selectUnit = function(){
-			$scope.selectedUnits.push($scope.currentlySelectedUnit);
-		}
-
-		$scope.deleteUnit = function(unit){
-			var index = $scope.selectedUnits.indexOf(unit);
-			$scope.selectedUnits.splice(index, 1);  
-		}
-		console.log("finish selecting units");		
-	}
-
-
-	$scope.addEvent = function(){
-		console.log("start adding");
-		$scope.data = {};
-
-		var dataObj = {
-				units: $scope.selectedUnits,
-				event_title: $scope.event.event_title,
-				event_content: $scope.event.event_content,
-				event_description: $scope.event.event_description,
-				event_approval_status: "processing",
-				event_start_date: ($scope.event.event_start_date).toString(),
-				event_end_date: ($scope.event.event_end_date).toString(),
-				filePath: $scope.event.filePath,
-		};
-		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/event/addEvent',
-			data    : dataObj //forms user object
-		});
-
-		console.log("SAVING THE Event");
-		send.success(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Event saved successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-		send.error(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Error in saving event! Check whether the unit is available',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-	};
-
-
-}]);
-
-app.controller('updateEController', ['$scope', '$http','$location','$routeParams','shareData','ModalService', function ($scope, $http,$location, $routeParams, shareData,ModalService){
-	$scope.init= function(){
-		$scope.event1 = JSON.parse(shareData.getData());
-		$scope.event1.event_start_date = new Date($scope.event1.event_start_date);
-		$scope.event1.event_end_date = new Date($scope.event1.event_end_date);
-		var dataObj = {			
-				units:$scope.event1.units,
-				event_title: $scope.event1.event_title,
-				event_content: $scope.event1.event_content,
-				event_description: $scope.event1.event_description,
-				event_approval_status: $scope.event1.event_approval_status,						
-				event_start_date: $scope.event1.event_start_date,						
-				event_end_date: $scope.event1.event_end_date,
-				filePath: $scope.event1.filePath,
-		};
-		$scope.event = angular.copy($scope.event1)
-
-		var url = "https://localhost:8443/event/updateEvent";
-		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
-	}
-
+app.controller('addEController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
 	console.log("start selecting venue");
 	var getBuild = $http({
 		method  : 'GET',
@@ -2868,7 +2066,7 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 		var getLevels = $http({
 			method  : 'GET',
 			url     : 'https://localhost:8443/level/viewLevels/'+id,
-		});
+	});
 		console.log("Getting the levels using the url: " + $scope.url);
 		getLevels.success(function(response){
 			$scope.levels = response;
@@ -2886,11 +2084,11 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 		}
 		console.log("finish selecting level");		
 	}
-
+	
 	$scope.selectedUnits=[];
 	$scope.getUnit = function(levelId){
 		//$scope.url = "https://localhost:8443/property/viewUnits/";
-
+		
 		$scope.levelID = levelId; 
 		var dataObj = {id: $scope.levelID};
 		console.log("GETTING THE ALL UNITS INFO")
@@ -2898,7 +2096,7 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 			method  : 'POST',
 			url     : 'https://localhost:8443/property/viewUnits/',
 			data    : dataObj,
-		});
+	});
 		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
 		getUnits.success(function(response){
 			$scope.units = response;
@@ -2909,7 +2107,7 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 		getUnits.error(function(){
 			alert('Get units error!!!!!!!!!!');
 		});		
-
+		
 		$scope.currentlySelectedUnit;
 		$scope.selectUnit = function(){
 			$scope.selectedUnits.push($scope.currentlySelectedUnit);
@@ -2921,7 +2119,147 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 		}
 		console.log("finish selecting units");		
 	}
+	
+	
+	$scope.addEvent = function(){
+		console.log("start adding");
+		$scope.data = {};
 
+		var dataObj = {
+				units: $scope.selectedUnits,
+				event_title: $scope.event.event_title,
+				event_content: $scope.event.event_content,
+				event_description: $scope.event.event_description,
+				event_approval_status: "processing",
+				event_start_date: ($scope.event.event_start_date).toString(),
+				event_end_date: ($scope.event.event_end_date).toString(),
+				filePath: $scope.event.filePath,
+		};
+		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/event/addEvent',
+			data    : dataObj //forms user object
+		});
+
+		console.log("SAVING THE Event");
+		send.success(function(){
+			alert('Event IS SAVED!');
+		});
+		send.error(function(){
+			alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
+		});
+	};
+	
+	
+}]);
+
+app.controller('updateEController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData){
+	$scope.init= function(){
+		$scope.event1 = JSON.parse(shareData.getData());
+		$scope.event1.event_start_date = new Date($scope.event1.event_start_date);
+		$scope.event1.event_end_date = new Date($scope.event1.event_end_date);
+		var dataObj = {			
+				units:$scope.event1.units,
+				event_title: $scope.event1.event_title,
+				event_content: $scope.event1.event_content,
+				event_description: $scope.event1.event_description,
+				event_approval_status: $scope.event1.event_approval_status,						
+				event_start_date: $scope.event1.event_start_date,						
+				event_end_date: $scope.event1.event_end_date,
+				filePath: $scope.event1.filePath,
+		};
+		$scope.event = angular.copy($scope.event1)
+
+		var url = "https://localhost:8443/event/updateEvent";
+		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
+	}
+	
+	console.log("start selecting venue");
+	var getBuild = $http({
+		method  : 'GET',
+		url     : 'https://localhost:8443/building/viewBuildings',
+	});
+	console.log("GETTING THE BUILDINGS");
+	getBuild.success(function(response){
+		$scope.buildings = response;
+		$scope.selectedBuilding;
+		console.log("RESPONSE IS" + JSON.stringify(response));
+
+		console.log('Buildings Gotten');
+	});
+	getBuild.error(function(){
+		alert('Get building error!!!!!!!!!!');
+	});
+	$scope.currentlySelectedBuilding;
+	$scope.selectBuild = function(){
+		$scope.selectedBuilding=$scope.currentlySelectedBuilding;
+	}
+	console.log("finish selecting building");
+
+	$scope.getLevel = function(id){
+		$scope.dataToShare = [];
+		//var id = $scope.currentlySelected;
+		$scope.url = "https://localhost:8443/level/viewLevels/"+id;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE ALL LEVELS INFO")
+		var getLevels = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/level/viewLevels/'+id,
+	});
+		console.log("Getting the levels using the url: " + $scope.url);
+		getLevels.success(function(response){
+			$scope.levels = response;
+			$scope.selectedLevel;
+			console.log("RESPONSE IS" + JSON.stringify(response));
+
+			console.log('Levels Gotten');
+		});
+		getLevels.error(function(){
+			alert('Get levels error!!!!!!!!!!');
+		});		
+		$scope.currentlySelectedLevel;
+		$scope.selectLevel = function(){
+			$scope.selectedLevel=$scope.currentlySelectedLevel;
+		}
+		console.log("finish selecting level");		
+	}
+	
+	$scope.selectedUnits=[];
+	$scope.getUnit = function(levelId){
+		//$scope.url = "https://localhost:8443/property/viewUnits/";
+		
+		$scope.levelID = levelId; 
+		var dataObj = {id: $scope.levelID};
+		console.log("GETTING THE ALL UNITS INFO")
+		var getUnits = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/property/viewUnits/',
+			data    : dataObj,
+	});
+		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
+		getUnits.success(function(response){
+			$scope.units = response;
+			console.log("RESPONSE IS" + JSON.stringify(response));
+
+			console.log('Units Gotten');
+		});
+		getUnits.error(function(){
+			alert('Get units error!!!!!!!!!!');
+		});		
+		
+		$scope.currentlySelectedUnit;
+		$scope.selectUnit = function(){
+			$scope.selectedUnits.push($scope.currentlySelectedUnit);
+		}
+
+		$scope.deleteUnit = function(unit){
+			var index = $scope.selectedUnits.indexOf(unit);
+			$scope.selectedUnits.splice(index, 1);  
+		}
+		console.log("finish selecting units");		
+	}
+	
 	$scope.getUnitsId = function(){
 		var dataObj ={id: $scope.selectedUnits};
 		console.log("units to be get are "+JSON.stringify(dataObj));
@@ -2974,357 +2312,272 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 
 		console.log("UPDATING THE EVENT");
 		send.success(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Event updated successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('EVENT IS SAVED!');
 		});
 		send.error(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Error in saving the event. Check if the unit is available',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
 		});
 	};	
 }]);
 
 app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
-	$scope.toggleLeft = buildDelayedToggler('left');
-	$scope.toggleRight = buildToggler('right');
-	$scope.isOpenRight = function(){
-		return $mdSidenav('right').isOpen();
+    $scope.toggleLeft = buildDelayedToggler('left');
+    $scope.toggleRight = buildToggler('right');
+    $scope.isOpenRight = function(){
+      return $mdSidenav('right').isOpen();
+    };
+
+    /**
+     * Supplies a function that will continue to operate until the
+     * time is up.
+     */
+    function debounce(func, wait, context) {
+      var timer;
+
+      return function debounced() {
+        var context = $scope,
+            args = Array.prototype.slice.call(arguments);
+        $timeout.cancel(timer);
+        timer = $timeout(function() {
+          timer = undefined;
+          func.apply(context, args);
+        }, wait || 10);
+      };
+    }
+
+    /**
+     * Build handler to open/close a SideNav; when animation finishes
+     * report completion in console
+     */
+    function buildDelayedToggler(navID) {
+      return debounce(function() {
+        // Component lookup should always be available since we are not using `ng-if`
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }, 200);
+    }
+
+    function buildToggler(navID) {
+      return function() {
+        // Component lookup should always be available since we are not using `ng-if`
+        $mdSidenav(navID)
+          .toggle()
+          .then(function () {
+            $log.debug("toggle " + navID + " is done");
+          });
+      }
+    }
+  })
+  .controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+    $scope.close = function () {
+      // Component lookup should always be available since we are not using `ng-if`
+      $mdSidenav('left').close()
+        .then(function () {
+          $log.debug("close LEFT is done");
+        });
+
+    };
+  })
+  .controller('RightCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+    $scope.close = function () {
+      // Component lookup should always be available since we are not using `ng-if`
+      $mdSidenav('right').close()
+        .then(function () {
+          $log.debug("close RIGHT is done");
+        });
+    };
+  });
+
+
+app.controller('eventExternalController', ['$scope', '$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+
+
+$scope.viewEvents = function(){
+	$scope.data = {};
+	//var tempObj= {id:1};
+	//console.log(tempObj)
+	$http.get("//localhost:8443/event/viewAllEvents").then(function(response){
+		$scope.events = response.data;
+		console.log("DISPLAY ALL EVENT");
+		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
+
+	},function(response){
+		alert("did not view all events");
+		//console.log("response is : ")+JSON.stringify(response);
+	}	
+	)	
+}
+
+$scope.viewApprovedEvents = function(){
+	$scope.data = {};
+	//var tempObj= {id:1};
+	//console.log(tempObj)
+	$http.get("//localhost:8443/event/viewApprovedEvents").then(function(response){
+		$scope.events = response.data;
+		console.log("DISPLAY ALL EVENT");
+		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
+
+	},function(response){
+		alert("did not view approved events");
+		//console.log("response is : ")+JSON.stringify(response);
+	}	
+	)	
+}
+
+$scope.getEvent = function(id){		
+	$scope.dataToShare = [];	  
+	$scope.shareMyData = function (myValue) {
+		//$scope.dataToShare = myValue;
+		//shareData.addData($scope.dataToShare);
+	}
+	$scope.url = "https://localhost:8443/event/getEvent1/"+id;
+	//$scope.dataToShare = [];
+	console.log("GETTING THE EVENT INFO")
+	var getEvent = $http({
+		method  : 'GET',
+		url     : 'https://localhost:8443/event/getEvent1/' + id        
+	});
+	console.log("Getting the event using the url: " + $scope.url);
+	getEvent.success(function(response){
+		//$scope.dataToShare.push(id);
+		//$location.path("/viewLevels/"+id);
+		console.log('GET EVENT SUCCESS! ' + JSON.stringify(response));
+		console.log("ID IS " + id);
+		shareData.addData(JSON.stringify(response));
+		//$location.path("/viewLevels");
+	});
+	getEvent.error(function(response){
+		$location.path("/viewAllEventsEx");
+		console.log('GET Event FAILED! ' + JSON.stringify(response));
+	});
+
+}
+
+$scope.getEventById= function(){
+
+	$scope.event1 = JSON.parse(shareData.getData());
+	$scope.event1.event_start_date = new Date($scope.event1.event_start_date);
+	$scope.event1.event_end_date = new Date($scope.event1.event_end_date);
+	var dataObj = {			
+			units:$scope.event1.units,
+			event_title: $scope.event1.event_title,
+			event_content: $scope.event1.event_content,
+			event_description: $scope.event1.event_description,
+			event_approval_status: $scope.event1.event_approval_status,						
+			event_start_date: $scope.event1.event_start_date,						
+			event_end_date: $scope.event1.event_end_date,
+			filePath: $scope.event1.filePath,
 	};
+	$scope.event = angular.copy($scope.event1)
 
-	/**
-	 * Supplies a function that will continue to operate until the
-	 * time is up.
-	 */
-	function debounce(func, wait, context) {
-		var timer;
+	var url = "https://localhost:8443/event/updateEvent";
+	console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
+}
 
-		return function debounced() {
-			var context = $scope,
-			args = Array.prototype.slice.call(arguments);
-			$timeout.cancel(timer);
-			timer = $timeout(function() {
-				timer = undefined;
-				func.apply(context, args);
-			}, wait || 10);
-		};
+
+
+
+$scope.deleteEvent = function(){
+	$scope.data = {};
+	console.log("Start deleting event");
+	$scope.event = JSON.parse(shareData.getData());
+	console.log($scope.event.id);
+	var tempObj ={eventId:$scope.event.id};
+	console.log("fetch id "+ tempObj);
+	//var buildings ={name: $scope.name, address: $scope.address};
+	$http.post("//localhost:8443/event/deleteEvent", JSON.stringify(tempObj)).then(function(response){
+		//$scope.buildings = response.data;
+		console.log("Cancel the EVENT");
+	},function(response){
+		alert("DID NOT Cancel EVENT");
+		//console.log("response is : ")+JSON.stringify(response);
+	}	
+	)
+
+}
+$scope.getEventByIdForDelete= function(){
+
+	//var buildings ={name: $scope.name, address: $scope.address};
+	//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
+	$scope.event = JSON.parse(shareData.getData());
+
+	var url = "https://localhost:8443/event/deleteEvent";
+	console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event);
+}
+
+
+$scope.getBookings = function(id){		
+	$scope.dataToShare = [];	  
+	$scope.shareMyData = function (myValue) {
+		//$scope.dataToShare = myValue;
+		//shareData.addData($scope.dataToShare);
 	}
+	$scope.url = "https://localhost:8443/booking/viewAllBookings/"+id;
+	//$scope.dataToShare = [];
+	console.log("GETTING THE EVENT INFO")
+	var getBookings = $http({
+		method  : 'GET',
+		url     : 'https://localhost:8443/booking/viewAllBookings/' + id        
+	});
+	console.log("Getting the bookings using the url: " + $scope.url);
+	getBookings.success(function(response){
+		//$scope.dataToShare.push(id);
+		//$location.path("/viewLevels/"+id);
+		console.log('GET Booking SUCCESS! ' + JSON.stringify(response));
+		console.log("ID IS " + id);
+		$scope.bookings = response.data;
+		shareData.addData(JSON.stringify(response));
+		//$location.path("/viewLevels");
+	});
+	getBookings.error(function(response){
+		$location.path("/viewAllEventsEx");
+		console.log('GET Booking FAILED! ' + JSON.stringify(response));
+	});
 
-	/**
-	 * Build handler to open/close a SideNav; when animation finishes
-	 * report completion in console
-	 */
-	function buildDelayedToggler(navID) {
-		return debounce(function() {
-			// Component lookup should always be available since we are not using `ng-if`
-			$mdSidenav(navID)
-			.toggle()
-			.then(function () {
-				$log.debug("toggle " + navID + " is done");
-			});
-		}, 200);
-	}
-
-	function buildToggler(navID) {
-		return function() {
-			// Component lookup should always be available since we are not using `ng-if`
-			$mdSidenav(navID)
-			.toggle()
-			.then(function () {
-				$log.debug("toggle " + navID + " is done");
-			});
-		}
-	}
-})
-.controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
-	$scope.close = function () {
-		// Component lookup should always be available since we are not using `ng-if`
-		$mdSidenav('left').close()
-		.then(function () {
-			$log.debug("close LEFT is done");
-		});
-
-	};
-})
-.controller('RightCtrl', function ($scope, $timeout, $mdSidenav, $log) {
-	$scope.close = function () {
-		// Component lookup should always be available since we are not using `ng-if`
-		$mdSidenav('right').close()
-		.then(function () {
-			$log.debug("close RIGHT is done");
-		});
-	};
-});
-
-
-app.controller('eventExternalController', ['$scope', '$http','$location','$routeParams','shareData', 'ModalService',function ($scope, $http,$location, $routeParams, shareData,ModalService) {
-
-
-	$scope.viewEvents = function(){
-		$scope.data = {};
-		//var tempObj= {id:1};
-		//console.log(tempObj)
-		$http.get("//localhost:8443/event/viewAllEvents").then(function(response){
-			$scope.events = response.data;
-			console.log("DISPLAY ALL EVENT");
-			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
-
-		},function(response){
-			alert("did not view all events");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)	
-	}
-
-	$scope.viewApprovedEvents = function(){
-		$scope.data = {};
-		//var tempObj= {id:1};
-		//console.log(tempObj)
-		$http.get("//localhost:8443/event/viewApprovedEvents").then(function(response){
-			$scope.events = response.data;
-			console.log("DISPLAY ALL EVENT");
-			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
-
-		},function(response){
-			alert("did not view approved events");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)	
-	}
-
-	$scope.getEvent = function(id){		
-		$scope.dataToShare = [];	  
-		$scope.shareMyData = function (myValue) {
-			//$scope.dataToShare = myValue;
-			//shareData.addData($scope.dataToShare);
-		}
-		$scope.url = "https://localhost:8443/event/getEvent1/"+id;
-		//$scope.dataToShare = [];
-		console.log("GETTING THE EVENT INFO")
-		var getEvent = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/event/getEvent1/' + id        
-		});
-		console.log("Getting the event using the url: " + $scope.url);
-		getEvent.success(function(response){
-			//$scope.dataToShare.push(id);
-			//$location.path("/viewLevels/"+id);
-			console.log('GET EVENT SUCCESS! ' + JSON.stringify(response));
-			console.log("ID IS " + id);
-			shareData.addData(JSON.stringify(response));
-			//$location.path("/viewLevels");
-		});
-		getEvent.error(function(response){
-			$location.path("/viewAllEventsEx");
-			console.log('GET Event FAILED! ' + JSON.stringify(response));
-		});
-
-	}
-
-	$scope.getEventById= function(){
-
-		$scope.event1 = JSON.parse(shareData.getData());
-		$scope.event1.event_start_date = new Date($scope.event1.event_start_date);
-		$scope.event1.event_end_date = new Date($scope.event1.event_end_date);
-		var dataObj = {			
-				units:$scope.event1.units,
-				event_title: $scope.event1.event_title,
-				event_content: $scope.event1.event_content,
-				event_description: $scope.event1.event_description,
-				event_approval_status: $scope.event1.event_approval_status,						
-				event_start_date: $scope.event1.event_start_date,						
-				event_end_date: $scope.event1.event_end_date,
-				filePath: $scope.event1.filePath,
-		};
-		$scope.event = angular.copy($scope.event1)
-
-		var url = "https://localhost:8443/event/updateEvent";
-		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
-	}
-
-
-
-
-	$scope.deleteEvent = function(){
-		$scope.data = {};
-		console.log("Start deleting event");
-		$scope.event = JSON.parse(shareData.getData());
-		console.log($scope.event.id);
-		var tempObj ={eventId:$scope.event.id};
-		console.log("fetch id "+ tempObj);
-		//var buildings ={name: $scope.name, address: $scope.address};
-		$http.post("//localhost:8443/event/deleteEvent", JSON.stringify(tempObj)).then(function(response){
-			//$scope.buildings = response.data;
-			console.log("Cancel the EVENT");
-		},function(response){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Error in cancelling event!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)
-
-	}
-	$scope.getEventByIdForDelete= function(){
-
-		//var buildings ={name: $scope.name, address: $scope.address};
-		//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
-		$scope.event = JSON.parse(shareData.getData());
-
-		var url = "https://localhost:8443/event/deleteEvent";
-		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event);
-	}
-
-
-	$scope.getBookings = function(id){		
-		$scope.dataToShare = [];	  
-		$scope.shareMyData = function (myValue) {
-			//$scope.dataToShare = myValue;
-			//shareData.addData($scope.dataToShare);
-		}
-		$scope.url = "https://localhost:8443/booking/viewAllBookings/"+id;
-		//$scope.dataToShare = [];
-		console.log("GETTING THE EVENT INFO")
-		var getBookings = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/booking/viewAllBookings/' + id        
-		});
-		console.log("Getting the bookings using the url: " + $scope.url);
-		getBookings.success(function(response){
-			//$scope.dataToShare.push(id);
-			//$location.path("/viewLevels/"+id);
-			console.log('GET Booking SUCCESS! ' + JSON.stringify(response));
-			console.log("ID IS " + id);
-			$scope.bookings = response.data;
-			shareData.addData(JSON.stringify(response));
-			//$location.path("/viewLevels");
-		});
-		getBookings.error(function(response){
-			$location.path("/viewAllEventsEx");
-			console.log('GET Booking FAILED! ' + JSON.stringify(response));
-		});
-
-	}
+}
 
 
 
 }]);
 
 
-app.controller('bookingController', ['$scope','$http','$location','$routeParams','shareData','ModalService', function ($scope, $http,$location, $routeParams, shareData,ModalService) {
-	$scope.viewBookings = function(){
-		$scope.data = {};
-		//var tempObj= {id:1};
-		//console.log(tempObj)
-		console.log("DISPLAY ALL BOOKINGS");
-		$scope.bookings = JSON.parse(shareData.getData());
-		var url = "https://localhost:8443/booking/viewAllBookings";	
-		console.log("BOOKING DATA ARE OF THE FOLLOWING: " + $scope.bookings);	
-	};
+app.controller('bookingController', ['$scope','$http','$location','$routeParams','shareData', function ($scope, $http,$location, $routeParams, shareData) {
+$scope.viewBookings = function(){
+	$scope.data = {};
+	//var tempObj= {id:1};
+	//console.log(tempObj)
+	console.log("DISPLAY ALL BOOKINGS");
+	$scope.bookings = JSON.parse(shareData.getData());
+	var url = "https://localhost:8443/booking/viewAllBookings";	
+    console.log("BOOKING DATA ARE OF THE FOLLOWING: " + $scope.bookings);	
+};
 
-	$scope.deleteBooking = function(id){
-		var r = confirm("Confirm cancel? \nEither OK or Cancel.");
-		if (r == true) {
-			$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
-			var deleteBooking = $http({
-				method  : 'POST',
-				url     : 'https://localhost:8443/booking/deleteBooking/' + id        
-			});
-			console.log("Deleting the event using the url: " + $scope.url);
-			deleteBooking.success(function(response){
-				ModalService.showModal({
-
-					templateUrl: "views/popupMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: 'Booking deleted successsfully!',
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-					});
-				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
-
-					console.log("in dissmiss");
-				};
-				console.log("ID IS " + id);
-			});
-			deleteBooking.error(function(response){
-				ModalService.showModal({
-
-					templateUrl: "views/errorMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: 'Did not manage to delete the booking',
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-					});
-				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
-
-					console.log("in dissmiss");
-				};
-				$location.path("/viewAllEventsEx");
-				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
-			});
-		} else {
-			alert("Cancel deleting booking");
-		}
-		//document.getElementById("demo").innerHTML = txt;	
-		/*
+$scope.deleteBooking = function(id){
+    var r = confirm("Confirm cancel? \nEither OK or Cancel.");
+    if (r == true) {
+    	$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
+    	var deleteBooking = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/booking/deleteBooking/' + id        
+		});
+    	console.log("Deleting the event using the url: " + $scope.url);
+		deleteBooking.success(function(response){
+			alert('DELETE BOOKING SUCCESS! ');
+			console.log("ID IS " + id);
+		});
+		deleteBooking.error(function(response){
+			alert('DELETE BOOKING FAIL! ');
+			$location.path("/viewAllEventsEx");
+			console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
+		});
+    } else {
+        alert("Cancel deleting booking");
+    }
+    //document.getElementById("demo").innerHTML = txt;	
+	/*
 	$scope.data = {};
 	console.log("Start deleting event");
 	$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
@@ -3342,31 +2595,156 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 		$location.path("/viewAllEventsEx");
 		console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
 	});*/
-
-		/*
+			
+	/*
 	$scope.event = JSON.parse(shareData.getData());
 	console.log($scope.event.id);
 	var tempObj ={eventId:$scope.event.id};
 	console.log("fetch id "+ tempObj);
+	
 	$http.post("//localhost:8443/event/deleteEvent", JSON.stringify(tempObj)).then(function(response){
+		
 		console.log("Cancel the EVENT");
 	},function(response){
 		alert("DID NOT Cancel EVENT");
+		
 	}	
 	)*/
-	}
+}
 }])
 
 
 //=======End of test===========
-//FLOORPLAN
+
+
+//Unit Plan of Event used by event organiser
+app.controller('areaPlanController', function ($scope, $http,shareData) {
+	jQuery = window.jQuery;
+	console.log(jQuery);
+	console.log(jQuery.ui);
+
+
+	var eventIdObj;
+	var eventId;
+	$scope.areas=[];
+	$scope.viewArea=function(){
+		$scope.areas=[];
+		alert("viewing existing areas");
+		var event = JSON.parse(shareData.getData());
+		console.log("test hailing");
+		console.log(event.id);
+		eventId=event.id;
+
+		//get event id from previous page
+		eventIdObj={
+				id:eventId
+		}
+		//retrieve areas when page loaded
+		$http.post('//localhost:8443/event/viewAreas', JSON.stringify(eventIdObj)).then(function(response){
+			console.log("pure response is "+response.data);
+
+			console.log("test anglar.fromJon"+angular.fromJson(response.data));
+			$scope.areas=angular.fromJson(response.data);
+
+		},function(response){
+			console.log("DID NOT view");
+			console.log("response is "+angularfromJson(response.data).error);
+		})
+
+
+	}
+
+	$scope.addArea = function () {  
+		alert("Please edit information of the new area in the table below.");
+		$scope.areas.push({"id": 0,"areaName": "#area","description": "#","square": {"left": 100,"top": 100,"height": 100,"width": 100, "color": "coral","type": "rect"}});
+		console.log("test "+JSON.stringify($scope.areas));
+
+	} 
+
+	$scope.saveAreas = function () {   
+
+		console.log("Test: start saving areas");
+		var saveAreas=$scope.areas;
+		var areasString=angular.toJson(saveAreas);
+		console.log(areasString);
+
+		var dataObj = {
+				id: eventId,
+				Areas:{
+					Area:saveAreas
+				}
+		};
+
+		console.log(dataObj);
+
+		$http.post('/event/saveAreas', JSON.stringify(dataObj)).then(function(response){
+			console.log("pure response is "+JSON.stringify(response.data));
+			alert("Saved. Please click on \"Start\" button to view.");
+
+		},function(response){//else is not saved successfully
+			console.log("DID NOT SAVE");
+			console.log("response is "+JSON.stringify(response.data));
+		})
+
+
+	} 
+
+	$scope.remove = function(area) { 
+		var index = $scope.areas.indexOf(area);
+		$scope.areas.splice(index, 1);     
+	}
+
+	$scope.showDetails= function (thisArea) {   
+		//console.log(thisArea.id); 
+
+		$scope.showDetail="id: "+ thisArea.id+", areaName: " + thisArea.areaName+", description: " + thisArea.description+"left: " + thisArea.square.left + ", top: " +  thisArea.square.top+ ", height: " + thisArea.square.height + ", width: " + thisArea.square.width;    
+
+	} 
+	$scope.resize = function(area,evt,ui) {
+
+		console.log("resize");
+
+		area.square.width = evt.size.width;//working restrict A
+		area.square.height = evt.size.height;
+		area.square.left = parseInt(evt.position.left);
+		area.square.top = parseInt(evt.position.top);
+	}
+	$scope.drag = function(area,evt,ui) {
+
+		console.log(evt);
+		console.log("DRAGGING");
+		area.square.left = parseInt(evt.position.left);
+		area.square.top = parseInt(evt.position.top);
+		area.square.width = evt.helper.context.clientWidth;
+		area.square.height = evt.helper.context.clientHeight;
+	}
+
+
+
+	/*
+	    var areaIds="";
+	    $scope.addToAreaIds=function(areaId){
+	        areaIds+=(areaId+" ");
+	        console.log(areaIds);
+	    }
+
+	    $scope.passAreaIds=function(){
+	    	var stringToPassArea=areaIds.substring(0,areaIds.length-1);
+	    	console.log(stringToPassArea);
+	    	var objToPassArea={'areas':stringToPassArea};
+	    	shareData.addData(JSON.stringify(objToPassArea));
+	    	console.log(JSON.stringify(objToPassArea));
+	    }
+	 */
+
+})
 
 
 
 //===========================================================================
 //6. Create client organisation.
 //===========================================================================
-app.controller('clientOrgController', ['$scope', '$http','$location','ModalService', function ($scope, $http, $location,ModalService) {
+app.controller('clientOrgController', ['$scope', '$http','$location', function ($scope, $http, $location) {
 	$scope.genders=['Property System','Event Management System','Finance System'];
 	$scope.selection=[];
 
@@ -3404,45 +2782,11 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 
 		console.log("SAVING THE CLIENT ORG");
 		send.success(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Client organisation saved successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('Client organisation successfully saved' );
 			$location.path("/dashboard");
 		});
 		send.error(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: data,
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert(data);
 		});
 	};
 
@@ -3465,8 +2809,8 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 
 //////////VIEW CLIENT ORGS//////////
 
-app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
-                                  function($scope, $http,$location,ModalService) {
+app.controller('viewClientOrgs', ['$scope','$http', '$location',
+                                  function($scope, $http,$location) {
 
 	$scope.genders=['Property System','Event Management System','Finance System'];
 	$scope.selection=[];
@@ -3499,17 +2843,17 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 		fetch.success(function(response){
 
 			$scope.Profiles = response;
-			//	alert('FETCHED ALL orgs SUCCESS!!! ' + JSON.stringify(response));
+		//	alert('FETCHED ALL orgs SUCCESS!!! ' + JSON.stringify(response));
 		});
 		fetch.error(function(response){
-			alert('FETCH ALL orgs FAILED!!!');
+		alert('FETCH ALL orgs FAILED!!!');
 		});
 
 		//alert('done with viewing users');
 		//$location.path('/viewUserList');
 	}
 	$scope.send();
-
+	
 
 	$scope.entity = {};
 	$scope.name = "";
@@ -3529,7 +2873,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 
 
 		$scope.updateValue = function(name){
-			//alert("addgin " + name + " to " + $scope.name);
+		//alert("addgin " + name + " to " + $scope.name);
 			$scope.name = name;
 		};
 
@@ -3551,24 +2895,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 		console.log("fetching the user list.......");
 		toEdit.success(function(response){
 			$scope.Profiles = response;
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Client organisation updated successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('Succesfully updated the client organisation');
 			$scope.send();
 		});
 		toEdit.error(function(response){
@@ -3576,25 +2903,25 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 		});
 
 	}
-
+	
 
 	$scope.checkRole =function(role,profile){
-		var roles=profile.systemSubscriptions;
-		console.log(roles);
-		var hasRole=false;
-		var index = 0;
-		angular.forEach(roles, function(item){             
-			if(hasRole==false&&role == roles[index]){	
-				hasRole=true;
-				console.log(hasRole);
-			}else{
-				index = index + 1;
-			}
-		});      
-		return hasRole;
-
+		     var roles=profile.systemSubscriptions;
+		     console.log(roles);
+			 var hasRole=false;
+		     var index = 0;
+			  angular.forEach(roles, function(item){             
+			   if(hasRole==false&&role == roles[index]){	
+					 hasRole=true;
+					  console.log(hasRole);
+			   }else{
+				   index = index + 1;
+			   }
+			  });      
+			  return hasRole;
+			
 	} ;
-
+	
 
 	$scope.delete = function(index){
 		//$scope.Profiles.splice(index,1);
@@ -3622,44 +2949,10 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 		console.log("fetching the user list.......");
 		del.success(function(response){
 			//$scope.Profiles = response;
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Client organisation deleted successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('Successfully delete ');
 		});
 		del.error(function(response){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Did not managed to delete the client organisation',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('DELETED THE client Org FAILED!!!');
 		});
 
 
@@ -3697,7 +2990,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 //===========================================================================
 //7. Audit Logs
 //===========================================================================
-app.controller('auditLogController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
+app.controller('auditLogController', ['$scope', '$http', function ($scope, $http) {
 	$scope.submit = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -3725,44 +3018,10 @@ app.controller('auditLogController', ['$scope', '$http','ModalService', function
 			var file = new Blob([data], {type: 'application/pdf'});
 			var fileURL = URL.createObjectURL(file);
 			window.open(fileURL);
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Download successful!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('DOWNLOADED!');
 		});
 		send.error(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Error in downloading',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('DOWNLOAD GOT ERROR!');
 		});
 	};
 
@@ -3798,7 +3057,7 @@ app.controller('auditLogController', ['$scope', '$http','ModalService', function
 
 //TODOLIST CALENDAR////
 
-app.controller('UsersIndexController', ['$scope','$http','ModalService', function($scope,$http,ModalService) {
+app.controller('UsersIndexController', ['$scope','$http', function($scope,$http) {
 	// ... code omitted ...
 	// Dates can be passed as strings or Date objects 
 	$scope.events = [];
@@ -3856,54 +3115,15 @@ app.controller('UsersIndexController', ['$scope','$http','ModalService', functio
 
 //END TODOLIST CALENDAR//
 
-//ERROR MESSAGE MODAL TEMPLATE:
-app.controller('errorMessageModalController', ['$scope','message','close',
-                                               function($scope, message,close) {
-	$scope.message = message;
-	$scope.close = function() {
-		close({
-			unit:$scope.unit
-		}, 399); // close, but give 500ms for bootstrap to animate
-	};
-
-	//  This cancel function must use the bootstrap, 'modal' function because
-	//  the doesn't have the 'data-dismiss' attribute.
-	$scope.cancel = function() {
-
-		//  Manually hide the modal.
-		$element.modal('hide');
-
-		//  Now call close, returning control to the caller.
-		close({
-			unit:$scope.unit
-		}, 399); // close, but give 500ms for bootstrap to animate
-	};
-
-
-
-}
-])
-
-app.controller('YesNoController', ['$scope', 'close','message', function($scope, close,message) {
-	$scope.message = message;
-	$scope.close = function(result) {
-		close(result, 500); // close, but give 500ms for bootstrap to animate
-	};
-
-}])
-
-///////
-
-
-
 
 //UPLOAD LOGO CONTROLLER//
-app.controller('logoController', ['$scope', 'Upload', '$timeout','$http','ModalService' ,function ($scope, Upload, $timeout,$http,ModalService ) {
+app.controller('logoController', ['$scope', 'Upload', '$timeout','$http', function ($scope, Upload, $timeout,$http ) {
 	/* $scope.submit = function() {
 	      if ($scope.form.file.$valid && $scope.file) {
 	        $scope.upload($scope.file);
 	      }
 	    };
+
 	    // upload on file select or drop
 	    $scope.upload = function (file) {
 	        Upload.upload({
@@ -3950,24 +3170,7 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http','ModalS
 		file.upload.then(function (response) {
 			$timeout(function () {
 				file.result = response.data;
-				ModalService.showModal({
-
-					templateUrl: "views/popupMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: 'Upload successful!',
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-					});
-				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
-
-					console.log("in dissmiss");
-				};
+				alert("is success " + JSON.stringify(response.data));
 				getLogo();
 			});
 		}, function (response) {
@@ -3978,24 +3181,24 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http','ModalS
 			file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
 		})
 	};
-
+	
 
 	$scope.themeSelected;
 	$scope.changeTheme = function(setTheme){
 		$scope.themeSelected=setTheme;
 		$('<link>')
-		.appendTo('head')
-		.attr({type : 'text/css', rel : 'stylesheet'})
-		.attr('href', 'css/styles/app-'+setTheme+'.css');
+		  .appendTo('head')
+		  .attr({type : 'text/css', rel : 'stylesheet'})
+		  .attr('href', 'css/styles/app-'+setTheme+'.css');
 
 		// $.get('/api/change-theme?setTheme='+setTheme);
 
 	}
-
+	
 	$scope.saveTheme = function(){
 
 		var dataObj={theme:$scope.themeSelected};
-
+		
 		var send = $http({
 			method  : 'POST',
 			url     : 'https://localhost:8443//saveTheme',
@@ -4005,48 +3208,15 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http','ModalS
 
 		console.log("SAVING THEME");
 		send.success(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Theme saved successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('THEME IS SAVED');
 		});
 		send.error(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Theme could not be saved!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
+			alert('THEME IS NOT SAVED!');
 		});
 	}
-
+	
 }]);
 
 
 ////////ASSIGNING FUNCTIONS BASED ON ROLES
+
