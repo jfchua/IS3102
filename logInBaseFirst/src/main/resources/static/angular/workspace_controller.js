@@ -54,7 +54,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				console.log(response);
 				console.log(response.data);
 				$scope.userInfo = angular.fromJson(response.data);
-				//console.log($scope.userInfo);
+				console.log($scope.userInfo.client);
 				console.log("DISPLAY current user");
 				if(response.data.theme){
 							$('<link>')
