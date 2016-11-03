@@ -46,7 +46,7 @@
                              <td>{{ x.unit }}</td>
                              <td>{{ x.vendors }}</td>
                                <td>                               
-                             		<a ng-show="checkDateBefore(x.start)" 
+                             		<a ng-show="checkDateBefore(x.start) && checkSchedule()" 
                              		ng-click="deleteSchedule(x.id)" tooltip-placement="top" tooltip="Delete Maintenance Schedule">
                              		<i class="glyphicon glyphicon-trash"></i></a>   
                              </td>
