@@ -15,10 +15,13 @@ import org.springframework.stereotype.Service;
 import application.entity.BookingAppl;
 import application.entity.Building;
 import application.entity.ClientOrganisation;
+import application.entity.Event;
 import application.entity.Level;
 import application.entity.Maintenance;
 import application.entity.MaintenanceSchedule;
+import application.entity.Role;
 import application.entity.Unit;
+import application.entity.User;
 import application.entity.Vendor;
 import application.repository.BookingApplRepository;
 import application.repository.MaintenanceRepository;
@@ -433,6 +436,85 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 			}
 		return bookings;
 	}
+
+@Override
+public boolean checkAvailability(ClientOrganisation client, User user, String unitsId, Date start, Date end) {
+	Set<User> users = userRepository.getAllUsers(client);
+	boolean doesHave = false;
+	String[] units = unitsId.split(" ");
+	System.out.println(units[0]);
+	for(User u: users){
+		Set<Role> roles = u.getRoles();
+		for(Role r: roles){
+			if(r.getName().equals("ROLE_PROPERTY") && u.equals(user))
+				doesHave = true;
+		}
+	}
+	if(!doesHave)
+		return false;
+	Date d1 = start;
+	Date d2 = end;
+	if(d1.compareTo(d2)>0)
+		return false;
+	boolean isAvailable = true;
+	for(int i = 0; i<units.length; i ++){
+		long uId = Long.valueOf(units[i]);
+		Optional<Unit> unit1 = unitRepository.getUnitById(uId);
+		if(unit1.isPresent()&&isAvailable){
+			Unit unit = unit1.get();
+			if(!checkUnit(client, unit.getId()))
+				return false;
+			int count = bookingApplRepository.getNumberOfBookings(uId, d1, d2);
+			int count2 = maintenanceScheduleRepository.getNumberOfMaintenanceSchedules(uId, d1, d2);
+			if((count != 0)||(count2 != 0)){
+				isAvailable = false;
+				break;
+			}
+		}
+	}
+	return isAvailable;
+}
+
+@Override
+public boolean checkAvailabilityForUpdate(ClientOrganisation client, User user, long maintId, String unitsId,
+		Date start, Date end) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean deleteSchedule(ClientOrganisation client, long scheduleId) {
+	Set<User> eventOrgs = userRepository.getAllUsers(client);
+	boolean doesHave = false;
+	  try{		
+			Optional<MaintenanceSchedule> sche1 = getScheduleById(scheduleId);
+			MaintenanceSchedule sche = null;
+			if(sche1.isPresent()){		
+				System.out.println("inside TRY");				
+				 sche =sche1.get();
+				Maintenance mt = sche.getMaintenance();
+				Set<MaintenanceSchedule> sches = mt.getMaintenanceSchedule();
+				Unit unit = sche.getUnit();
+				Set<MaintenanceSchedule> sches1 = unit.getMaintenanceSchedule();
+					sches.remove(sche);
+					mt.setMaintenanceSchedule(sches);
+					sches1.remove(sche);
+					unit.setMaintenanceSchedule(sches1);
+					unitRepository.flush();
+					maintenanceRepository.flush();
+					maintenanceScheduleRepository.delete(sche);
+			}
+			}catch(Exception e){
+				return false;
+			}
+			return true;
+			}
+
+@Override
+public Optional<MaintenanceSchedule> getScheduleById(long id) {
+	LOGGER.debug("Getting booking={}", id);
+	return Optional.ofNullable(maintenanceScheduleRepository.findOne(id));
+}
 
 
 }

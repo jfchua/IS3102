@@ -1,0 +1,61 @@
+ 
+	<div ng-cloak ng-controller="scheduleController as scheduleCtrl" >
+        
+        	<div class="clearfix">
+                            <ol class="breadcrumb no-bg no-m-t">
+                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="dashboard.viewMaintenance" ng-click="passMaintenance()">View Maintenance Requests</a></li>                          
+                                <li><a>View Maintenance Schedule</a></li>
+                            </ol>
+            </div>
+      <div class="col-md-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Maintenance Schedules  
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+					<table class="table table-hover">
+						<thead>
+
+                               <tr>
+                               <th><i></i> Schedule ID </th>
+                               <th><i></i> Maintenance Id </th>
+                               <th><i></i> Start Date </th>
+                               <th><i></i> End Date </th>
+                               <th><i></i> Unit Booked </th>
+                               <th><i></i> Vendor Name(s) </th>
+                               <th><i></i> Action </th>
+                               
+                               </tr>
+                        </thead>
+                            <tbody>
+                             <tr ng-repeat="x in schedules">
+                             <td>{{ x.id }}</td>
+                             <td>{{ x.maint}}</td>
+                             <td>{{ x.start }}</td>
+                             <td>{{ x.end }}</td>
+                             <td>{{ x.unit }}</td>
+                             <td>{{ x.vendors }}</td>
+                               <td>
+                               <button class="naviaBtn naviaBlue" ng-click="alertShow = (alertShow == 4 ? -1 : 4)"><i class="fa fa-exclamation-circle fa-2x" ng-show="ppt.checkDate(ppt.Dates[index].key)"></i>recent denials</button> 
+                               
+                             		<a ng-show="checkDateBefore(x.start)" 
+                             		ng-click="deleteSchedule(x.id)" tooltip-placement="top" tooltip="Delete Maintenance Schedule">
+                             		<i class="glyphicon glyphicon-trash"></i></a>   
+                             </td>
+                             </tr>
+                             </tbody>
+                          </table>
+                    </div>
+			</div>
+		</div>
+	</div>

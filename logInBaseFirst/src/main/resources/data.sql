@@ -153,8 +153,11 @@ INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room
 VALUES('2016-10-26 22:00:00', '2016-10-25 10:00:00', 12, 1, 1, 1);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-11-12 22:00:00', '2016-11-11 10:00:00', 12, 1, 2, 1);
---INSERT INTO unit(description, length, rent, rentable, unit_number, width)
---VALUES('1123',1,2,true,6,4);
+INSERT INTO maintenance VALUES (1, 'Repair projector', '2016-11-02 22:00:00', '2016-11-01 10:00:00');
+INSERT INTO maintenance_vendors VALUES (1, 1);
+INSERT INTO maintenance_vendors VALUES (1, 2);
+INSERT INTO schedule VALUES (1, '2016-11-02 22:00:00', 1, '2016-11-01 10:00:00', 1, 1);
+INSERT INTO schedule VALUES (2, '2016-11-02 22:00:00', 2, '2016-11-01 10:00:00', 1, 2);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)
 --VALUES('333',1,2,true,7,4);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)

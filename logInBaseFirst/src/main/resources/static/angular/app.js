@@ -424,6 +424,14 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
+                                			  .state('dashboard.viewMaintenanceSchedule',{
+                                				  url:'/viewMaintenanceSchedule',	
+                                				  templateUrl: '/views/viewMaintenanceSchedule.html',
+                                				  controller: 'scheduleController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.property]
+                                				  }
+                                			  })
                                 			  .state('dashboard.viewBuildingMtn',{
                                 				  url:'/viewBuildingMtn',
                                 				  templateUrl: '/views/viewBuildingMtn.html',

@@ -25,6 +25,7 @@ public class Maintenance {
 	 
 	 @Column(name = "description", nullable = false)
 	 private String description;
+
 	 /*
 	 @Column(name = "fullday", nullable = false)
 	    private Boolean fullday;
