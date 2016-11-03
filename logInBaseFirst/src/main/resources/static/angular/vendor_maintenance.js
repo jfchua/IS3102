@@ -1088,15 +1088,21 @@ app.controller('scheduleController', ['$scope','$http','$state','$routeParams','
 		}
 	}
 
-	this.checkDateBefore = function (dateString) {
+	$scope.checkDateBefore = function (dateString) {
 	    var daysAgo = new Date();
+	    console.log(daysAgo);
+	    console.log("*******");
+	    console.log(dateString);
 	    return (new Date(dateString) < daysAgo);
 	}
-	
-	this.checkDateAfter = function (dateString) {
+	/*
+	$scope.checkDateAfter = function (dateString) {
 	    var daysAgo = new Date();
+	    console.log(daysAgo);
+	    console.log("*******");
+	    console.log(dateString);
 	    return (new Date(dateString) > daysAgo);
-	}
+	}*/
 	
 	
 	$scope.passSchedule=function(booking){

@@ -49,8 +49,11 @@ VALUES ('suntecadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('suntecall@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec All roles', '5');
 
+
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('tkgs.zhao.mingsha@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Mingsha ZHAO', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('suntecexternal@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec external manager', '5');
 
 --Assign roles to users for testing
 INSERT into users_roles values( 1,1);
@@ -85,6 +88,9 @@ INSERT into users_roles values( 12,4);
 INSERT into users_roles values( 12,5);
 INSERT into users_roles values( 12,6);
 INSERT into users_roles values( 12,8);
+INSERT into users_roles values( 13,3);
+INSERT into users_roles values( 13,8);
+
 
 --INSERT INTO message (subject,sender,recipient,message) values('subject','1@1','1@1','test');
 --INSERT INTO message (subject,sender,recipient,message) values('pikachu','dragonite','1@1','charmander');
@@ -147,8 +153,11 @@ INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room
 VALUES('2016-10-26 22:00:00', '2016-10-25 10:00:00', 12, 1, 1, 1);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-11-12 22:00:00', '2016-11-11 10:00:00', 12, 1, 2, 1);
---INSERT INTO unit(description, length, rent, rentable, unit_number, width)
---VALUES('1123',1,2,true,6,4);
+INSERT INTO maintenance VALUES (1, 'Repair projector', '2016-11-02 22:00:00', '2016-11-01 10:00:00');
+INSERT INTO maintenance_vendors VALUES (1, 1);
+INSERT INTO maintenance_vendors VALUES (1, 2);
+INSERT INTO schedule VALUES (1, '2016-11-02 22:00:00', 1, '2016-11-01 10:00:00', 1, 1);
+INSERT INTO schedule VALUES (2, '2016-11-02 22:00:00', 2, '2016-11-01 10:00:00', 1, 2);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)
 --VALUES('333',1,2,true,7,4);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)
