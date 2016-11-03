@@ -118,7 +118,7 @@ insert into vendor(contact, description, email, name)values("456", "good", "2@gm
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,2);
 INSERT INTO level(file_path, length, level_num, width, building_id)
-VALUES('floorplan2.PNG',123,2,80,1);
+VALUES('flooPlan1.png',123,2,80,1);
 INSERT INTO building_levels(building_id, levels_id)VALUES(1,1);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('coral', 100, 100, 100, './svg/rect.svg', 100, null);

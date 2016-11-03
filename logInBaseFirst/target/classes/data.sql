@@ -49,8 +49,11 @@ VALUES ('suntecadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('suntecall@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec All roles', '5');
 
+
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('tkgs.zhao.mingsha@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Mingsha ZHAO', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('suntecexternal@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec external manager', '5');
 
 --Assign roles to users for testing
 INSERT into users_roles values( 1,1);
@@ -85,6 +88,9 @@ INSERT into users_roles values( 12,4);
 INSERT into users_roles values( 12,5);
 INSERT into users_roles values( 12,6);
 INSERT into users_roles values( 12,8);
+INSERT into users_roles values( 13,3);
+INSERT into users_roles values( 13,8);
+
 
 --INSERT INTO message (subject,sender,recipient,message) values('subject','1@1','1@1','test');
 --INSERT INTO message (subject,sender,recipient,message) values('pikachu','dragonite','1@1','charmander');
@@ -112,7 +118,7 @@ insert into vendor(contact, description, email, name)values("456", "good", "2@gm
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,2);
 INSERT INTO level(file_path, length, level_num, width, building_id)
-VALUES('floorplan2.PNG',123,2,80,1);
+VALUES('flooPlan1.png',123,2,80,1);
 INSERT INTO building_levels(building_id, levels_id)VALUES(1,1);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('coral', 100, 100, 100, './svg/rect.svg', 100, null);

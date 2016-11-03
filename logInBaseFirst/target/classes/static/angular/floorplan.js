@@ -23,6 +23,7 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 		      console.log(level);
 		      $scope.levelLength;
 		      $scope.levelWidth;
+		      $scope.background=level.filePath;
 		    //IN CASE OF GETTING AN ARRAY FROM SHAREDATA 
 		    if(!level.id){
 		    	console.log("LEVEL IS NOT GET");
@@ -41,7 +42,7 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 		      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;
 		   
 		      
-		      meter=parseInt((widthForFloorPlan-24)/(level.length));
+		      meter=parseInt((widthForFloorPlan-40)/(level.length));
 		      $scope.levelLengthGrid=meter*(level.length);
 			    $scope.levelWidthGrid=meter*(level.width);	
 			    console.log( $scope.levelLengthGrid+" "+$scope.levelWidthGrid);
@@ -257,7 +258,7 @@ $scope.twoOptions=[
 					    width:$scope.levelLengthGrid, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
 					    colWidth: meter, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
 					    rowHeight: meter, // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
-					    margins: [0, 0], // the pixel distance between each widget
+					    margins: [2, 2], // the pixel distance between each widget
 					    outerMargin: false, // whether margins apply to outer edges of the grid
 					    sparse: false, // "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
 					    isMobile: false, // stacks the grid items if true
@@ -434,7 +435,9 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	  		level=obj.level
 	  		building=obj.building;
 	      $scope.levelLength;
-	      $scope.levelWidth;     
+	      $scope.levelWidth; 
+	      $scope.background=level.filePath;
+	      console.log($scope.background);
 	      console.log("GET LEVEL: ");
 	      console.log(level);
 	      if(!level.id){
@@ -449,7 +452,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	      $scope.levelLength=800;
 	      $scope.levelWidth=parseInt((level.width)*800/(level.length));
 	      
-	      meter=parseInt((widthForFloorPlan-24)/(level.length));
+	      meter=parseInt((widthForFloorPlan-40)/(level.length));
 	      $scope.levelLengthGrid=meter*(level.length);
 		    $scope.levelWidthGrid=meter*(level.width);	
 		    console.log( $scope.levelLengthGrid+" "+$scope.levelWidthGrid);
@@ -1822,7 +1825,7 @@ app.controller('viewDefaultUnitPlanController', function ($scope, $http,shareDat
 			    width:$scope.unitLengthGrid, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
 			    colWidth: scale, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
 			    rowHeight: scale, // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
-			    margins: [1, 1], // the pixel distance between each widget
+			    margins: [2, 2], // the pixel distance between each widget
 			    outerMargin: false, // whether margins apply to outer edges of the grid
 			    sparse: false, // "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
 			    isMobile: false, // stacks the grid items if true

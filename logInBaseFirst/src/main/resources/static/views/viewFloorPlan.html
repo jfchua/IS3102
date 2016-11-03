@@ -30,7 +30,7 @@
 			
 
 			<div class="panel-body" id="panelheadGrid">
-				<div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{levelWidthGrid}} + 'px', width: {{levelLengthGrid}} + 'px'}">
+				<div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{levelWidthGrid}} + 'px', width: {{levelLengthGrid}} + 'px', 'background-image':'url({{background}})',   'background-size':'{{levelLengthGrid}}px {{levelWidthGrid}}px'}">
 					<ul>
 						<li gridster-item="unit" id="{{unit.square.id}}" ng-repeat="unit in units" ng-dblclick="showModal(unit,$parent)"
 							context-menu="twoOptions" ng-style="{'background-color':'{{unit.square.color}}'}"><p tooltip-placement="top" tooltip="Double click to view details of unit {{unit.unitNumber}}">

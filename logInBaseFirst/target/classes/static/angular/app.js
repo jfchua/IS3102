@@ -135,7 +135,7 @@ var app = angular.module('app', [ 'ui.router',
                                 			  .state('/login',{
                                 				  url:'/login',
                                 				  templateUrl: '/views/mainlogin.html',
-                                				  controller: 'passController',
+                                				  controller: 'usersController',
                                 				  data: {
                                 					  authorizedRoles: [USER_ROLES.all],
                                 				  }
@@ -144,7 +144,7 @@ var app = angular.module('app', [ 'ui.router',
                                 			  .state('/reset',{
                                 				  url:'/reset',
                                 				  templateUrl: '/views/resetPassword.html',
-                                				  controller: 'passController',
+                                				  controller: 'usersController',
                                 				  data: {
                                 					  authorizedRoles: [USER_ROLES.all]
                                 				  }
@@ -152,18 +152,28 @@ var app = angular.module('app', [ 'ui.router',
                                 			  .state('/resetPassword',{
                                 				  url:'/resetPassword/:id/:token',
                                 				  templateUrl: '/views/resetChangePass.html',
-                                				  controller: 'passController',
+                                				  controller: 'usersController',
                                 				  data: {
                                 					  authorizedRoles: [USER_ROLES.all]
                                 				  }
                                 			  })
                                 			  .state('dashboard',{
-                                				  url:'/dashboard',
+                                				  url:'/dashboard/:org',
                                 				  templateUrl: 'views/index.html',
-                                				  controller: 'passController',
+                                				  controller: function($scope, $stateParams, $state, $sessionStorage) {
+                                					    $scope.headingTitle = "Pass List";
+                                					    if ($stateParams.org != sessionStorage.getItem('clientOrg')){
+                    										event.preventDefault();
+                                					    	$stateParams.org = sessionStorage.getItem('clientOrg');
+                                					    	
+                                					    	$state.reload();
+                                					    }
+                                					  },
+                                					 
                                 				  data: {
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
+                                				
                                 			  })
                                 			  .state('dashboard.workspace',{
                                 				  url:'/workspace',
@@ -902,7 +912,7 @@ var app = angular.module('app', [ 'ui.router',
 
                                 			  /*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
                                 		  })
-                                		  app.factory('httpAuthInterceptor', function ($q) {
+                                		  app.factory('httpAuthInterceptor', function ($q, $location) {
                                 			  return {
                                 				  'response': function(response) {
                                 					  return response;
@@ -1691,6 +1701,86 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 			});
 		};
 	}
+	
+	$scope.submitChangeSecurity = function(){
+		//alert("SUCCESS");
+		if ( $scope.userProfile.security1 != $scope.userProfile.security2 ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'The security answers do not match',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		else{
+			var dataObj = {
+					password: $scope.userProfile.security1,
+					oldpassword: $scope.userProfile.security0,
+			};
+			
+
+			var send = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/user/changeSecurity',
+				data    : dataObj //forms user object
+			});
+			
+			send.success(function(){
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Security Answer successfully updated',
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dismiss");
+				};
+			});
+			send.error(function(data){
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: data,
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+					});
+				});
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
+			});
+		};
+	}
+	
 	$scope.getUserProfileRoles = function(){
 		//alert("SUCCESS");
 
