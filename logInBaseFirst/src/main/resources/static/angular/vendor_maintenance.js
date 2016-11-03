@@ -1033,10 +1033,75 @@ app.controller('maintenanceController',['$scope', '$http','$state','$routeParams
 		//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
 	}
 
-
-
-
 }]);
+
+app.controller('maintenanceController', ['$scope','$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService) {
+	angular.element(document).ready(function () {	
+		//console.log(tempObj)
+		console.log("DISPLAY ALL MAINTENANCES");
+		$scope.maint = shareData.getData();
+		var id=$scope.maint.id;
+
+		$scope.url = "https://localhost:8443/booking/viewAllBookings/"+id;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE EVENT INFO")
+		var getBookings = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/booking/viewAllBookings/' + id        
+		});
+		console.log("Getting the bookings using the url: " + $scope.url);
+		getBookings.success(function(response){
+			//$scope.dataToShare.push(id);
+			//$location.path("/viewLevels/"+id);
+			console.log('GET Booking SUCCESS! ' + JSON.stringify(response));
+			console.log("ID IS " + id);
+			$scope.bookings = response;
+
+			//$location.path("/viewLevels");
+		});
+		getBookings.error(function(response){
+			$state.go("dashboard.viewAllEventsEx");
+			console.log('GET Booking FAILED! ' + JSON.stringify(response));
+		});
+
+		var url = "https://localhost:8443/booking/viewAllBookings";	
+		console.log("BOOKING DATA ARE OF THE FOLLOWING: " + $scope.bookings);	
+	});
+
+	$scope.deleteBooking = function(id){
+		var r = confirm("Confirm cancel? \nEither OK or Cancel.");
+		if (r == true) {
+			$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
+			var deleteBooking = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/booking/deleteBooking/' + id        
+			});
+			console.log("Deleting the event using the url: " + $scope.url);
+			deleteBooking.success(function(response){
+				alert('DELETE BOOKING SUCCESS! ');
+				console.log("ID IS " + id);
+				$state.go("dashboard.viewAllEventsEx");
+			});
+			deleteBooking.error(function(response){
+				alert('DELETE BOOKING FAIL! ');
+				$state.go("dashboard.viewAllEventsEx");
+				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
+			});
+		} else {
+			alert("Cancel deleting booking");
+		}
+	}
+
+	$scope.passBooking=function(booking){
+		console.log(booking);
+		var obj={
+				event:$scope.event,
+				booking:booking
+		};
+		shareData.addData(obj);
+	}
+}])
+
 
 
 

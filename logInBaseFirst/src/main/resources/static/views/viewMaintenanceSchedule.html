@@ -27,27 +27,26 @@
 						<thead>
 
                                <tr>
-                               <th><i></i> Booking ID </th>
-                               <th><i></i> Event Id </th>
+                               <th><i></i> Schedule ID </th>
+                               <th><i></i> Maintenance Id </th>
                                <th><i></i> Start Date </th>
                                <th><i></i> End Date </th>
                                <th><i></i> Unit Booked </th>
-                               <!-- <th><i></i> Change Unit </th>-->
+                               <th><i></i> Vendor Name(s) </th>
                                <th><i></i> Action </th>
                                
                                </tr>
                         </thead>
                             <tbody>
-                             <tr ng-repeat="x in bookings">
+                             <tr ng-repeat="x in schedules">
                              <td>{{ x.id }}</td>
-                             <td>{{ x.owner}}</td>
-                             <td>{{ x.event_start_date_time }}</td>
-                             <td>{{ x.event_end_date_time }}</td>
-                             <td>{{ x.room }}</td>
-                             <!-- <td><a ng-model="myValue" href="/#/updateBookingEx" ng-click="updateBooking(x.id)">Update</a></td>-->
+                             <td>{{ x.maint}}</td>
+                             <td>{{ x.start }}</td>
+                             <td>{{ x.end }}</td>
+                             <td>{{ x.units }}</td>
+                             <td>{{ x.vendors }}</td>
                                <td>
-                             		<a   ng-click="deleteBooking(x.id)" tooltip-placement="top" tooltip="Delete Booking"><i class="glyphicon glyphicon-trash"></i></a>
-                             		<a ng-show="x.event.approvalStatus==='APPROVED'||x.event.approvalStatus==='SUCCESSFUL'"     ui-sref="dashboard.viewUnitPlanEx" ng-click="passBooking(x)" tooltip-placement="top" tooltip="Add unit plan"><i class="glyphicon glyphicon-eye-open"></i></a>
+                             		<a ng-click="deleteSchedule(x.id)" tooltip-placement="top" tooltip="Delete Maintenance Schedule"><i class="glyphicon glyphicon-trash"></i></a>
                              </td>
                              </tr>
                              </tbody>
