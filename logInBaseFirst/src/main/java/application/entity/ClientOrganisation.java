@@ -27,11 +27,11 @@ public class ClientOrganisation {
 	private Long id;
 	@Column(name = "organisation_name",nullable = false,unique=true)
 	private String organisationName;
-	@Column(name = "address",nullable = false,unique=true)
+	@Column(name = "address",unique=true)
 	private String address;
-	@Column(name = "postal",nullable = false,unique=true)
+	@Column(name = "postal",unique=true)
 	private String postal;
-	@Column(name = "phone",nullable = false,unique=true)
+	@Column(name = "phone",unique=true)
 	private String phone;
 	@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
 	private Set<Vendor> vendors = new HashSet<Vendor>();
