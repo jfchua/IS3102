@@ -10,7 +10,7 @@
 <div class="col-lg-9">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					<h3 class="panel-title">Line Chart	  
+					<h3 class="panel-title">Data Visualisation (Links don't work!!)
 						<div class="panel-control pull-right">
 						
 							<a class="panelButton"><i class="fa fa-refresh"></i></a>
@@ -27,51 +27,36 @@
 		<div class="panel panel-primary">
 
 				<div class="panel-heading">
-				<h3 class="panel-title text-center">Select Units	  
+				<h3 class="panel-title text-center">Select Event	  
 						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
 						</div>
 					</h3>
 				</div>
 				</div>
+				
 				<div class="panel panel-info">
 				
 				<div class="panel-heading">
-					<h3 class="panel-title text-center">Building 1		  
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-						</div>
-					</h3>
+					<div class="dropdown">
+			        <button class="btn btn-info btn-lg dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			            Event
+			            <span class="caret"></span>
+			        </button>
+			        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+			            <li><a href="#">Jay Chou 2016</a></li>
+			            <li><a href="#">IT Show 2016</a></li>
+			        </ul>
+			    </div>
 				</div>
 				</div>
+				
+				
+				
+				
 				<div class="panel panel-info">
 				
-				<div class="panel-heading">
-					<h3 class="panel-title text-center" context-menu="menuOptions">All 6 levels		  
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-						</div>
-					</h3>
-				</div>
-				</div>
-				<div class="panel panel-info">
 				
-				<div class="panel-heading">
-					<h3 class="panel-title text-center" >Units		  
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-						</div>
-					</h3>
-				</div>
-				</div>
 				<div class="panel panel-primary">
 
 				<div class="panel-heading">
@@ -84,9 +69,23 @@
 					</h3>
 				</div>
 				</div>
+				<div class="panel-heading">
+					<div class="dropdown">
+			        <button class="btn btn-info btn-lg dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			            Date
+			            <span class="caret"></span>
+			        </button>
+			        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+			            <li><a href="#">Show calendar here
+			            </a></li>
+			        </ul>
+			    </div>
+				</div>
+				</div>
+				
 		</div>
 		
-		<div class="col-lg-9" id="line-chart" ng-controller="ChartCtrl">
+		<div class="col-lg-9" id="pie-chart" ng-controller="ChartCtrl">
 			<div class="panel panel-primary">
 
 				<div class="panel-heading">
@@ -101,7 +100,16 @@
 				</div>
 
 				<div class="panel-body">
-					<div><canvas id="line" class="chart chart-line chart-xl" data="line.data" labels="line.labels" click="line.onClick" series="line.series" colours="line.colours"></canvas></div>
+					<div>
+						<canvas id="pie" 
+			              class="chart chart-pie chart-xs ng-isolate-scope" 
+			              data="pie.data" labels="pie.labels" 
+			              colours="pie.colours" 
+			              height="430" width="860" 
+			              style="display: block; 
+			              width: 688px; height: 344px;">
+			        	</canvas>
+			        </div>
 				</div>
 			</div>
 
