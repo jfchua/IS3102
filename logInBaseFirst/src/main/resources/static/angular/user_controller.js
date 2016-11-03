@@ -7,6 +7,8 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 	self.email = '';
 	self.pass1  = '';
 	self.pass2  = '';
+	self.sec1  = '';
+	self.sec2  = '';
 	self.user={id:null,username:'',address:'',email:''};
 	self.users=[];
 	self.changePasswordInfo={id:parseInt($stateParams.id),token:$stateParams.token,password:''};
@@ -42,7 +44,14 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 				$rootScope.authenticated = true;
 				Auth.setUser(response);
 				//$location.path("/workspace");
-				$state.go("dashboard");
+				console.log(response);
+				$http.get("//localhost:8443/user/viewCurrentUser").then(function(responseUser){
+					$rootScope.userInfo = angular.fromJson(responseUser.data);
+					sessionStorage.setItem('clientOrg', responseUser.data.client);
+					sessionStorage.setItem('userInfo', responseUser.data);
+					console.log(responseUser.data);
+					$state.go('dashboard', {org :$rootScope.userInfo.client});
+				})
 				//return true;
 			} else {
 				console.log("NO VERIFIED");
@@ -78,11 +87,16 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 			console.log("got true or false from authenticate");
 			if ($rootScope.authenticated) {
 				//$location.path("/dashboard/workspace");
+				
 				console.log("LOGGED IN");
 				self.error = false;
+				
 				 $timeout(function() {
-				      $state.go('dashboard.workspace');
+					 //$state.go('dashboard', {org :'suntec'});
+					 console.log($scope.userInfo.client + " is here");
+				     $state.go('dashboard.workspace');
 				      }, 1000);
+				
 			} else {
 				console.log("NOT LOGGED IN");
 				$location.path("/login");
