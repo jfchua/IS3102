@@ -103,8 +103,8 @@ insert into message (message, sender_name,subject,recipient_id)values("Hello Wor
 insert into message (message, sender_name,subject,recipient_id)values("This event needs some modification, reply me asap.","event@localhost","Event Message",6);
 insert into message (message, sender_name,subject,recipient_id)values("The pricing model seems a little off, can we discuss this later?","finance@localhost","Finance matter",6);
 
-insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameMS", "MINGSHA", 123456,"SINGAPORE", 6, "expo.jpg");
-insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameHL", "HAILING", 234567,"SINGAPORE", 4, "max_atria.jpg");
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameMS", "MINGSHA", 123456,"SINGAPORE", 6, "");
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameHL", "HAILING", 234567,"SINGAPORE", 4, "");
 insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,1);
 insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,2);
 insert into vendor(contact, description, email, name)values("123", "good", "1@gmail.com", "MS");
@@ -112,7 +112,7 @@ insert into vendor(contact, description, email, name)values("456", "good", "2@gm
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,2);
 INSERT INTO level(file_path, length, level_num, width, building_id)
-VALUES('floorplan2.PNG',123,2,80,1);
+VALUES('111',123,2,80,1);
 INSERT INTO building_levels(building_id, levels_id)VALUES(1,1);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('coral', 100, 100, 100, './svg/rect.svg', 100, null);
@@ -136,17 +136,13 @@ VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party'
 --VALUES('APPROVED','hahaha','2016-09-12 22:00:00', '2016-09-11 10:00:00', 'party2', 'CONCERT', null, 1, 'UNPAID', 12, 2);		
 --INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id, payment_plan_id)		
 --VALUES('APPROVED','hahaha','2016-09-26 22:00:00', '2016-09-25 10:00:00', 'party3', 'CONCERT', null, 1, 'UNPAID', 12, 3);
-INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
-VALUES('APPROVED','hahaha','2016-11-12 22:00:00', '2016-11-11 10:00:00', 'partyyyyyy', 'FAIR', null, 1, 'UNPAID', 12);
 
 INSERT INTO user_events(user_id, events_id)VALUES(12, 1);
-INSERT INTO user_events(user_id, events_id)VALUES(12, 2);		
+--INSERT INTO user_events(user_id, events_id)VALUES(12, 2);		
 --INSERT INTO user_events(user_id, events_id)VALUES(12, 3);		
 --INSERT INTO user_events(user_id, events_id)VALUES(12, 4);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-26 22:00:00', '2016-10-25 10:00:00', 12, 1, 1, 1);
-INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-11-12 22:00:00', '2016-11-11 10:00:00', 12, 1, 2, 1);
+VALUES('2016-10-26 22:00:00', '2016-10-25 10:00:00', 1, 1, 1, 1);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)
 --VALUES('1123',1,2,true,6,4);
 --INSERT INTO unit(description, length, rent, rentable, unit_number, width)
@@ -180,13 +176,3 @@ insert into user_tickets values( 6,1);
 insert into user_tickets values( 6,2);
 insert into user_tickets values (6,6);
 insert into discount values ( 1,"12345","DISCOUNT MESSAGE", "STARHUB");
-
-
-INSERT INTO icon(icon_path, icon_type) VALUES('yard-fountain.svg','CUST');
-INSERT INTO client_organisation_icons VALUES (1, 1);
-INSERT INTO icon(icon_path, icon_type) VALUES('mall-information-sign.svg','CUST');
-INSERT INTO client_organisation_icons VALUES (1, 2);
-INSERT INTO icon(icon_path, icon_type) VALUES('mall-wifi-sign.svg','CUST');
-INSERT INTO client_organisation_icons VALUES (1, 3);
-INSERT INTO icon(icon_path, icon_type) VALUES('waiting-room-sign.svg','CUST');
-INSERT INTO client_organisation_icons VALUES (1, 4);
