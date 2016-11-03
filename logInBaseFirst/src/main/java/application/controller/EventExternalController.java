@@ -1,5 +1,7 @@
 package application.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -28,7 +30,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -36,9 +40,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import application.entity.*;
+import application.exception.InvalidFileUploadException;
+import application.exception.InvalidIconException;
 import application.exception.UserNotFoundException;
 import application.service.EventExternalService;
 import application.service.EventOrganizerService;
+import application.service.FileUploadCheckingService;
 import application.service.PaymentPlanService;
 import application.service.UnitService;
 import application.service.UserService;
@@ -53,16 +60,19 @@ public class EventExternalController {
 	private final UnitService unitService;
 	private final EventCreateFormValidator eventCreateFormValidator;
 	private JSONParser parser = new JSONParser();
+	private final FileUploadCheckingService fileService;
+	private Gson geeson= new Gson();
 	
 	@Autowired
 	public EventExternalController(EventExternalService eventService, UserService userService, UnitService unitService,
-			EventCreateFormValidator eventCreateFormValidator, PaymentPlanService paymentPlanService) {
+			EventCreateFormValidator eventCreateFormValidator, PaymentPlanService paymentPlanService,FileUploadCheckingService fileService) {
 		super();
 		this.eventExternalService = eventService;
 		this.userService = userService;
 		this.eventCreateFormValidator = eventCreateFormValidator;
 	    this.paymentPlanService =paymentPlanService;
 	    this.unitService= unitService;
+	    this.fileService=fileService;
 	}
 	
 	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
@@ -71,7 +81,7 @@ public class EventExternalController {
 	//Call $http.post(URL,stringToAdd);
 	@RequestMapping(value = "/addEvent", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> addEvent(@RequestBody String eventJSON,
+	public ResponseEntity<String> addEvent(@RequestBody String eventJSON,
 			HttpServletRequest rq) throws UserNotFoundException {
 		System.out.println("start adding");
 		DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
@@ -82,7 +92,7 @@ public class EventExternalController {
 		Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
 		//Optional<EventOrganizer> eventOrg1 = eventOrganizerService.getEventOrganizerByEmail(principal.getName());
 		if ( !eventOrg1.isPresent() ){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 		try{
 			//EventOrganizer eventOrg = eventOrg1.get();
@@ -112,19 +122,21 @@ public class EventExternalController {
 			String filePath = (String)jsonObject.get("filePath");
 			//long eventOrgId = (Long)jsonObject.get("id");
 			
-			boolean bl = eventExternalService.createEvent(client, eventOrg, unitsId, event_title, event_content, event_description, 
+			Event event = eventExternalService.createEvent(client, eventOrg, unitsId, event_title, event_content, event_description, 
 					event_approval_status, event_start_date, event_end_date, filePath);
 			System.out.println("adding event " + event_title);
-			if(!bl){
+			if(event.getId()==null){
 				System.out.println("cannot add event");
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}			
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);
+			}	
+			String eventIdToReturn = Long.toString(event.getId());
+			return new ResponseEntity<String>(eventIdToReturn,HttpStatus.OK);	
 		}
 		catch (Exception e){
 			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);	
+		
 	}	
 	
 	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
@@ -977,6 +989,51 @@ public class EventExternalController {
 	       		catch (Exception e){
 	       			return new ResponseEntity<String>("Server error in getting event",HttpStatus.INTERNAL_SERVER_ERROR);
 	       		}
-	       	}	           
+	       	}	
+	           
+	           
+	           
+	           @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+		     	@RequestMapping(value = "/saveEventImage",  method = RequestMethod.POST)
+		     	@ResponseBody
+		     	public ResponseEntity<String> saveEventImage(@RequestParam("file") MultipartFile file,String eventId, HttpServletRequest request ) throws IOException, UserNotFoundException, InvalidIconException {
+
+		     		Principal p = request.getUserPrincipal();
+		     		User curUser = userService.getUserByEmail(p.getName()).get();
+		     		//CHECKING FOR FILE VALIDITY
+		     		if ( eventId == null || eventId.equals("")){
+		     			return new ResponseEntity<String>(geeson.toJson("Server error in saving building information"),HttpStatus.INTERNAL_SERVER_ERROR);
+		     		}
+		     		try{
+		     			fileService.checkFile(file);
+		     			//GET RELATIVE PATH SINCE EVERYONE COMPUTER DIFFERENT
+		     			String filePath = request.getSession().getServletContext().getRealPath("/");
+		     			System.out.println(filePath);
+		     			File toTrans = new File(filePath,file.getOriginalFilename());
+		     			toTrans.setExecutable(true);
+		     			toTrans.setWritable(true);
+		     			file.transferTo(toTrans);
+		     			System.err.println("saveLevelImage in controller saving to " + Long.valueOf(eventId));
+		     			boolean OK = eventExternalService.saveImageToEvent(Long.valueOf(eventId), file.getOriginalFilename());
+		     			if(OK){
+		     				System.out.println("Level image is created");
+		     				
+		     			}else{
+		     				System.out.println("Level image is not created");
+		     			}
+		     			//clientOrganisationRepository.saveAndFlush(client);
+		     			System.out.println("Saved Level image");
+		     		}
+		     		catch ( InvalidFileUploadException e ){
+		     			System.err.println(e.getMessage());
+		     			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		     		}
+		     		catch ( Exception e){
+		     			System.err.println(e.getMessage());
+		     			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		     		}
+		     		System.err.println(String.format("received %s", file.getOriginalFilename()));
+		     		return new ResponseEntity<String>(HttpStatus.OK);
+		     	}
 }
 

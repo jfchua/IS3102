@@ -44,6 +44,7 @@ import application.enumeration.ApprovalStatus;
 import application.enumeration.EventType;
 import application.enumeration.IconType;
 import application.enumeration.PaymentStatus;
+import application.exception.InvalidFileUploadException;
 import application.repository.AreaRepository;
 import application.repository.BookingApplRepository;
 import application.repository.EventOrganizerRepository;
@@ -332,9 +333,10 @@ public class EventExternalServiceImpl implements EventExternalService {
 	}
 
 	@Override
-	public boolean createEvent(ClientOrganisation client, User eventOrg, String unitsId, String event_title, String event_content, String event_description, String status,
+	public Event createEvent(ClientOrganisation client, User eventOrg, String unitsId, String event_title, String event_content, String event_description, String status,
 			Date event_start_date, Date event_end_date, String filePath) {
 		Event event = new Event();
+		
 		Set<BookingAppl> bookings = new HashSet<BookingAppl>();
 		event.setBookings(bookings);
 		String[] units = unitsId.split(" ");
@@ -349,12 +351,12 @@ public class EventExternalServiceImpl implements EventExternalService {
 			}
 		}
 		if(!doesHave)
-			return false;
+			return null;
 		Date d1 = event_start_date;
 		Date d2 = event_end_date;
 		if(d1.compareTo(d2)>0){
 			System.err.println("date error");
-			return false;
+			return null;
 		}
 		boolean isAvailable = true;
 		for(int i = 0; i<units.length; i ++){
@@ -364,7 +366,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 				Unit unit = unit1.get();
 				if(!checkUnit(client, unit.getId())){
 					System.err.println("unit error");
-					return false;
+					return  null;
 				}
 				int count = bookingApplRepository.getNumberOfBookings(uId, d1, d2);
 				int count2 = maintenanceScheduleRepository.getNumberOfMaintenanceSchedules(uId, d1, d2);
@@ -419,8 +421,10 @@ public class EventExternalServiceImpl implements EventExternalService {
 			event.setEventOrg(eventOrg);
 			eventRepository.save(event);
 			userRepository.save(eventOrg);
+			
+		
 		}
-		return isAvailable;
+		return event;
 	}
 
 	@Override
@@ -1078,5 +1082,29 @@ public class EventExternalServiceImpl implements EventExternalService {
 		System.err.println("K is " +k);
 		System.err.println("Count is " +count);
 		return setA;
+	}
+	
+	
+	
+	@Override
+	public boolean saveImageToEvent(Long eventId, String filePath) throws InvalidFileUploadException {
+		String t = filePath.toUpperCase();
+		System.err.println("creating icon: " + t);
+		if ( !t.contains(".JPG") && !t.contains(".JPEG")&& !t.contains(".SVG") && !t.contains(".TIF") && !t.contains(".PNG") ){
+			System.err.println("Invalid icon: " + t);
+			throw new InvalidFileUploadException("Building image uploaded is invalid");
+		}
+		try{		
+			Event event=eventRepository.getOne(eventId);
+			event.setFilePath(filePath);
+			System.err.println("Level pic path saved as " + filePath);
+			eventRepository.saveAndFlush(event);
+			System.out.println("1102 true");
+			return true;
+		}catch(Exception e){
+			System.err.println("Error at creating building image " + e.getMessage());
+			return false;
+		
+	}
 	}
 }

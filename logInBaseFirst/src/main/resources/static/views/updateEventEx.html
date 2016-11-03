@@ -10,7 +10,7 @@
 		</ol>
 	</div>
 
-	<div class="col-md-9">
+	<div class="col-md-6">
 		<div class="panel panel-primary">
 
 			<div class="panel-heading">
@@ -127,6 +127,17 @@
 							type="datetime-local" ng-model="event.event_end_date"
 							class="form-control" placeholder="Enter end date">
 					</div>
+					<div>
+						Logo: <input type="file" ngf-select ng-model="picFile" name="file"
+							accept="image/*" ngf-max-size="10MB"
+							ngf-model-invalid="errorFile"> <i
+							ng-show="myForm.file.$error.required">*required</i><br> <i
+							ng-show="myForm.file.$error.maxSize">File too large
+							{{errorFile.size / 1000000|number:1}}MB: max 2M</i> <img
+							ng-show="myForm.file.$valid" ngf-thumbnail="picFile"
+							class="thumb" height="100px" width="100px">
+						<button ng-click="picFile = null" ng-show="picFile">Remove</button>
+					</div>
 					<!--    <div class="form-group">
                <label for="exampleInputFile">File input</label>
                <input type="file" ng-model="building.filePath" id="exampleInputFile">
@@ -138,6 +149,36 @@
 					&nbsp;
 					<!--   <button ng-click = "updateBuilding()"><input type="submit" value="Submit"></button>-->
 				</form>
+			</div>
+		</div>
+	</div>
+		<div class="col-md-6">
+		<div class="conter-wrapper">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div ui-calendar="uiConfig.calendar" ng-model="haha"></div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-primary">
+
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Current image
+					<div class="panel-control pull-right">
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body">
+					<carousel interval="5000">
+						
+						<slide>
+							<img src="{{event.filePath}}" alt="">
+						</slide>
+					</carousel>
 			</div>
 		</div>
 	</div>

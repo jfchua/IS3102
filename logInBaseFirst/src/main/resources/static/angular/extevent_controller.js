@@ -341,7 +341,7 @@ app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareD
 
 }])
 
-app.controller('addEController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService){
+app.controller('addEController', ['$scope', '$http','$state','$routeParams','shareData','ModalService','Upload','$timeout', function ($scope, $http,$state, $routeParams, shareData,ModalService,Upload,$timeout){
 
 	$scope.checkDateErr = function(startDate,endDate) {
 		$scope.errMessage = '';
@@ -470,6 +470,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 
 		$scope.currentlySelectedUnit;
 		$scope.selectUnit = function(){
+			$scope.haha.length=0;
 			console.log("currently selected unit bookings");
 			console.log($scope.currentlySelectedUnit.bookings);
 
@@ -644,7 +645,75 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		});
 
 		console.log("SAVING THE Event");
-		send.success(function(){
+		send.success(function(eventId){
+			console.log("eventId "+eventId);
+			if ($scope.picFile != null && $scope.picFile != "") {
+				
+				$scope.picFile.upload = Upload.upload({
+					url: 'https://localhost:8443/event/saveEventImage',
+					data: { file: $scope.picFile,eventId:eventId},
+				});
+
+				$scope.picFile.upload.then(function (response) {
+					$timeout(function () {
+						$scope.picFile.result = response.data;
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'event and its associated image has been updated successfully',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewAllEventsEx");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+
+					});
+				}, function (response) {
+					if (response.status > 0){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: response.data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
+
+						//END SHOWMODAL
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+
+						$scope.errorMsg = response.status + ': ' + response.data;
+					}
+				}, function (evt) {
+					// Math.min is to fix IE which reports 200% sometimes
+					$scope.picFile.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+				})
+				/////////////////////////
+				return;
+			}
+			
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
@@ -872,7 +941,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 		console.log("GETTING THE ALL UNITS INFO")
 		var getUnits = $http({
 			method  : 'POST',
-			url     : 'https://localhost:8443/property/viewUnits/',
+			url     : 'https://localhost:8443/property/viewUnitsWithBookings/',
 			data    : dataObj,
 		});
 		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
@@ -888,7 +957,11 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 
 		$scope.currentlySelectedUnit;
 		$scope.selectUnit = function(){
-
+			$scope.haha.length=0;
+			getEvents($scope.currentlySelectedUnit.bookings);
+			console.log("currently selected unit schedules");
+			console.log($scope.currentlySelectedUnit.schedule);
+			getMaints($scope.currentlySelectedUnit.schedule);//put here or after for loop
 			var duplicate = false;
 			var index = 0;
 			angular.forEach($scope.selectedBookingsUnits, function() {
@@ -1142,6 +1215,73 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			};
 		});
 	};	
+	
+	$scope.uiConfig = {
+			calendar:{
+				width: 300,
+				editable:false,
+				header:{
+					left: 'month agendaWeek agendaDay',
+					center: 'title',
+					right: 'today prev,next'
+				},
+				eventClick: $scope.alertEventOnClick,
+				eventDrop: $scope.alertOnDrop,
+				eventResize: $scope.alertOnResize
+			}
+	};
+    
+    
+    
+    $scope.haha=[];
+	//RETRIEVE EVENTS
+	//$scope.eventsFormated=[];
+	var getEvents = function(bookings){
+		//need to changed to same as workspace calendar view all events with status success approved,processing	
+		var index=0;
+		angular.forEach(bookings, function() {
+
+			var booking=[{start: bookings[index].event_start_date_time,
+				end: bookings[index].event_end_date_time,	         
+				title:'Booked',
+				allDay: false,
+				color: 'IndianRed',
+				overlap:false
+			}];
+
+			$scope.haha.push(booking);
+			index = index + 1;
+		});	
+
+
+
+
+	}
+	// getEvents(); 
+
+
+	//RETRIEVE MAINTENANCES
+	//$scope.eventsFormated=[];
+	var getMaints = function(schedules){
+		var index=0;
+		angular.forEach(schedules, function() {
+
+			var maint=[{start: schedules[index].start_time,
+				end: schedules[index].end_time,	         
+				title:"Maintenance",
+				allDay: false,
+				color: 'SteelBlue'
+			}];
+
+			$scope.haha.push(maint);
+			index = index + 1;
+		});
+		//var buildings ={name: $scope.name, address: $scope.address};
+		console.log( $scope.haha);
+
+
+	}
+
 }]);
 
 

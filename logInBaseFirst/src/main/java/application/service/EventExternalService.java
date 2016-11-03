@@ -15,10 +15,11 @@ import application.entity.Payment;
 import application.entity.PaymentPlan;
 import application.entity.SendMessageForm;
 import application.entity.User;
+import application.exception.InvalidFileUploadException;
 
 
 public interface EventExternalService {
-    boolean createEvent(ClientOrganisation client, User eventOrg, String unitsId, String event_title, String event_content, String event_descriptions, String status, 
+    Event createEvent(ClientOrganisation client, User eventOrg, String unitsId, String event_title, String event_content, String event_descriptions, String status, 
 			Date event_start_date, Date event_end_date, String filePath);
 	
 	Set<Event> getAllEventsByOrg(ClientOrganisation client, User eventOrg);
@@ -65,4 +66,6 @@ public interface EventExternalService {
 	int getTicketNum(ClientOrganisation client, long eventId);
 	
 	Set<String[]> checkRateNum(ClientOrganisation client, String unitsId, Date start, Date end) throws ParseException;
+	
+	boolean saveImageToEvent(Long eventId, String filePath) throws InvalidFileUploadException;
 }

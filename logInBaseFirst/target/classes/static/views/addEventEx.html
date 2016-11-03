@@ -10,7 +10,7 @@
 	</div>
 
 
-	<div class="col-md-8">
+	<div class="col-md-6">
 		<div class="panel panel-primary">
 
 			<div class="panel-heading">
@@ -137,7 +137,20 @@
 							class="form-control underline"
 							placeholder="Enter event description">
 					</div>
-
+					
+					
+					<div>
+						Logo: <input type="file" ngf-select ng-model="picFile" name="file"
+							accept="image/*" ngf-max-size="10MB"
+							ngf-model-invalid="errorFile"> <i
+							ng-show="myForm.file.$error.required">*required</i><br> <i
+							ng-show="myForm.file.$error.maxSize">File too large
+							{{errorFile.size / 1000000|number:1}}MB: max 2M</i> <img
+							ng-show="myForm.file.$valid" ngf-thumbnail="picFile"
+							class="thumb" height="100px" width="100px">
+						<button ng-click="picFile = null" ng-show="picFile">Remove</button>
+					</div>
+					
 					<!--  <button ng-click = "addEvent()"><input type="submit" value="Submit"></button>-->
 					<button class="progress-button primary-progress"
 						data-style="shrink" data-horizontal ng-click="addEvent()">Submit</button>
