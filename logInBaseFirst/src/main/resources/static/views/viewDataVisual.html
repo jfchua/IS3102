@@ -7,7 +7,7 @@
 </div>
 
 <div class="row">
-<div class="col-lg-9">
+<div class="col-lg-9" id="screenshotChart">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">Data Visualisation (Links don't work!!)
@@ -139,3 +139,10 @@
 		</div>
 		
 	</div>
+		<a onclick="javascript:window.print();" class="btn btn-bordered btn-primary hidden-print pull-right">
+						Print <i class="fa fa-print"></i>
+					</a>
+		<div class="col-md-1">
+				<br> <a ng-click="downloadPlan()" id="download" tooltip-placement="right" tooltip="Download Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"> <i class="glyphicon glyphicon-download-alt"></i> </button></a>
+
+			</div>	
