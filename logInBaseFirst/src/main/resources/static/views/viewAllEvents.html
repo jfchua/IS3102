@@ -146,7 +146,7 @@
 <div ng-cloak ng-controller="canceledEventController as canceledEventCtrl" >
     	<div class="panel panel-primary">
 				<div class="panel-heading">
-					<h3 class="panel-title">Successful Events  
+					<h3 class="panel-title">Cancelled Events  
 						<div class="panel-control pull-right">
 						
 							<a class="panelButton"><i class="fa fa-refresh"></i></a>
@@ -174,7 +174,7 @@
                              <td>{{ x.event_title }}</td>
                              <td>{{ x.approvalStatus }}</td>
                              <!--<td><a ng-model="myValue" href="/#/viewEventDetails" ng-click="getEvent(x.id)">View Details</a></td>-->
-                             <td><a  ui-sref="dashboard.deleteEvent" ng-click="passEvent(x)" tooltip-placement="top" tooltip="Delete Building"><i class="glyphicon glyphicon-trash"></i></a>
+                             <td><a  ui-sref="dashboard.deleteEvent" ng-click="passEvent(x)" tooltip-placement="top" tooltip="Delete Event"><i class="glyphicon glyphicon-trash"></i></a>
                             <a  ui-sref="dashboard.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
                               </td>
                              </tr>
