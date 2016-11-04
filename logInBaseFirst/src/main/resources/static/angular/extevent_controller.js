@@ -31,6 +31,38 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		}	
 		)
 
+		$scope.checkDateBefore = function (dateString) {
+		    var daysAgo = new Date();
+		    return (new Date(dateString) > daysAgo);
+		}
+
+		/*
+		$scope.checkTicket= function (id) {
+			var noTicSold = true;
+			$scope.cats = {};
+			var getBookings = $http({
+				method  : 'GET',
+				url     : 'https://localhost:8443/event/viewAllCategories/' + id        
+			});
+			console.log("Getting the bookings using the url: " + $scope.url);
+			getBookings.success(function(response){
+				$scope.cats = response;
+				console.log("DISPLAY ALL Categories");
+				console.log($scope.cats);
+			});
+			getBookings.error(function(response){
+				alert("did not view all categories");
+			});
+			angular.forEach($scope.cats, function() {
+				
+				if(noTicSold==true&&$scope.cats[index].tickets.length>0)
+					noTicSold = false;
+				else
+					index = index + 1;
+			});
+		    return noTicSold;
+		}*/
+		
 
 	});
 

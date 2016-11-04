@@ -597,6 +597,59 @@ public class EventExternalController {
 						return new ResponseEntity<Void>(HttpStatus.OK);
 					}
 					
+	            /*  @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
+	      					@RequestMapping(value = "/viewAllCategories/{id}",  method = RequestMethod.GET)
+	      					@ResponseBody
+	      					public String viewAllBookings(@PathVariable("id") String bId, HttpServletRequest rq) throws UserNotFoundException {
+	      					    System.out.println("start view");
+	      					    Principal principal = rq.getUserPrincipal();
+	      					    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+	      						if ( !eventOrg1.isPresent() ){
+	      							return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+	      						}
+	      						try{
+	      						User eventOrg = eventOrg1.get();
+	      						ClientOrganisation client = eventOrg.getClientOrganisation();
+	      						System.out.println(eventOrg.getId());
+	      						long id = Long.parseLong(bId);
+	      						Set<Category> cats = eventExternalService.getCategories(client,id);	
+	      						System.out.println("There are " + cats.size() + " events under this organizer");
+	      						if(cats != null){
+	      						for(Category c: cats){
+	      							c.getEvent().setBookings(null);
+	      							c.getEvent().setCategories(null);
+	      							c.getEvent().setEventOrg(null);
+	      							c.getEvent().setPaymentPlan(null);
+	      							Set<Ticket> tics = c.getTickets();
+	      							for(Ticket t : tics){
+	      							t.setCategory(null);
+	      							}
+	      						}
+	      						}
+	      						Gson gson2 = new GsonBuilder()
+	      							    .setExclusionStrategies(new ExclusionStrategy() {
+	      							        public boolean shouldSkipClass(Class<?> clazz) {
+	      							            return (clazz == Area.class)||(clazz == MaintenanceSchedule.class);
+	      							        }
+
+	      							
+	      									@Override
+	      									public boolean shouldSkipField(FieldAttributes f) {
+	      										return false;
+	      									}
+
+	      							     })
+	      							    .serializeNulls()
+	      							    .create();			    
+	      					    String json = gson2.toJson(cats);
+	      					    System.out.println(json);
+	      					    return json;
+	      						}
+	      						catch (Exception e){
+	      							return "cannot fetch";
+	      						}
+	      					}*/
+	              
 	              @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 					//This method takes in a JSON format which contains an object with 5 attributes
 					//Long/String id, int levelNum, int length, int width, String filePath

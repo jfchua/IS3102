@@ -1107,4 +1107,20 @@ public class EventExternalServiceImpl implements EventExternalService {
 		
 	}
 	}
+
+	@Override
+	public Set<Category> getCategories(ClientOrganisation client, long id) {
+		Set<Category> cats = null;
+		try{
+			Optional<Event> event1 = getEventById(id);
+			if(event1.isPresent()&&checkEvent(client, id)){
+				Event event = event1.get();
+				if(event.isHasTicket())
+				cats = event.getCategories();
+			}
+		}catch(Exception e){
+
+		}
+		return cats;
+	}
 }
