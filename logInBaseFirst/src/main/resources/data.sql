@@ -149,7 +149,7 @@ VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party'
 --INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id, payment_plan_id)		
 --VALUES('APPROVED','hahaha','2016-09-26 22:00:00', '2016-09-25 10:00:00', 'party3', 'CONCERT', null, 1, 'UNPAID', 12, 3);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
-VALUES('APPROVED','hahaha','2016-11-12 22:00:00', '2016-11-11 10:00:00', 'partyyyyyy', 'FAIR', null, 1, 'UNPAID', 12);
+VALUES('APPROVED','hahaha','2016-11-12 22:00:00', '2016-11-11 10:00:00', 'partyyyyyy', 'FAIR', null, 0, 'UNPAID', 12);
 
 INSERT INTO user_events(user_id, events_id)VALUES(12, 1);
 INSERT INTO user_events(user_id, events_id)VALUES(12, 2);		

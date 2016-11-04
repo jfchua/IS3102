@@ -866,7 +866,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 		var dataObj = {	
 				units:$scope.event1.units,
 				event_title: $scope.event1.event_title,
-				eventType: $scope.event1.eventType,
+				event_type: $scope.event1.event_type,
 				event_description: $scope.event1.event_description,
 				event_approval_status: $scope.event1.approvalStatus,	
 				event_start_date: $scope.event1.event_start_date,	
@@ -875,11 +875,10 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 		};
 
 		$scope.event = angular.copy($scope.event1);
-		$scope.event.eventType = $scope.event1.eventType;
-		console.log($scope.event1);
+		//$scope.event.eventType = $scope.event1.eventType
 		var url = "https://localhost:8443/event/updateEvent";
-		console.log($scope.event1.event_title);
-
+		console.log("***********************");
+		console.log($scope.event.eventType);
 		//GET SELECTED UNITS
 		var id=$scope.event.id;
 
@@ -1116,7 +1115,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 				id: $scope.event.id,
 				units: $scope.selectedBookingsUnits,		
 				event_title: $scope.event.event_title,
-				event_content: $scope.event.eventType,
+				event_content: $scope.event.event_type,
 				event_description: $scope.event.event_description,
 				event_approval_status: "PROCESSING",
 				event_start_date: ($scope.event.event_start_date).toString(),
