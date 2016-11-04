@@ -53,14 +53,14 @@ public class DataController {
 	
 		
 //use JSON OBJECT obj.put to put the various data into a JSON array
-		@RequestMapping(value = "/dataVisual", method = RequestMethod.GET)
+		/*@RequestMapping(value = "/dataVisual", method = RequestMethod.GET)
 		@ResponseBody
 		public ResponseEntity<String> viewAreas( @RequestBody String event, HttpServletRequest rq)  {
 			
 			
 			event.category.getTickets().getSize();
 			return;
-}           
+}      */     
 		
 		
 		

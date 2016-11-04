@@ -36,19 +36,13 @@
 						<div class="form-group">
 							<ul class="list-group" name="units">
 								<li ng-repeat="selectedBookingsUnit in selectedBookingsUnits"
-									class="list-group-item">{{selectedBookingsUnit.unitNumber}}
-									<button ng-click="deleteBookingUnit(selectedBookingsUnit)">
+									class="list-group-item" style="display: inline;">{{selectedBookingsUnit.unitNumber}}
+									<button ng-click="deleteBookingUnit(selectedBookingsUnit); checkRent()">
 										<i class="glyphicon glyphicon-trash"></i>
 									</button>
 								</li>
 							</ul>
 						</div>
-						<!--  <div ng-mouseover="checkAvail()">
-							<p>
-								Put mouse over to check Availability<br> Available?
-								{{avail}}
-							</p>
-						</div>-->
 					</div>
 					<p>
 						Want to change unit(s)?: <input type="checkbox" ng-model="myVar">
@@ -107,7 +101,7 @@
 					</div>
 					</div>					
 					<div class="form-group">
-						Select an event type: <select ng-model="event.eventType"
+						Select an event type: <select ng-model="event.event_type"
 							ng-options="x.eventType as x.name for x in eventTypes">
 						</select>
 					</div>
