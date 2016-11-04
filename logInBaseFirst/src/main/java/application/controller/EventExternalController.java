@@ -597,9 +597,7 @@ public class EventExternalController {
 						return new ResponseEntity<Void>(HttpStatus.OK);
 					}
 					
-	              @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
-	      		// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
-	      				// Each object (building) will contain... long id, .
+	            /*  @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 	      					@RequestMapping(value = "/viewAllCategories/{id}",  method = RequestMethod.GET)
 	      					@ResponseBody
 	      					public String viewAllBookings(@PathVariable("id") String bId, HttpServletRequest rq) throws UserNotFoundException {
@@ -610,18 +608,12 @@ public class EventExternalController {
 	      							return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 	      						}
 	      						try{
-	      						//EventOrganizer eventOrg = eventOrg1.get();	
 	      						User eventOrg = eventOrg1.get();
 	      						ClientOrganisation client = eventOrg.getClientOrganisation();
 	      						System.out.println(eventOrg.getId());
 	      						long id = Long.parseLong(bId);
 	      						Set<Category> cats = eventExternalService.getCategories(client,id);	
 	      						System.out.println("There are " + cats.size() + " events under this organizer");
-	      						//Set<BookingAppl> bookingsWithUnits=new HashSet<BookingAppl>();
-	      						//Gson gson = new Gson();
-	      						//String json = gson.toJson(levels);
-	      					    //System.out.println("Returning levels with json of : " + json);
-	      						//return json;
 	      						if(cats != null){
 	      						for(Category c: cats){
 	      							c.getEvent().setBookings(null);
@@ -640,22 +632,13 @@ public class EventExternalController {
 	      							            return (clazz == Area.class)||(clazz == MaintenanceSchedule.class);
 	      							        }
 
-	      							        /**
-	      							          * Custom field exclusion goes here
-	      							          */
-
+	      							
 	      									@Override
 	      									public boolean shouldSkipField(FieldAttributes f) {
-	      										//TODO Auto-generated method stub
 	      										return false;
-	      												//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
 	      									}
 
 	      							     })
-	      							    /**
-	      							      * Use serializeNulls method if you want To serialize null values 
-	      							      * By default, Gson does not serialize null values
-	      							      */
 	      							    .serializeNulls()
 	      							    .create();			    
 	      					    String json = gson2.toJson(cats);
@@ -665,7 +648,7 @@ public class EventExternalController {
 	      						catch (Exception e){
 	      							return "cannot fetch";
 	      						}
-	      					}
+	      					}*/
 	              
 	              @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 					//This method takes in a JSON format which contains an object with 5 attributes

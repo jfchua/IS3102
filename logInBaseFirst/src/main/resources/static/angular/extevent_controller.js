@@ -36,6 +36,7 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		    return (new Date(dateString) > daysAgo);
 		}
 
+		/*
 		$scope.checkTicket= function (id) {
 			var noTicSold = true;
 			$scope.cats = {};
@@ -60,7 +61,7 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 					index = index + 1;
 			});
 		    return noTicSold;
-		}
+		}*/
 		
 
 	});
