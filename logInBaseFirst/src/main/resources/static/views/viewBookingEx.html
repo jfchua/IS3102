@@ -46,7 +46,7 @@
                              <td>{{ x.room }}</td>
                              <!-- <td><a ng-model="myValue" href="/#/updateBookingEx" ng-click="updateBooking(x.id)">Update</a></td>-->
                                <td>
-                             		<a   ng-click="deleteBooking(x.id)" tooltip-placement="top" tooltip="Delete Booking"><i class="glyphicon glyphicon-trash"></i></a>
+                             		<a  ng-show="checkDateBefore(x.event_start_date_time) && checkBookings()" ng-click="deleteBooking(x.id)" tooltip-placement="top" tooltip="Delete Booking"><i class="glyphicon glyphicon-trash"></i></a>
                              		<a ng-show="x.event.approvalStatus==='APPROVED'||x.event.approvalStatus==='SUCCESSFUL'"     ui-sref="dashboard.viewUnitPlanEx" ng-click="passBooking(x)" tooltip-placement="top" tooltip="Add unit plan"><i class="glyphicon glyphicon-eye-open"></i></a>
                              </td>
                              </tr>

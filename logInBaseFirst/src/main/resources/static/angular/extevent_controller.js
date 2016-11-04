@@ -874,7 +874,8 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 				filePath: $scope.event1.filePath,
 		};
 
-		$scope.event = angular.copy($scope.event1)
+		$scope.event = angular.copy($scope.event1);
+		$scope.event.eventType = $scope.event1.eventType;
 		console.log($scope.event1);
 		var url = "https://localhost:8443/event/updateEvent";
 		console.log($scope.event1.event_title);
@@ -1014,32 +1015,6 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			$scope.selectedBookingsUnits.splice(index, 1);  
 		}
 		console.log("finish selecting units");	
-		/*
-	$scope.checkAvail = function(){
-	console.log("start checking availability");
-	$scope.data = {};
-
-	var dataObj = {
-	units: $scope.selectedBookingsUnits,
-	event_start_date: ($scope.event.event_start_date).toString(),
-	event_end_date: ($scope.event.event_end_date).toString(),
-	};
-	console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-	var send = $http({
-	method  : 'POST',
-	url     : 'https://localhost:8443/event/checkAvailability',
-	data    : dataObj //forms user object
-	});
-	$scope.avail = "";
-	send.success(function(){
-	$scope.avail = "AVAILABLE!";
-	console.log($scope.avail);
-	});
-	send.error(function(){
-	$scope.avail = "NOT AVAILABLE!";
-	console.log($scope.avail);
-	});
-	}	*/
 	}
 
 	$scope.checkAvail = function(){
@@ -1116,50 +1091,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 		});	
 	}
 	
-	/*
-	$scope.checkRent = function(){
-		console.log("start checking rent");
-		$scope.data = {};
-		if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date){
-			ModalService.showModal({
 
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: "Please make sure you have entered the starting and ending dates to check for availability and rent calculation",
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-					$scope.selectedBookingsUnits = [];
-					$scope.currentlySelectedUnit = '';
-				});
-			});
-			return;
-		}
-		var dataObj = {
-				units: $scope.selectedBookingsUnits,
-				event_start_date: ($scope.event.event_start_date).toString(),
-				event_end_date: ($scope.event.event_end_date).toString(),
-		};
-		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/event/checkRent',
-			data    : dataObj //forms user object
-		});
-		//$scope.avail = "";
-		send.success(function(response){
-			$scope.totalRent = response;
-			$scope.totalRentAfter = response*1.07;
-			console.log($scope.totalRent);
-		});
-		send.error(function(response){
-			$scope.totalRent = response;
-			console.log($scope.totalRent);
-		});
-	}*/
 
 	$scope.eventTypes=[{'name':'Concert','eventType':'CONCERT'},
 	                   {'name':'Conference','eventType':'CONFERENCE'},
@@ -1167,7 +1099,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 	                   {'name':'Family Entertainment','eventType':'FAMILY'},
 	                   {'name':'Lifestyle/Leisure','eventType':'LIFESTYLE'},
 	                   {'name':'Seminar/Workshop','eventType':'SEMINAR'}];
-	//$scope.eventType=$scope.eventTypes[0].eventType;
+     //$scope.eventType=$scope.eventTypes[0].eventType;
 	
 	$scope.updateEvent = function(){
 		console.log("Start updating");
@@ -1327,6 +1259,7 @@ app.controller('bookingController', ['$scope','$http','$state','$routeParams','s
 		$scope.event = shareData.getData();
 		var id=$scope.event.id;
 
+		$scope.bookings = {};
 		$scope.url = "https://localhost:8443/booking/viewAllBookings/"+id;
 		//$scope.dataToShare = [];
 		console.log("GETTING THE EVENT INFO")
@@ -1353,6 +1286,17 @@ app.controller('bookingController', ['$scope','$http','$state','$routeParams','s
 		console.log("BOOKING DATA ARE OF THE FOLLOWING: " + $scope.bookings);	
 	});
 
+	$scope.checkDateBefore = function (dateString) {
+	    var daysAgo = new Date();
+	    return (new Date(dateString) > daysAgo);
+	}
+
+	$scope.checkBookings = function () {
+		//console.log("*************");
+		//console.log($scope.bookings.length);
+	    return ($scope.bookings.length >1);
+	}
+	
 	$scope.deleteBooking = function(id){
 		var r = confirm("Confirm cancel? \nEither OK or Cancel.");
 		if (r == true) {
