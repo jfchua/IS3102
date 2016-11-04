@@ -8,6 +8,7 @@
 --VALUES ('event@event', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'EVENT');
 --INSERT INTO user (email, password_hash, role)
 --VALUES ('kenneth1399@hotmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'USER');
+--10 roles
 insert into role (name)values ("ROLE_SUPERADMIN");
 insert into role (name)values ("ROLE_ADMIN");
 insert into role (name)values ("ROLE_USER");
@@ -16,6 +17,7 @@ insert into role (name)values ("ROLE_PROPERTY");
 insert into role (name)values ("ROLE_FINANCE");
 insert into role (name)values ("ROLE_TICKETING");
 insert into role (name)values ("ROLE_EXTEVE");
+insert into role (name)values ("ROLE_HIGHER");
 insert into role (name)values ("ROLE_EVEGOER");
  
 INSERT INTO payment_policy(deposit_rate, interim_period, due_days, subsequent_number)
@@ -32,7 +34,7 @@ values ("Algattas", "73 Ubi Road 1","408733", "31580456","red","algattasLogo.png
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',3 ,'Kenneth LIM' , '2');
 --Algattas superadmin is user 1
-
+--User 2 to 9
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('admin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Jin Fa CHUA' , '3');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
@@ -49,24 +51,41 @@ INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('ticketing@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'ticketing manager', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('exteve@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'external event organiser', '5');
-
+--User 10 to 11
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('suntecadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec Admin', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('suntecall@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec All roles', '5');
 
-
+--User 12 to 13
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('tkgs.zhao.mingsha@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Mingsha ZHAO', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('suntecexternal@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec external manager', '5');
-
+--User 14 to 21
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer1@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS1', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer2@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL2', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer3@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'TKH3', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer4@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CJF4', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer5@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'KLZW5', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer6@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS6', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer7@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL7', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer8@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CHS8', '5');
 --Assign roles to users for testing
 INSERT into users_roles values( 1,1);
 INSERT into users_roles values( 1,3);
 INSERT into users_roles values( 2,2);
 INSERT into users_roles values( 2,3);
 INSERT into users_roles values( 3,3);
+INSERT into users_roles values( 3,9);
 INSERT into users_roles values( 4,3);
 INSERT into users_roles values( 4,4);
 INSERT into users_roles values( 4,5);
@@ -96,7 +115,22 @@ INSERT into users_roles values( 12,6);
 INSERT into users_roles values( 12,8);
 INSERT into users_roles values( 13,3);
 INSERT into users_roles values( 13,8);
-
+INSERT into users_roles values( 14,3);
+INSERT into users_roles values( 14,10);
+INSERT into users_roles values( 15,3);
+INSERT into users_roles values( 15,10);
+INSERT into users_roles values( 16,3);
+INSERT into users_roles values( 16,10);
+INSERT into users_roles values( 17,3);
+INSERT into users_roles values( 17,10);
+INSERT into users_roles values( 18,3);
+INSERT into users_roles values( 18,10);
+INSERT into users_roles values( 19,3);
+INSERT into users_roles values( 19,10);
+INSERT into users_roles values( 20,3);
+INSERT into users_roles values( 20,10);
+INSERT into users_roles values( 21,3);
+INSERT into users_roles values( 21,10);
 
 --INSERT INTO message (subject,sender,recipient,message) values('subject','1@1','1@1','test');
 --INSERT INTO message (subject,sender,recipient,message) values('pikachu','dragonite','1@1','charmander');
@@ -452,22 +486,25 @@ INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , 
 VALUES('Hall', 1, 100, true, 'HALL N2', 1, 16, 7, 17, 60);
 
 
+
+INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		
+VALUES('2016-09-06 22:00:00', 42.8, 0.4, '2016-09-12 22:00:00', 7, 64.2, '2016-09-19 22:00:00', 0, 'tkgs.zhao.mingsha@gmail.com', 42.8, 64.2, 64.2, 1, 0.00, 107, 100);		
+INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		
+VALUES('2016-09-11 22:00:00', 42.8, 0.4, '2016-09-17 22:00:00', 7, 42.8, '2016-09-14 22:00:00', 0, 'tkgs.zhao.mingsha@gmail.com', 0.0, 107.0, 64.2, 1, 0.00, 107, 100);		
+INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		
+VALUES('2016-09-08 22:00:00', 42.8, 0.4, '2016-09-14 22:00:00', 7, 42.8, '2016-09-11 22:00:00', 0, 'tkgs.zhao.mingsha@gmail.com', 0.0, 107.0, 64.2, 1, 0.00, 107, 100);		
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
-VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party', 'CONCERT', null, 1, 'UNPAID', 12);
---INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		
---VALUES('2016-09-06 22:00:00', 42.8, 0.4, '2016-09-12 22:00:00', 7, 64.2, '2016-09-19 22:00:00', 0, 'tkgs.zhao.mingsha@gmail.com', 42.8, 64.2, 64.2, 1, 0.00, 107, 100);		
---INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		
---VALUES('2016-09-11 22:00:00', 42.8, 0.4, '2016-09-17 22:00:00', 7, 42.8, '2016-09-14 22:00:00', 0, 'tkgs.zhao.mingsha@gmail.com', 0.0, 107.0, 64.2, 1, 0.00, 107, 100);		
---INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		
---VALUES('2016-09-08 22:00:00', 42.8, 0.4, '2016-09-14 22:00:00', 7, 42.8, '2016-09-11 22:00:00', 0, 'tkgs.zhao.mingsha@gmail.com', 0.0, 107.0, 64.2, 1, 0.00, 107, 100);		
---INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id, payment_plan_id)		
---VALUES('APPROVED','hahaha','2016-09-08 22:00:00', '2016-09-06 10:00:00', 'party1', 'CONCERT', null, 1, 'UNPAID', 12, 1);		
---INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id, payment_plan_id)		
---VALUES('APPROVED','hahaha','2016-09-12 22:00:00', '2016-09-11 10:00:00', 'party2', 'CONCERT', null, 1, 'UNPAID', 12, 2);		
---INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id, payment_plan_id)		
---VALUES('APPROVED','hahaha','2016-09-26 22:00:00', '2016-09-25 10:00:00', 'party3', 'CONCERT', null, 1, 'UNPAID', 12, 3);
+VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party', 'CONCERT', null, 1, 'PAID', 12);
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id, payment_plan_id)		
+VALUES('APPROVED','hahaha','2016-09-08 22:00:00', '2016-09-06 10:00:00', 'party1', 'CONCERT', null, 1, 'PAID', 12, 1);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id, payment_plan_id)		
+VALUES('APPROVED','hahaha','2016-09-12 22:00:00', '2016-09-11 10:00:00', 'party2', 'FAIR', null, 1, 'PAID', 12, 2);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id, payment_plan_id)		
+VALUES('APPROVED','hahaha','2016-09-26 22:00:00', '2016-09-25 10:00:00', 'party3', 'CONCERT', null, 1, 'PAID', 12, 3);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
 VALUES('APPROVED','hahaha','2016-11-12 22:00:00', '2016-11-11 10:00:00', 'partyyyyyy', 'FAIR', null, 0, 'UNPAID', 12);
+
+
 
 INSERT INTO user_events(user_id, events_id)VALUES(12, 1);
 INSERT INTO user_events(user_id, events_id)VALUES(12, 2);		
