@@ -115,25 +115,343 @@ insert into message (message, sender_name,subject,recipient_id)values("Hello Wor
 insert into message (message, sender_name,subject,recipient_id)values("This event needs some modification, reply me asap.","event@localhost","Event Message",6);
 insert into message (message, sender_name,subject,recipient_id)values("The pricing model seems a little off, can we discuss this later?","finance@localhost","Finance matter",6);
 
-insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameMS", "MINGSHA", 123456,"SINGAPORE", 6, "expo.jpg");
-insert into building(name, address, postal_code, city, num_floor, pic_path) values("buildingNameHL", "HAILING", 234567,"SINGAPORE", 4, "max_atria.jpg");
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("EXPO EAST", "1 Expo Dr", 486150,"SINGAPORE", 6, "expo.jpg");
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("EXPO WEST", "2 Expo Dr", 486151,"SINGAPORE", 4, "expo_west.jpg");
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("EXPO NORTH", "3 Expo Dr", 486152,"SINGAPORE", 5, "expo_north.jpg");
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("EXPO SOUTH", "3 Temasek Boulevard", 038983,"SINGAPORE", 2, "expo_south.jpg");
+insert into building(name, address, postal_code, city, num_floor, pic_path) values("SUNTEC", "MINGSHA", 123456,"SINGAPORE", 6, "expo.jpg");
+
 insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,1);
 insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,2);
-insert into vendor(contact, description, email, name)values("123", "good", "1@gmail.com", "MS");
-insert into vendor(contact, description, email, name)values("456", "good", "2@gmail.com", "HL");
+insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,3);
+insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,4);
+insert into client_organisation_buildings(client_organisation_id, buildings_id) values(2,5);
+
+insert into vendor(contact, description, email, name)values("84500062", "great", "1@gmail.com", "MS");
+insert into vendor(contact, description, email, name)values("84536000", "excellent", "2@gmail.com", "HL");
+insert into vendor(contact, description, email, name)values("81610000", "good", "3@gmail.com", "KL");
+
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,2);
+insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,3);
+
+--Expo East
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('flooPlan1.png',123,1,80,1);
 INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('flooPlan1.png',123,2,80,1);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('flooPlan1.png',123,3,80,1);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('flooPlan1.png',123,4,80,1);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('flooPlan1.png',123,5,80,1);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('flooPlan1.png',123,6,80,1);
+
+--Expo West
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('fP2.jpg',123,1,60,2);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('fP2.jpg',123,2,60,2);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('fP2.jpg',123,3,60,2);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('fP2.jpg',123,4,60,2);
+
+--Expo North
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('fP3.jpeg',123,1,60,3);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('fP3.jpeg',123,2,60,3);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('fP3.jpeg',123,3,60,3);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('fP3.jpeg',123,4,60,3);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('fP3.jpeg',123,5,60,3);
+
+--Expo South
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('fP4.png',123,1,80,4);
+INSERT INTO level(file_path, length, level_num, width, building_id)
+VALUES('fP4.png',123,2,80,4);
+
 INSERT INTO building_levels(building_id, levels_id)VALUES(1,1);
+INSERT INTO building_levels(building_id, levels_id)VALUES(1,2);
+INSERT INTO building_levels(building_id, levels_id)VALUES(1,3);
+INSERT INTO building_levels(building_id, levels_id)VALUES(1,4);
+INSERT INTO building_levels(building_id, levels_id)VALUES(1,5);
+INSERT INTO building_levels(building_id, levels_id)VALUES(1,6);
+
+INSERT INTO building_levels(building_id, levels_id)VALUES(2,7);
+INSERT INTO building_levels(building_id, levels_id)VALUES(2,8);
+INSERT INTO building_levels(building_id, levels_id)VALUES(2,9);
+INSERT INTO building_levels(building_id, levels_id)VALUES(2,10);
+
+INSERT INTO building_levels(building_id, levels_id)VALUES(3,11);
+INSERT INTO building_levels(building_id, levels_id)VALUES(3,12);
+INSERT INTO building_levels(building_id, levels_id)VALUES(3,13);
+INSERT INTO building_levels(building_id, levels_id)VALUES(3,14);
+INSERT INTO building_levels(building_id, levels_id)VALUES(3,15);
+
+INSERT INTO building_levels(building_id, levels_id)VALUES(4,16);
+INSERT INTO building_levels(building_id, levels_id)VALUES(4,17);
+
+--Expo East
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+--Expo West
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+
+--Expo North
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+
+--Expo South
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+
+--Expo East
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall',38,100,true,'HALL C', 50 , 71 , 7 , 1, 1);
+VALUES('Hall', 38, 100, true, 'HALL A1', 50, 71, 7, 1, 1);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall',18,100,true,'HALL B',51,52,7, 1, 2);
+VALUES('Hall', 18, 100, true, 'HALL B1', 51, 52, 7, 1, 2);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL C1', 1, 2, 7, 1, 3);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL D1', 1, 10, 7, 1, 4);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL A2', 1, 16, 7, 2, 5);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL B2', 1, 28, 7, 2, 6);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 38, 100, true, 'HALL C2', 50, 71, 7, 2, 7);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 18, 100, true, 'HALL D2', 51, 52, 7, 2, 8);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL A3', 1, 2, 7, 3, 9);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL B3', 1, 10, 7, 3, 10);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL C3', 1, 16, 7, 3, 11);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL D3', 1, 28, 7, 3, 12);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL A4', 1, 2, 7, 4, 13);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL B4', 1, 10, 7, 4, 14);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL C4', 1, 16, 7, 4, 15);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL D4', 1, 28, 7, 4, 16);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL A5', 1, 2, 7, 5, 17);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL B5', 1, 10, 7, 5, 18);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL C5', 1, 16, 7, 5, 19);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL D5', 1, 28, 7, 5, 20);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL A6', 1, 2, 7, 6, 21);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL B6', 1, 10, 7, 6, 22);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL C6', 1, 16, 7, 6, 23);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL D6', 1, 28, 7, 6, 24);
+-- Expo West
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL E1', 1, 28, 7, 7, 25);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL F1', 1, 2, 7, 7, 26);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL G1', 1, 10, 7, 7, 27);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL H1', 1, 16, 7, 7, 28);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL E2', 1, 28, 7, 8, 29);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL F2', 1, 28, 7, 8, 30);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL G2', 1, 2, 7, 8, 31);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL H2', 1, 10, 7, 8, 32);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL E3', 1, 16, 7, 9, 33);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL F3', 1, 28, 7, 9, 34);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL G3', 1, 28, 7, 9, 35);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL H3', 1, 2, 7, 9, 36);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL E4', 1, 10, 7, 10, 37);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL F4', 1, 16, 7, 10, 38);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL G4', 1, 28, 7, 10, 39);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL H4', 1, 28, 7, 10, 40);
+
+--Expo North
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL I1', 1, 2, 7, 11, 41);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL J1', 1, 10, 7, 11, 42);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL K1', 1, 16, 7, 11, 43);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL L1', 1, 28, 7, 11, 44);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL I2', 1, 2, 7, 12, 45);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL J2', 1, 10, 7, 12, 46);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL K2', 1, 16, 7, 12, 47);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL L2', 1, 28, 7, 12, 48);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL I3', 1, 10, 7, 13, 49);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL J3', 1, 16, 7, 13, 50);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL K3', 1, 28, 7, 13, 51);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL I4', 1, 10, 7, 14, 52);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL J4', 1, 16, 7, 14, 53);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL K4', 1, 28, 7, 14, 54);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL I5', 1, 10, 7, 15, 55);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL J5', 1, 16, 7, 15, 56);
+--Expo South
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL M1', 1, 16, 7, 16, 57);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL N1', 1, 28, 7, 16, 58);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL M2', 1, 10, 7, 17, 59);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 1, 100, true, 'HALL N2', 1, 16, 7, 17, 60);
+
+
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
 VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party', 'CONCERT', null, 1, 'UNPAID', 12);
 --INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		
