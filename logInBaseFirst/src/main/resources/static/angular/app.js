@@ -2600,7 +2600,7 @@ app.service('shareData', function($window) {
 //========Test================
 
 //========Event================
-app.controller('addEController', ['$scope', '$http','$location','$routeParams','shareData','ModalService', function ($scope, $http,$location, $routeParams, shareData,ModalService){
+/*app.controller('addEController', ['$scope', '$http','$location','$routeParams','shareData','ModalService', function ($scope, $http,$location, $routeParams, shareData,ModalService){
 	console.log("start selecting venue");
 	var getBuild = $http({
 		method  : 'GET',
@@ -2969,7 +2969,7 @@ app.controller('updateEController', ['$scope', '$http','$location','$routeParams
 			};
 		});
 	};	
-}]);
+}]);*/
 
 app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 	$scope.toggleLeft = buildDelayedToggler('left');

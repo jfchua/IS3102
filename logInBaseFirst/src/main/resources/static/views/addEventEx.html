@@ -61,9 +61,8 @@
 					</div>
 					<div class="form-group">
 						<ul class="list-group" name="units">
-							<li ng-repeat="unit in selectedUnits" class="list-group-item"
-								style="display: inline;">{{unit.unitNumber}}
-								<button ng-click="deleteUnit(unit)">
+							<li ng-repeat="unit in selectedUnits" class="list-group-item" style="display: inline;">{{unit.unitNumber}}
+								<button ng-click="deleteUnit(unit); checkRent();">
 									<i class="glyphicon glyphicon-trash"></i>
 								</button>
 							</li>
@@ -76,16 +75,6 @@
 							ng-change="selectUnit(); checkRent(); checkAvail()" class="form-control underline">
 
 						</select>
-
-						<!-- <p>Units selected: <input ng-model = "currentlySelectedUnit"></p>-->
-						<!--  <button ng-click = "checkAvail()">Check Availability</button>-->
-						<!--  <div ng-mouseover="checkAvail()">
-							<p>
-								Put mouse over to check availability<br> Available?
-								{{avail}}
-							</p>
-						</div>
-						-->
 					</div>
 
 					<div>
@@ -114,7 +103,7 @@
                             <td>{{ x.rental }}</td>
                         </tr>
                          </tbody>                       
-                    </table>		
+                    </table>	
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">Event Title</label> <input type="text"

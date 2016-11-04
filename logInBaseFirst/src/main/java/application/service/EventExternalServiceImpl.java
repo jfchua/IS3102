@@ -987,6 +987,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 							str[3] = String.valueOf(duration1);
 							str[4] = String.valueOf(duration1 * base * checkRate(client, cal.getTime()));
 							setA.add(str);
+							System.err.println("size of setA" + setA.size());
 							break;
 						}
 						else if(s[2].equals(rate)&&s[0].equals(units[k])){
@@ -995,6 +996,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 							s[3] = String.valueOf(orgDuration+duration1);
 							Double total = Double.valueOf(s[4]);
 							s[4] = String.valueOf(total+duration1 * base * checkRate(client, cal.getTime()));
+							System.err.println("size of setA" + setA.size());
 							break;
 						}
 
@@ -1007,6 +1009,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 					str[3] = String.valueOf(duration1);
 					str[4] = String.valueOf(duration1 * base * checkRate(client, cal.getTime()));
 					setA.add(str);
+					System.err.println("size of setA" + setA.size());
 				}
 				//System.out.println("*****END TIME IS "+end);
 				//System.out.println("*****REFEREBCE TIME IS "+ calRef.getTime());
@@ -1041,6 +1044,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 							str[3] = String.valueOf(durationX);
 							str[4] = String.valueOf(durationX * base * checkRate(client, cal.getTime()));
 							setA.add(str);
+							System.err.println("size of setA" + setA.size());
 							break;
 						}
 						else if(s[2].equals(rate)&&units[k].equals(s[0])){
@@ -1049,6 +1053,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 							s[3] = String.valueOf(orgDuration+durationX);
 							Double total = Double.valueOf(s[4]);
 							s[4] = String.valueOf(total+durationX * base * checkRate(client, cal.getTime()));
+							System.err.println("size of setA" + setA.size());
 							break;
 						}
 
@@ -1061,6 +1066,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 					str[3] = String.valueOf(durationX);
 					str[4] = String.valueOf(durationX * base * checkRate(client, cal.getTime()));
 					setA.add(str);
+					System.err.println("size of setA" + setA.size());
 				}
 				//System.out.println("*****END TIME IS "+date.getTime());
 				//System.out.println("*****REFEREBCE TIME IS "+ calRef.getTime());
@@ -1080,6 +1086,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 			}
 		}
 		System.err.println("K is " +k);
+		k = 0;
 		System.err.println("Count is " +count);
 		return setA;
 	}
