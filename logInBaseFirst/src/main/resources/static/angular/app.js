@@ -2288,40 +2288,6 @@ app.controller('calendarCtrl', function ($scope,$http) {
 
 });
 
-//FOR MOCK UP DATA VISUAL//NEED TO DELETE LATER
-app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $timeout,$http) {
-	$scope.menuOptions = [
-	                      
-	                              // Dividier
-	                        ['Cat 1', function ($itemScope, $event, modelValue, text, $li) {
-	                           
-	                        }],
-	                     
-	                        ['Cat 2', function ($itemScope, $event, modelValue, text, $li) {
-	                           
-	                        }],
-	                       ,
-	                    ];
-
-     $scope.pie = {
-    	labels : ["Cat 1", "Cat 2", "Unsold"],
-    		data: [24, 36, 15],
-    	     // data : [$http.get('//localhost:8443/BI/dataVisual')],
-    		colours: ['#3CA2E0','#F0AD4E','#7AB67B']
-     
-    };
-
-
-    $scope.datapoints=[{"x":10,"top-1":10,"top-2":15},
-                       {"x":20,"top-1":100,"top-2":35},
-                       {"x":30,"top-1":15,"top-2":75},
-                       {"x":40,"top-1":50,"top-2":45}];
-    $scope.datacolumns=[{"id":"top-1","type":"spline"},
-                        {"id":"top-2","type":"spline"}];
-    $scope.datax={"id":"x"};
-
-    
-}]);
 
 //MESSAGE
 
