@@ -371,12 +371,12 @@ public class UnitController {
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			}
 			else{
-			if(unitService.deleteUnit(unitId,levelId)){
-				System.out.println("DELETED");
-				return new ResponseEntity<Void>(HttpStatus.OK);
-			}else{
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
+				if(unitService.deleteUnit(unitId,levelId)){
+					System.out.println("DELETED");
+					return new ResponseEntity<Void>(HttpStatus.OK);
+				}else{
+					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				}
 			}
 		}
 		catch (Exception e){
@@ -577,17 +577,40 @@ public class UnitController {
 			JSONObject unitJson=(JSONObject)jsonObject.get("unit");	
 			long unitId = (Long)unitJson.get("id");				
 			System.out.println("test rent");
-			Double rent =Double.parseDouble((String)unitJson.get("rent"));
+			Double rent;
+			Object pricet = unitJson.get("rent");
+			System.out.println("test rent2");
+			if ( pricet instanceof Double){
+				System.out.println("Type double");
+				rent = (double)pricet;
+			}
+			else if ( pricet instanceof Integer){
+				System.out.println("Type int");
+				rent = (double)pricet;
+			}
+			else if ( pricet instanceof Long){
+				System.out.println("type long");
+				long theprice = (long)pricet;
+				rent = Double.parseDouble(String.valueOf(theprice));
+				System.out.println("rent is " + rent);
+			}
+			else{
+				rent = -1.0;
+			}
+
+			//	Double rent =Double.parseDouble((String)unitJson.get("rent"));
+			if ( rent < 0 ) { return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR); }
+
 			System.out.println(rent);
 			if(unitService.updateRent(unitId,rent)){
 				System.out.println("RENT UPDATED");
 				return new ResponseEntity<Void>(HttpStatus.OK);
 			}else{
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
@@ -683,7 +706,7 @@ public class UnitController {
 
 
 
-	
+
 
 
 

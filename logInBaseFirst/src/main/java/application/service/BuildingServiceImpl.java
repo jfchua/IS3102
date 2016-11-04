@@ -49,7 +49,7 @@ public class BuildingServiceImpl implements BuildingService {
 		Pattern pat = Pattern.compile(regex);
 		Matcher get = pat.matcher(post);
 		if(!get.matches()){
-			throw new InvalidPostalCodeException("Postal code of " + postalCode + " is invalid");
+			throw new InvalidPostalCodeException("Postal code of " + postalCode + " is invalid. A valid postal code should be 6 digits long.");
 		}
 		else{
 			building.setPostalCode(postalCode);
@@ -97,7 +97,7 @@ public class BuildingServiceImpl implements BuildingService {
 	@Override
 	public boolean editBuildingInfo(ClientOrganisation client, long id, String name, String address, String postalCode, String city, int numFloor, String path) throws BuildingNotFoundException, InvalidPostalCodeException {
 		// TODO Auto-generated method stub
-		
+
 		if ( !getBuildingById(id).isPresent()){
 			throw new BuildingNotFoundException("Building of id " + id + " was not found");
 		}
@@ -106,7 +106,8 @@ public class BuildingServiceImpl implements BuildingService {
 		Pattern pat = Pattern.compile(regex);
 		Matcher get = pat.matcher(post);
 		if (!get.matches() ){
-			throw new InvalidPostalCodeException("Postal code of " + postalCode + " is invalid");
+			throw new InvalidPostalCodeException("Postal code of " + postalCode + " is invalid. A valid postal code should be 6 digits long.");
+
 		}
 		try{
 			Optional<Building> building1 = getBuildingById(id);
@@ -173,7 +174,7 @@ public class BuildingServiceImpl implements BuildingService {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public boolean saveImageToBuilding(Long buildingId, String iconPath) throws InvalidFileUploadException {
 		String t = iconPath.toUpperCase();

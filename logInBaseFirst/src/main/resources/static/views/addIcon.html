@@ -32,7 +32,7 @@
 					</div>
 					<div>
 						Logo: <input type="file" ngf-select ng-model="picFile" name="file"
-							accept="image/svg+xml" ngf-max-size="10MB" required
+							accept=".svg" ngf-max-size="10MB" required
 							ngf-model-invalid="errorFile"> <i
 							ng-show="myForm.file.$error.required">*required</i><br> <i
 							ng-show="myForm.file.$error.maxSize">File too large

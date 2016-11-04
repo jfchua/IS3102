@@ -11,7 +11,7 @@
 
 			<div class="panel-heading">
 				<h3 class="panel-title">
-				Update rent
+					Update rent
 					<div class="panel-control pull-right">
 						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
 							class="panelButton"><i class="fa fa-minus"></i></a> <a
@@ -20,45 +20,43 @@
 				</h3>
 			</div>
 			<div class="panel-body">
-			  <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <td>Unit Number</td>
-                            <td>Rent</td>
-                            <td></td>
-                            <td>Actions</td>
-                        </tr>
-                    </thead>
-                <tbody>
-		              <tr ng-repeat="unit in units | filter: { rentable : true }">
-			             <td>
-                            {{unit.unitNumber }}
-                          </td>
-			             <td>
-                                {{unit.rent}}
-                            </td>
-                            <td>
-                               <input type="text" ng-model="unit.rent" placeholder="{{unit.rent}}" ng-show="unit.editable" required>
-                            </td>
-                            <td>
-                                <a  ng-click="edit(unit)" ng-hide="unit.editable" tooltip-placement="top" tooltip="Update client"><i class="glyphicon glyphicon-pencil"></i></a>
-                                <a  ng-click="save(unit)" ng-show="unit.editable" tooltip-placement="top" tooltip="Save client"><i class="glyphicon glyphicon-floppy-disk"></i></a>
-                            </td> 
-		</tr>
-                    </tbody>
-	</table>			
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<td>Unit Number</td>
+							<td>Rent</td>
+							<td></td>
+							<td>Actions</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="unit in units | filter: { rentable : true }">
+							<td>{{unit.unitNumber }}</td>
+							<td>{{unit.rent}}</td>
+							<td> <form name="thisForm"> <input input type="number"
+									min="0.01" step="0.01" max="99999999" name = "formName" ng-model="unit.rent2"
+									placeholder="{{unit.rent}}" ng-show="unit.editable" required></td>
+							<td><a ng-click="edit(unit)" ng-hide="unit.editable"
+								tooltip-placement="top" tooltip="Update Rent"><i
+									class="glyphicon glyphicon-pencil"></i></a> <a
+								ng-click="save(unit,thisForm.$invalid)" ng-show="unit.editable"
+								tooltip-placement="top" tooltip="Save Rent"><i
+									class="glyphicon glyphicon-floppy-disk"></i></a> </form></td>
+						</tr>
+					</tbody>
+				</table>
 
 			</div>
 		</div>
 	</div>
 
 	<div class="col-md-3">
-	
+
 		<div class="panel panel-primary">
 
 			<div class="panel-heading">
 				<h3 class="panel-title">
-				Select filter
+					Select filter
 					<div class="panel-control pull-right">
 						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
 							class="panelButton"><i class="fa fa-minus"></i></a> <a
@@ -68,8 +66,8 @@
 			</div>
 			<div class="panel-body">
 				<form>
-					
-					
+
+
 					<div class="form-group">
 						<label for="building" class="control-label">Select
 							Building</label> <select name="building"
@@ -98,10 +96,14 @@
 
 			</div>
 		</div>
-	
-	
-		 <a  tooltip-placement="right" ng-click="viewAllUnits()" tooltip="View all units"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-refresh"></i></button></a>  
-		
+
+
+		<a tooltip-placement="right" ng-click="viewAllUnits()"
+			tooltip="View all units"><button type="button"
+				class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-refresh"></i>
+			</button></a>
+
 	</div>
 
 </div>

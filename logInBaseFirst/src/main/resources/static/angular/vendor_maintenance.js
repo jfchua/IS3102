@@ -42,6 +42,30 @@ app.controller('vendorController', ['$scope', '$http','$state','$routeParams','s
 			return;
 		}
 		
+		if ( $scope.vendor.contact.length < 3 || $scope.vendor.contact.length > 11 ||!(/^[0-9]+$/.test($scope.vendor.contact))  ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered a valid contact number",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		
 		
 		var dataObj = {			
 				email: $scope.vendor.email,
@@ -141,6 +165,30 @@ app.controller('updateVendorController', ['$scope', '$http','$state','$routePara
 				controller: "errorMessageModalController",
 				inputs: {
 					message: "Ensure that you have entered all fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		
+		if ( $scope.vendor.contact.length < 3 || $scope.vendor.contact.length > 11 ||!(/^[0-9]+$/.test($scope.vendor.contact))  ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered a valid contact number",
 				}
 			}).then(function(modal) {
 				modal.element.modal();
