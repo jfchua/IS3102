@@ -823,9 +823,13 @@ public class EventExternalController {
 	          			ClientOrganisation client = user.getClientOrganisation();
 	          			System.out.println(user.getId());
 	          			//long id = Long.parseLong(bId);
-	          			Set<PaymentPlan> plans = eventExternalService.viewAllPaymentPlan(client, user);	
-	          			System.out.println("There are " + plans.size() + " plans under this event org");
 	          			JSONArray jArray = new JSONArray();
+	          			if(!eventExternalService.viewAllPaymentPlan(client, user).isEmpty()){
+	          			Set<PaymentPlan> plans = eventExternalService.viewAllPaymentPlan(client, user);       			
+	          			System.err.println(plans.isEmpty());
+	          			System.err.println(plans==null);
+	          			
+	          			System.out.println("There are " + plans.size() + " plans under this event org");          			
 	          			Gson gson2 = new GsonBuilder()
 	          					.setExclusionStrategies(new ExclusionStrategy() {
 	          						public boolean shouldSkipClass(Class<?> clazz) {
@@ -851,6 +855,7 @@ public class EventExternalController {
 	          					.create();			    
 	          			String json = gson2.toJson(plans);
 	          			System.out.println(json);
+	          			
 	          			for(PaymentPlan p: plans){
 	          				JSONObject obj1 = new JSONObject();
 	          				obj1.put("id", p.getEvent().getId());
@@ -863,6 +868,8 @@ public class EventExternalController {
 	          				System.out.println("TOTAL3");
 	          				jArray.add(obj1);
 	          			}
+	          			}
+	          			
 	          			return new ResponseEntity<String>(jArray.toString(), HttpStatus.OK);
 	          		}
 	          		catch (Exception e){
