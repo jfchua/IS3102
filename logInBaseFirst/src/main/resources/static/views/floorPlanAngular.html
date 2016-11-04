@@ -13,7 +13,7 @@
 		                             <li><a>Update Floor Plan</a></li>
 		                        </ol>
 		</div> 
-        <div class="col-md-9" id="widthForFloorPlan">
+        <div class="col-md-10" id="widthForFloorPlan">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">Floor Plan	  
@@ -29,27 +29,58 @@
     <div class="panel-body" id="panelheadGrid">
 <div gridster="gridsterOpts" id="glassboxGrid" ng-style="{height: {{levelWidthGrid}} + 'px', width: {{levelLengthGrid}} + 'px','background-image':'url({{background}})','background-size':'{{levelLengthGrid}}px {{levelWidthGrid}}px'}">
     <ul>
-        <li gridster-item="unit"  id="{{unit.square.id}}" context-menu="iconMenu" ng-repeat="unit in units"   ng-style="{'background-color':'{{unit.square.color}}'}" ><p> {{unit.unitNumber}}<a  ng-click="showModal(unit,$parent)" tooltip-placement="top" tooltip="Edit unit {{unit.unitNumber}}"><i class="glyphicon glyphicon-pencil"></i></a><a  ng-click="$parent.remove(unit)" tooltip-placement="top" tooltip="Delete unit {{unit.unitNumber}}"><i class="glyphicon glyphicon-trash"></i></a>
+        <li gridster-item="unit"  id="{{unit.square.id}}"  ng-repeat="unit in units"   ng-style="{'background-color':'{{unit.square.color}}'}" ><p> {{unit.unitNumber}}<a  ng-click="showModal(unit,$parent)" tooltip-placement="top" tooltip="Edit unit {{unit.unitNumber}}"><i class="glyphicon glyphicon-pencil"></i></a><a  ng-click="$parent.remove(unit)" tooltip-placement="top" tooltip="Delete unit {{unit.unitNumber}}"><i class="glyphicon glyphicon-trash"></i></a>
                           <img  class="svgtest" ng-src="{{unit.square.type||unit.square.icon.iconPath}}"  alt="icon"></p></li>
     </ul>
 </div>
 </div>
   </div>
-<div class="col-md-3">
-<br>
-<br>
+ <div class="col-md-2">
+<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Grid scale	  
+						<div class="panel-control pull-right">
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+						</div>
+					</h3>
+				</div>
+		   
+  
+    <div class="panel-body" >
+    <table >
+  <tbody >
+  	<tr  >
+      <th scope="row" class="col-xs-4"> <div gridster="gridsterOptsScale" >
+    			<ul>
+        			<li gridster-item="scale"    ng-style="{'background-color':'coral'}" ></li>
+    			</ul>
+			</div>
+			</th>
+      <td class="col-xs-6">{{scale.scale}} m</td>
+    </tr>
+   
+  </tbody>
+</table>
+    
+    </div>
+    	</div> 
+    </div>
+<div class="col-md-2">
+
 <br>
     <a ng-click="addUnit()" tooltip-placement="right" tooltip="Add a Unit"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>
 </div>
-<div class="col-md-3">
+<div class="col-md-2">
 <br>
 	<a  tooltip-placement="right" tooltip="Right Click for Adding a Default Icon" context-menu="menuOptions"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-asterisk"></i></button></a>
 </div>
-<div class="col-md-3">
+<div class="col-md-2">
 <br>
     <a ng-click="saveUnits()" tooltip-placement="right" tooltip="Save Floor Plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-floppy-disk"></i></button></a>
  </div>
-<div class="col-md-3">
+<div class="col-md-2">
 	<br>
     <a  context-menu="iconMenu" tooltip-placement="right" tooltip="Select and add a Personalised Icon"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-asterisk"></i></button></a>
    
