@@ -7,8 +7,6 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
   var building;
   var widthForFloorPlan;
   var obj;
-  var scale;
-  var checkIndex;
   $scope.legends=[];
   angular.element(document).ready(function () {
 	  		//GET LEVEL	 
@@ -25,7 +23,6 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 		      console.log(level);
 		      $scope.levelLength;
 		      $scope.levelWidth;
-		      $scope.background=level.filePath;
 		    //IN CASE OF GETTING AN ARRAY FROM SHAREDATA 
 		    if(!level.id){
 		    	console.log("LEVEL IS NOT GET");
@@ -44,35 +41,13 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 		      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;
 		   
 		      
-		      meter=(widthForFloorPlan-40)/(level.length);
+		     // meter=parseInt((widthForFloorPlan-40)/(level.length));
+		    meter=(widthForFloorPlan-40)/(level.length);
 		      $scope.levelLengthGrid=meter*(level.length);
 			    $scope.levelWidthGrid=meter*(level.width);	
+			    $scope.background=level.filePath;
 			    console.log( $scope.levelLengthGrid+" "+$scope.levelWidthGrid);
-			    checkIndex=1;
-			    var checkLength=level.length;
-			      do{
-			      if(checkLength<=100){
-			    	  checkIndex*=2;
-			    	  checkLength*=2;
-			      }else if(checkLength>200){
-			    	  checkIndex/=2;
-			    	  checkLength/=2;
-			      }}while(checkLength<=100||checkLength>200);
-			      console.log("meter");
-			      console.log(meter);
-			      console.log("checkIndex"); 
-			      console.log(checkIndex);  		      
-			      scale=meter/checkIndex;
-			      console.log("scale");
-			      console.log(scale);
-			      $scope.scaleMeter=1/checkIndex;
-			      $scope.scale={
-		    		  		sizeX:1,
-		    		  		sizeY:1,
-		    		  		col:1,
-		    		  		row:1,
-		    		  		scale:$scope.scaleMeter
-		      }
+			    
 		    //GET UNITS FROM levelIdObj
 		    levelId=level.id;
 		    levelIdObj={
@@ -253,8 +228,7 @@ $scope.twoOptions=[
 		    	      controller: "viewUnitController",
 		    	      inputs: {
 		    	        title: "View Unit",
-		    	        unit:unit,
-		    	        scale:$scope.scaleMeter
+		    	        unit:unit
 		    	      }
 		    	    }).then(function(modal) {
 		    	      modal.element.modal();
@@ -273,29 +247,27 @@ $scope.twoOptions=[
 			 
 			 
 			 //GRIDSTER CONFIG
-			 var col=parseInt(level.length*checkIndex);
-			 var row=parseInt(level.width*checkIndex);
 			 console.log("gridster test view");
 			 console.log(meter);
 			 $scope.gridsterOpts = {
 					 
 					 	
-					    columns: col, // the width of the grid, in columns
+					    columns: level.length, // the width of the grid, in columns
 					    pushing: false, // whether to push other items out of the way on move or resize
 					    floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
 					    swapping: false, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
 					    width:$scope.levelLengthGrid, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
-					    colWidth: scale, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
-					    rowHeight: scale, // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
-					    margins: [0, 0], // the pixel distance between each widget
+					    colWidth: meter, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
+					    rowHeight: meter, // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
+					    margins: [2, 2], // the pixel distance between each widget
 					    outerMargin: false, // whether margins apply to outer edges of the grid
 					    sparse: false, // "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
 					    isMobile: false, // stacks the grid items if true
 					    mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items
 					    mobileModeEnabled: false, // whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
-					    minColumns: col, // the minimum columns the grid must have
-					    minRows: row, // the minimum height of the grid, in rows
-					    maxRows: row,
+					    minColumns: level.length, // the minimum columns the grid must have
+					    minRows: level.width, // the minimum height of the grid, in rows
+					    maxRows: level.width,
 					    defaultSizeX: 2, // the default width of a gridster item, if not specifed
 					    defaultSizeY: 1, // the default height of a gridster item, if not specified
 					    minSizeX: 1, // minimum column width of an item
@@ -327,8 +299,8 @@ $scope.twoOptions=[
 })
 
 //VIEW UNIT MODAL
-app.controller('viewUnitController', ['$scope', '$element', 'title', 'close', 'unit','scale',
-                                                function($scope, $element, title, close,unit,scale) {
+app.controller('viewUnitController', ['$scope', '$element', 'title', 'close', 'unit',
+                                                function($scope, $element, title, close,unit) {
 	
 
 		  $scope.title = title;
@@ -336,7 +308,6 @@ app.controller('viewUnitController', ['$scope', '$element', 'title', 'close', 'u
 		  console.log(title);
 		  console.log(close);
 		  console.log($element);
-		  $scope.scale=scale;
 		  //  This close function doesn't need to use jQuery or bootstrap, because
 		  //  the button has the 'data-dismiss' attribute.
 		  $scope.close = function() {
@@ -456,8 +427,6 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
   var widthForFloorPlan;
   var obj;
   var meter;
-  var checkIndex;
-  var scale;
   angular.element(document).ready(function () {
 	  
 	    	//GET LEVEL
@@ -466,7 +435,9 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	  		level=obj.level
 	  		building=obj.building;
 	      $scope.levelLength;
-	      $scope.levelWidth;     
+	      $scope.levelWidth; 
+	      $scope.background=level.filePath;
+	      console.log($scope.background);
 	      console.log("GET LEVEL: ");
 	      console.log(level);
 	      if(!level.id){
@@ -481,39 +452,11 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	      $scope.levelLength=800;
 	      $scope.levelWidth=parseInt((level.width)*800/(level.length));
 	      
+	      //meter=parseInt((widthForFloorPlan-40)/(level.length));
 	      meter=(widthForFloorPlan-40)/(level.length);
 	      $scope.levelLengthGrid=meter*(level.length);
 		    $scope.levelWidthGrid=meter*(level.width);	
-		    $scope.background=level.filePath;
 		    console.log( $scope.levelLengthGrid+" "+$scope.levelWidthGrid);
-		    
-		    checkIndex=1;
-		    var checkLength=level.length;
-		      do{
-		      if(checkLength<=100){
-		    	  checkIndex*=2;
-		    	  checkLength*=2;
-		      }else if(checkLength>200){
-		    	  checkIndex/=2;
-		    	  checkLength/=2;
-		      }}while(checkLength<=100||checkLength>200);
-		      console.log("meter");
-		      console.log(meter);
-		      console.log("checkIndex"); 
-		      console.log(checkIndex);  		      
-		      scale=meter/checkIndex;
-		      console.log("scale");
-		      console.log(scale);
-		      $scope.scaleMeter=1/checkIndex;
-		      $scope.scale={
-	    		  		sizeX:1,
-	    		  		sizeY:1,
-	    		  		col:1,
-	    		  		row:1,
-	    		  		scale:$scope.scaleMeter
-		      }
-		      console.log("scale");
-		      console.log($scope.scale);
 	      //GET UNITS
 	      levelId=level.id;
 	      levelIdObj={
@@ -1002,9 +945,6 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
   $scope.complexResult = null;
 	 $scope.showModal = function(unit,$parent) {
 		 console.log(unit);
-		 console.log("scalemeter in parent");
-		 console.log($scope.scaleMeter);
-		
 		    // Just provide a template url, a controller and call 'showModal'.
 		    ModalService.showModal({
 		    	
@@ -1012,8 +952,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 		    	      controller: "updateUnitController",
 		    	      inputs: {
 		    	        title: "Update Unit",
-		    	        unit:unit,
-		    	        scale:$scope.scaleMeter
+		    	        unit:unit
 		    	      }
 		    	    }).then(function(modal) {
 		    	      modal.element.modal();
@@ -1043,30 +982,28 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 			                        
 			                       ];*/
 			
-			 var col=parseInt(level.length*checkIndex);
-			 var row=parseInt(level.width*checkIndex);
 			 console.log($scope.standardItems);
 			 console.log("gridster test ");
 			 console.log(meter);
 			 $scope.gridsterOpts = {
 					 
 					 	
-					    columns: col, // the width of the grid, in columns
+					    columns: level.length, // the width of the grid, in columns
 					    pushing: false, // whether to push other items out of the way on move or resize
 					    floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
 					    swapping: false, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
 					    width:$scope.levelLengthGrid, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
-					    colWidth: scale, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
-					    rowHeight: scale, // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
-					    margins: [1, 1], // the pixel distance between each widget
+					    colWidth: meter, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
+					    rowHeight: meter, // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
+					    margins: [0, 0], // the pixel distance between each widget
 					    outerMargin: false, // whether margins apply to outer edges of the grid
 					    sparse: false, // "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
 					    isMobile: false, // stacks the grid items if true
 					    mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items
 					    mobileModeEnabled: false, // whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
-					    minColumns: col, // the minimum columns the grid must have
-					    minRows: row, // the minimum height of the grid, in rows
-					    maxRows: row,
+					    minColumns: level.length, // the minimum columns the grid must have
+					    minRows: level.width, // the minimum height of the grid, in rows
+					    maxRows: level.width,
 					    defaultSizeX: 2, // the default width of a gridster item, if not specifed
 					    defaultSizeY: 1, // the default height of a gridster item, if not specified
 					    minSizeX: 1, // minimum column width of an item
@@ -1104,65 +1041,13 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 			 console.log($scope.gridsterOpts.colWidth);
 			 console.log($scope.gridsterOpts.maxRows);
 			 console.log($scope.gridsterOpts.columns);
-			 
-			 $scope.gridsterOptsScale = {
-					 
-					 	
-					    columns: 1, // the width of the grid, in columns
-					    pushing: false, // whether to push other items out of the way on move or resize
-					    floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
-					    swapping: false, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
-					    width:$scope.levelLengthGrid, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
-					    colWidth: scale, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
-					    rowHeight: scale, // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
-					    margins: [1, 1], // the pixel distance between each widget
-					    outerMargin: false, // whether margins apply to outer edges of the grid
-					    sparse: false, // "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
-					    isMobile: false, // stacks the grid items if true
-					    mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items
-					    mobileModeEnabled: false, // whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
-					    minColumns: 1, // the minimum columns the grid must have
-					    minRows: 1, // the minimum height of the grid, in rows
-					    maxRows: 1,
-					    defaultSizeX: 1, // the default width of a gridster item, if not specifed
-					    defaultSizeY: 1, // the default height of a gridster item, if not specified
-					    minSizeX: 1, // minimum column width of an item
-					    maxSizeX: null, // maximum column width of an item
-					    minSizeY: 1, // minumum row height of an item
-					    maxSizeY: null, // maximum row height of an item
-					    resizable: {
-					       enabled: false,
-					       handles: ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'],
-					       start: function(event, $element, widget) {}, // optional callback fired when resize is started,
-					       resize: function(event, $element, widget) {}, // optional callback fired when item is resized,
-					       stop: function(event, $element, unit) {
-					    	   
-					    	   //console.log($element);
-					    	 //  console.log(unit);
-					    	   $scope.updateUnit(unit);
-					       } // optional callback fired when item is finished resizing
-					    },
-					    draggable: {
-					       enabled: false, // whether dragging items is supported
-					       //handle: '.my-class', // optional selector for drag handle
-					       start: function(event, $element, widget) {}, // optional callback fired when drag is started,
-					       drag: function(event, $element, widget) {
-					    	 
-					       }, // optional callback fired when item is moved,
-					       stop: function(event, $element, unit) {
-					    	   //console.log($element);
-					    	   //console.log(unit);
-					    	   $scope.updateUnit(unit);
-					       } // optional callback fired when item is finished dragging
-					    }
-					};
 })
 
 
 
 //UPDATE UNIT MODAL
-app.controller('updateUnitController', ['$scope', '$element', 'title', 'close', 'unit','scale',
-                                                function($scope, $element, title, close,unit,scale) {
+app.controller('updateUnitController', ['$scope', '$element', 'title', 'close', 'unit',
+                                                function($scope, $element, title, close,unit) {
 	
 		//UPDATE MODAL
 
@@ -1170,12 +1055,7 @@ app.controller('updateUnitController', ['$scope', '$element', 'title', 'close', 
 		  $scope.unit=unit;
 		  console.log(title);
 		  console.log(close);
-		  console.log("scale");
-		  console.log(scale);
-		  $scope.scale=scale;
-		  console.log( $scope.scale);
 		  console.log($element);
-		 
 		  //  This close function doesn't need to use jQuery or bootstrap, because
 		  //  the button has the 'data-dismiss' attribute.
 		  $scope.close = function() {
@@ -1201,6 +1081,3 @@ app.controller('updateUnitController', ['$scope', '$element', 'title', 'close', 
 
 	
 }])
-
-
-

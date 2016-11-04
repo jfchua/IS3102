@@ -16,7 +16,8 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 	 //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
 	      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;    
 	      console.log(widthForFloorPlan);
-	      meter=parseInt((widthForFloorPlan-40)/(unit.sizeX));
+	      //meter=parseInt((widthForFloorPlan-40)/(unit.sizeX));
+	      meter=(widthForFloorPlan-24)/(unit.sizeX);
 	      $scope.unitLengthGrid=meter*(unit.sizeX);
 		  $scope.unitWidthGrid=meter*(unit.sizeY);	
 		  scale=meter/2;//one grid represent 0.5m
@@ -596,7 +597,8 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 	 //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
 	      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;    
 	      console.log(widthForFloorPlan);
-	      meter=parseInt((widthForFloorPlan-40)/($scope.unit.sizeX));
+	     // meter=parseInt((widthForFloorPlan-40)/($scope.unit.sizeX));
+	      meter=(widthForFloorPlan-40)/($scope.unit.sizeX);
 	      $scope.unitLengthGrid=meter*($scope.unit.sizeX);
 		  $scope.unitWidthGrid=meter*($scope.unit.sizeY);	
 		  scale=meter/2;//one grid represent 0.5m
