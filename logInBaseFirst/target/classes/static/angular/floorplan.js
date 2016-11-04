@@ -995,11 +995,11 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					    width:$scope.levelLengthGrid, // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
 					    colWidth: meter, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
 					    rowHeight: meter, // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
-					    margins: [0, 0], // the pixel distance between each widget
+					    margins: [2, 2], // the pixel distance between each widget
 					    outerMargin: false, // whether margins apply to outer edges of the grid
-					    sparse: false, // "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
+					    sparse: true, // "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
 					    isMobile: false, // stacks the grid items if true
-					    mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items
+					    mobileBreakPoint: 0, // if the screen is not wider that this, remove the grid layout and stack the items
 					    mobileModeEnabled: false, // whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
 					    minColumns: level.length, // the minimum columns the grid must have
 					    minRows: level.width, // the minimum height of the grid, in rows
@@ -1007,9 +1007,9 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					    defaultSizeX: 2, // the default width of a gridster item, if not specifed
 					    defaultSizeY: 1, // the default height of a gridster item, if not specified
 					    minSizeX: 1, // minimum column width of an item
-					    maxSizeX: null, // maximum column width of an item
+					    maxSizeX: level.length, // maximum column width of an item
 					    minSizeY: 1, // minumum row height of an item
-					    maxSizeY: null, // maximum row height of an item
+					    maxSizeY: level.width, // maximum row height of an item
 					    resizable: {
 					       enabled: true,
 					       handles: ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'],
@@ -1026,9 +1026,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					       enabled: true, // whether dragging items is supported
 					       //handle: '.my-class', // optional selector for drag handle
 					       start: function(event, $element, widget) {}, // optional callback fired when drag is started,
-					       drag: function(event, $element, widget) {
-					    	 
-					       }, // optional callback fired when item is moved,
+					       drag: function(event, $element, widget) {}, // optional callback fired when item is moved,
 					       stop: function(event, $element, unit) {
 					    	   //console.log($element);
 					    	   //console.log(unit);

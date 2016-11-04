@@ -160,6 +160,18 @@
 				</ul>
             </li>
 			
+			
+				
+		<li  ng-show="IsUser()" ng-controller="AccountController" class="active">
+			<a ui-sref="dashboard.viewDataVisual">
+					<span class="glyphicon glyphicon-blackboard"></span>
+				</a>
+				<ul class="nested-dropdown animated fadeIn">
+					<li class="sidemenu-header">{{ 'Data Visualisation' | translate }}</li>
+					<li><a  ui-sref="dashboard.viewDataVisual">{{ 'View Data Visualisation' | translate }}</a></li>
+					
+				</ul>
+            </li>
 		</ul>
 	</div>
 </div>

@@ -8,6 +8,7 @@
 --VALUES ('event@event', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'EVENT');
 --INSERT INTO user (email, password_hash, role)
 --VALUES ('kenneth1399@hotmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'USER');
+--10 roles
 insert into role (name)values ("ROLE_SUPERADMIN");
 insert into role (name)values ("ROLE_ADMIN");
 insert into role (name)values ("ROLE_USER");
@@ -16,6 +17,7 @@ insert into role (name)values ("ROLE_PROPERTY");
 insert into role (name)values ("ROLE_FINANCE");
 insert into role (name)values ("ROLE_TICKETING");
 insert into role (name)values ("ROLE_EXTEVE");
+insert into role (name)values ("ROLE_HIGHER");
 insert into role (name)values ("ROLE_EVEGOER");
  
 INSERT INTO payment_policy(deposit_rate, interim_period, due_days, subsequent_number)
@@ -32,7 +34,7 @@ values ("Algattas", "73 Ubi Road 1","408733", "31580456","red","algattasLogo.png
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',3 ,'Kenneth LIM' , '2');
 --Algattas superadmin is user 1
-
+--User 2 to 9
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('admin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Jin Fa CHUA' , '3');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
@@ -49,17 +51,52 @@ INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('ticketing@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'ticketing manager', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('exteve@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'external event organiser', '5');
-
+--User 10 to 11
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('suntecadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec Admin', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('suntecall@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec All roles', '5');
 
-
+--User 12 to 13
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('tkgs.zhao.mingsha@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Mingsha ZHAO', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('suntecexternal@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec external manager', '5');
+--User 14 to 21
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer1@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS1', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer2@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL2', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer3@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'TKH3', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer4@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CJF4', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer5@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'KLZW5', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer6@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS6', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer7@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL7', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('goer8@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CHS8', '5');
+--User 22 to 29
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('ext1@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS11', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('ext2@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL22', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('ext3@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'TKH33', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('ext4@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CJF44', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('ext5@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'KLZW55', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('ext6@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS66', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('ext7@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL77', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+VALUES ('ext8@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CHS88', '5');
+
 
 --Assign roles to users for testing
 INSERT into users_roles values( 1,1);
@@ -67,6 +104,7 @@ INSERT into users_roles values( 1,3);
 INSERT into users_roles values( 2,2);
 INSERT into users_roles values( 2,3);
 INSERT into users_roles values( 3,3);
+INSERT into users_roles values( 3,9);
 INSERT into users_roles values( 4,3);
 INSERT into users_roles values( 4,4);
 INSERT into users_roles values( 4,5);
@@ -96,7 +134,38 @@ INSERT into users_roles values( 12,6);
 INSERT into users_roles values( 12,8);
 INSERT into users_roles values( 13,3);
 INSERT into users_roles values( 13,8);
-
+INSERT into users_roles values( 14,3);
+INSERT into users_roles values( 14,10);
+INSERT into users_roles values( 15,3);
+INSERT into users_roles values( 15,10);
+INSERT into users_roles values( 16,3);
+INSERT into users_roles values( 16,10);
+INSERT into users_roles values( 17,3);
+INSERT into users_roles values( 17,10);
+INSERT into users_roles values( 18,3);
+INSERT into users_roles values( 18,10);
+INSERT into users_roles values( 19,3);
+INSERT into users_roles values( 19,10);
+INSERT into users_roles values( 20,3);
+INSERT into users_roles values( 20,10);
+INSERT into users_roles values( 21,3);
+INSERT into users_roles values( 21,10);
+INSERT into users_roles values( 22,3);
+INSERT into users_roles values( 22,8);
+INSERT into users_roles values( 23,3);
+INSERT into users_roles values( 23,8);
+INSERT into users_roles values( 24,3);
+INSERT into users_roles values( 24,8);
+INSERT into users_roles values( 25,3);
+INSERT into users_roles values( 25,8);
+INSERT into users_roles values( 26,3);
+INSERT into users_roles values( 26,8);
+INSERT into users_roles values( 27,3);
+INSERT into users_roles values( 27,8);
+INSERT into users_roles values( 28,3);
+INSERT into users_roles values( 28,8);
+INSERT into users_roles values( 29,3);
+INSERT into users_roles values( 29,8);
 
 --INSERT INTO message (subject,sender,recipient,message) values('subject','1@1','1@1','test');
 --INSERT INTO message (subject,sender,recipient,message) values('pikachu','dragonite','1@1','charmander');
@@ -127,9 +196,9 @@ insert into client_organisation_buildings(client_organisation_id, buildings_id) 
 insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,4);
 insert into client_organisation_buildings(client_organisation_id, buildings_id) values(2,5);
 
-insert into vendor(contact, description, email, name)values("84500062", "great", "1@gmail.com", "MS");
-insert into vendor(contact, description, email, name)values("84536000", "excellent", "2@gmail.com", "HL");
-insert into vendor(contact, description, email, name)values("81610000", "good", "3@gmail.com", "KL");
+insert into vendor(contact, description, email, name, registration)values("84500062", "great", "1@gmail.com", "MS", "#1234");
+insert into vendor(contact, description, email, name, registration)values("84536000", "excellent", "2@gmail.com", "HL", "#1235");
+insert into vendor(contact, description, email, name, registration)values("81610000", "good", "3@gmail.com", "KL", "#1236");
 
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,2);
@@ -452,31 +521,142 @@ INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , 
 VALUES('Hall', 1, 100, true, 'HALL N2', 1, 16, 7, 17, 60);
 
 
-INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
-VALUES('APPROVED','hahaha','2016-10-26 22:00:00', '2016-10-25 10:00:00', 'party', 'CONCERT', null, 1, 'UNPAID', 12);
+
 --INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		
 --VALUES('2016-09-06 22:00:00', 42.8, 0.4, '2016-09-12 22:00:00', 7, 64.2, '2016-09-19 22:00:00', 0, 'tkgs.zhao.mingsha@gmail.com', 42.8, 64.2, 64.2, 1, 0.00, 107, 100);		
 --INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		
 --VALUES('2016-09-11 22:00:00', 42.8, 0.4, '2016-09-17 22:00:00', 7, 42.8, '2016-09-14 22:00:00', 0, 'tkgs.zhao.mingsha@gmail.com', 0.0, 107.0, 64.2, 1, 0.00, 107, 100);		
 --INSERT INTO payment_plan(created, deposit, deposit_rate, due, gst, next_payment, notification_due, overdue, owner, paid, payable, subsequent, subsequent_number, ticket_revenue, total, total_before_gst)		
 --VALUES('2016-09-08 22:00:00', 42.8, 0.4, '2016-09-14 22:00:00', 7, 42.8, '2016-09-11 22:00:00', 0, 'tkgs.zhao.mingsha@gmail.com', 0.0, 107.0, 64.2, 1, 0.00, 107, 100);		
---INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id, payment_plan_id)		
---VALUES('APPROVED','hahaha','2016-09-08 22:00:00', '2016-09-06 10:00:00', 'party1', 'CONCERT', null, 1, 'UNPAID', 12, 1);		
---INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id, payment_plan_id)		
---VALUES('APPROVED','hahaha','2016-09-12 22:00:00', '2016-09-11 10:00:00', 'party2', 'CONCERT', null, 1, 'UNPAID', 12, 2);		
---INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id, payment_plan_id)		
---VALUES('APPROVED','hahaha','2016-09-26 22:00:00', '2016-09-25 10:00:00', 'party3', 'CONCERT', null, 1, 'UNPAID', 12, 3);
+
+--Insert 20 events
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha1','2016-09-03 22:00:00', '2016-09-01 10:00:00', 'Conference', 'CONFERENCE', null, 0, 'PAID', 12);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha2','2016-09-08 22:00:00', '2016-09-06 10:00:00', 'Annual Conference', 'CONFERENCE', null, 0, 'PAID', 12);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha3','2016-09-12 22:00:00', '2016-09-10 10:00:00', 'Flea Market', 'FAIR', null, 0, 'PAID', 12);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha4','2016-09-12 22:00:00', '2016-09-11 10:00:00', 'Meeting', 'CONFERENCE', null, 0, 'PAID', 12);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha5','2016-09-19 22:00:00', '2016-09-17 10:00:00', 'NTUC', 'FAIR', null, 0, 'PAID', 12);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha6','2016-09-26 22:00:00', '2016-09-25 10:00:00', 'Birthday', 'FAMILY', null, 0, 'PAID', 12);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
-VALUES('APPROVED','hahaha','2016-11-12 22:00:00', '2016-11-11 10:00:00', 'partyyyyyy', 'FAIR', null, 0, 'UNPAID', 12);
+VALUES('APPROVED','hahaha7','2016-10-03 22:00:00', '2016-10-03 10:00:00', 'Concert', 'CONCERT', null, 1, 'PAID', 12);
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
+VALUES('APPROVED','hahaha8','2016-10-07 22:00:00', '2016-10-03 10:00:00', 'Movie Screening', 'LIFESTYLE', null, 0, 'UNPAID', 12);
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
+VALUES('APPROVED','hahaha9','2016-10-08 22:00:00', '2016-10-06 10:00:00', 'Singing Competition', 'CONCERT', null, 1, 'PAID', 12);
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
+VALUES('APPROVED','hahaha10','2016-10-12 22:00:00', '2016-10-11 10:00:00', 'Finance Workshop', 'SEMINAR', null, 1, 'UNPAID', 12);
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha11','2016-10-13 22:00:00', '2016-10-12 10:00:00', 'DND', 'CONFERENCE', null, 0, 'PAID', 12);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha12','2016-10-18 22:00:00', '2016-10-16 10:00:00', 'General meeting', 'CONFERENCE', null, 0, 'PAID', 12);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha13','2016-10-22 22:00:00', '2016-10-20 10:00:00', 'Flea Market 2', 'FAIR', null, 0, 'PAID', 12);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha14','2016-10-22 22:00:00', '2016-10-22 10:00:00', 'Audit Workshop', 'SEMINAR', null, 1, 'PAID', 12);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha15','2016-10-26 22:00:00', '2016-10-26 10:00:00', 'Book Sale', 'FAIR', null, 0, 'PAID', 12);		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+VALUES('APPROVED','hahaha16','2016-10-29 22:00:00', '2016-10-27 10:00:00', 'Modelling Workshop', 'SEMINAR', null, 1, 'PAID', 12);
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
+VALUES('APPROVED','hahaha17','2016-11-03 22:00:00', '2016-11-03 10:00:00', 'Party', 'CONCERT', null, 1, 'PAID', 12);
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
+VALUES('APPROVED','hahaha18','2016-11-04 22:00:00', '2016-11-03 10:00:00', 'Reunion Dinner', 'LIFESTYLE', null, 0, 'UNPAID', 12);
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
+VALUES('APPROVED','hahaha19','2016-11-12 22:00:00', '2016-11-11 10:00:00', 'Dance Competition', 'CONCERT', null, 1, 'PAID', 12);
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
+VALUES('APPROVED','hahaha20','2016-11-16 22:00:00', '2016-11-15 10:00:00', 'Data Analysis Seminar', 'SEMINAR', null, 1, 'UNPAID', 12);
 
 INSERT INTO user_events(user_id, events_id)VALUES(12, 1);
-INSERT INTO user_events(user_id, events_id)VALUES(12, 2);		
---INSERT INTO user_events(user_id, events_id)VALUES(12, 3);		
---INSERT INTO user_events(user_id, events_id)VALUES(12, 4);
+INSERT INTO user_events(user_id, events_id)VALUES(22, 2);	
+INSERT INTO user_events(user_id, events_id)VALUES(23, 3);
+INSERT INTO user_events(user_id, events_id)VALUES(24, 4);
+INSERT INTO user_events(user_id, events_id)VALUES(25, 5);
+INSERT INTO user_events(user_id, events_id)VALUES(26, 6);
+INSERT INTO user_events(user_id, events_id)VALUES(27, 7);
+INSERT INTO user_events(user_id, events_id)VALUES(28, 8);
+INSERT INTO user_events(user_id, events_id)VALUES(29, 9);		
+INSERT INTO user_events(user_id, events_id)VALUES(12, 10);
+INSERT INTO user_events(user_id, events_id)VALUES(12, 11);
+INSERT INTO user_events(user_id, events_id)VALUES(22, 12);	
+INSERT INTO user_events(user_id, events_id)VALUES(23, 13);
+INSERT INTO user_events(user_id, events_id)VALUES(24, 14);
+INSERT INTO user_events(user_id, events_id)VALUES(25, 15);
+INSERT INTO user_events(user_id, events_id)VALUES(26, 16);
+INSERT INTO user_events(user_id, events_id)VALUES(27, 17);
+INSERT INTO user_events(user_id, events_id)VALUES(28, 18);
+INSERT INTO user_events(user_id, events_id)VALUES(29, 19);		
+INSERT INTO user_events(user_id, events_id)VALUES(12, 20);
+
+--Insert 30 Bookings
+--1 to 10
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-26 22:00:00', '2016-10-25 10:00:00', 12, 1, 1, 1);
+VALUES('2016-09-03 22:00:00', '2016-09-01 10:00:00', 12, 1, 1, 1);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-11-12 22:00:00', '2016-11-11 10:00:00', 12, 1, 2, 1);
+VALUES('2016-09-03 22:00:00', '2016-09-01 10:00:00', 12, 2, 1, 2);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-09-08 22:00:00', '2016-09-06 10:00:00', 22, 3, 2, 3);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-09-12 22:00:00', '2016-09-10 10:00:00', 23, 2, 3, 2);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-09-12 22:00:00', '2016-09-10 10:00:00', 23, 4, 3, 4);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-09-12 22:00:00', '2016-09-11 10:00:00', 24, 7, 4, 7);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-09-19 22:00:00', '2016-09-17 10:00:00', 25, 13, 5, 13);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-09-19 22:00:00', '2016-09-17 10:00:00', 25, 14, 5, 14);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-09-26 22:00:00', '2016-09-25 10:00:00', 26, 25, 6, 25);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-03 22:00:00', '2016-10-03 10:00:00', 27, 1, 7, 1);
+--11 to 20
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-07 22:00:00', '2016-10-03 10:00:00', 28, 59, 8, 59);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-07 22:00:00', '2016-10-03 10:00:00', 28, 60, 8, 60);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-08 22:00:00', '2016-10-06 10:00:00', 29, 57, 9, 58);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-12 22:00:00', '2016-10-11 10:00:00', 12, 35, 10, 35);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-13 22:00:00', '2016-10-12 10:00:00', 12, 36, 11, 36);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-18 22:00:00', '2016-10-16 10:00:00', 22, 31, 12, 31);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-18 22:00:00', '2016-10-16 10:00:00', 22, 32, 12, 32);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-22 22:00:00', '2016-10-20 10:00:00', 23, 14, 13, 14);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-22 22:00:00', '2016-10-22 10:00:00', 24, 35, 14, 35);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-26 22:00:00', '2016-10-26 10:00:00', 25, 2, 15, 2);
+--21 to 30
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-29 22:00:00', '2016-10-27 10:00:00', 26, 49, 16, 49);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-29 22:00:00', '2016-10-27 10:00:00', 26, 50, 16, 50);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-10-29 22:00:00', '2016-10-27 10:00:00', 26, 51, 16, 51);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-11-03 22:00:00', '2016-11-03 10:00:00', 27, 2, 17, 2);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-11-03 22:00:00', '2016-11-03 10:00:00', 27, 3, 17, 3);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-11-04 22:00:00', '2016-11-03 10:00:00', 28, 5, 18, 5);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-11-12 22:00:00', '2016-11-11 10:00:00', 29, 1, 19, 1);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-11-16 22:00:00', '2016-11-15 10:00:00', 12, 4, 20, 4);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-11-16 22:00:00', '2016-11-15 10:00:00', 12, 5, 20, 5);
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+VALUES('2016-11-16 22:00:00', '2016-11-15 10:00:00', 12, 6, 20, 6);
+
 INSERT INTO maintenance VALUES (1, 'Repair projector', '2016-11-02 22:00:00', '2016-11-01 10:00:00');
 INSERT INTO maintenance VALUES (2, 'Cleaning', '2016-11-18 22:00:00', '2016-11-16 10:00:00');
 INSERT INTO maintenance_vendors VALUES (1, 1);
@@ -505,18 +685,73 @@ INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Finance Syste
 INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Event Management System');
 INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Property System');
 
-insert into category values(1,'name',12,12,1);
-insert into category values(2,'namenumber2',15,15.5,1);
+--Insert 12 categories
 
-insert into ticket values(1,'2016-10-26 22:00:00', 'P1', '2016-10-23 10:00:00', '2016-10-25 10:00:00', 'single entry','*15*',1);
-insert into ticket values(2,'2016-10-26 22:00:00', 'P2', '2016-10-22 10:00:00', '2016-10-25 10:00:00', 'single entry','*16*',1);
-insert into ticket values(3,'2016-10-26 22:00:00', 'P3', '2016-10-21 10:00:00', '2016-10-25 10:00:00', 'double entry','*17*',2);
-insert into ticket values(4,'2016-10-26 22:00:00', 'P4', '2016-10-20 10:00:00', '2016-10-25 10:00:00', 'double entry','*18*',2);
-insert into ticket values(5,'2016-10-26 22:00:00', 'P5', '2016-10-19 10:00:00', '2016-10-25 10:00:00', 'double entry','*19*',2);
-insert into ticket values(6,'2016-12-26 22:00:00', 'P6', '2016-10-19 10:00:00', '2016-10-25 10:00:00', 'double entry','*19*',2);
-insert into user_tickets values( 6,1);
-insert into user_tickets values( 6,2);
-insert into user_tickets values (6,6);
+INSERT INTO category VALUES(1,'STUDENT',20,12,7);
+INSERT INTO category VALUES(2,'ADULT',20,15.5,7);
+INSERT INTO category VALUES(3,'ALL',20,10,9);
+INSERT INTO category VALUES(4,'ADULT',10,15,10);
+INSERT INTO category VALUES(5,'ELDERLY',10,12,10);
+INSERT INTO category VALUES(6,'ALL',20,15,14);
+INSERT INTO category VALUES(7,'STUDENT',10,12,16);
+INSERT INTO category VALUES(8,'ADULT',10,15.5,16);
+INSERT INTO category VALUES(9,'CHILDREN',10,10,17);
+INSERT INTO category VALUES(10,'ADULT',15,15.5,17);
+INSERT INTO category VALUES(11,'ALL',20,15,19);
+INSERT INTO category VALUES(12,'ALL',15,12,20);
+
+
+--Insert 24 tickets
+insert into ticket values(1,'2016-10-03 22:00:00', 'P1', '2016-10-01 10:00:00', '2016-10-03 10:00:00', 'single entry','*01*',1);
+insert into ticket values(2,'2016-10-03 22:00:00', 'P2', '2016-10-01 10:00:00', '2016-10-03 10:00:00', 'single entry','*02*',1);
+insert into ticket values(3,'2016-10-03 22:00:00', 'P3', '2016-10-02 10:00:00', '2016-10-03 10:00:00', 'single entry','*03*',2);
+insert into ticket values(4,'2016-10-03 22:00:00', 'P4', '2016-10-02 10:00:00', '2016-10-03 10:00:00', 'single entry','*04*',2);
+insert into ticket values(5,'2016-10-08 22:00:00', 'P5', '2016-10-05 10:00:00', '2016-10-06 10:00:00', 'double entry','*05*',3);
+insert into ticket values(6,'2016-10-08 22:00:00', 'P6', '2016-10-05 10:00:00', '2016-10-06 10:00:00', 'double entry','*06*',3);
+insert into ticket values(7,'2016-10-12 22:00:00', 'P7', '2016-10-06 10:00:00', '2016-10-11 10:00:00', 'double entry','*07*',4);
+insert into ticket values(8,'2016-10-12 22:00:00', 'P8', '2016-10-06 10:00:00', '2016-10-11 10:00:00', 'double entry','*08*',4);
+insert into ticket values(9,'2016-10-12 22:00:00', 'P9', '2016-10-06 10:00:00', '2016-10-11 10:00:00', 'double entry','*09*',5);
+insert into ticket values(10,'2016-10-12 22:00:00', 'P10', '2016-10-06 10:00:00', '2016-10-11 10:00:00', 'double entry','*10*',5);
+insert into ticket values(11,'2016-10-22 22:00:00', 'P11', '2016-10-20 10:00:00', '2016-10-22 10:00:00', 'double entry','*11*',6);
+insert into ticket values(12,'2016-10-22 22:00:00', 'P12', '2016-10-20 10:00:00', '2016-10-22 10:00:00', 'double entry','*12*',6);
+insert into ticket values(13,'2016-10-29 22:00:00', 'P13', '2016-10-25 10:00:00', '2016-10-27 10:00:00', 'double entry','*13*',7);
+insert into ticket values(14,'2016-10-29 22:00:00', 'P14', '2016-10-25 10:00:00', '2016-10-27 10:00:00', 'double entry','*14*',7);
+insert into ticket values(15,'2016-10-29 22:00:00', 'P15', '2016-10-25 10:00:00', '2016-10-27 10:00:00', 'double entry','*15*',8);
+insert into ticket values(16,'2016-10-29 22:00:00', 'P16', '2016-10-25 10:00:00', '2016-10-27 10:00:00', 'double entry','*16*',8);
+insert into ticket values(17,'2016-11-03 22:00:00', 'P17', '2016-11-01 10:00:00', '2016-11-03 10:00:00', 'single entry','*17*',9);
+insert into ticket values(18,'2016-11-03 22:00:00', 'P18', '2016-11-01 10:00:00', '2016-11-03 10:00:00', 'single entry','*18*',9);
+insert into ticket values(19,'2016-11-03 22:00:00', 'P19', '2016-11-02 10:00:00', '2016-11-03 10:00:00', 'single entry','*19*',10);
+insert into ticket values(20,'2016-11-03 22:00:00', 'P20', '2016-11-02 10:00:00', '2016-11-03 10:00:00', 'single entry','*20*',10);
+insert into ticket values(21,'2016-11-12 22:00:00', 'P21', '2016-11-05 10:00:00', '2016-11-11 10:00:00', 'single entry','*21*',11);
+insert into ticket values(22,'2016-11-12 22:00:00', 'P22', '2016-11-05 10:00:00', '2016-11-11 10:00:00', 'single entry','*22*',11);
+insert into ticket values(23,'2016-11-16 22:00:00', 'P23', '2016-11-05 10:00:00', '2016-11-15 10:00:00', 'single entry','*23*',12);
+insert into ticket values(24,'2016-11-16 22:00:00', 'P24', '2016-11-05 10:00:00', '2016-11-15 10:00:00', 'single entry','*24*',12);
+
+insert into user_tickets values(14,1);
+insert into user_tickets values(14,2);
+insert into user_tickets values(15,3);
+insert into user_tickets values(15,4);
+insert into user_tickets values(16,5);
+insert into user_tickets values(16,6);
+insert into user_tickets values(17,7);
+insert into user_tickets values(17,8);
+insert into user_tickets values(18,9);
+insert into user_tickets values(18,10);
+insert into user_tickets values(19,11);
+insert into user_tickets values(19,12);
+insert into user_tickets values(20,13);
+insert into user_tickets values(20,14);
+insert into user_tickets values(21,15);
+insert into user_tickets values(21,16);
+insert into user_tickets values(14,17);
+insert into user_tickets values(14,18);
+insert into user_tickets values(16,19);
+insert into user_tickets values(16,20);
+insert into user_tickets values(19,21);
+insert into user_tickets values(19,22);
+insert into user_tickets values(20,23);
+insert into user_tickets values(20,24);
+
 insert into discount values ( 1,"12345","DISCOUNT MESSAGE", "STARHUB");
 
 
