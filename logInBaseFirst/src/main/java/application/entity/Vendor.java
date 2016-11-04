@@ -37,6 +37,9 @@ public class Vendor {
 	@Column(name = "contact")
 	private String contact;
 	
+	@Column(name = "registration")
+	private String registration;
+	
 	public Vendor() {
 		super();
 	}
@@ -63,5 +66,10 @@ public class Vendor {
 	@Column(name = "name")
 	private String name;
 
-
+	public String getRegistration() {
+		return registration;
+	}
+	public void setRegistration(String registration) {
+		this.registration = registration;
+	}
 }
