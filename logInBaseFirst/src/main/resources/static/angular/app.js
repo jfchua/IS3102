@@ -384,6 +384,14 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
+                                			  .state('dashboard.viewTestData',{
+                                				  url:'/viewTestData',
+                                				  templateUrl: '/views/viewTestData.html',
+                                				  controller: 'LineChartCtrl',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.user]
+                                				  }
+                                			  })
                                 			  .state('dashboard.createFloorPlan',{
                                 				  url:'/createFloorPlan',
                                 				  templateUrl: '/views/floorPlanAngular.html',
