@@ -490,11 +490,13 @@ public class PaymentPlanController {
 					.serializeNulls()
 					.create();
 			for(Event ev : events){
+				if(ev.getPaymentPlan() != null){
 				PaymentPlan p = ev.getPaymentPlan();
 				if(!p.getPayable().equals(0.00))
 					payments.add(p);
+				}
 			}
-			System.out.println("finishing getting list of events");
+			System.out.println("finishing getting list of payment plans");
 			return new ResponseEntity<Set<PaymentPlan>>(payments,HttpStatus.OK);	
 		}
 		catch (Exception e){
@@ -547,6 +549,7 @@ public class PaymentPlanController {
 			obj1.put("total", formatter.format(policy.getTotal()));
 			obj1.put("subsequent", formatter.format(policy.getSubsequent()));
 			obj1.put("nextPayment",formatter.format(policy.getNextPayment()));
+			obj1.put("nextInvoice",formatter.format(policy.getNextInvoice()));
 			System.out.println("TOTAL2");
 			return new ResponseEntity<String>(obj1.toString(), HttpStatus.OK);
 		}
