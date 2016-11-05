@@ -88,11 +88,10 @@
 				</div>
 			</div>
 		</div>
-		
-		
-		<div class="col-lg-12" id="pie-chart">
-			<div class="panel panel-primary">
 
+
+		<div class="col-lg-6" id="pie-chart">
+			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">
 						Percentage of event types
@@ -102,7 +101,6 @@
 								class="panelButton"><i class="fa fa-remove"></i></a>
 						</div>
 					</h3>
-
 				</div>
 				<div class="panel-body">
 					<c3chart bindto-id="pie-plot1-chart" ng-if="eventTypeCount">
@@ -116,90 +114,30 @@
 						column-type="pie" /> <chart-column column-id="Lifestyle"
 						column-values="{{eventTypeCount.lifestyle}}" column-type="pie" />
 					<chart-column column-id="Seminar"
-						column-values="{{eventTypeCount.seminar}}" column-type="pie" /> 
-						 <chart-legend show-legend="true" legend-position="right"/> </c3chart>
-
-
+						column-values="{{eventTypeCount.seminar}}" column-type="pie" /> <chart-legend
+						show-legend="true" legend-position="right" /> </c3chart>
 				</div>
-
-
 			</div>
-
 		</div>
-				<div class="col-lg-12" id="pie-chart">
-			<div class="panel panel-primary">
 
+		<div class="col-lg-6" id="eventThreeMonth">
+			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">
-						Number of events in the last year
+						Number of events in the last three month
 						<div class="panel-control pull-right">
 							<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
 								class="panelButton"><i class="fa fa-minus"></i></a> <a
 								class="panelButton"><i class="fa fa-remove"></i></a>
 						</div>
 					</h3>
-
 				</div>
 				<div class="panel-body">
-<c3chart bindto-id="chart2">
-    <chart-column column-id="line1"
-                  column-name="Line 1"
-                  column-color="red"
-                  column-values="30,200,100,400,150,250"
-                  column-type="spline"/>
-    <chart-column column-id="bar1"
-                  column-name="Bar 1"
-                  column-color="green"
-                  column-values="50,20,10,40,15,25"
-                  column-type="bar"/>
-      <chart-column column-id="bar2"
-                  column-name="Bar 2"
-                  column-color="yellow"
-                  column-values="{{testnumbers}}"
-                  column-type="bar"/>
-    <chart-axes y="line1"/>
-     <chart-axis>
-        <chart-axis-x axis-position="outer-center"
-                      axis-label="The time"
-                      axis-type="category"/>
-    </chart-axis>
-</c3chart>
-
-
+					<div id="chart"></div>
 				</div>
-
-
 			</div>
-
 		</div>
-						<div class="col-lg-12" id="pie-chart">
-			<div class="panel panel-primary">
-
-				<div class="panel-heading">
-					<h3 class="panel-title">
-						Number of events in the last year
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
-								class="panelButton"><i class="fa fa-minus"></i></a> <a
-								class="panelButton"><i class="fa fa-remove"></i></a>
-						</div>
-					</h3>
-
-				</div>
-				<div class="panel-body">
-	<div id="chart"></div>
-
-
-				</div>
-
-
-			</div>
-
-		</div>
-
 	</div>
-
-
 </div>
 <a onclick="javascript:window.print();"
 	class="btn btn-bordered btn-primary hidden-print pull-right"> Print
