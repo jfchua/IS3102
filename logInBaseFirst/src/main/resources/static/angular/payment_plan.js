@@ -241,7 +241,7 @@ alert('PAYMENT IS UPDATED! DOWNLOAD THE INVOICE!! GOING BACK TO VIEW PAYMENT PLA
 				console.log(JSON.stringify(data));
 				var file = new Blob([data], {type: 'application/pdf'});
 				var fileURL = URL.createObjectURL(file);
-				window.open(fileURL);
+				//window.open(fileURL);
 				alert('DOWNLOADED!');
 			});
 			send.error(function(data){
@@ -721,7 +721,7 @@ app.controller('invoiceController', ['$scope', '$http', function ($scope, $http)
 			console.log(JSON.stringify(data));
 			var file = new Blob([data], {type: 'application/pdf'});
 			var fileURL = URL.createObjectURL(file);
-			window.open(fileURL);
+			//window.open(fileURL);
 			alert('DOWNLOADED!');
 		});
 		send.error(function(data){

@@ -915,7 +915,13 @@ public class PaymentPlanController {
 				}
 				parameters.put("number", p.getId() + "-" + counter );
 			}
+			Calendar cal = Calendar.getInstance();
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			parameters.put("createdDate", String.valueOf(sdf.format(cal.getTime())));
 			System.out.println("invoice is "+invoice);
+			Date due = p.getDue();
+			//System.err.println("DUE " +sdf.format(due));
+			parameters.put("dueDate", String.valueOf(sdf.format(due)));
 			boolean bl = paymentPlanService.generatePayment(client, p.getId(), invoice);
 			System.out.println("*******GENERATE PAYMENT????"+bl);
 			System.err.println("path is " + path);
@@ -1005,6 +1011,12 @@ public class PaymentPlanController {
 				}
 				parameters.put("number", p.getId() + "-" + counter );
 			}
+			Calendar cal = Calendar.getInstance();
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			parameters.put("createdDate", String.valueOf(sdf.format(cal.getTime())));
+			Date due = p.getDue();
+			//System.err.println("DUE " +sdf.format(due));
+			parameters.put("dueDate", String.valueOf(sdf.format(due)));
 			System.out.println("invoice is "+invoice);
 			boolean bl = paymentPlanService.generatePayment(client, p.getId(), invoice);
 			System.out.println("*******GENERATE PAYMENT????"+bl);
@@ -1092,6 +1104,11 @@ public class PaymentPlanController {
 				System.err.println(invoice);
 				parameters.put("number", invoice);
 			}
+			Calendar cal = Calendar.getInstance();
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			parameters.put("createdDate", String.valueOf(sdf.format(cal.getTime())));
+			Date due = p.getDue();
+			parameters.put("dueDate", String.valueOf(sdf.format(due)));
 			path += "Invoice" + invoice + ".pdf";
 			File f = new File(path);
 			System.out.println("invoice is "+invoice);
