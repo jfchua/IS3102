@@ -43,7 +43,7 @@
                            </tr>
                         </thead>
                           <tbody>
-                         <tr ng-repeat="x in events">
+                         <tr ng-repeat="x in events| orderObjectBy:order_item:order_reverse">
                          <td>{{ x.id }}</td>
                          <td>{{ x.event_title }}</td>
                          <td>{{ x.approvalStatus }}</td>
@@ -83,7 +83,7 @@
                                </tr>
                              </thead>
                             <tbody>
-                             <tr ng-repeat="x in events">
+                             <tr ng-repeat="x in events| orderObjectBy:order_item:order_reverse">
                              <td>{{ x.id }}</td>
                              <td>{{ x.event_title }}</td>
                              <td>{{ x.approvalStatus }}</td>
@@ -126,7 +126,7 @@
                            </tr>
                         </thead>
                          <tbody>
-                             <tr ng-repeat="x in events | filter: eventFilter.event ">
+                             <tr ng-repeat="x in events | filter: eventFilter.event | orderObjectBy:order_item:order_reverse">
                              <td>{{ x.id }}</td>
                              <td>{{ x.event_title }}</td>
                              <td>{{ x.approvalStatus }}</td>
@@ -169,7 +169,7 @@
                            </tr>
                         </thead>
                          <tbody>
-                             <tr ng-repeat="x in events | filter: eventFilter.event ">
+                             <tr ng-repeat="x in events | filter: eventFilter.event | orderObjectBy:order_item:order_reverse">
                              <td>{{ x.id }}</td>
                              <td>{{ x.event_title }}</td>
                              <td>{{ x.approvalStatus }}</td>
