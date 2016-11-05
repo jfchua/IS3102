@@ -2,13 +2,15 @@ package application.controller;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
+import java.util.concurrent.TimeUnit;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
@@ -69,57 +71,99 @@ public class DataController {
 		this.eventService =eventService;
 	}
 	    
-	    //use JSON OBJECT obj.put to put the various data into a JSON array
-		@RequestMapping(value = "/occupancyAgainstUnit", method = RequestMethod.GET)
-		@ResponseBody
-		public ResponseEntity<String> occupancyAgainstUnit( @RequestBody String infoJSON, HttpServletRequest rq)  throws UserNotFoundException {
-			System.out.println("start adding");
-			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
-			//DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			System.out.println("start adding");
-			Principal principal = rq.getUserPrincipal();
-			System.out.println(principal.getName());
-			Optional<User> user1 = userService.getUserByEmail(principal.getName());
-			//Optional<EventOrganizer> eventOrg1 = eventOrganizerService.getEventOrganizerByEmail(principal.getName());
-			if (!user1.isPresent()){
-				return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+	 //use JSON OBJECT obj.put to put the various data into a JSON array
+	@RequestMapping(value = "/occupancyAgainstUnit", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> occupancyAgainstUnit( @RequestBody String infoJSON, HttpServletRequest rq)  throws UserNotFoundException {
+		System.out.println("start adding");
+		DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+		//DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		System.out.println("start adding");
+		Principal principal = rq.getUserPrincipal();
+		System.out.println(principal.getName());
+		Optional<User> user1 = userService.getUserByEmail(principal.getName());
+		//Optional<EventOrganizer> eventOrg1 = eventOrganizerService.getEventOrganizerByEmail(principal.getName());
+		if (!user1.isPresent()){
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+			JSONArray jArray = new JSONArray();
+			User user = user1.get();
+			ClientOrganisation client = user.getClientOrganisation();
+			System.out.println(user.getName());
+			Object obj = parser.parse(infoJSON);
+			JSONObject jsonObject = (JSONObject) obj;
+			//get units id
+			JSONArray unitsId = (JSONArray)jsonObject.get("units");
+            Set<String> units = new HashSet<String>();
+            for(int i = 0; i < unitsId.size(); i++){
+            	JSONObject unitObj = (JSONObject)unitsId.get(i);		
+            	System.out.println(unitObj.toString());
+				long unitId = (Long)unitObj.get("id");
+				System.out.println(unitId);
+				units.add(String.valueOf(unitId));
+				System.out.println("unit set size is " + units.size());
 			}
-			try{
-				JSONArray jArray = new JSONArray();
-				User user = user1.get();
-				ClientOrganisation client = user.getClientOrganisation();
-				System.out.println(user.getName());
-				Object obj = parser.parse(infoJSON);
-				JSONObject jsonObject = (JSONObject) obj;
-				JSONArray unitsId = (JSONArray)jsonObject.get("units");
-	            Set<String> units = new HashSet<String>();
-	            for(int i = 0; i < unitsId.size(); i++){
-	            	JSONObject unitObj = (JSONObject)unitsId.get(i);		
-	            	System.out.println(unitObj.toString());
-					long unitId = (Long)unitObj.get("id");
-					System.out.println(unitId);
-					units.add(String.valueOf(unitId));
-					System.out.println("unit set size is " + units.size());
+            //start, end date and duration
+			Date start = sdf.parse((String)jsonObject.get("start"));
+			System.out.println(start);
+			Date end = sdf.parse((String)jsonObject.get("end"));
+			long diff = end.getTime() - start.getTime();
+			long duration = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+			Double duration1 = Double.valueOf(duration);
+			System.err.println("duration is " + duration1);
+			//calculate percentage for each unit
+			NumberFormat formatter = new DecimalFormat("#0.00");    
+			Iterator iter = units.iterator();				
+			while (iter.hasNext()){
+				Long id = Long.parseLong((String)iter.next());
+				Unit unit = unitService.getUnitById(id).get();
+			    Set<BookingAppl> bookings = unit.getBookings();
+			    System.err.println("booking size is " + bookings.size());
+			    JSONObject obj1 = new JSONObject();
+				obj1.put("unit", id);	
+				Double totalH = 0.0;
+				for(BookingAppl b : bookings){
+					System.out.println(b.getEvent_start_date_time());
+					System.out.println(b.getEvent_end_date_time());
+					if(b.getEvent_end_date_time().after(start) && b.getEvent_end_date_time().before(end) 
+							&& b.getEvent_start_date_time().before(start)){
+						System.out.println("Scenario 1");
+						long diffB = b.getEvent_end_date_time().getTime() - start.getTime();
+						long durationB = TimeUnit.HOURS.convert(diffB, TimeUnit.MILLISECONDS);
+						totalH += Double.valueOf(durationB);	
+						System.err.println(totalH);
+					}
+					else if(b.getEvent_start_date_time().after(start) && b.getEvent_end_date_time().before(end)){
+						System.out.println("Scenario 2");
+						long diffB = b.getEvent_end_date_time().getTime() - b.getEvent_start_date_time().getTime();
+						long durationB = TimeUnit.HOURS.convert(diffB, TimeUnit.MILLISECONDS);
+						totalH += Double.valueOf(durationB);	
+						System.err.println("totalH " + totalH);
+					}
+					else if(b.getEvent_start_date_time().before(end) && b.getEvent_start_date_time().after(start)
+							&& b.getEvent_end_date_time().after(end)){
+						System.out.println("Scenario 3");
+						long diffB = end.getTime() - b.getEvent_start_date_time().getTime();
+						long durationB = TimeUnit.HOURS.convert(diffB, TimeUnit.MILLISECONDS);
+						totalH += Double.valueOf(durationB);	
+					}
+					else if(b.getEvent_start_date_time().before(start) && b.getEvent_end_date_time().after(end)){
+						System.out.println("Scenario 4");
+						totalH += duration1;	
+					}
 				}
-				Date event_start_date = sdf.parse((String)jsonObject.get("event_start_date"));
-				System.out.println(event_start_date);
-				Date event_end_date = sdf.parse((String)jsonObject.get("event_end_date"));
-				Iterator iter = units.iterator();				
-				while (iter.hasNext()){
-					Long id = (Long)iter.next();
-					Unit unit = unitService.getUnitById(id).get();
-					
-				}
-				//Event event = eventExternalService.createEvent(client, eventOrg, unitsId, event_title, event_content, event_description, 
-					//	event_approval_status, event_start_date, event_end_date, filePath);
-			
-				return new ResponseEntity<String>(jArray.toString(), HttpStatus.OK);	
-			}
-			catch (Exception e){
-				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
-				return new ResponseEntity<String>(HttpStatus.CONFLICT);
-			}
-}          
+				System.err.println("booked hours are"+totalH);
+				obj1.put("percent", formatter.format(totalH/duration1));	
+				jArray.add(obj1);
+			}		
+			return new ResponseEntity<String>(jArray.toString(), HttpStatus.OK);	
+		}
+		catch (Exception e){
+			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
+		}
+}        
 		@PreAuthorize("hasAnyAuthority('ROLE_USER')")
 	    //use JSON OBJECT obj.put to put the various data into a JSON array
 			@RequestMapping(value = "/eventCountAgainstEventType", method = RequestMethod.GET)
