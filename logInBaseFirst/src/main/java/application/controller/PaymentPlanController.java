@@ -549,7 +549,7 @@ public class PaymentPlanController {
 			obj1.put("total", formatter.format(policy.getTotal()));
 			obj1.put("subsequent", formatter.format(policy.getSubsequent()));
 			obj1.put("nextPayment",formatter.format(policy.getNextPayment()));
-			obj1.put("nextInvoice",formatter.format(policy.getNextInvoice()));
+			obj1.put("nextInvoice",policy.getNextInvoice());
 			System.out.println("TOTAL2");
 			return new ResponseEntity<String>(obj1.toString(), HttpStatus.OK);
 		}
@@ -856,8 +856,8 @@ public class PaymentPlanController {
 		Principal principal = request.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		ClientOrganisation client = usr.get().getClientOrganisation();
-		//response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
-		//ServletOutputStream outputStream = response.getOutputStream();
+		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+		ServletOutputStream outputStream = response.getOutputStream();
 		HashMap<String,Object> parameters = new HashMap<String,Object>();
 		StringBuilder sb = new StringBuilder();
 		sb.append(" ");
@@ -946,8 +946,8 @@ public class PaymentPlanController {
 		Principal principal = request.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		ClientOrganisation client = usr.get().getClientOrganisation();
-		//response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
-		//ServletOutputStream outputStream = response.getOutputStream();
+		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+		ServletOutputStream outputStream = response.getOutputStream();
 		HashMap<String,Object> parameters = new HashMap<String,Object>();
 		StringBuilder sb = new StringBuilder();
 		sb.append(" ");
