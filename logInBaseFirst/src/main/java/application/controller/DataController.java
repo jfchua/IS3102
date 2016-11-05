@@ -212,7 +212,7 @@ public class DataController {
 					Calendar cal = Calendar.getInstance();				
 					int currentMonth = cal.get(Calendar.MONTH);
 					int currentMonthCount=0;
-					int[] monthsCount= {0,0,0};
+					int[] monthsCount= {0,0,0};//last one is currentMonth
 					for (Event event:events){
 						cal.setTime(event.getEvent_start_date());
 						if((cal.get(Calendar.MONTH))==currentMonth){
@@ -223,20 +223,29 @@ public class DataController {
 							monthsCount[0]++;
 						}
 					}
-					String dataToreturn="";
-					for(int i=0;i<monthsCount.length;i++){
-						dataToreturn+=(monthsCount[i]+",");
+								
+					JSONArray arrayToReturn = new JSONArray(); 
+					SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM");
+					for(int i=monthsCount.length-1;i>=0;i--){
+						JSONObject oneMonth = new JSONObject();
+						oneMonth.put("count", monthsCount[i]);
+						cal = Calendar.getInstance();	
+						cal.add(Calendar.MONTH, -i);
+						Date result = cal.getTime();						
+						oneMonth.put("label", ft.format(result));
+						arrayToReturn.add(oneMonth);
+						
 					}
-					JSONObject objToreturn = new JSONObject(); 
-					objToreturn.put("countsForThreeMonth", dataToreturn);
-					objToreturn.put("name", "Number of Events");
+					
+				
+					
 						//JSONObject bd = new JSONObject(); 
 						//bd.put("error", "cannot fetch"); 
 					
 				
 					
 				
-					return new ResponseEntity<String>(objToreturn.toString(), HttpStatus.OK);	
+					return new ResponseEntity<String>(arrayToReturn.toString(), HttpStatus.OK);	
 				}
 				catch (Exception e){
 					System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
