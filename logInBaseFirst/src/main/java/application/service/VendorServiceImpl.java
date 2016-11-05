@@ -32,7 +32,7 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	public boolean createVendor(ClientOrganisation client, String email, String name, String description, String contact) throws InvalidEmailException {
+	public boolean createVendor(ClientOrganisation client, String email, String name, String registration, String description, String contact) throws InvalidEmailException {
 		// TODO Auto-generated method stub	
 		Pattern pat = Pattern.compile("^.+@.+\\..+$");
 		Matcher get = pat.matcher(email);		
@@ -44,6 +44,7 @@ public class VendorServiceImpl implements VendorService {
 			Vendor vendor = new Vendor();
 			vendor.setEmail(email);
 			vendor.setName(name);
+			vendor.setRegistration(registration);
 			vendor.setDescription(description);
 			vendor.setContact(contact);
 			System.out.println("finish setting");
@@ -86,7 +87,7 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	public boolean editVendor(long id, String email, String name, String description, String contact) throws InvalidEmailException, VendorNotFoundException {
+	public boolean editVendor(long id, String email, String name, String registration, String description, String contact) throws InvalidEmailException, VendorNotFoundException {
 		// TODO Auto-generated method stub
 		Pattern pat = Pattern.compile("^.+@.+\\..+$");
 		Matcher get = pat.matcher(email);		
@@ -101,6 +102,7 @@ public class VendorServiceImpl implements VendorService {
 				Vendor vendor = vendor1.get();
 				vendor.setEmail(email);
 				vendor.setName(name);
+				vendor.setRegistration(registration);
 				vendor.setDescription(description);
 				vendor.setContact(contact);
 				vendorRepository.save(vendor);

@@ -197,9 +197,9 @@ insert into client_organisation_buildings(client_organisation_id, buildings_id) 
 --insert into client_organisation_buildings(client_organisation_id, buildings_id) values(1,4);
 --insert into client_organisation_buildings(client_organisation_id, buildings_id) values(2,5);
 
-insert into vendor(contact, description, email, name, registration)values("84500062", "great", "1@gmail.com", "MS", "#1234");
-insert into vendor(contact, description, email, name, registration)values("84536000", "excellent", "2@gmail.com", "HL", "#1235");
-insert into vendor(contact, description, email, name, registration)values("81610000", "good", "3@gmail.com", "KL", "#1236");
+insert into vendor(contact, description, email, name, registration)values("84500062", "great", "1@gmail.com", "MS", "123456789A");
+insert into vendor(contact, description, email, name, registration)values("84536000", "excellent", "2@gmail.com", "HL", "123456789B");
+insert into vendor(contact, description, email, name, registration)values("81610000", "good", "3@gmail.com", "KL", "123456789C");
 
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,1);
 insert into client_organisation_vendors(client_organisation_id, vendors_id) values(1,2);

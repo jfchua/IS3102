@@ -4,6 +4,8 @@ app.controller('vendorController', ['$scope', '$http','$state','$routeParams','s
 		$scope.data = {};	
 		$http.get("//localhost:8443/vendor/viewAllVendors").then(function(response){
 			$scope.vendors = response.data;
+			$scope.order_item = "id";
+			$scope.order_reverse = false;
 			console.log("DISPLAY ALL vendors");
 		},function(response){
 			alert("did not view vendors");
@@ -18,7 +20,7 @@ app.controller('vendorController', ['$scope', '$http','$state','$routeParams','s
 		//alert("SUCCESS");
 		$scope.data = {};
 		
-		if ( !$scope.vendor || !$scope.vendor.email || !$scope.vendor.name || !$scope.vendor.description || !$scope.vendor.contact){
+		if ( !$scope.vendor || !$scope.vendor.email || !$scope.vendor.name || !$scope.vendor.registration || !$scope.vendor.description || !$scope.vendor.contact){
 			ModalService.showModal({
 
 				templateUrl: "views/errorMessageTemplate.html",
@@ -66,10 +68,35 @@ app.controller('vendorController', ['$scope', '$http','$state','$routeParams','s
 			return;
 		}
 		
+
+		if ( $scope.vendor.registration.length != 10 ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered a valid business registration number",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
 		
 		var dataObj = {			
 				email: $scope.vendor.email,
 				name: $scope.vendor.name,
+				registration: $scope.vendor.registration,
 				description: $scope.vendor.description,
 				contact: $scope.vendor.contact,						
 		};
@@ -141,6 +168,7 @@ app.controller('updateVendorController', ['$scope', '$http','$state','$routePara
 		var dataObj = {			
 				email: $scope.vendor1.email,
 				name: $scope.vendor1.name,
+				registration: $scope.vendor1.registration,
 				description: $scope.vendor1.description,
 				contact: $scope.vendor1.contact,						
 		};
@@ -158,7 +186,7 @@ app.controller('updateVendorController', ['$scope', '$http','$state','$routePara
 		console.log($scope.vendor.id);
 		
 		
-		if ( !$scope.vendor || !$scope.vendor.email || !$scope.vendor.name || !$scope.vendor.description || !$scope.vendor.contact){
+		if ( !$scope.vendor || !$scope.vendor.email || !$scope.vendor.name || !$scope.vendor.registration || !$scope.vendor.description || !$scope.vendor.contact){
 			ModalService.showModal({
 
 				templateUrl: "views/errorMessageTemplate.html",
@@ -206,10 +234,35 @@ app.controller('updateVendorController', ['$scope', '$http','$state','$routePara
 			return;
 		}
 		
+		if ( $scope.vendor.registration.length != 10 ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered a valid business registration number",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		
 		var dataObj = {				
 				id: $scope.vendor.id,
 				email: $scope.vendor.email,
 				name: $scope.vendor.name,
+				registration: $scope.vendor.registration,
 				description: $scope.vendor.description,
 				contact: $scope.vendor.contact,		};		
 		//console.log(dataObj.event_approval_status);
