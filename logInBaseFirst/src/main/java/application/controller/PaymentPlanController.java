@@ -847,18 +847,19 @@ public class PaymentPlanController {
 
 	@RequestMapping(value = "/downloadInvoice", method = RequestMethod.POST, produces = "application/pdf")
 	public void downloadInvoice(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException, InvalidAttachmentException {
-		System.out.println("Enter");
+		System.err.println("Enter");
 		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Invoice.jasper");
 		response.setContentType("application/pdf");
 		Principal principal = request.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		ClientOrganisation client = usr.get().getClientOrganisation();
-		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+		//response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
 		//ServletOutputStream outputStream = response.getOutputStream();
 		HashMap<String,Object> parameters = new HashMap<String,Object>();
 		StringBuilder sb = new StringBuilder();
 		sb.append(" ");
 		Object obj;
+		System.err.println("before try");
 		try {
 			/*
 	if(info == null)
@@ -871,12 +872,13 @@ public class PaymentPlanController {
 
 			obj = parser.parse(info);
 			JSONObject jsonObject = (JSONObject) obj;
-			Long paymentId = (Long)jsonObject.get("id");
-			PaymentPlan p = paymentPlanService.getPaymentPlanById(paymentId).get();
+			Long eventId = (Long)jsonObject.get("id");
+			System.err.println("display id " + eventId);
+			PaymentPlan p = paymentPlanService.getPaymentPlanByEvent(client,eventId);
 			Event event = p.getEvent();
 			User user = event.getEventOrg();
 			sb.append(" P.ID = ");
-			sb.append(paymentId);
+			sb.append(p.getId());
 			System.err.println("Query parameter is : " + sb.toString());
 			parameters.put("criteria", sb.toString());
 
@@ -891,27 +893,27 @@ public class PaymentPlanController {
 			}
 			String path = request.getSession().getServletContext().getRealPath("/");
 			System.err.println("path is " + path);
-			path += "Invoice" + paymentId + ".pdf";
+			path += "Invoice" + p.getId() + ".pdf";
 			File f = new File(path);
 			int counter = 1;
 			String invoice = "";
 			if ( !f.exists()){
-				parameters.put("number", String.valueOf(paymentId));
-				invoice = String.valueOf(paymentId);
+				parameters.put("number", String.valueOf(p.getId()));
+				invoice = String.valueOf(p.getId());
 			}
 			else{
 				while ( f.exists() && !f.isDirectory() ){
 					counter++;
 					path = request.getSession().getServletContext().getRealPath("/");
-					path += "Invoice" + paymentId + "-" + counter + ".pdf";	
+					path += "Invoice" + p.getId() + "-" + counter + ".pdf";	
 
 					f = new File(path);
-					invoice = paymentId + "-" + counter;
+					invoice = p.getId() + "-" + counter;
 				}
-				parameters.put("number", paymentId+ "-" + counter );
+				parameters.put("number", p.getId() + "-" + counter );
 			}
 			System.out.println("invoice is "+invoice);
-			boolean bl = paymentPlanService.generatePayment(client, paymentId, invoice);
+			boolean bl = paymentPlanService.generatePayment(client, p.getId(), invoice);
 			System.out.println("*******GENERATE PAYMENT????"+bl);
 			System.err.println("path is " + path);
 			FileOutputStream fileOutputStream = new FileOutputStream(path);
@@ -924,7 +926,7 @@ public class PaymentPlanController {
 			PaymentPolicy paypol = client.getPaymentPolicy();
 			String email = "Please pay the amount stated in the invoice within "+ paypol.getNumOfDueDays() +
 					" days.";
-			emailService.sendEmailWithAttachment(user.getEmail(), "Invoice for payment plan id "+paymentId, email , path);
+			emailService.sendEmailWithAttachment(user.getEmail(), "Invoice for payment plan id "+ p.getId(), email , path);
 
 
 		} catch (ParseException e1) {
@@ -941,21 +943,13 @@ public class PaymentPlanController {
 		Principal principal = request.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		ClientOrganisation client = usr.get().getClientOrganisation();
-		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+		//response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
 		//ServletOutputStream outputStream = response.getOutputStream();
 		HashMap<String,Object> parameters = new HashMap<String,Object>();
 		StringBuilder sb = new StringBuilder();
 		sb.append(" ");
 		Object obj;
 		try {
-			/*
-	if(info == null)
-	System.out.println("********** info is null");
-
-	if(parser == null)
-	System.out.println("********** parser is null");
-
-	System.out.println("********** HERE");*/
 
 			obj = parser.parse(info);
 			JSONObject jsonObject = (JSONObject) obj;

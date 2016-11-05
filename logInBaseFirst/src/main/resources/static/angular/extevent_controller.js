@@ -33,8 +33,8 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 
 		$scope.checkDateBefore = function (dateString) {
 		    var daysAgo = new Date();
-		    console.log("***");
-		    console.log(new Date(dateString) < daysAgo);
+		    //console.log("***");
+		    //console.log(new Date(dateString) < daysAgo);
 		    return (new Date(dateString) < daysAgo);
 		}
 		$scope.checkStatus = function (event) {
