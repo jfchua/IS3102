@@ -169,7 +169,7 @@ app.controller('LineChartCtrl', ['$scope', '$timeout','$http', function ($scope,
 			
 
 			$scope.xData=['x'];
-			$scope.eventCountTimeData=['Occupancy Rate'];
+			$scope.eventCountTimeData=['Monthly Occupancy Rate'];
 			$scope.changeFormat = function(occupancy){
 				angular.forEach(occupancy, function(oneData) {
 					$scope.xData.push(oneData.month);
@@ -177,7 +177,7 @@ app.controller('LineChartCtrl', ['$scope', '$timeout','$http', function ($scope,
 				});
 
 				var chart1 = c3.generate({
-					bindto: '#chart',
+					bindto: '#chart1',
 					data: {
 						x: 'x',
 						xFormat: '%Y-%m',
