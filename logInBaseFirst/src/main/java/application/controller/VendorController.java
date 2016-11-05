@@ -110,9 +110,10 @@ public class VendorController {
 			System.out.println(email);
 			System.out.println("email2");
 			String name = (String)jsonObject.get("name");
+			String registration = (String)jsonObject.get("registration");
 			String description = (String)jsonObject.get("description");
 			String contact = (String)jsonObject.get("contact");				
-			boolean bl = vendorService.createVendor(client, email, name, description, contact);
+			boolean bl = vendorService.createVendor(client, email, name, registration, description, contact);
 			System.out.println("adding vendor " + name);
 			if(!bl){
 				return new ResponseEntity<String>(geeson.toJson("Server error in creating vendor"),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -206,9 +207,10 @@ public class VendorController {
 			long vendorId = (Long)jsonObject.get("id");
 			String email = (String)jsonObject.get("email");
 			String name = (String)jsonObject.get("name");
+			String registration = (String)jsonObject.get("registration");
 			String description = (String)jsonObject.get("description");
 			String contact = (String)jsonObject.get("contact");	
-			boolean bl = vendorService.editVendor( vendorId, email, name, description, contact);
+			boolean bl = vendorService.editVendor( vendorId, email, name, registration, description, contact);
 			System.out.println("editing vendor " + name);
 			if(!bl){
 				return new ResponseEntity<String>(HttpStatus.CONFLICT);

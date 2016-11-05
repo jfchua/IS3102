@@ -10,6 +10,8 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 		//var buildings ={name: $scope.name, address: $scope.address};
 		$http.get("//localhost:8443/eventManager/viewAllEvents").then(function(response){
 			$scope.events = response.data;
+			$scope.order_item = "id";
+			$scope.order_reverse = false;
 			console.log("DISPLAY ALL EVENT fir event manager");
 			//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
 
@@ -182,6 +184,20 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 	
 
 }]);
+
+app.filter('orderObjectBy', function() {
+	  return function(items, field, reverse) {
+	    var filtered = [];
+	    angular.forEach(items, function(item) {
+	      filtered.push(item);
+	    });
+	    filtered.sort(function (a, b) {
+	      return (a[field] > b[field] ? 1 : -1);
+	    });
+	    if(reverse) filtered.reverse();
+	    return filtered;
+	  };
+	});
 
 app.controller('successfulEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 	$scope.eventFilter={

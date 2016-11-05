@@ -20,18 +20,15 @@
                             </div>
                         </h3>
                     </div>
-                    <div class="panel-body" >
-
-
-            
+                    <div class="panel-body" >       
 
             <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th><i></i> ID </th>
-                                    <th><i></i> Business Registration Number </th>
+                                    <th><i></i> ID </th>                              
                                     <th><i></i> Vendor Email </th>
                                     <th><i></i> Vendor Name </th>
+                                     <th><i></i> Business Registration Number </th>
                                     <th><i></i> Vendor Description </th>
                                     <th><i></i> Vendor Contact </th>
 
@@ -43,6 +40,7 @@
              <td ng-bind="vendor.id"></td>
              <td ng-bind="vendor.email"></td>
              <td ng-bind="vendor.name"></td>
+             <td ng-bind="vendor.registration"></td>             
              <td ng-bind="vendor.description"></td>
              <td ng-bind="vendor.contact"></td>
              </tr>
