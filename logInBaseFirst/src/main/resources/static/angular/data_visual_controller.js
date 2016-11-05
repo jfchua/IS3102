@@ -44,11 +44,23 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $ti
     	    }
     };
      $scope.xData=['x'];
-     $scope.eventCountTimeData=['Number of Events'];
+     $scope.eventCountTimeData=['Total'];
+     $scope.eventCountTimeConcert=['Concert'];
+     $scope.eventCountTimeConference=['Conference'];
+     $scope.eventCountTimeFair=['Fair'];
+     $scope.eventCountTimeFamily=['Family'];
+     $scope.eventCountTimeLifestyle=['Lifestyle'];
+     $scope.eventCountTimeSeminar=['Seminar'];
      $scope.changeFormatForEventTime = function(eventCountTime){
     	 angular.forEach(eventCountTime, function(oneData) {
     		 $scope.xData.push(oneData.label);
     		 $scope.eventCountTimeData.push(oneData.count);
+    		 $scope.eventCountTimeConcert.push(oneData.concert);
+    	     $scope.eventCountTimeConference.push(oneData.conference);
+    	     $scope.eventCountTimeFair.push(oneData.fair);
+    	     $scope.eventCountTimeFamily.push(oneData.family);
+    	     $scope.eventCountTimeLifestyle.push(oneData.lifestyle);
+    	     $scope.eventCountTimeSeminar.push(oneData.seminar);
  		});
     	 
          var chart = c3.generate({
@@ -57,11 +69,20 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $ti
      	        x: 'x',
      	        xFormat: '%Y-%m',
      	        columns: [
-
-     	                 $scope.xData,
-     	                $scope.eventCountTimeData
+     	                $scope.xData,
+     	                $scope.eventCountTimeData,
+     	               $scope.eventCountTimeConcert,
+     	      	     $scope.eventCountTimeConference,
+     	      	     $scope.eventCountTimeFair,
+     	      	     $scope.eventCountTimeFamily,
+     	      	     $scope.eventCountTimeLifestyle,
+     	      	     $scope.eventCountTimeSeminar,
      	                ],
-     	        type: 'line'
+     	        type: 'bar',
+     	       types: {
+     	    	  Total: 'line',
+  	              
+  	          }
      	    },
      	  
      	    axis: {
@@ -72,7 +93,8 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $ti
      	            localtime: true,
      	            tick: {
      	                format: '%Y-%m'
-     	            }
+     	            },
+     	         
      	        }
      	    }
      	});
