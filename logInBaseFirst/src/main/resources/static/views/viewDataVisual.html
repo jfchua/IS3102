@@ -88,11 +88,10 @@
 				</div>
 			</div>
 		</div>
-		
-		
-		<div class="col-lg-12" id="pie-chart">
-			<div class="panel panel-primary">
 
+
+		<div class="col-lg-6" id="pie-chart">
+			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">
 						Percentage of event types
@@ -102,7 +101,6 @@
 								class="panelButton"><i class="fa fa-remove"></i></a>
 						</div>
 					</h3>
-
 				</div>
 				<div class="panel-body">
 					<c3chart bindto-id="pie-plot1-chart" ng-if="eventTypeCount">
@@ -116,20 +114,14 @@
 						column-type="pie" /> <chart-column column-id="Lifestyle"
 						column-values="{{eventTypeCount.lifestyle}}" column-type="pie" />
 					<chart-column column-id="Seminar"
-						column-values="{{eventTypeCount.seminar}}" column-type="pie" /> 
-						 <chart-legend show-legend="true" legend-position="right"/> </c3chart>
-
-
+						column-values="{{eventTypeCount.seminar}}" column-type="pie" /> <chart-legend
+						show-legend="true" legend-position="right" /> </c3chart>
 				</div>
-
-
 			</div>
-
 		</div>
 
-						<div class="col-lg-12" id="pie-chart">
+		<div class="col-lg-6" id="eventThreeMonth">
 			<div class="panel panel-primary">
-
 				<div class="panel-heading">
 					<h3 class="panel-title">
 						Number of events in the last three month
@@ -139,22 +131,13 @@
 								class="panelButton"><i class="fa fa-remove"></i></a>
 						</div>
 					</h3>
-
 				</div>
 				<div class="panel-body">
-	<div id="chart"></div>
-
-
+					<div id="chart"></div>
 				</div>
-
-
 			</div>
-
 		</div>
-
 	</div>
-
-
 </div>
 <a onclick="javascript:window.print();"
 	class="btn btn-bordered btn-primary hidden-print pull-right"> Print
