@@ -254,7 +254,7 @@ app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareDat
 				console.log("Cancel the EVENT");
 			},function(response){
 				alert(response);
-				//console.log("response is : ")+JSON.stringify(response);
+				$state.go("dashboard.viewAllEvents");
 			}	
 			)
 		}

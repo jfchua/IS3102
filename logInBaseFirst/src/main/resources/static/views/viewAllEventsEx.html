@@ -44,10 +44,10 @@
 							<td>{{ x.event_start_date }}</td>
 							<td>{{ x.event_end_date }}</td>
 							<td>{{ x.approvalStatus }}</td>
-							<td><a ng-show="checkDateBefore(x.event_start_date)" ng-hide=x.hasTicket ui-sref="dashboard.updateEventEx"
+							<td><div ng-show="checkStatus(x)"><a ng-hide="checkDateBefore(x.event_start_date)||x.hasTicket" ui-sref="dashboard.updateEventEx"
 								ng-click="passEvent(x)" tooltip-placement="top"
 								tooltip="Update Event"><i class="glyphicon glyphicon-pencil"></i></a>
-								<a ng-show="checkDateBefore(x.event_start_date)" ng-hide=x.hasTicket ui-sref="dashboard.cancelEventEx" ng-click="passEvent(x)"
+								<a ng-hide= "checkDateBefore(x.event_start_date)||x.hasTicket" ui-sref="dashboard.cancelEventEx" ng-click="passEvent(x)"
 								tooltip-placement="top" tooltip="Cancel Event"><i
 									class="glyphicon glyphicon-trash"></i></a>
 									 <a ui-sref="dashboard.viewBookingEx" ng-click="passEvent(x)" 
@@ -63,7 +63,7 @@
 								ng-show=x.hasTicket ng-click="passEventToViewTix(x.id)"
 								tooltip-placement="top" tooltip="View Ticket Sales"><i
 									class="glyphicon glyphicon-list"></i></a>
-									</td>
+									</div></td>
 						</tr>
 					</tbody>
 				</table>

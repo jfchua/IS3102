@@ -33,7 +33,17 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 
 		$scope.checkDateBefore = function (dateString) {
 		    var daysAgo = new Date();
-		    return (new Date(dateString) > daysAgo);
+		    //console.log("***");
+		    //console.log(new Date(dateString) < daysAgo);
+		    return (new Date(dateString) < daysAgo);
+		}
+		$scope.checkStatus = function (event) {
+			var isTrue = true;
+		    console.log("****");
+		    console.log(event.approvalStatus == "CANCELLED");
+		    if(event.approvalStatus == "CANCELLED")
+				isTrue = false;
+		    return isTrue;
 		}
 
 		/*

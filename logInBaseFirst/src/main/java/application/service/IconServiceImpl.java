@@ -36,9 +36,10 @@ public class IconServiceImpl implements IconService {
 	public boolean createIconOnClientOrganisation(ClientOrganisation client, String iconType, String iconPath) throws InvalidIconException {
 		String t = iconPath.toUpperCase();
 		System.err.println("creating icon: " + t);
-		if ( !t.contains(".JPG") && !t.contains(".JPEG")&& !t.contains(".SVG") && !t.contains(".TIF") && !t.contains(".PNG") ){
+		//if ( !t.contains(".JPG") && !t.contains(".JPEG")&& !t.contains(".SVG") && !t.contains(".TIF") && !t.contains(".PNG") ){
+		if ( !t.contains(".SVG") ){	
 			System.err.println("Invalid icon: " + t);
-			throw new InvalidIconException("Icon is invalid");
+			throw new InvalidIconException("Icon is invalid. Only files of type .SVG is allowed");
 		}
 		try{		
 			Icon icon = new Icon();
@@ -64,8 +65,12 @@ public class IconServiceImpl implements IconService {
 			throw new IconNotFoundException("Icon with ID of " + iconId + "was not found");
 		}
 		String t = iconPath.toUpperCase();
-		if (!t.contains(".SVG") && !t.contains(".JPG") && !t.contains(".JPEG") && !t.contains(".TIF") && !t.contains(".PNG") ){
+		/*if (!t.contains(".SVG") && !t.contains(".JPG") && !t.contains(".JPEG") && !t.contains(".TIF") && !t.contains(".PNG") ){
 			throw new InvalidIconException("Icon is invalid");
+		}*/
+		if ( !t.contains(".SVG") ){	
+			System.err.println("Invalid icon: " + t);
+			throw new InvalidIconException("Icon is invalid. Only files of type .SVG is allowed");
 		}
 		try{
 			Set<Icon> icons=client.getIcons();

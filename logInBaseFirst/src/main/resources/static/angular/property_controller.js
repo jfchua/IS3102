@@ -167,7 +167,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 			console.log( $scope.buildings);
 
 		},function(response){
-			alert("did not view buildings, server error");
+			console.log("did not view buildings, server error");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
@@ -504,8 +504,25 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 
 
 					},function(response){
-						alert("Error, " + response);
-						//console.log("response is : ")+JSON.stringify(response);
+						ModalService.showModal({
+
+							templateUrl: "views/errorpMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: response
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewBuilding");
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
 					}	
 					)
 				}
@@ -584,6 +601,31 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state','Mo
 		$scope.building = shareData.getData();
 		console.log($scope.building);
 		console.log($scope.building.id);
+
+		if ( !$scope.level.levelNum || !$scope.level.length || !$scope.level.width){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered all fields correctly",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+		}
+
 		var dataObj = {
 				id: $scope.building.id,
 				levelNum: $scope.level.levelNum,
@@ -668,7 +710,7 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state','Mo
 				/////////////////////////
 				return;
 			}
-			
+
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
@@ -759,7 +801,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$state','Modal
 		send.success(function(){
 			shareData.addData(building); 
 			if ($scope.picFile != null && $scope.picFile != "") {
-				
+
 				$scope.picFile.upload = Upload.upload({
 					url: 'https://localhost:8443/level/saveLevelImage',
 					data: { file: $scope.picFile,levelId:$scope.level.id},
@@ -824,8 +866,8 @@ app.controller('levelController', ['$scope', '$http','shareData','$state','Modal
 				/////////////////////////
 				return;
 			}
-			
-			
+
+
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
@@ -948,6 +990,31 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 	$scope.weekends = [{'name':'yes', 'weekend':'weekend'}];
 
 	$scope.addRate = function(){
+
+		if ( !$scope.special.rate || !$scope.special.description || !$scope.special.period){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered all fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+
 		//alert("SUCCESS");
 		$scope.data = {};
 		var dataObj = {
@@ -977,7 +1044,7 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewLevels");
+					$state.go("dashboard.viewAllRates");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -985,11 +1052,29 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 
 				console.log("in dissmiss");
 			};
-			$state.go("dashboard.viewAllRates");
+
 
 		});
 		send.error(function(){
-			alert('SAVING RATE GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Error in saving the rate'
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					//	$state.go("dashboard.viewLevels");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -1002,7 +1087,7 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 			console.log("READY TO DISPLAY ALL RATES");
 			console.log("DISPLAY ALL RATES: "+ $scope.rates);
 		},function(response){
-			alert("did not view");
+			console.log("did not view");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
@@ -1088,6 +1173,30 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 	$scope.weekends = [{'name':'yes', 'weekend':'weekend'}];
 
 	$scope.updateRate = function(){
+
+		if ( !$scope.special.rate || !$scope.special.description || !$scope.special.period){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered all fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
 		$scope.data = {};
 		//$scope.building = JSON.parse(shareData.getData());
 		var dataObj = {					
@@ -1117,7 +1226,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewLevels");
+					$state.go("dashboard.viewAllRates");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -1125,10 +1234,28 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 
 				console.log("in dissmiss");
 			};
-			$state.go("dashboard.viewAllRates");
+
 		});
 		send.error(function(){
-			alert('UPDATING RATE GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Error updating the rate'
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllRates");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};	
 }])
@@ -1144,43 +1271,75 @@ app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData
 	});
 
 	$scope.deleteRate = function(){
-		if(confirm('CONFIRM TO DELETE SPECIAL RATE '+$scope.special.description+'?')){
-			console.log("START DELETE");
-			$scope.data = {};
-			var tempObj ={id:$scope.special.id};
-			console.log("fetch id "+ tempObj);
 
-			$http.post("//localhost:8443/rate/deleteRate", JSON.stringify(tempObj)).then(function(response){
-				//$scope.buildings = response.data;
-				console.log("Delete the RATE");
-				ModalService.showModal({
+		ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: 'Do you wish to delete the special rate '+$scope.special.description+'?'
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					console.log("START DELETE");
+					$scope.data = {};
+					var tempObj ={id:$scope.special.id};
+					console.log("fetch id "+ tempObj);
 
-					templateUrl: "views/popupMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: 'Special rate deleted successfully!'
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-						$state.go("dashboard.viewLevels");
-					});
-				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
+					$http.post("//localhost:8443/rate/deleteRate", JSON.stringify(tempObj)).then(function(response){
+						//$scope.buildings = response.data;
+						console.log("Delete the RATE");
+						ModalService.showModal({
 
-					console.log("in dissmiss");
-				};
-				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$state.go("dashboard.viewAllRates");
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Special rate deleted successfully!'
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewAllRates");
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
 
-			},function(response){
-				alert("DID NOT DELETE");
-				//console.log("response is : ")+JSON.stringify(response);
-			}	
-			)
-		}
+							console.log("in dissmiss");
+						};
+						//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
+
+
+					},function(response){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Error deleting the special rate'
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewAllRates");
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//console.log("response is : ")+JSON.stringify(response);
+					}	
+					)
+
+				}
+			});
+		});
+
 
 	};	
 }])
@@ -1201,7 +1360,7 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 
 
 		},function(response){
-			alert("DID NOT VIEW UNITS");
+			console.log("DID NOT VIEW UNITS");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
@@ -1219,7 +1378,7 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 			console.log('Buildings Gotten');
 		});
 		getBuild.error(function(){
-			alert('Get building error!!!!!!!!!!');
+			console.log('Get building error!!!!!!!!!!');
 		});
 		$scope.currentlySelectedBuilding;
 		$scope.selectBuild = function(){
@@ -1246,7 +1405,7 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 				console.log('Levels Gotten');
 			});
 			getLevels.error(function(){
-				alert('Get levels error!!!!!!!!!!');
+				console.log('Get levels error!!!!!!!!!!');
 			});		
 			$scope.currentlySelectedLevel;
 			$scope.selectLevel = function(){
@@ -1273,7 +1432,7 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 				console.log($scope.units);
 			});
 			getUnits.error(function(){
-				alert('Get units error!!!!!!!!!!');
+				console.log('Get units error!!!!!!!!!!');
 			});		
 
 			$scope.currentlySelectedUnit;
@@ -1335,57 +1494,93 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 	$scope.viewAllUnits=function(){
 		$scope.units=$scope.allUnits;
 	}
-	$scope.save = function(unit){
+	$scope.save = function(unit,invalid){
 		unit.editable=false;
-		if(confirm('CONFIRM TO EDIT RENT OF '+unit.unitNumber+'?')){
+		if ( !unit.rent2 || invalid || unit.rent2 == null || unit.rent2 == "" ){
+			ModalService.showModal({
 
-			var tempObj ={unit:unit};
-
-			$http.post("//localhost:8443/property/updateRent", JSON.stringify(tempObj)).then(function(response){
-				ModalService.showModal({
-
-					templateUrl: "views/popupMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: 'Rent updated successfully!'
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-						$state.go("dashboard.viewLevels");
-					});
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Please enter a proper value for the new rent."
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					//	$state.go("dashboard.viewLevels");
 				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
 
-					console.log("in dissmiss");
-				};
-
-			},function(response){
-				ModalService.showModal({
-
-					templateUrl: "views/errorMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: "DID NOT UPDATE RENT OF UNIT "+unit.unitNumber
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-						$state.go("dashboard.viewLevels");
-					});
-				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
-
-					console.log("in dissmiss");
-				};
-
-			}	
-			)
+				console.log("in dissmiss");
+			};
+			unit.editable = true;
+			return;
 		}
+
+		ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: 'Do you wish to edit rent for unit ' +unit.unitNumber+'?'
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					unit.rent = unit.rent2;
+					var tempObj ={unit:unit};
+					$http.post("//localhost:8443/property/updateRent", JSON.stringify(tempObj)).then(function(response){
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Rent updated successfully!'
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								//$state.go("dashboard.viewLevels");
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+
+					},function(response){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: "Did not update rent for unit "+unit.unitNumber
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								//	$state.go("dashboard.viewLevels");
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+
+					}	
+					)
+
+				}
+			});
+		});
+
 
 	};	
 
