@@ -88,51 +88,39 @@
 		<div class="col-lg-9" id="pie-chart" ng-controller="ChartCtrl">
 			<div class="panel panel-primary">
 
-				<div class="panel-heading">
-					<h3 class="panel-title">View Vacancy Rate	  
+				<div class="panel-heading" >
+					<h3 class="panel-title" >View Vacancy Rate 
 						<div class="panel-control pull-right">
 							<a class="panelButton"><i class="fa fa-refresh"></i></a>
 							<a class="panelButton"><i class="fa fa-minus"></i></a>
 							<a class="panelButton"><i class="fa fa-remove"></i></a>
 						</div>
 					</h3>
-
+						
 				</div>
 
 				<div class="panel-body">
-					<div>
-						<canvas id="pie" 
-			              class="chart chart-pie chart-xs ng-isolate-scope" 
-			              data="pie.data" labels="pie.labels" 
-			              colours="pie.colours" 
-			              height="430" width="860" 
-			              style="display: block; 
-			              width: 688px; height: 344px;">
-			        	</canvas>
-			        </div>
+				<c3chart bindto-id="pie-plot1-chart">
+  				<chart-column column-id="{{test.hei}}"
+              column-values="{{test.ho}}"
+              column-type="pie"/>
+  				<chart-column column-id="{{test.ha}}"
+              column-values="{{test.haha}}"
+              column-type="pie"/>
+ 				 <chart-column column-id="Data 3"
+              column-values="60"
+              column-type="pie"/>
+  					<chart-pie expand="true"/>
+				</c3chart>
 				</div>
+				
 			</div>
-
-		</div>			
-		<div class="col-lg-1">
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-	<button type="button" class="btn btn-primary btn-circle btn-lg" context-menu="xaxis"><i class="glyphicon glyphicon-retweet"></i></button>
-		</div>
+	 
+		</div>	
+		
+		
+		 	
+	
 				</div>
 			</div>
 
