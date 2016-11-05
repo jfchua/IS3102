@@ -39,8 +39,10 @@ import com.google.gson.GsonBuilder;
 
 import application.entity.Area;
 import application.entity.BookingAppl;
+import application.entity.Building;
 import application.entity.ClientOrganisation;
 import application.entity.Event;
+import application.entity.Level;
 import application.entity.Maintenance;
 import application.entity.Square;
 import application.entity.Unit;
@@ -328,7 +330,111 @@ public class DataController {
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 	}
-	
+
+		 //use JSON OBJECT obj.put to put the various data into a JSON array
+		@RequestMapping(value = "/occupancyAgainstTime", method = RequestMethod.GET)
+		@ResponseBody
+		public ResponseEntity<String> occupancyAgainstTime(HttpServletRequest rq)  throws UserNotFoundException {
+			System.out.println("start adding");
+			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+			//DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			System.out.println("start adding");
+			Principal principal = rq.getUserPrincipal();
+			System.out.println(principal.getName());
+			Optional<User> user1 = userService.getUserByEmail(principal.getName());
+			if (!user1.isPresent()){
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			}
+			try{
+				JSONArray jArray = new JSONArray();
+				User user = user1.get();
+				ClientOrganisation client = user.getClientOrganisation();
+				System.out.println(user.getName());
+				Set<Unit> units = new HashSet<Unit>();
+			    Set<Building> buildings = client.getBuildings();
+			    for(Building b : buildings){
+			    	Set<Level> levels = b.getLevels();
+			    	for(Level l : levels){
+			    		Set<Unit> unitFromL = l.getUnits();
+			    		for(Unit u : unitFromL){
+			    			units.add(u);
+			    		}
+			    	}
+			    }
+	            
+	            //start, end date and duration
+			    Calendar cal = Calendar.getInstance();
+			    int year = cal.get(Calendar.YEAR);
+			    cal.set(Calendar.YEAR,year);			    
+			    //int numOfDays = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
+				//Double duration1 = Double.valueOf(numOfDays*24);
+				SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM");
+			    //System.err.println("duration is " + duration1);
+				//calculate percentage for each unit
+				NumberFormat formatter = new DecimalFormat("#0.00");    
+				Double[] count = new Double[12];
+				for(int i = 0; i < 12; i ++){	
+					cal.set(Calendar.MONTH, i);			
+				    cal.set(Calendar.DAY_OF_MONTH,31);
+				    Date end = cal.getTime();
+				    cal.set(Calendar.MONTH, i);	
+				    cal.set(Calendar.DAY_OF_MONTH,1);
+				    Date start = cal.getTime();
+				    JSONObject obj1 = new JSONObject();
+					obj1.put("month", ft.format(cal.getTime()));	
+					Double totalH = 0.0;
+					long diff = end.getTime() - start.getTime();
+					long duration = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+					Double duration1 = Double.valueOf(duration);
+					System.err.println("duration is " + duration1 + " for month " + i);
+					
+					for(Unit unit : units){
+				    Set<BookingAppl> bookings = unit.getBookings();
+				    System.err.println("booking size is " + bookings.size());		    				
+					for(BookingAppl b : bookings){
+						System.out.println(b.getEvent_start_date_time());
+						System.out.println(b.getEvent_end_date_time());
+						if(b.getEvent_end_date_time().after(start) && b.getEvent_end_date_time().before(end) 
+								&& b.getEvent_start_date_time().before(start)){
+							System.out.println("Scenario 1");
+							long diffB = b.getEvent_end_date_time().getTime() - start.getTime();
+							long durationB = TimeUnit.HOURS.convert(diffB, TimeUnit.MILLISECONDS);
+							totalH += Double.valueOf(durationB);	
+							System.err.println(totalH);
+						}
+						else if(b.getEvent_start_date_time().after(start) && b.getEvent_end_date_time().before(end)){
+							System.out.println("Scenario 2");
+							long diffB = b.getEvent_end_date_time().getTime() - b.getEvent_start_date_time().getTime();
+							long durationB = TimeUnit.HOURS.convert(diffB, TimeUnit.MILLISECONDS);
+							totalH += Double.valueOf(durationB);	
+							System.err.println("totalH " + totalH);
+						}
+						else if(b.getEvent_start_date_time().before(end) && b.getEvent_start_date_time().after(start)
+								&& b.getEvent_end_date_time().after(end)){
+							System.out.println("Scenario 3");
+							long diffB = end.getTime() - b.getEvent_start_date_time().getTime();
+							long durationB = TimeUnit.HOURS.convert(diffB, TimeUnit.MILLISECONDS);
+							totalH += Double.valueOf(durationB);	
+						}
+						else if(b.getEvent_start_date_time().before(start) && b.getEvent_end_date_time().after(end)){
+							System.out.println("Scenario 4");
+							totalH += duration1;	
+						}
+					}
+					System.err.println("booked hours are"+totalH);				
+				}	
+			   obj1.put("percent", formatter.format(totalH/duration1));	
+			   System.out.println(formatter.format(totalH/duration1));
+			   jArray.add(obj1);
+			}		
+				return new ResponseEntity<String>(jArray.toString(), HttpStatus.OK);	
+			}
+			catch (Exception e){
+				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);
+			}
+	}        
+
 	
 		private List<Set<Event>> countAgainstEventType( Set<Event> events)  {
 			Set<Event> countCONCERT=new HashSet<Event>();
