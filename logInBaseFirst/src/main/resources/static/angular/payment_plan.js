@@ -293,8 +293,8 @@ app.controller('receivedPController', ['$scope', '$http','$state','$routeParams'
 			$scope.selectedPlan;
 		});
 		getEvents.error(function(response){
-			$state.go("dashboard.viewAllOutstandingBalance");
-			console.log('GET EVENTS FAILED! ');
+			//$state.go("dashboard.viewAllOutstandingBalance");
+			console.log('GET PLANS FAILED! ');
 		});
 	});
 	$scope.currentlySelectedPlan;

@@ -972,26 +972,35 @@ public class PaymentPlanController {
 				e.printStackTrace();
 			}
 			String path = request.getSession().getServletContext().getRealPath("/");
-			System.err.println("path is " + path);
-			path += "Invoice" + paymentId + ".pdf";
-			File f = new File(path);
-			//int counter = 1;
+			//System.err.println("path is " + path);
+			//path += "Invoice" + paymentId + ".pdf";
+			
+			//String path = request.getSession().getServletContext().getRealPath("/");
+			//System.err.println("path is " + path);
+			//path += "Invoice" + p.getId() + ".pdf";
+			//File f = new File(path);
+			
+			
+			int counter = 2;
 			String invoice = "";
 			PaymentPlan pay = paymentPlanService.getPaymentPlanById(paymentId).get();
 			Set<Payment> pays = pay.getPayments();
 			if ( pays.size()==1){
-				parameters.put("number", String.valueOf(paymentId));
-				invoice = String.valueOf(paymentId);
+				invoice = String.valueOf(paymentId + "-" + counter);
+				parameters.put("number", invoice);			
 			}
 			else{
-				/*Iterator iter = pays.iterator();
+				Iterator iter = pays.iterator();
 				while (iter.hasNext()){
-					invoice = ((Payment)iter.next()).getInvoice();
-				}*/
-				invoice = String.valueOf(paymentId + "-" + pays.size());
+					counter++;							
+				}
+				invoice = (paymentId + "-" + counter);		
+				//invoice = String.valueOf(paymentId + "-" + pays.size());
 				System.err.println(invoice);
 				parameters.put("number", invoice);
 			}
+			path += "Invoice" + invoice + ".pdf";
+			File f = new File(path);
 			System.out.println("invoice is "+invoice);
 			boolean bl = paymentPlanService.updatePayment(client, paymentId, invoice);
 			System.out.println("*******GENERATE PAYMENT????"+bl);
