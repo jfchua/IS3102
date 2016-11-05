@@ -154,9 +154,58 @@ app.controller('LineChartCtrl', ['$scope', '$timeout','$http', function ($scope,
 					}
 				});
 			}
+		}	
+		
+		$scope.generateAnnualChart = function(){
+			1
+			$http.get("//localhost:8443/dataVisual/occupancyAgainstTime").then(function(response){
+				$scope.occupancy = response.data;
+				console.log($scope.occupancy);
+				console.log("get component success");
+				$scope.changeFormat($scope.occupancy);
+			},function(response){
+				alert("DID NOT VIEW OCCUPANCY BY TIME");
+			})
+			
 
+			$scope.xData=['x'];
+			$scope.eventCountTimeData=['Occupancy Rate'];
+			$scope.changeFormat = function(occupancy){
+				angular.forEach(occupancy, function(oneData) {
+					$scope.xData.push(oneData.month);
+					$scope.eventCountTimeData.push(oneData.percent);
+				});
 
-		}		
+				var chart1 = c3.generate({
+					bindto: '#chart',
+					data: {
+						x: 'x',
+						xFormat: '%Y-%m',
+						columns: [
+						          $scope.xData,
+						          $scope.eventCountTimeData
+						          ],
+						          type: 'line'
+					},		     	  
+					axis: {
+						x: {
+							 type: 'category',
+			     	            // if true, treat x value as localtime (Default)
+			     	            // if false, convert to UTC internally
+			     	         localtime: true,
+		     	            tick: {
+		     	                format: '%Y-%m'
+		     	            }
+		     	        },
+						y: {
+							tick: {
+								format: d3.format(",%")
+							}
+						}
+					}
+				});
+			}
+		}	
 	});
 
 

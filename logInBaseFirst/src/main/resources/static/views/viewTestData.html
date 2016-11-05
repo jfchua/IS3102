@@ -79,11 +79,11 @@
 				</form>
 			</div>
 		</div>
-		<!--  <div class="col-lg-12" id="pie-chart">
+		<div class="col-lg-12" id="pie-chart">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">
-						Occupancy Rate for Units Selected
+						Occupancy Rate for The Whole Year
 						<div class="panel-control pull-right">
 							<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
 								class="panelButton"><i class="fa fa-minus"></i></a> <a
@@ -91,12 +91,17 @@
 						</div>
 					</h3>
 				</div>
+				<div>
+				<button class="progress-button primary-progress"
+						data-style="shrink" data-horizontal ng-click="generateAnnualChart()">Generate Annual
+						Chart</button>
+					&nbsp;
+			    </div>
 				<div class="panel-body">
-					<div id="chart"></div>
+					<div id="chart1"></div>
 				</div>
 			</div>
 		</div>
-		-->
 	</div>
 </div>
 <a onclick="javascript:window.print();"
