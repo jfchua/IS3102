@@ -5,7 +5,7 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $ti
 	angular.element(document).ready(function () {
 
 
-		//RETRIEVE ICON WHEN LOADED
+		//RETRIEVE EVENTS COUNT AGAINST EVENT TYPE WHEN LOADED
 		$http.get("//localhost:8443/dataVisual/eventCountAgainstEventType").then(function(response){
 
 			console.log(response.data);
@@ -13,6 +13,18 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $ti
 			console.log($scope.eventTypeCount);
 		},function(response){
 			alert("DID NOT VIEW EVENT COUNT BY TYPES");
+		})
+		
+		
+		//RETRIEVE EVENTS COUNT AGAINST TIME WHEN LOADED
+		$http.get("//localhost:8443/dataVisual/eventCountAgainstTime").then(function(response){
+			console.log("event count against time");
+			console.log(response.data);
+			$scope.eventCountTime=response.data;
+			console.log($scope.eventCountTime);
+			$scope.changeFormatForEventTime($scope.eventCountTime);
+		},function(response){
+			alert("DID NOT VIEW EVENT COUNT BY TIME");
 		})
 
 	});
@@ -31,32 +43,41 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $ti
     	        }
     	    }
     };
-     var chart = c3.generate({
-    	    bindto: '#chart',
-    	    data: {
-    	        x: 'x',
-    	        xFormat: '%Y',
-    	        columns: [
+     $scope.xData=['x'];
+     $scope.eventCountTimeData=['Number of Events'];
+     $scope.changeFormatForEventTime = function(eventCountTime){
+    	 angular.forEach(eventCountTime, function(oneData) {
+    		 $scope.xData.push(oneData.label);
+    		 $scope.eventCountTimeData.push(oneData.count);
+ 		});
+    	 
+         var chart = c3.generate({
+     	    bindto: '#chart',
+     	    data: {
+     	        x: 'x',
+     	        xFormat: '%Y-%m',
+     	        columns: [
 
-    	            ['x', '2010', '2011', '2012', '2013', '2014', '2015'],
-    	            ['data1', 30, 200, 100, 400, 150, 250],
-    	            ['data2', 130, 340, 200, 500, 250, 350]
-    	        ],
-    	        type: 'bar'
-    	    },
-    	  
-    	    axis: {
-    	        x: {
-    	            type: 'timeseries',
-    	            // if true, treat x value as localtime (Default)
-    	            // if false, convert to UTC internally
-    	            localtime: true,
-    	            tick: {
-    	                format: '%Y-%m'
-    	            }
-    	        }
-    	    }
-    	});
+     	                 $scope.xData,
+     	                $scope.eventCountTimeData
+     	                ],
+     	        type: 'line'
+     	    },
+     	  
+     	    axis: {
+     	        x: {
+     	            type: 'category',
+     	            // if true, treat x value as localtime (Default)
+     	            // if false, convert to UTC internally
+     	            localtime: true,
+     	            tick: {
+     	                format: '%Y-%m'
+     	            }
+     	        }
+     	    }
+     	});
+     }
+
   
 
     $scope.downloadPlan = function () {
