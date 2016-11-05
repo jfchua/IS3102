@@ -107,8 +107,26 @@ public class EventServiceImpl implements EventService {
 		for(User u: allUsers){
 			Set<Event> events= u.getEvents();
 			if(!events.isEmpty()){
-				for(Event e : events)
+				for(Event e : events){
+				/*	Set<BookingAppl> bookings=e.getBookings();
+					for(BookingAppl booking:bookings){
+						booking.setAreas(null);
+						booking.getUnit().setAreas(null);
+						booking.getUnit().setBookings(null);
+						booking.getUnit().setLevel(null);
+						booking.getUnit().setMaintenanceSchedule(null);
+						booking.getUnit().setUnitAttributeValues(null);
+					}
+					Set<Category> cats=e.getCategories();
+					for(Category cat: cats){
+						cat.setEvent(null);
+						cat.setTickets(null);
+					}
+					e.setEventOrg(null);
+					e.setPaymentPlan(null);
+					*/
 					allEvents.add(e);
+				}
 			}
 		}
 		return allEvents;

@@ -1,7 +1,9 @@
 package application.controller;
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,6 +19,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +41,7 @@ import application.entity.Maintenance;
 import application.entity.Square;
 import application.entity.Unit;
 import application.entity.User;
+import application.enumeration.EventType;
 import application.exception.UserNotFoundException;
 import application.service.UnitService;
 import application.service.UserService;
@@ -46,21 +50,23 @@ import application.service.EventService;
 
 
 @Controller
-@RequestMapping("/BI")
+@RequestMapping("/dataVisual")
 
 public class DataController {
 
 	@Autowired
 	private final UnitService unitService;
 	private final EventExternalService eventExternalService;
+	private final EventService eventService;
 	private final UserService userService;
 	private JSONParser parser = new JSONParser();
 
 	@Autowired
-	public DataController(UnitService unitService,EventExternalService eventExternalService, UserService userService) {
+	public DataController(UnitService unitService,EventExternalService eventExternalService, UserService userService,EventService eventService) {
 		this.unitService = unitService;
 		this.eventExternalService=eventExternalService;
 		this.userService =userService;
+		this.eventService =eventService;
 	}
 	    
 	    //use JSON OBJECT obj.put to put the various data into a JSON array
@@ -114,8 +120,128 @@ public class DataController {
 				return new ResponseEntity<String>(HttpStatus.CONFLICT);
 			}
 }          
-		
-		
-		
+		@PreAuthorize("hasAnyAuthority('ROLE_USER')")
+	    //use JSON OBJECT obj.put to put the various data into a JSON array
+			@RequestMapping(value = "/eventCountAgainstEventType", method = RequestMethod.GET)
+			@ResponseBody
+			public ResponseEntity<String> eventCountAgainstEventType( HttpServletRequest rq)  throws UserNotFoundException {
+				Principal principal = rq.getUserPrincipal();
+				Optional<User> user1 = userService.getUserByEmail(principal.getName());
+				//Optional<EventOrganizer> eventOrg1 = eventOrganizerService.getEventOrganizerByEmail(principal.getName());
+				if (!user1.isPresent()){
+					return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+				}
+				try{
+					
+					User user = user1.get();
+					ClientOrganisation client = user.getClientOrganisation();
+					Set<Event> events=eventService.getAllEvents(client);
+					
+					
+						//JSONObject bd = new JSONObject(); 
+						//bd.put("error", "cannot fetch"); 
+					int countCONCERT=0;
+					int countCONFERENCE=0;
+					int countFAIR=0;
+					int countFAMILY=0;
+					int countLIFESTYLE=0;
+					int countSEMINAR=0;		
+					
+					for(Event event:events){
+						if(event.getEventType().equals(EventType.CONCERT)){
+							countCONCERT++;
+							System.out.println("CONCERT for event id "+event.getId()+" "+event.getEventType());
+							}
+						else if(event.getEventType().equals(EventType.CONFERENCE)){
+								countCONFERENCE++;
+								System.out.println("CONFERENCE for event id "+event.getId()+" "+event.getEventType());
+							}
+						else if(event.getEventType().equals(EventType.FAIR)){
+								countFAIR++;
+								System.out.println("FAIR for event id "+event.getId()+" "+event.getEventType());
+							}
+						else if(event.getEventType().equals(EventType.FAMILY)){
+								countFAMILY++;
+								System.out.println("FAMILY for event id "+event.getId()+" "+event.getEventType());
+							}
+						else if(event.getEventType().equals(EventType.LIFESTYLE)){
+								countLIFESTYLE++;
+								System.out.println("LIFESTYLE for event id "+event.getId()+" "+event.getEventType());
+							}
+						else if(event.getEventType().equals(EventType.SEMINAR)){
+								countSEMINAR++;
+								System.out.println("SEMINAR for event id "+event.getId()+" "+event.getEventType());
+							}else{
+								System.out.println("ERROR!!! cannot read event id for event id "+event.getId()+" "+event.getEventType());
+							}
+						}				
+					JSONObject eventTypeCount = new JSONObject(); 
+					eventTypeCount.put("concert", countCONCERT); 				
+					eventTypeCount.put("conference", countCONFERENCE);				
+					eventTypeCount.put("fair", countFAIR); 						
+					eventTypeCount.put("family", countFAMILY); 				
+					eventTypeCount.put("lifestyle", countLIFESTYLE); 
+					eventTypeCount.put("seminar", countSEMINAR); 
+				
+					
+				
+					return new ResponseEntity<String>(eventTypeCount.toString(), HttpStatus.OK);	
+				}
+				catch (Exception e){
+					System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+					return new ResponseEntity<String>(HttpStatus.CONFLICT);
+				}
+	}  
+		@PreAuthorize("hasAnyAuthority('ROLE_USER')")
+	    //use JSON OBJECT obj.put to put the various data into a JSON array
+			@RequestMapping(value = "/eventCountAgainstTime", method = RequestMethod.GET)
+			@ResponseBody
+			public ResponseEntity<String> eventCountAginstTime( HttpServletRequest rq)  throws UserNotFoundException {
+				Principal principal = rq.getUserPrincipal();
+				Optional<User> user1 = userService.getUserByEmail(principal.getName());
+				//Optional<EventOrganizer> eventOrg1 = eventOrganizerService.getEventOrganizerByEmail(principal.getName());
+				if (!user1.isPresent()){
+					return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+				}
+				try{
+					
+					User user = user1.get();
+					ClientOrganisation client = user.getClientOrganisation();
+					Set<Event> events=eventService.getAllEvents(client);
+					Set<Event> eventsOfTheTime=new HashSet<Event>();
+					Calendar cal = Calendar.getInstance();				
+					int currentMonth = cal.get(Calendar.MONTH);
+					int currentMonthCount=0;
+					int[] monthsCount= {0,0,0};
+					for (Event event:events){
+						cal.setTime(event.getEvent_start_date());
+						if((cal.get(Calendar.MONTH))==currentMonth){
+							monthsCount[2]++;
+						}else if((cal.get(Calendar.MONTH))==(currentMonth-1)){
+							monthsCount[1]++;
+						}else if((cal.get(Calendar.MONTH))==(currentMonth-2)){
+							monthsCount[0]++;
+						}
+					}
+					String dataToreturn="";
+					for(int i=0;i<monthsCount.length;i++){
+						dataToreturn+=(monthsCount[i]+",");
+					}
+					JSONObject objToreturn = new JSONObject(); 
+					objToreturn.put("countsForThreeMonth", dataToreturn);
+					objToreturn.put("name", "Number of Events");
+						//JSONObject bd = new JSONObject(); 
+						//bd.put("error", "cannot fetch"); 
+					
+				
+					
+				
+					return new ResponseEntity<String>(objToreturn.toString(), HttpStatus.OK);	
+				}
+				catch (Exception e){
+					System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+					return new ResponseEntity<String>(HttpStatus.CONFLICT);
+				}
+	}
 
 }
