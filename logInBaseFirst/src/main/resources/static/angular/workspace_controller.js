@@ -29,7 +29,8 @@ app.controller('workspaceController', function ($scope, $http,shareData,Auth) {
 //FOR SIDE BAR PROFILE AND TOP BAR PROFILE
 app.controller('dashboardController', function ($scope, $http,shareData,$state,Auth) {
 	
-	 angular.element(document).ready(function () {
+	 //angular.element(document).ready(function () {
+		 angular.element(document.getElementById('body-container')).ready(function () {
 		 //GET LOGO
 		 $http({
 	 			method: 'GET',

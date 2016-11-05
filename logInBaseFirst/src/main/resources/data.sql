@@ -30,10 +30,10 @@ insert into client_organisation (organisation_name, address, postal, phone,theme
 values ("Suntec", "3 Temasek Boulevard","038983", "68221537","green","suntecLogo.png");
 
 --Algattas is client_organisation 3
-insert into client_organisation (organisation_name, address, postal, phone,themecolour,logo_file_path) 
-values ("Algattas", "73 Ubi Road 1","408733", "31580456","red","algattasLogo.png");
+--insert into client_organisation (organisation_name, address, postal, phone,themecolour,logo_file_path) 
+--values ("Algattas", "73 Ubi Road 1","408733", "31580456","red","algattasLogo.png");
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',3 ,'Kenneth LIM' , '2');
+VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1 ,'Kenneth LIM' , '2');
 --Algattas superadmin is user 1
 --User 2 to 9
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
