@@ -11,8 +11,40 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 		},function(response){
 			alert("did not view plans");
 		}	
-		)	
+		)
+		$scope.checkStatus = function(plan){
+			console.log("*****");
+			console.log(plan.nextPayment == plan.subsequent);
+			return (plan.nextPayment == plan.subsequent)&&(plan.payable > 0);
+		}
 	});
+	$scope.generateInvoice = function(id){
+		var dataObj = {
+				id: id,
+		};
+
+		console.log("REACHED HERE FOR AUDIT LOG " + JSON.stringify(dataObj));
+
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/payment/downloadSubseInvoice',
+			data    : dataObj, 
+			responseType: 'arraybuffer'
+		});
+
+		console.log("DOWNLOADING");
+		send.success(function(data){
+			console.log(JSON.stringify(data));
+			var file = new Blob([data], {type: 'application/pdf'});
+			var fileURL = URL.createObjectURL(file);
+			//window.open(fileURL);
+			alert('DOWNLOADED!');
+		});
+		send.error(function(data){
+			alert('DOWNLOAD GOT ERROR!');
+		}); 
+	}
+	
 	$scope.paymentPlanNull = function(paymentPlan){
 		  return !(paymentPlan === null)
 	}
@@ -134,7 +166,7 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 				console.log(JSON.stringify(data));
 				var file = new Blob([data], {type: 'application/pdf'});
 				var fileURL = URL.createObjectURL(file);
-				window.open(fileURL);
+				//window.open(fileURL);
 				alert('DOWNLOADED!');
 			});
 			send.error(function(data){
@@ -294,7 +326,7 @@ app.controller('receivedPController', ['$scope', '$http','$state','$routeParams'
 		});
 		getEvents.error(function(response){
 			$state.go("dashboard.viewAllOutstandingBalance");
-			console.log('GET EVENTS FAILED! ');
+			console.log('GET PLANS FAILED! ');
 		});
 	});
 	$scope.currentlySelectedPlan;

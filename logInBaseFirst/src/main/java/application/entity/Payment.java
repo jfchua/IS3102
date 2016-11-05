@@ -32,7 +32,7 @@ public class Payment {
 	 @Column(name = "plan")
 	 private Long plan;
 	 
-	 @Column(name = "invoice", nullable = false)
+	 @Column(name = "invoice")
 	 private String invoice;
 	 
 	 @Column(name = "cheque")

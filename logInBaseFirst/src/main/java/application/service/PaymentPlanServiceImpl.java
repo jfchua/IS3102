@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -725,12 +726,42 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				System.out.println("INSIDE IF");
 				PaymentPlan pay = pay1.get();
 				Set<Payment> payments = pay.getPayments();
-				for(Payment p : payments){
-					if(p.getInvoice().equals(invoice))
-				p.setInvoice(invoice);
-				p.setPlan(id);
-				paymentRepository.flush();
+				String[] arr = invoice.split("-");
+				String oldInvoice = arr[0] + "-" + String.valueOf(Integer.valueOf(arr[1])-1);
+				if(payments.size() ==1){
+					Payment p = payments.iterator().next();
+					Payment p1 = new Payment();
+					p1.setAmount(pay.getNextPayment());
+					p1.setInvoice(invoice);
+					p1.setPlan(id);
+					p.setInvoice(null);
+					p.setAmount(null);
+					p.setPaid(null);
+					p.setCheque(null);
+					p.setPlan(id);
+					payments.add(p1);
+				    paymentRepository.save(p1);
 				}
+				else{
+				System.out.println("INSIDE ELSE");	
+				for(Payment p : payments){
+				if(p.getInvoice().equals(oldInvoice)){
+				Payment p1 = new Payment();
+				p1.setAmount(pay.getNextPayment());
+				p1.setInvoice(invoice);
+				p1.setPlan(id);
+				p.setInvoice(null);
+				p.setAmount(null);
+				p.setPaid(null);
+				p.setCheque(null);
+				p.setPlan(id);
+				payments.add(p1);
+			    paymentRepository.save(p1);
+			    break;
+				}				
+				}
+				}
+				paymentRepository.flush();
 				System.out.println("SAVE PAYMENT SUCCESS");
 				pay.setNextInvoice(invoice);
 				paymentPlanRepository.flush();
