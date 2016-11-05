@@ -23,6 +23,7 @@ insert into role (name)values ("ROLE_EVEGOER");
 INSERT INTO payment_policy(deposit_rate, interim_period, due_days, subsequent_number)
 VALUES(0.4, 2, 2, 2);
 
+--ALTER TABLE client_organisation ENGINE=Innodb;
 insert into client_organisation (organisation_name, address, postal, phone, payment_policy_id,themecolour,logo_file_path) 
 values ("Expo", "1 Expo Dr", "486150", "64032160", 1,"midnight-blue","expoLogo.png");
 insert into client_organisation (organisation_name, address, postal, phone,themecolour,logo_file_path) 
