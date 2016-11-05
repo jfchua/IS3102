@@ -27,7 +27,7 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 
 		var send = $http({
 			method  : 'POST',
-			url     : 'https://localhost:8443/payment/downloadInvoice',
+			url     : 'https://localhost:8443/payment/downloadSubseInvoice',
 			data    : dataObj, 
 			responseType: 'arraybuffer'
 		});

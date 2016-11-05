@@ -937,7 +937,97 @@ public class PaymentPlanController {
 			e1.printStackTrace();
 		}
 	}
+	
+	@RequestMapping(value = "/downloadSubseInvoice", method = RequestMethod.POST, produces = "application/pdf")
+	public void downloadSubseInvoice(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException, InvalidAttachmentException {
+		System.err.println("Enter");
+		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/Invoice.jasper");
+		response.setContentType("application/pdf");
+		Principal principal = request.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		ClientOrganisation client = usr.get().getClientOrganisation();
+		response.setHeader("Content-disposition", "attachment; filename=Invoice.pdf");
+		ServletOutputStream outputStream = response.getOutputStream();
+		HashMap<String,Object> parameters = new HashMap<String,Object>();
+		StringBuilder sb = new StringBuilder();
+		sb.append(" ");
+		Object obj;
+		System.err.println("before try");
+		try {
+			/*
+	if(info == null)
+	System.out.println("********** info is null");
 
+	if(parser == null)
+	System.out.println("********** parser is null");
+
+	System.out.println("********** HERE");*/
+
+			obj = parser.parse(info);
+			JSONObject jsonObject = (JSONObject) obj;
+			Long paymentId = (Long)jsonObject.get("id");
+			System.err.println("display id " + paymentId);
+			PaymentPlan p = paymentPlanService.getPaymentPlanById(paymentId).get();
+			Event event = p.getEvent();
+			User user = event.getEventOrg();
+			sb.append(" P.ID = ");
+			sb.append(p.getId());
+			System.err.println("Query parameter is : " + sb.toString());
+			parameters.put("criteria", sb.toString());
+
+			Connection conn = null;
+			try {
+				DataSource ds = (DataSource)context.getBean("dataSource");
+				conn = ds.getConnection();
+				System.out.println(conn.toString());
+			} catch (SQLException e) {
+				System.out.println("************* ERROR: " + e.getMessage());
+				e.printStackTrace();
+			}
+			String path = request.getSession().getServletContext().getRealPath("/");
+			System.err.println("path is " + path);
+			path += "Invoice" + p.getId() + ".pdf";
+			File f = new File(path);
+			int counter = 1;
+			String invoice = "";
+			if ( !f.exists()){
+				parameters.put("number", String.valueOf(p.getId()));
+				invoice = String.valueOf(p.getId());
+			}
+			else{
+				while ( f.exists() && !f.isDirectory() ){
+					counter++;
+					path = request.getSession().getServletContext().getRealPath("/");
+					path += "Invoice" + p.getId() + "-" + counter + ".pdf";	
+
+					f = new File(path);
+					invoice = p.getId() + "-" + counter;
+				}
+				parameters.put("number", p.getId() + "-" + counter );
+			}
+			System.out.println("invoice is "+invoice);
+			boolean bl = paymentPlanService.generatePayment(client, p.getId(), invoice);
+			System.out.println("*******GENERATE PAYMENT????"+bl);
+			System.err.println("path is " + path);
+			FileOutputStream fileOutputStream = new FileOutputStream(path);
+			JasperRunManager.runReportToPdfStream(jasperStream, fileOutputStream, parameters,conn);
+			fileOutputStream.flush();
+			fileOutputStream.close();
+			System.out.println("FLUSHED OUT THE LOG");
+			//User usr = userService.getUserByEmail(principal.getName()).get();
+			//ClientOrganisation client = usr.getClientOrganisation();
+			PaymentPolicy paypol = client.getPaymentPolicy();
+			String email = "Please pay the amount stated in the invoice within "+ paypol.getNumOfDueDays() +
+					" days.";
+			emailService.sendEmailWithAttachment(user.getEmail(), "Invoice for payment plan id "+ p.getId(), email , path);
+
+
+		} catch (ParseException e1) {
+			System.out.println("at /download invoice there was an error parsing the json string received");
+			e1.printStackTrace();
+		}
+	}
+	
 	@RequestMapping(value = "/downloadInvoiceForUpdate", method = RequestMethod.POST, produces = "application/pdf")
 	public void downloadInvoiceForUpdate(@RequestBody String info,HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException, InvalidAttachmentException {
 		System.out.println("Enter");

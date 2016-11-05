@@ -41,7 +41,7 @@
                             <td>{{ x.subsequentNumber }}</td>
                             <td>
                             <a ui-sref="dashboard.updatePaymentPlan" ng-click="passPaymentPlan(x)" tooltip-placement="top" tooltip="Update Payment Plan"><i class="glyphicon glyphicon-pencil"></i></a>
-                            <a ng-show="checkStatus(x) && !showDiv" ng-click="generateInvoice(x.id); showDiv=true" tooltip-placement="top" tooltip="Generate Invoice For Subsequent Paument"><i class="glyphicon glyphicon-list"></i></a> 
+                            <a ng-show="checkStatus(x) && !showDiv" ng-click="generateInvoice(x.id); showDiv=true" tooltip-placement="top" tooltip="Generate Invoice For Subsequent Payment"><i class="glyphicon glyphicon-list"></i></a> 
                            </td>
                         </tr>
                          </tbody>
