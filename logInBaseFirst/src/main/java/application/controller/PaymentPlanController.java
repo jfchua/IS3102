@@ -428,6 +428,7 @@ public class PaymentPlanController {
 					 */
 					.serializeNulls()
 					.create();
+			NumberFormat formatter = new DecimalFormat("#0.00");   
 			for(Event ev : events){
 				JSONObject obj1 = new JSONObject();
 				obj1.put("id", ev.getId());
@@ -436,12 +437,12 @@ public class PaymentPlanController {
 				System.out.println(ev.getPaymentStatus());
 				if(ev.getPaymentPlan()!= null){
 				PaymentPlan pay= ev.getPaymentPlan();
-				obj1.put("rent",pay.getTotal());
+				obj1.put("rent", formatter.format(pay.getTotal()));
 				System.out.println("TOTAL1");
-				obj1.put("ticket",pay.getTicketRevenue());
+				obj1.put("ticket", formatter.format(pay.getTicketRevenue()));
 				System.out.println("TOTAL2");
 				Double balance = pay.getPayable();
-				obj1.put("balance",balance);
+				obj1.put("balance",formatter.format(balance));
 				System.out.println("TOTAL3" + balance);
 				}
 				jArray.add(obj1);

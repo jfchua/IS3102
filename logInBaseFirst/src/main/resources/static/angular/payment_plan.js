@@ -17,6 +17,12 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 			console.log(plan.nextPayment == plan.subsequent);
 			return (plan.nextPayment == plan.subsequent)&&(plan.payable > 0);
 		}
+		
+		$scope.checkFinish = function(plan){
+			console.log("MSMSMS");
+			console.log(plan.payable > 0);
+			return (plan.payable > 0);
+		}
 	});
 	$scope.generateInvoice = function(id){
 		var dataObj = {
@@ -299,7 +305,7 @@ app.controller('eventListController', ['$scope', '$http','$state','$routeParams'
 			$scope.events = response;
 		});
 		getEvents.error(function(response){
-			//$state.go("dashboard.viewAllOutstandingBalance");
+			$state.go("dashboard.viewAllOutstandingBalance");
 			console.log('GET EVENTS FAILED! ');
 		});
 	});
@@ -526,7 +532,7 @@ app.controller('paymentHistoryController', ['$scope', '$http','$state','$routePa
 			$scope.payments = response;
 		});
 		getPayments.error(function(response){
-			//$state.go("dashboard.viewAllOutstandingBalance");
+			$state.go("dashboard.viewAllOutstandingBalance");
 			console.log('GET PAYMENTS FAILED! ');
 		});
 	});
