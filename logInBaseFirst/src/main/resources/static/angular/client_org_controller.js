@@ -1,4 +1,4 @@
-app.controller('clientOrgController', ['$scope', '$http','$location','ModalService', function ($scope, $http, $location,ModalService) {
+app.controller('clientOrgController', ['$scope', '$http','$state','$location','ModalService', function ($scope, $http, $state, $location, ModalService) {
 	$scope.genders=['COMMONINFRA','PROPERTY','EVENT','FINANCE', 'TICKETING', 'BI'];
 	$scope.selection=[];
 
@@ -106,7 +106,8 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 			}).then(function(modal) {
 				modal.element.modal();
 				modal.close.then(function(result) {
-					console.log("OK");
+					console.log("OK");	
+					$state.go("dashboard.viewClientOrgs");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -114,7 +115,7 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 
 				console.log("in dissmiss");
 			};
-			$location.path("/dashboard");
+			//$state.go("dashboard.worksapce");
 		});
 		send.error(function(data){
 			ModalService.showModal({
@@ -157,10 +158,10 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 
 //////////VIEW CLIENT ORGS//////////
 
-app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
-                                  function($scope, $http,$location,ModalService) {
+app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalService',
+                                  function($scope, $http, $location,$state,ModalService) {
 
-	$scope.genders=['Property System','Event Management System','Finance System'];
+	$scope.genders=['COMMONINFRA','PROPERTY','EVENT','FINANCE', 'TICKETING', 'BI'];
 	$scope.selection=[];
 
 	$scope.toggleSelection = function toggleSelection(gender) {
@@ -204,14 +205,14 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 
 
 	$scope.entity = {};
-	$scope.name = "";
+	/*$scope.name = "";
 
 
 	$scope.updateValue = function(name){
 		$scope.name = name;
 
-	};
-	console.log("SENDING THE NAME: " + $scope.name);
+	};*/
+	//console.log("SENDING THE NAME: " + $scope.name);
 	$scope.save = function(index){
 		$scope.Profiles[index].editable = true;
 		//$scope.entity = $scope.Profiles[index];
@@ -219,20 +220,21 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 		//$scope.entity.index = index;
 		$scope.entity.editable = true;
 
-
-		$scope.updateValue = function(name){
+		//$scope.name="";
+		//$scope.updateValue = function(name){
 			//alert("addgin " + name + " to " + $scope.name);
-			$scope.name = name;
-		};
-
+			//$scope.name = name;
+			
+		//};
 
 		var Edit = {
-				newname: $scope.name,
+				//newname: $scope.name,
 				name: $scope.entity.organisationName,
 				subsys: $scope.selection		
 		}
-
-
+		console.log("ZMS");
+        console.log(Edit);
+		console.log(JSON.stringify(Edit));
 		var toEdit = $http({
 			method  : 'POST',
 			url     : 'https://localhost:8443/user/updateClientOrg',
@@ -268,17 +270,97 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 		});
 
 	}
+	
+	$scope.showModal = function(profile,$parent) {
+		console.log("hahahaha");
+		console.log(profile);
+		profile.start_date = new Date(profile.start_date);
+		profile.end_date = new Date(profile.end_date);
+	    // Just provide a template url, a controller and call 'showModal'.
+		
+	    ModalService.showModal({
+	    	
+	    	      templateUrl: "views/updateOrgTemplate.html",
+	    	      controller: "updateOrgController",
+	    	      inputs: {
+	    	        title: "View and Update Client Organisation Details",
+	    	        profile: profile
+	    	      }
+	    	    }).then(function(modal) {
+	    	      modal.element.modal();
+	    	      modal.close.then(function(result) {
+	    	      var profile = result.profile;
+	    	      if(profile == null)
+	    	    	  $state.reload();
+	    	      else
+	    	    	  $parent.updateClient(profile);
+	    	     
+	    	      // console.log("in then");
+	    	      // console.log("scope test1");	    	       
+	    	      // console.log("scope test2");
+	    	       
+	    	      });
+	    	    });
 
+	  };//END SHOWMODAL
+	  
+	  $scope.dismissModal = function(result) {
+		    close(result, 200); // close, but give 200ms for bootstrap to animate
+		    $parent.updateClient();
+		    console.log("in dissmiss");
+		 };
+	
+		 $scope.updateClient=function(profile){
+			 console.log("Update the client other details");
+			
+			// console.log("scope test3");
+		//	 console.log(   angular.element(document.getElementById('1')).scope());
+			  var dataObj = {
+				        id: profile.id,
+				        address: profile.address,
+				        name: profile.organisationName,
+				        postal: profile.postal,
+				        phone: profile.phone,
+				        start_date: (profile.start_date).toString(),
+				        end_date: (profile.end_date).toString(),
+				        fee: (profile.fee).toString()
+				    };
+			  $http.post('/user/updateOrgDetails', JSON.stringify(dataObj)).then(function(response){
+					console.log("finish updating");
+					ModalService.showModal({
+						templateUrl: "views/popupMessageTemplate.html",
+						controller: "errorMessageModalController",
+						inputs: {
+							message: "Client organisation saved successfully",
+						}
+					}).then(function(modal) {
+						modal.element.modal();
+						modal.close.then(function(result) {
+							console.log("OK");
+							$state.go("dashboard.viewClientOrgs");
+						});
+					});
 
+					$scope.dismissModal = function(result) {
+						close(result, 200); // close, but give 200ms for bootstrap to animate
+
+						console.log("in dissmiss");
+					};
+
+			  },function(response){
+				  alert("did not save changes to client organisation's other details");  
+			      } )
+		 };//END UPDATE UNIT	 
+		 
 	$scope.checkRole =function(role,profile){
 		var roles=profile.systemSubscriptions;
-		console.log(roles);
+		//console.log(roles);
 		var hasRole=false;
 		var index = 0;
 		angular.forEach(roles, function(item){             
 			if(hasRole==false&&role == roles[index]){	
 				hasRole=true;
-				console.log(hasRole);
+				//console.log(hasRole);
 			}else{
 				index = index + 1;
 			}
@@ -289,73 +371,79 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 
 
 	$scope.delete = function(index){
-		//$scope.Profiles.splice(index,1);
-		//send to db to delete
-		//var index = $scope.Profiles[index];
-		//console.log("DEX" + index);
 		$scope.entity = $scope.Profiles[index];
+		ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: 'Do you wish to delete client organisation '+$scope.entity.organisation_name+' ?',
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					$scope.data = {};
+					console.log("Start deleting client org");
+					var toDel = {
+							id: $scope.entity.id,
+					}
+					
+					$http.post("//localhost:8443/user/deleteClientOrg", JSON.stringify(toDel)).then(function(response){
+						ModalService.showModal({
 
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Client organisation deleted successfully',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								//$state.go("dashboard.viewAllVendors");
+								$scope.Profiles.splice(index, 1);
+							});
+						});
 
-		console.log(JSON.stringify($scope.entity));
-		var toDel = {
-				id: $scope.entity.id,
-		}
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
 
-		//var toDel = $scope.Profiles[index];
-		console.log("ITEM ID TO DELETE: " + JSON.stringify(toDel));
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
 
-		var del = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/user/deleteClientOrg',
-			data 	: toDel
-			//forms user object
-		});
+					},function(data){
+						ModalService.showModal({
 
-		console.log("fetching the user list.......");
-		del.success(function(response){
-			//$scope.Profiles = response;
-			ModalService.showModal({
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
 
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Client organisation deleted successsfully!',
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+					}	
+					)
 				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
 			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-		del.error(function(response){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Did not managed to delete the client organisation',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
 		});
 
+		$scope.dismissModal = function(result) {
+			close(result, 200); // close, but give 200ms for bootstrap to animate
 
-		$scope.Profiles.splice(index, 1);
+			console.log("in dissmiss");
+		};
 	}
 
 	$scope.edit = function(index){
@@ -373,3 +461,39 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 	}
 }
 ]);
+
+app.controller('updateOrgController', ['$scope', '$element', 'title', 'close', 'profile',
+                                        function($scope, $element, title, close, profile) {
+
+//UPDATE MODAL
+
+  $scope.title = title;
+  $scope.profile=profile;
+  console.log(title);
+  console.log(profile);
+  console.log($element);
+  //  This close function doesn't need to use jQuery or bootstrap, because
+  //  the button has the 'data-dismiss' attribute.
+  $scope.close = function() {
+ 	  close({
+      profile:$scope.profile
+    }, 500); // close, but give 500ms for bootstrap to animate
+  };
+
+  //  This cancel function must use the bootstrap, 'modal' function because
+  //  the doesn't have the 'data-dismiss' attribute.
+  $scope.cancel = function() {
+
+    //  Manually hide the modal.
+    $element.modal('hide');
+    
+    //  Now call close, returning control to the caller.
+    close({
+    
+    }, 500); // close, but give 500ms for bootstrap to animate
+  };
+
+
+
+
+}])
