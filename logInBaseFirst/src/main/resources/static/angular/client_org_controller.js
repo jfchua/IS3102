@@ -371,73 +371,79 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 
 
 	$scope.delete = function(index){
-		//$scope.Profiles.splice(index,1);
-		//send to db to delete
-		//var index = $scope.Profiles[index];
-		//console.log("DEX" + index);
 		$scope.entity = $scope.Profiles[index];
+		ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: 'Do you wish to delete client organisation '+$scope.entity.organisation_name+' ?',
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					$scope.data = {};
+					console.log("Start deleting client org");
+					var toDel = {
+							id: $scope.entity.id,
+					}
+					
+					$http.post("//localhost:8443/user/deleteClientOrg", JSON.stringify(toDel)).then(function(response){
+						ModalService.showModal({
 
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Client organisation deleted successfully',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								//$state.go("dashboard.viewAllVendors");
+								$scope.Profiles.splice(index, 1);
+							});
+						});
 
-		console.log(JSON.stringify($scope.entity));
-		var toDel = {
-				id: $scope.entity.id,
-		}
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
 
-		//var toDel = $scope.Profiles[index];
-		console.log("ITEM ID TO DELETE: " + JSON.stringify(toDel));
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
 
-		var del = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/user/deleteClientOrg',
-			data 	: toDel
-			//forms user object
-		});
+					},function(data){
+						ModalService.showModal({
 
-		console.log("fetching the user list.......");
-		del.success(function(response){
-			//$scope.Profiles = response;
-			ModalService.showModal({
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+							});
+						});
 
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Client organisation deleted successsfully!',
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+					}	
+					)
 				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
 			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-		del.error(function(response){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Did not managed to delete the client organisation',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
 		});
 
+		$scope.dismissModal = function(result) {
+			close(result, 200); // close, but give 200ms for bootstrap to animate
 
-		$scope.Profiles.splice(index, 1);
+			console.log("in dissmiss");
+		};
 	}
 
 	$scope.edit = function(index){
