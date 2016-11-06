@@ -79,8 +79,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean getUserBySecurity(User user, String security) {
-		System.out.println(user.getSecurity() + "is the userserviceimpl");
-		if (user.getSecurity().equals(security)) {
+		BCryptPasswordEncoder t = new BCryptPasswordEncoder();
+
+		if (t.matches(security, user.getSecurity())) {
 			return true;
 		}
 		return false;
