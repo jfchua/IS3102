@@ -855,7 +855,41 @@ public class UserController {
 
 
 	}
+	// Call this method using $http.get and you will get a JSON format containing an array of eventobjects.
+		// Each object (building) will contain... long id, .
+		@RequestMapping(value = "user/viewClientOfUser",  method = RequestMethod.GET)
+		@ResponseBody
+		public String viewClientOfUser(HttpServletRequest rq) {
+			Principal principal = rq.getUserPrincipal();
+			try{
+				Optional<User> usrOpt = userService.getUserByEmail(principal.getName());
+				if (usrOpt.isPresent()){
 
+					User usr=usrOpt.get();
+					ClientOrganisation clientObj = usr.getClientOrganisation();
+					String client=clientObj.getOrganisationName();
+					
+					JSONObject bd = new JSONObject(); 
+					bd.put("client", client); 
+					return bd.toString();
+				}else{
+					JSONObject err = new JSONObject(); 
+					err.put("error", "error"); 
+					System.out.println("Returning user info error : " + err.toString());
+					return err.toString();
+
+				}
+
+			}catch (Exception e){
+				JSONObject err = new JSONObject(); 
+				err.put("error", "error"); 
+				System.out.println("Returning building id : " + err.toString());
+				return err.toString();
+
+			}
+
+
+		}
 
 	/*
 	 * Mobile app register new user;
