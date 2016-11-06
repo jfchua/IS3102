@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,6 +53,7 @@ public class EngagementController {
 	private final FeedbackRepository feedbackRepository;
 	private final CategoryRepository categoryRepository;
 	private final BuildingRepository buildingRepository;
+	Gson gson = new Gson();
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 
@@ -72,30 +74,37 @@ public class EngagementController {
 	
 	@RequestMapping(value = "/viewDiscount", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> viewBuildings(String discount, HttpServletRequest rq) throws UserNotFoundException {
-		Principal principal = rq.getUserPrincipal();
+	public ResponseEntity<String> viewDiscount(@RequestBody String discount, HttpServletRequest rq) throws UserNotFoundException {
+
+/*		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		}*/
 		try{
+
 			Object obj1 = parser.parse(discount);
+
 			JSONObject jsonObject = (JSONObject) obj1;
+	
 			String id = (String)jsonObject.get("discount");
+
 			Discount dis = engagementService.getDiscount(id);
+			System.out.println(discount + dis.getDiscountMessage());
 			//Gson gson = new Gson();
 			//String json = gson.toJson(buildings);
 			//System.out.println("Returning buildings with json of : " + json);
 			//return json;	
 
-			Gson gson = new Gson();
+			
 
 			String json = gson.toJson(dis);
 			System.out.println("discount IS " + json);
 			return new ResponseEntity<String>(json,HttpStatus.OK);
 		}
 		catch (Exception e){
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+			System.err.println(e.getMessage());
+			return new ResponseEntity<String>(gson.toJson("Sorry, the QR code is invalid"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
