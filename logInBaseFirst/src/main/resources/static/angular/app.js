@@ -144,7 +144,7 @@ var app = angular.module('app', [ 'ui.router',
                                 			  .state('/reset',{
                                 				  url:'/reset',
                                 				  templateUrl: '/views/resetPassword.html',
-                                				  controller: 'usersController',
+                                				  controller: 'UserController',
                                 				  data: {
                                 					  authorizedRoles: [USER_ROLES.all]
                                 				  }
