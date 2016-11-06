@@ -1,4 +1,4 @@
-app.controller('clientOrgController', ['$scope', '$http','$location','ModalService', function ($scope, $http, $location,ModalService) {
+app.controller('clientOrgController', ['$scope', '$http','$state','$location','ModalService', function ($scope, $http, $state, $location, ModalService) {
 	$scope.genders=['COMMONINFRA','PROPERTY','EVENT','FINANCE', 'TICKETING', 'BI'];
 	$scope.selection=[];
 
@@ -106,7 +106,8 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 			}).then(function(modal) {
 				modal.element.modal();
 				modal.close.then(function(result) {
-					console.log("OK");
+					console.log("OK");	
+					$state.go("dashboard.viewClientOrgs");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -114,7 +115,7 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 
 				console.log("in dissmiss");
 			};
-			$location.path("/dashboard");
+			//$state.go("dashboard.worksapce");
 		});
 		send.error(function(data){
 			ModalService.showModal({
@@ -157,8 +158,8 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 
 //////////VIEW CLIENT ORGS//////////
 
-app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
-                                  function($scope, $http,$location,ModalService) {
+app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalService',
+                                  function($scope, $http,$state, $location,ModalService) {
 
 	$scope.genders=['COMMONINFRA','PROPERTY','EVENT','FINANCE', 'TICKETING', 'BI'];
 	$scope.selection=[];
@@ -276,7 +277,78 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 
 	}
 
+	$scope.showModal = function(profile,$parent) {
+		console.log(profile);
+	    // Just provide a template url, a controller and call 'showModal'.
+	    ModalService.showModal({
+	    	
+	    	      templateUrl: "views/updateOrgTemplate.html",
+	    	      controller: "updateOrgController",
+	    	      inputs: {
+	    	        title: "View and Update Client Organisation Details",
+	    	        org: profile
+	    	      }
+	    	    }).then(function(modal) {
+	    	      modal.element.modal();
+	    	      modal.close.then(function(result) {
+	    	      var profile = result.profile;
+	    	      // console.log("in then");
+	    	      // console.log("scope test1");
+	    	       $parent.updateClient(profile);
+	    	      // console.log("scope test2");
+	    	       //$state.reload();
+	    	      });
+	    	    });
 
+	  };//END SHOWMODAL
+	  
+	  $scope.dismissModal = function(result) {
+		    close(result, 200); // close, but give 200ms for bootstrap to animate
+		    $parent.updateClient();
+		    console.log("in dissmiss");
+		 };
+	
+		 $scope.updateClient=function(profile){
+			 console.log("Update the client other details");
+			
+			// console.log("scope test3");
+		//	 console.log(   angular.element(document.getElementById('1')).scope());
+			  var dataObj = {
+				        id: profile.id,
+				        address: profile.address,
+				        postal: profile.postal,
+				        phone: profile.phone,
+				        start_date: (profile.start_date).toString(),
+				        end_date: (profile.end_date).toString(),
+				        fee: (profile.fee).toString()
+				    };
+			  $http.post('/user/updateOrgDetails', JSON.stringify(dataObj)).then(function(response){
+					console.log("finish updating");
+					ModalService.showModal({
+						templateUrl: "views/popupMessageTemplate.html",
+						controller: "errorMessageModalController",
+						inputs: {
+							message: "Client organisation saved successfully",
+						}
+					}).then(function(modal) {
+						modal.element.modal();
+						modal.close.then(function(result) {
+							console.log("OK");
+							$state.go("dashboard.worksapce");
+						});
+					});
+
+					$scope.dismissModal = function(result) {
+						close(result, 200); // close, but give 200ms for bootstrap to animate
+
+						console.log("in dissmiss");
+					};
+
+			  },function(response){
+				  alert("did not save changes to client organisation's other details");  
+			      } )
+		 };//END UPDATE UNIT	 
+		 
 	$scope.checkRole =function(role,profile){
 		var roles=profile.systemSubscriptions;
 		console.log(roles);

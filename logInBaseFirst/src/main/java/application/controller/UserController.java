@@ -337,6 +337,44 @@ public class UserController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
+	@RequestMapping(value = "user/updateOrgDetails", method = RequestMethod.POST)
+	@ResponseBody //SERVICE CLASS
+	public ResponseEntity<Void> updateOrgDetails(@RequestBody String userJSON, HttpServletRequest rq) {
+		System.out.println("ERROR here GGGGG");
+		try{
+			Object obj = parser.parse(userJSON);
+			JSONObject jsonObject = (JSONObject) obj;
+			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+			//Name to find client org
+			System.err.println("ERROR here 1");
+			Long id = (Long)jsonObject.get("id");
+			String address = (String)jsonObject.get("address");
+			System.err.println("ERROR here 2");
+			String postal = (String)jsonObject.get("postal");
+			String phone = (String)jsonObject.get("phone");
+			Date start_date = sdf.parse((String)jsonObject.get("start_date"));
+			Date end_date = sdf.parse((String)jsonObject.get("end_date"));
+			Double fee = Double.valueOf((String)jsonObject.get("fee"));
+
+			System.out.println("EDITING REACHED HERE LINE 209 GETTING CLIENT ORG OF ID " + id);
+			ClientOrganisation orgToEdit = clientOrganisationRepository.findOne(id);
+			System.out.println("CLIENT ORG NAME IS " + orgToEdit.getOrganisationName());				
+			orgToEdit.setAddress(address);
+			orgToEdit.setPostal(postal);
+			orgToEdit.setPhone(phone);
+			orgToEdit.setFee(fee);
+			orgToEdit.setStart_date(start_date);
+			orgToEdit.setEnd_date(end_date);
+			clientOrganisationRepository.saveAndFlush(orgToEdit);
+			System.out.println("CHANGES SAVED");
+		}catch(Exception e){
+			System.out.println("ERROR IN EDITING CLIENT ORG");
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 
 
 

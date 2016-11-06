@@ -8,10 +8,10 @@
 <div ng-controller="viewClientOrgs as ctrl">
 
 
-<div class="col-md-9">
+<div class="col-md-12">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					<h3 class="panel-title">Users	  
+					<h3 class="panel-title">Client Organisations	  
 						<div class="panel-control pull-right">
 						
 							<a class="panelButton"><i class="fa fa-refresh"></i></a>
@@ -61,6 +61,7 @@
                                 <a  ng-click="edit($index)" ng-hide="profile.editable" tooltip-placement="top" tooltip="Update client"><i class="glyphicon glyphicon-pencil"></i></a>
                                 <a   ng-click="delete($index)" ng-hide="profile.editable" tooltip-placement="top" tooltip="Delete client"><i class="glyphicon glyphicon-trash"></i></a>
                                 <a  ng-click="save($index)" ng-show="profile.editable" tooltip-placement="top" tooltip="Save client"><i class="glyphicon glyphicon-floppy-disk"></i></a>
+                                <a  ng-click="showModal($index,$parent)" tooltip-placement="top" tooltip="View and edit details"><i class="glyphicon glyphicon-eye-open"></i></a>
                             </td> 
 		</tr>
                     </tbody>
