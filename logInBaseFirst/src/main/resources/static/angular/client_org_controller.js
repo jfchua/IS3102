@@ -160,7 +160,7 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
                                   function($scope, $http,$location,ModalService) {
 
-	$scope.genders=['Property System','Event Management System','Finance System'];
+	$scope.genders=['COMMONINFRA','PROPERTY','EVENT','FINANCE', 'TICKETING', 'BI'];
 	$scope.selection=[];
 
 	$scope.toggleSelection = function toggleSelection(gender) {
@@ -208,6 +208,8 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 
 
 	$scope.updateValue = function(name){
+		console.log("*****");
+		console.log(name);
 		$scope.name = name;
 
 	};
@@ -219,20 +221,25 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 		//$scope.entity.index = index;
 		$scope.entity.editable = true;
 
-
+		$scope.name="";
 		$scope.updateValue = function(name){
 			//alert("addgin " + name + " to " + $scope.name);
 			$scope.name = name;
+			console.log("hahaho");
+			console.log($scope.name);
 		};
 
+		console.log("hahaha");
+		console.log($scope.name);
 
 		var Edit = {
 				newname: $scope.name,
 				name: $scope.entity.organisationName,
 				subsys: $scope.selection		
 		}
-
-
+		console.log("ZMS");
+        console.log(Edit);
+		console.log(JSON.stringify(Edit));
 		var toEdit = $http({
 			method  : 'POST',
 			url     : 'https://localhost:8443/user/updateClientOrg',

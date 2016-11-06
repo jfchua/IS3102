@@ -319,25 +319,24 @@ public class UserController {
 
 			System.out.println("EDITING REACHED HERE LINE 209 GETTING CLIENT ORG OF NAME " + name);
 			ClientOrganisation orgToEdit = clientOrganisationRepository.getClientOrgByName(name);
-			System.out.println("ERROR here fkkkkkkkkk" + orgToEdit.getOrganisationName());
-			orgToEdit.setOrganisationName(newname);
+			System.out.println("ERROR here" + orgToEdit.getOrganisationName());
+			if(newname.equals("")){
+				orgToEdit.setOrganisationName(name);
+			}
+			else {			
+				orgToEdit.setOrganisationName(newname);
+			}
 			orgToEdit.setSystemSubscriptions(sysToAdd);
 			clientOrganisationRepository.saveAndFlush(orgToEdit);
 			System.out.println("GG");
-
 			//System.out.println("ORGANIZATION TO BE EDITED: " + OrgToEdit + "   " +name);
 			//userToEdit.setRoles(roles);
-
 		}catch(Exception e){
 			System.out.println("ERROR IN EDITING USER");
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
-
 	}
-
-
-
 
 
 
