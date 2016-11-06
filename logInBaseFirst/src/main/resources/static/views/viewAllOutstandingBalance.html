@@ -1,4 +1,3 @@
-
 	<div ng-cloak ng-controller="balanceController as balanceCtrl" >
 	 <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
@@ -42,9 +41,9 @@
                             <td>{{ x.outstanding }}</td>
                             <td>{{ x.paid }}</td>
                             <td>
-                            <a  ui-sref="dashboard.updateReceivedPayment" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="Update Received Payment"><i class="glyphicon glyphicon-arrow-left"></i></a>
-                            <a  ui-sref="dashboard.viewListOfEvents" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View List Of Events"><i class="glyphicon glyphicon-list"></i></a>
-                            <a  ui-sref="dashboard.viewPaymentHistory" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View Payment History"><i class="glyphicon glyphicon-eye-open"></i></a>
+                            <a ui-sref="dashboard.updateReceivedPayment" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="Update Received Payment"><i class="glyphicon glyphicon-arrow-left"></i></a>
+                            <a ui-sref="dashboard.viewListOfEvents" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View List Of Events"><i class="glyphicon glyphicon-list"></i></a>
+                            <a ui-sref="dashboard.viewPaymentHistory" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View Payment History"><i class="glyphicon glyphicon-eye-open"></i></a>
                            </td>
                         </tr>
                          </tbody>
