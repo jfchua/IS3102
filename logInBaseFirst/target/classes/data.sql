@@ -689,13 +689,16 @@ INSERT INTO special_rate(rate, description, period) VALUES(0.8, 'Feb discount', 
 INSERT INTO client_organisation_special_rates(client_organisation_id, special_rates_id) values(1,1);
 INSERT INTO client_organisation_special_rates(client_organisation_id, special_rates_id) values(1,2);
 
-INSERT INTO client_organisation_system_subscriptions VALUES ('1', 'Finance System');
-INSERT INTO client_organisation_system_subscriptions VALUES ('1', 'Event Management System');
-INSERT INTO client_organisation_system_subscriptions VALUES ('1', 'Property System');
+INSERT INTO client_organisation_system_subscriptions VALUES ('1', '0');
+INSERT INTO client_organisation_system_subscriptions VALUES ('1', '1');
+INSERT INTO client_organisation_system_subscriptions VALUES ('1', '2');
+INSERT INTO client_organisation_system_subscriptions VALUES ('1', '3');
+INSERT INTO client_organisation_system_subscriptions VALUES ('1', '4');
+INSERT INTO client_organisation_system_subscriptions VALUES ('1', '5');
 
-INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Finance System');
-INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Event Management System');
-INSERT INTO client_organisation_system_subscriptions VALUES ('2', 'Property System');
+INSERT INTO client_organisation_system_subscriptions VALUES ('2', '0');
+INSERT INTO client_organisation_system_subscriptions VALUES ('2', '1');
+INSERT INTO client_organisation_system_subscriptions VALUES ('2', '2');
 
 --Insert 12 categories
 /*

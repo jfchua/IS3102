@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import application.entity.ClientOrganisation;
 import application.entity.Role;
 import application.entity.User;
+import application.enumeration.Subscription;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.InvalidEmailException;
@@ -51,7 +52,7 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 	}
 
 
-	public boolean createNewClientOrganisation(String orgName, String adminEmail, List<String> subs,String nameAdmin) throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException{
+	public boolean createNewClientOrganisation(String orgName, String adminEmail, List<Subscription> subs,String nameAdmin) throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException{
 		Pattern pat = Pattern.compile("^.+@.+\\..+$");
 		Matcher get = pat.matcher(adminEmail);		
 		if(!get.matches()){

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import application.entity.ClientOrganisation;
+import application.enumeration.Subscription;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.InvalidEmailException;
@@ -13,7 +14,7 @@ import application.exception.UserNotFoundException;
 
 public interface ClientOrganisationService {
 
-	 public boolean createNewClientOrganisation(String orgName, String adminEmail, List<String> subs,String nameAdmin) throws EmailAlreadyExistsException, OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException;
+	 public boolean createNewClientOrganisation(String orgName, String adminEmail, List<Subscription> subs,String nameAdmin) throws EmailAlreadyExistsException, OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException;
 	 
 	 public Collection<ClientOrganisation>  getAllClientOrganisations();
 	 

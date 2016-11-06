@@ -93,6 +93,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		plan.setTotalBeforeGst(Double.valueOf(formatter.format(total/1.07)));
 		plan.setDepositRate(payPol.getDepositRate());
 		plan.setOverdue(false);
+		plan.setInvoice_due(false);
 		plan.setTicketRevenue(0.00);
 		plan.setDeposit(deposit);
 		plan.setNextPayment(deposit);
@@ -288,10 +289,14 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				Double total = pay.getTotal();
 				System.out.println("total " + total);
 				pay.setPayable(Double.valueOf(formatter.format(total-pay.getPaid())));
-				if((total-pay.getPaid()) >= subsequent)
+				if((total-pay.getPaid()) >= subsequent){
 					pay.setNextPayment(subsequent);
-				else if (((total-pay.getPaid())<subsequent)&&((total-pay.getPaid())>0))
+					pay.setInvoice_due(true);
+				}
+				else if (((total-pay.getPaid())<subsequent)&&((total-pay.getPaid())>0)){
 					pay.setNextPayment(total-pay.getPaid());
+					pay.setInvoice_due(true);
+				}
 				else if(pay.getTotal()==pay.getPaid())
 					pay.setNextPayment(0.00);
 				Calendar cal1 = Calendar.getInstance();
@@ -710,6 +715,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				System.out.println("SAVE PAYMENT SUCCESS");
 				payments.add(p);
 				pay.setNextInvoice(invoice);
+				pay.setInvoice_due(false);
 				paymentPlanRepository.flush();
 				return true;
 			}

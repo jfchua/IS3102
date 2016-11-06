@@ -14,8 +14,8 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 		)
 		$scope.checkStatus = function(plan){
 			console.log("*****");
-			console.log(plan.nextPayment == plan.subsequent);
-			return (plan.nextPayment == plan.subsequent)&&(plan.payable > 0);
+			console.log(plan.invoice_due);
+			return (plan.invoice_due);
 		}
 		
 		$scope.checkFinish = function(plan){

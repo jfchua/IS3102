@@ -42,6 +42,7 @@ import application.entity.ToDoTask;
 import application.entity.UnitAttributeType;
 import application.entity.User;
 import application.entity.Vendor;
+import application.enumeration.Subscription;
 import application.exception.ClientOrganisationNotFoundException;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.InvalidEmailException;
@@ -111,9 +112,9 @@ public class UserController {
  				subsToAdd[i]  = (String)rolesArr.get(i);
  			}*/
 
-			List<String> subsToAdd = new ArrayList<String>();
+			List<Subscription> subsToAdd = new ArrayList<Subscription>();
 			for(int i = 0; i < rolesArr.size(); i++){
-				subsToAdd.add((String)rolesArr.get(i));
+				subsToAdd.add(Subscription.valueOf((String)rolesArr.get(i)));
 			}
 
 			System.out.println("adding new client organisation" + name + " with it admin user: " + email);
@@ -175,7 +176,9 @@ public class UserController {
 					.setExclusionStrategies(new ExclusionStrategy() {
 
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return ( clazz == User.class || clazz == Vendor.class );
+							return (clazz == PaymentPolicy.class  ||clazz == SpecialRate.class  ||clazz == Building.class  
+									||clazz == UnitAttributeType.class  ||clazz == Icon.class  ||clazz == User.class  
+									|| clazz == Vendor.class);
 						}
 
 						/**
@@ -192,13 +195,10 @@ public class UserController {
 
 					.serializeNulls()
 					.create();
-
+    
 			String json = gson2.toJson(orgList);
 			System.out.println(json);
 			return json;
-
-
-
 		}
 		catch ( Exception e) {
 			System.err.println("Error at UserController get all clientOrgs" + e.toString());
@@ -226,7 +226,9 @@ public class UserController {
 					.setExclusionStrategies(new ExclusionStrategy() {
 						//No Vendors or users inside the organisation should be returned
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == PaymentPolicy.class  ||clazz == SpecialRate.class  ||clazz == Building.class  ||clazz == UnitAttributeType.class  ||clazz == Icon.class  ||clazz == User.class  || clazz == Vendor.class);
+							return (clazz == PaymentPolicy.class  ||clazz == SpecialRate.class  ||clazz == Building.class  
+									||clazz == UnitAttributeType.class  ||clazz == Icon.class  ||clazz == User.class  
+									|| clazz == Vendor.class);
 						}
 
 						/**
@@ -307,11 +309,10 @@ public class UserController {
 			JSONArray subsysArr = (JSONArray)jsonObject.get("subsys");
 			System.err.println("Name is " + name + "NEW NAME IS " + newname + "subsys is: " + subsysArr.toString());
 
-			List<String> sysToAdd = new ArrayList<String>();
+			List<Subscription> sysToAdd = new ArrayList<Subscription>();
 			for(int i = 0; i < subsysArr.size(); i++){
-				sysToAdd.add((String)subsysArr.get(i));
+				sysToAdd.add(Subscription.valueOf((String)subsysArr.get(i)));
 			}
-
 
 			System.out.println("EDITING REACHED HERE LINE 209 GETTING CLIENT ORG OF NAME " + name);
 			ClientOrganisation orgToEdit = clientOrganisationRepository.getClientOrgByName(name);

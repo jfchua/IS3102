@@ -82,6 +82,9 @@ public class PaymentPlan {
 	 @Column(name = "next_invoice")
 	 private String nextInvoice;	
 
+	 @Column(name = "invoice_due")
+	 private Boolean invoice_due;	
+
 	 @OneToOne
      @JsonIgnore
      private Event event;
@@ -249,6 +252,13 @@ public class PaymentPlan {
 	public void setNextInvoice(String nextInvoice) {
 		this.nextInvoice = nextInvoice;
 	}
-	
+
+	public Boolean getInvoice_due() {
+		return invoice_due;
+	}
+
+	public void setInvoice_due(Boolean invoice_due) {
+		this.invoice_due = invoice_due;
+	}
 	
 }
