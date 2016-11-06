@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +53,8 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 	}
 
 
-	public boolean createNewClientOrganisation(String orgName, String adminEmail, List<Subscription> subs,String nameAdmin) throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException{
+	public boolean createNewClientOrganisation(String orgName, String adminEmail, List<Subscription> subs,String nameAdmin, Double fee, Date start, Date end, String address, String postal, String phone)
+			throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException{
 		Pattern pat = Pattern.compile("^.+@.+\\..+$");
 		Matcher get = pat.matcher(adminEmail);		
 		if(!get.matches()){
@@ -102,6 +104,12 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 			ClientOrganisation clientOrg = new ClientOrganisation();
 			clientOrg.setOrganisationName(orgName);
 			clientOrg.setSystemSubscriptions(subs);
+			clientOrg.setFee(fee);
+			clientOrg.setStart_date(start);
+			clientOrg.setEnd_date(end);
+			clientOrg.setAddress(address);
+			clientOrg.setPostal(postal);
+			clientOrg.setPhone(phone);
 			Set<User> tempSetOfUsers = new HashSet<User>();
 			tempSetOfUsers.add(user);
 			clientOrg.setUsers(tempSetOfUsers);

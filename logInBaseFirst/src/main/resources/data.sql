@@ -24,10 +24,10 @@ INSERT INTO payment_policy(deposit_rate, interim_period, due_days, subsequent_nu
 VALUES(0.4, 2, 2, 2);
 
 --ALTER TABLE client_organisation ENGINE=Innodb;
-insert into client_organisation (organisation_name, address, postal, phone, payment_policy_id,themecolour,logo_file_path) 
-values ("Expo", "1 Expo Dr", "486150", "64032160", 1,"midnight-blue","expoLogo.png");
-insert into client_organisation (organisation_name, address, postal, phone,themecolour,logo_file_path) 
-values ("Suntec", "3 Temasek Boulevard","038983", "68221537","green","suntecLogo.png");
+insert into client_organisation (organisation_name, address, end_date, fee, postal, phone, start_date, payment_policy_id,themecolour,logo_file_path) 
+values ("Expo", "1 Expo Dr", "2017-06-30 22:00:00", "45000.00", "486150", "64032160", "2016-07-01 22:00:00", 1,"midnight-blue","expoLogo.png");
+insert into client_organisation (organisation_name, address, end_date, fee, postal, phone, start_date, themecolour,logo_file_path) 
+values ("Suntec", "3 Temasek Boulevard", "2017-06-30 22:00:00", "25000.00", "038983", "68221537", "2016-07-01 22:00:00", "green","suntecLogo.png");
 
 --Algattas is client_organisation 3
 --insert into client_organisation (organisation_name, address, postal, phone,themecolour,logo_file_path) 

@@ -1,5 +1,6 @@
 package application.entity;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -46,6 +49,17 @@ public class ClientOrganisation {
 	@ElementCollection //
 	@JsonIgnore
 	private List<Subscription> systemSubscriptions;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "start_date", nullable = false)
+	private Date start_date;
+	    
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "end_date", nullable = false)
+	private Date end_date;
+	
+	@Column(name = "fee")
+	private Double fee;
 	
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Building> buildings = new HashSet<Building>();
@@ -125,6 +139,41 @@ public class ClientOrganisation {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+
+	public Date getStart_date() {
+		return start_date;
+	}
+
+
+
+	public void setStart_date(Date start_date) {
+		this.start_date = start_date;
+	}
+
+
+
+	public Date getEnd_date() {
+		return end_date;
+	}
+
+
+
+	public void setEnd_date(Date end_date) {
+		this.end_date = end_date;
+	}
+
+
+
+	public Double getFee() {
+		return fee;
+	}
+
+
+
+	public void setFee(Double fee) {
+		this.fee = fee;
 	}
 
 

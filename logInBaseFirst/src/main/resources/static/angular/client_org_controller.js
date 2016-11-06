@@ -1,5 +1,5 @@
 app.controller('clientOrgController', ['$scope', '$http','$location','ModalService', function ($scope, $http, $location,ModalService) {
-	$scope.genders=['Property System','Event Management System','Finance System'];
+	$scope.genders=['COMMONINFRA','PROPERTY','EVENT','FINANCE', 'TICKETING', 'BI'];
 	$scope.selection=[];
 
 	$scope.toggleSelection = function toggleSelection(gender) {
@@ -14,7 +14,61 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 		}
 	};
 
+	$scope.checkDateErr = function(startDate,endDate) {
+		$scope.errMessage = '';
+		var curDate = new Date();
 
+		if(new Date(startDate) > new Date(endDate)){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "End Date should be after start date",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.event.event_end_date = '';
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+
+			return false;
+		}
+		if(new Date(startDate) < curDate){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Start date should not be before today",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.event.event_start_date = '';
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+			return false;
+		}
+	};
+
+	
 	$scope.submit = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -23,7 +77,13 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 				name: $scope.clientOrg.name,
 				email: $scope.clientOrg.email,
 				subscription: $scope.selection,
-				nameAdmin: $scope.clientOrg.nameAdmin
+				nameAdmin: $scope.clientOrg.nameAdmin,
+				fee: ($scope.clientOrg.fee).toString(),
+				start: ($scope.clientOrg.start).toString(),
+				end: ($scope.clientOrg.end).toString(),
+				address: $scope.clientOrg.address,
+				postal: $scope.clientOrg.postal,
+				phone: $scope.clientOrg.phone,
 		};
 
 		console.log("REACHED HERE FOR SUBMIT BUILDING " + JSON.stringify(dataObj));
