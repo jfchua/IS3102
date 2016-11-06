@@ -744,10 +744,10 @@ insert into ticket values(22,'2016-11-12 22:00:00', 'P22', '2016-11-05 10:00:00'
 insert into ticket values(23,'2016-11-16 22:00:00', 'P23', '2016-11-05 10:00:00', '2016-11-15 10:00:00', 'single entry','*23*',12);
 insert into ticket values(24,'2016-11-16 22:00:00', 'P24', '2016-11-05 10:00:00', '2016-11-15 10:00:00', 'single entry','*24*',12);*/
 
-insert into ticket values(1,'2016-11-12 22:00:00', 'P21', '2016-11-05 10:00:00', '2016-11-11 10:00:00', 'single entry','*21*',1);
-insert into ticket values(2,'2016-11-12 22:00:00', 'P22', '2016-11-05 10:00:00', '2016-11-11 10:00:00', 'single entry','*22*',1);
-insert into ticket values(3,'2016-11-16 22:00:00', 'P23', '2016-11-05 10:00:00', '2016-11-15 10:00:00', 'single entry','*23*',2);
-insert into ticket values(4,'2016-11-16 22:00:00', 'P24', '2016-11-05 10:00:00', '2016-11-15 10:00:00', 'single entry','*24*',2);
+insert into ticket values(1,'2016-11-12 22:00:00', 'P21', '2016-11-05 10:00:00',false, '2016-11-11 10:00:00', 'single entry','*21*',1);
+insert into ticket values(2,'2016-11-12 22:00:00', 'P22', '2016-11-05 10:00:00',false, '2016-11-11 10:00:00', 'single entry','*22*',1);
+insert into ticket values(3,'2016-11-16 22:00:00', 'P23', '2016-11-05 10:00:00',false, '2016-11-15 10:00:00', 'single entry','*23*',2);
+insert into ticket values(4,'2016-11-16 22:00:00', 'P24', '2016-11-05 10:00:00', false,'2016-11-15 10:00:00', 'single entry','*24*',2);
 /*
 insert into user_tickets values(14,1);
 insert into user_tickets values(14,2);
@@ -779,7 +779,7 @@ insert into user_tickets values(12,2);
 insert into user_tickets values(12,3);
 insert into user_tickets values(12,4);
 
-insert into discount values ( 1,"12345","DISCOUNT MESSAGE", "STARHUB");
+insert into discount values ( 1,"12345","Enjoy 10% off your next mobile phone purchase. Exclusively at starhub!", "STARHUB");
 
 
 INSERT INTO icon(icon_path, icon_type) VALUES('yard-fountain.svg','CUST');

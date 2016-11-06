@@ -1,8 +1,8 @@
 <div class="text-center"> 
 	<a  ui-sref="dashboard.viewUserProfile"><img src="{{logo}}" class="user-avatar" /></a>
-	<div class="text-center avatar-name">Hi, {{userInfo.name}}.
+	<div class="text-center avatar-name">Hi, {{userName}}.
 	</div>
 	<div class="text-center" style="font-size:10px; float: center;">Your have roles in: 
-		<div ng-repeat="userRole in userInfo.roles"  style="font-size:10px; float: center;">{{userRole.role}}</div>
+		<div ng-repeat="userRole in userRoles"  style="font-size:10px; float: center;">{{userRole.roleName}}</div>
 	</div>
 </div>

@@ -29,8 +29,58 @@ app.controller('workspaceController', function ($scope, $http,shareData,Auth) {
 //FOR SIDE BAR PROFILE AND TOP BAR PROFILE
 app.controller('dashboardController', function ($scope, $http,shareData,$state,Auth) {
 	
-	 //angular.element(document).ready(function () {
-		 angular.element(document.getElementById('body-container')).ready(function () {
+	 angular.element(document).ready(function () {
+		 //angular.element(document.getElementById('body-container')).ready(function () {
+		 console.log("in dashboard");
+		 console.log(Auth.getUser());
+		 var userObj=Auth.getUser();
+
+		 var client=userObj.principal.user.clientOrganisation;
+		 //GET CLIENT ORG NAME
+		 $scope.clientName=client.organisationName;
+		 //GET LOGO
+		 if(client.logoFilePath)
+			 $scope.logo = client.logoFilePath;
+		 else
+			 $scope.logo="img/ifms.png";
+		 console.log($scope.logo);
+		 //CHANGE THEME COLOUR
+		 if(client.themeColour){
+			 $('<link>')
+			 .appendTo('head')
+			 .attr({type : 'text/css', rel : 'stylesheet'})
+			 .attr('href', 'css/styles/app-'+client.themeColour+'.css');
+			 console.log("THEME IS "+client.themeColour);
+		 }
+		 //GET USER NAME
+		 $scope.userName=userObj.principal.user.name;
+
+		 //GET USER ROLES
+		 var roles=userObj.principal.user.rolesAsStringArray;
+		 var rolesObj=[];
+		 angular.forEach(roles, function(role){   
+			 if("ROLE_SUPERADMIN"===role){
+				 rolesObj.push({roleName:"Algattas admin"});
+			 }else{				
+				 if("ROLE_ADMIN"===role){
+					 rolesObj.push({roleName:"IT admin"});
+				 }else if("ROLE_EVENT"===role){
+					 rolesObj.push({roleName:"managing events"});
+				 }else if("ROLE_PROPERTY"===role){
+					 rolesObj.push({roleName:"managing property"});
+				 }else if("ROLE_FINANCE"===role){
+					 rolesObj.push({roleName:"managing finance"});
+				 }else if("ROLE_TICKETING"===role){
+					 rolesObj.push({roleName:"managing tickets"});
+				 }else if("ROLE_EXTEVE"===role){
+					 rolesObj.push({roleName:"organising events"});
+				 }else if("ROLE_HIGHER"===role){
+					 rolesObj.push({roleName:"management level"});
+				 }
+			 }
+			})
+			$scope.userRoles=rolesObj;
+			 /*
 		 //GET LOGO
 		 $http({
 	 			method: 'GET',
@@ -47,8 +97,9 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 	 			
 	 			console.log("LOGOERROR: " + JSON.stringify(result));
 	 		});
-		 
+		 */
 		 //GET USERINFO
+		 /*
 			$scope.userInfo = [];	
 			$http.get("//localhost:8443/user/viewCurrentUser").then(function(response){
 				console.log("test Hailing");
@@ -57,18 +108,12 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				$scope.userInfo = angular.fromJson(response.data);
 				//console.log($scope.userInfo);
 				console.log("DISPLAY current user");
-				if(response.data.theme){
-							$('<link>')
-								  .appendTo('head')
-					 			  .attr({type : 'text/css', rel : 'stylesheet'})
-								  .attr('href', 'css/styles/app-'+response.data.theme+'.css');
-								console.log("THEME IS "+response.data.theme);
-							}
+
 			},function(response){
 				alert("did not view user info");
 			}	
 			)
-			
+			*/
 		//CONFIG CALENDAR
 	   $scope.uiConfig = {
 			      calendar:{
@@ -273,7 +318,9 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 			  // angular.element(document).ready(function () {
 				
 				   //GET TODOS FOR TODOS IN WORKSPACE AND SIDEBAR
-					 console.log("test for ready");
+		/*
+					 console.log("test for getting todo list");
+					 
 					 $http({
 							method: 'GET',
 							url: 'https://localhost:8443/todo/getToDoList'
@@ -283,7 +330,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 						}).error(function(result){
 							//do something
 							console.log("ERROR GETTING TODO LIST");
-						})
+						})*/
 				 //});
 
 			   	 $scope.today = new Date();
@@ -421,7 +468,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 								console.log("after add");
 								console.log($scope.eventSources);
 								//VIEW EVENTS
-								if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
+								/*if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
 									console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");
 									$scope.getEvents();
 									$scope.getMaints();
@@ -432,6 +479,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 									console.log("NOT GETTING CALENDAR EVENTS");
 									
 								}
+								*/
 								$scope.getTodos();
 							}).error(function(result){
 								//do something

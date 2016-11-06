@@ -273,6 +273,17 @@ public class TicketingController {
 					 */
 					.serializeNulls()
 					.create();			    
+			
+			Date todayDate = new Date();
+			Set<Event> toDelete = new HashSet<>();
+
+			for ( Event t : events){
+				if ( t.getEvent_end_date().before(todayDate) ){
+					toDelete.add(t);
+				}
+			}
+			events.removeAll(toDelete);
+			
 			String json = gson2.toJson(events);
 			String json2 = gson2.toJson("Server error in getting all the events");
 			System.out.println(json);
@@ -311,6 +322,53 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/tixViewBuilding",  method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> viewBuildingInfo(@RequestBody String eventId,HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		try{
+			Object obj1 = parser.parse(eventId);
+			JSONObject jsonObject = (JSONObject) obj1;
+			Long id = (Long)jsonObject.get("eventId");
+			System.err.println("gotten location id of : "  + id);
+			Building build = buildingRepository.findOne(id);
+				Gson gson = new GsonBuilder()
+						.setExclusionStrategies(new ExclusionStrategy() {
+							public boolean shouldSkipClass(Class<?> clazz) {
+								return (clazz == Level.class)||(clazz == BookingAppl.class);
+							}
+
+							/**
+							 * Custom field exclusion goes here
+							 */
+							@Override
+							public boolean shouldSkipField(FieldAttributes f) {
+								//TODO Auto-generated method stub
+								return false;
+								//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+							}
+						})
+						/**
+						 * Use serializeNulls method if you want To serialize null values 
+						 * By default, Gson does not serialize null values
+						 */
+						.serializeNulls()
+						.create();			    
+			
+			return new ResponseEntity<String>(gson.toJson(build),HttpStatus.OK);
+		}
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting the building"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
 
 	@RequestMapping(value = "/tixViewEventCat",  method = RequestMethod.POST)
 	@ResponseBody
@@ -528,7 +586,7 @@ public class TicketingController {
 			Set<Ticket> toDelete = new HashSet<>();
 
 			for ( Ticket t : ticketsToReturn){
-				if (t.getEnd_date().before(todayDate)){
+				if (t.isRedeemed() || t.getEnd_date().before(todayDate) ){
 					toDelete.add(t);
 				}
 			}
@@ -700,6 +758,43 @@ public class TicketingController {
 		return new ResponseEntity<String>(geeson.toJson("Server error in getting categories"),HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}	
+
+	
+	@RequestMapping(value = "/redeemTicket", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> redeemTicket(@RequestBody String qrCode,HttpServletRequest rq) throws UserNotFoundException {
+		System.err.println("redeem ticket");
+
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>("User not found!", HttpStatus.INTERNAL_SERVER_ERROR); 
+		}
+		try{
+			System.err.println("before try");
+			Object obj1 = parser.parse(qrCode);
+			JSONObject jsonObject = (JSONObject) obj1;
+			String code = (String)jsonObject.get("code");
+			System.out.println("code is " + code);
+		
+			
+			
+
+			boolean bl = ticketingService.redeemTicket(code);
+			if ( bl ){
+				return new ResponseEntity<String>(HttpStatus.OK);
+			}
+			else{
+				return new ResponseEntity<String>(geeson.toJson("Server error in redeeming the ticket!"),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		catch (Exception e){
+			System.err.println("Controller redeeming ticket error " + e.getMessage());
+			return new ResponseEntity<String>(geeson.toJson("Server error in redeeming ticket"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}	
+	
 
 
 

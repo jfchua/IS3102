@@ -25,6 +25,19 @@ public class Ticket {
 
 	@Column(name = "paymentId", nullable = false)
 	private String paymentId;
+	
+	@Column(name = "redeemed", nullable = false)
+	private boolean redeemed = false;
+
+	public boolean isRedeemed() {
+		return redeemed;
+	}
+
+
+	public void setRedeemed(boolean redeemed) {
+		this.redeemed = redeemed;
+	}
+
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "start_date", nullable = false)
