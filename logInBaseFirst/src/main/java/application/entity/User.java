@@ -36,7 +36,7 @@ public class User {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 	
-	@OneToMany(fetch = FetchType.EAGER,cascade={CascadeType.ALL})
+	@OneToMany(fetch = FetchType.LAZY,cascade={CascadeType.ALL})
 	@Column(nullable = true)
 	@JsonIgnore
 	private Set<Ticket> tickets = new HashSet<Ticket>();
@@ -78,21 +78,21 @@ public class User {
 	private Set<Role> roles = new HashSet<Role>();
 
 	//(fetch = FetchType.EAGER)
-	@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<ToDoTask> toDoList = new HashSet<ToDoTask>();
 
 	//@OneToMany(fetch = FetchType.EAGER)
 	//private Set<Message> messagesSent = new HashSet<Message>();
-	@OneToMany(fetch = FetchType.EAGER, mappedBy="recipient",cascade = CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy="recipient",cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Message> messagesReceived = new HashSet<Message>();
 
-	@ManyToOne(fetch = FetchType.EAGER) 
+	@ManyToOne(fetch = FetchType.LAZY) 
 	@JsonIgnore
 	private ClientOrganisation clientOrganisation = new ClientOrganisation();
 
-	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Event> events = new HashSet<Event>();
 
