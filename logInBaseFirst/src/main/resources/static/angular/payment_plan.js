@@ -14,8 +14,8 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 		)
 		
 		$scope.checkFinish = function(plan){
-			console.log("MSMSMS");
-			console.log(plan.payable > 0);
+			//console.log("MSMSMS");
+			//console.log(plan.payable > 0);
 			return (plan.payable > 0);
 		}
 	});
@@ -196,6 +196,7 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 				id : $scope.plan1.id,
 				total : $scope.plan1.total,
 				deposit: $scope.plan1.deposit,
+				depositRate: $scope.plan1.depositRate,
 				subsequentNumber: $scope.plan1.subsequentNumber,
 				//nextInvoice: $scope.plan1.nextInvoice,
 		};	
@@ -203,7 +204,13 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 		console.log("$scope.policy3");
 		console.log($scope.plan);
 		console.log("$scope.policy4");
+		$scope.checkStatus = function(){
+			//console.log($scope.plan1.deposit == $scope.plan1.nextPayment);
+			return ($scope.plan1.deposit == $scope.plan1.nextPayment);
+		}
 	});
+	
+	
 	
 	$scope.updatePaymentPlan = function(){
 		//alert("SUCCESS");
