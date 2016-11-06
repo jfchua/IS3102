@@ -209,8 +209,6 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 
 
 	$scope.updateValue = function(name){
-		console.log("*****");
-		console.log(name);
 		$scope.name = name;
 
 	};
@@ -226,12 +224,8 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 		$scope.updateValue = function(name){
 			//alert("addgin " + name + " to " + $scope.name);
 			$scope.name = name;
-			console.log("hahaho");
-			console.log($scope.name);
+			
 		};
-
-		console.log("hahaha");
-		console.log($scope.name);
 
 		var Edit = {
 				newname: $scope.name,
@@ -278,6 +272,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 	}
 
 	$scope.showModal = function(profile,$parent) {
+		console.log("hahahaha");
 		console.log(profile);
 	    // Just provide a template url, a controller and call 'showModal'.
 	    ModalService.showModal({
@@ -286,7 +281,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 	    	      controller: "updateOrgController",
 	    	      inputs: {
 	    	        title: "View and Update Client Organisation Details",
-	    	        org: profile
+	    	        profile: profile
 	    	      }
 	    	    }).then(function(modal) {
 	    	      modal.element.modal();
@@ -452,3 +447,39 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 	}
 }
 ]);
+
+app.controller('updateOrgController', ['$scope', '$element', 'title', 'close', 'profile',
+                                        function($scope, $element, title, close, profile) {
+
+//UPDATE MODAL
+
+  $scope.title = title;
+  $scope.profile=profile;
+  console.log(title);
+  console.log(profile);
+  console.log($element);
+  //  This close function doesn't need to use jQuery or bootstrap, because
+  //  the button has the 'data-dismiss' attribute.
+  $scope.close = function() {
+ 	  close({
+      profile:$scope.profile
+    }, 500); // close, but give 500ms for bootstrap to animate
+  };
+
+  //  This cancel function must use the bootstrap, 'modal' function because
+  //  the doesn't have the 'data-dismiss' attribute.
+  $scope.cancel = function() {
+
+    //  Manually hide the modal.
+    $element.modal('hide');
+    
+    //  Now call close, returning control to the caller.
+    close({
+    	profile:$scope.profile
+    }, 500); // close, but give 500ms for bootstrap to animate
+  };
+
+
+
+
+}])

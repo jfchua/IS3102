@@ -61,7 +61,7 @@
                                 <a  ng-click="edit($index)" ng-hide="profile.editable" tooltip-placement="top" tooltip="Update client"><i class="glyphicon glyphicon-pencil"></i></a>
                                 <a   ng-click="delete($index)" ng-hide="profile.editable" tooltip-placement="top" tooltip="Delete client"><i class="glyphicon glyphicon-trash"></i></a>
                                 <a  ng-click="save($index)" ng-show="profile.editable" tooltip-placement="top" tooltip="Save client"><i class="glyphicon glyphicon-floppy-disk"></i></a>
-                                <a  ng-click="showModal($index,$parent)" tooltip-placement="top" tooltip="View and edit details"><i class="glyphicon glyphicon-eye-open"></i></a>
+                                <a  ng-click="showModal(profile,$parent)" tooltip-placement="top" tooltip="View and edit details"><i class="glyphicon glyphicon-eye-open"></i></a>
                             </td> 
 		</tr>
                     </tbody>

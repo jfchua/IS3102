@@ -351,6 +351,7 @@ public class UserController {
 			System.err.println("ERROR here 1");
 			Long id = (Long)jsonObject.get("id");
 			String address = (String)jsonObject.get("address");
+			String name = (String)jsonObject.get("name");
 			System.err.println("ERROR here 2");
 			String postal = (String)jsonObject.get("postal");
 			String phone = (String)jsonObject.get("phone");
