@@ -2,6 +2,7 @@ package application.entity;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,9 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -25,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import application.enumeration.ApprovalStatus;
 import application.enumeration.EventType;
-import application.enumeration.IconType;
 import application.enumeration.PaymentStatus;
 
 
@@ -89,6 +86,25 @@ public class Event {
 		@Column(nullable = true)
 		private Set<Category> categories = new HashSet<Category>();
 		
+		@OneToMany(fetch = FetchType.EAGER,cascade={CascadeType.ALL})
+		@Column(nullable = true)
+		private Set<Discount> discounts = new HashSet<Discount>();
+		
+		public Set<Discount> getDiscounts() {
+			return discounts;
+		}
+
+		public void setDiscounts(Set<Discount> discounts) {
+			this.discounts = discounts;
+		}
+		public void addDiscount(Discount d){
+			discounts.add(d);
+		}
+		public void removeDiscount(Discount d){
+			discounts.remove(d);
+		}
+
+
 		/*
 		@ManyToMany(fetch = FetchType.EAGER)
 		@JoinTable( 

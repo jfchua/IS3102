@@ -107,6 +107,8 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 	$scope.passEventToViewTix = function(id){
 		shareData.addData(id);
 	}
+	
+
 
 	$scope.requestForTicketSales = function(event){
 		ModalService.showModal({
