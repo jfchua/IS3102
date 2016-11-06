@@ -434,6 +434,7 @@ public class PaymentPlanController {
 				System.out.println("event title is "+ev.getEvent_title());
 				obj1.put("paymentStatus", String.valueOf(ev.getPaymentStatus()));
 				System.out.println(ev.getPaymentStatus());
+				if(ev.getPaymentPlan()!= null){
 				PaymentPlan pay= ev.getPaymentPlan();
 				obj1.put("rent",pay.getTotal());
 				System.out.println("TOTAL1");
@@ -442,6 +443,7 @@ public class PaymentPlanController {
 				Double balance = pay.getPayable();
 				obj1.put("balance",balance);
 				System.out.println("TOTAL3" + balance);
+				}
 				jArray.add(obj1);
 			}
 			System.out.println("finishing getting list of events");
@@ -574,7 +576,7 @@ public class PaymentPlanController {
 			JSONObject jsonObject = (JSONObject) obj1;
 			Long paymentId = (Long)jsonObject.get("id");
 			System.out.println(paymentId);
-			Double amount = (Double)jsonObject.get("amountPaid");
+			Double amount = Double.valueOf((String)jsonObject.get("amountPaid"));
 			System.out.println("amount: "+ amount);
 			String cheque = (String)jsonObject.get("cheque");
 			System.out.println("cheque: "+cheque);

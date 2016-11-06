@@ -299,7 +299,7 @@ app.controller('eventListController', ['$scope', '$http','$state','$routeParams'
 			$scope.events = response;
 		});
 		getEvents.error(function(response){
-			$state.go("dashboard.viewAllOutstandingBalance");
+			//$state.go("dashboard.viewAllOutstandingBalance");
 			console.log('GET EVENTS FAILED! ');
 		});
 	});
@@ -357,7 +357,7 @@ app.controller('receivedPController', ['$scope', '$http','$state','$routeParams'
 		$scope.data = {};
 		var dataObj = {			
 				id: $scope.paymentPlan.id,
-				amountPaid: $scope.amountPaid,
+				amountPaid: ($scope.amountPaid).toString(),
 				cheque: $scope.chequeNum,
 				nextInvoice: $scope.paymentPlan.nextInvoice,
 		};
@@ -526,7 +526,7 @@ app.controller('paymentHistoryController', ['$scope', '$http','$state','$routePa
 			$scope.payments = response;
 		});
 		getPayments.error(function(response){
-			$state.go("dashboard.viewAllOutstandingBalance");
+			//$state.go("dashboard.viewAllOutstandingBalance");
 			console.log('GET PAYMENTS FAILED! ');
 		});
 	});
