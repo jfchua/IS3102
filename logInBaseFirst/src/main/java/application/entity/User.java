@@ -89,7 +89,6 @@ public class User {
 	private Set<Message> messagesReceived = new HashSet<Message>();
 
 	@ManyToOne(fetch = FetchType.EAGER) 
-	@JsonIgnore
 	private ClientOrganisation clientOrganisation = new ClientOrganisation();
 
 	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
