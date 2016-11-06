@@ -19,7 +19,7 @@
 					</h3>
 				</div>
 				<div class="panel-body">
-        <form>
+        <form name='form'>
          <div class="form-group">
                <label for="exampleInput">Payment Id</label>
                <input type="number" ng-model="plan.id" class="form-control" readonly>
@@ -31,16 +31,20 @@
 		<div class="form-group">
                <label for="exampleInput">Deposit</label>
                <input type="number" ng-model="plan.deposit" class="form-control" readonly>
-       </div>  
-		<div class="form-group">
+       </div> 
+       <div ng-show = "checkStatus()" class="form-group">
                <label for="exampleInput">Deposit Rate</label>
-               <input type="number" step="0.01" min="0" ng-model="plan.depositRate" class="form-control">
-       </div>      
+               <input type="number" ng-model="plan.depositRate" class="form-control">
+       </div>  
+       <div ng-show = "!checkStatus()" class="form-group">
+               <label for="exampleInput">Deposit Rate</label>
+               <input type="number" ng-model="plan.depositRate" class="form-control" readonly>
+       </div>    
        <div class="form-group">
                <label for="exampleInput">Number of Subsequent Payments</label>
                <input type="number" min="0" ng-model="plan.subsequentNumber" class="form-control">
        </div>
-        <button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "updatePaymentPlan()">Submit</button> &nbsp;
+        <button  ng-disabled="form.$pristine" class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "updatePaymentPlan()">Submit</button> &nbsp;
       </form>
       
                    

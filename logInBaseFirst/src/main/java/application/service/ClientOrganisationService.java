@@ -1,6 +1,7 @@
 package application.service;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +15,8 @@ import application.exception.UserNotFoundException;
 
 public interface ClientOrganisationService {
 
-	 public boolean createNewClientOrganisation(String orgName, String adminEmail, List<Subscription> subs,String nameAdmin) throws EmailAlreadyExistsException, OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException;
+	 public boolean createNewClientOrganisation(String orgName, String adminEmail, List<Subscription> subs,String nameAdmin, Double fee, Date start, Date end, String address, String postal, String phone) 
+			 throws EmailAlreadyExistsException, OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException;
 	 
 	 public Collection<ClientOrganisation>  getAllClientOrganisations();
 	 

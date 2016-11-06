@@ -12,15 +12,10 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 			alert("did not view plans");
 		}	
 		)
-		$scope.checkStatus = function(plan){
-			console.log("*****");
-			console.log(plan.invoice_due);
-			return (plan.invoice_due);
-		}
 		
 		$scope.checkFinish = function(plan){
-			console.log("MSMSMS");
-			console.log(plan.payable > 0);
+			//console.log("MSMSMS");
+			//console.log(plan.payable > 0);
 			return (plan.payable > 0);
 		}
 	});
@@ -44,6 +39,7 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 			var file = new Blob([data], {type: 'application/pdf'});
 			var fileURL = URL.createObjectURL(file);
 			//window.open(fileURL);
+			$state.reload();
 			alert('DOWNLOADED!');
 		});
 		send.error(function(data){
@@ -200,6 +196,7 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 				id : $scope.plan1.id,
 				total : $scope.plan1.total,
 				deposit: $scope.plan1.deposit,
+				depositRate: $scope.plan1.depositRate,
 				subsequentNumber: $scope.plan1.subsequentNumber,
 				//nextInvoice: $scope.plan1.nextInvoice,
 		};	
@@ -207,7 +204,13 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 		console.log("$scope.policy3");
 		console.log($scope.plan);
 		console.log("$scope.policy4");
+		$scope.checkStatus = function(){
+			//console.log($scope.plan1.deposit == $scope.plan1.nextPayment);
+			return ($scope.plan1.deposit == $scope.plan1.nextPayment);
+		}
 	});
+	
+	
 	
 	$scope.updatePaymentPlan = function(){
 		//alert("SUCCESS");
@@ -717,7 +720,7 @@ app.controller('invoiceController', ['$scope', '$http', function ($scope, $http)
 
 		var send = $http({
 			method  : 'POST',
-			url     : 'https://localhost:8443/payment/downloadInvoice',
+			url     : 'https://localhost:8443/payment/downloadSubseInvoice',
 			data    : dataObj, 
 			responseType: 'arraybuffer'
 		});
@@ -731,7 +734,7 @@ app.controller('invoiceController', ['$scope', '$http', function ($scope, $http)
 			alert('DOWNLOADED!');
 		});
 		send.error(function(data){
-			alert('DOWNLOAD GOT ERROR!');
+			alert('Invoice has already been generated. Please select a new payment plan.');
 		});
 	};
 }]);
