@@ -1,86 +1,3 @@
-/*var app = angular.module('app', ['ngRoute','ngResource','ui.bootstrap','ngAnimate', 'ngSanitize']);*/
-/*app.config(function($routeProvider,$locationProvider,$httpProvider){
-	$routeProvider
-	.when('/reset',{
-		templateUrl: '/views/resetPassword.html',
-		controller: 'passController'
-	})
-	.when('/login',{
-		templateUrl: '/views/mainLogin.html',
-		controller: 'passController'
-	})
-	.when('/dashboard',{
-		templateUrl: '/views/index.html',
-		controller: 'passController',
-	})
-	.when('/addEvent',{
-		templateUrl: '/views/addEvent.html',
-		controller: 'eventController',
-	})
-	.when('/addBuilding',{
-		templateUrl: '/views/addBuilding.html',
-		controller: 'buildingController',
-	})
-	.when('/viewBuilding',{
-		templateUrl: '/views/viewBuilding.html',
-		controller: 'buildingController',
-	})
-	.when('/updateBuilding',{
-		templateUrl: '/views/updateBuilding.html',
-		controller: 'buildingController',
-	})
-	.when('/deleteBuilding',{
-		templateUrl: '/views/deleteBuilding.html',
-		controller: 'buildingController',
-	})
-	.when('/viewLevels',{
-		templateUrl: '/views/viewLevels.html',
-		controller: 'buildingController',
-	})
-	.when('/addLevel',{
-		templateUrl: '/views/addLevel.html',
-		controller: 'levelController',
-	})
-	.when('/updateLevel',{
-		templateUrl: '/views/updateLevel.html',
-		controller: 'levelController',
-	})
-	.when('/deleteLevel',{
-		templateUrl: '/views/deleteLevel.html',
-		controller: 'levelController',
-	})
-	.when('/resetPassword/:id/:token',{
-		templateUrl: '/views/resetChangePass.html',
-		controller: 'passController'
-	})
-	.when('/messageList',{
-		templateUrl: '/message/message.html',
-		controller: 'ListController'
-	})
-	.when('/view/:id', { 
-		controller: 'DetailController',
-		templateUrl: 'message/detail.html'
-	})
-	.when('/new', { 
-		controller: 'NewMailController',
-		templateUrl: 'message/new.html'
-	})
-	.when('/addClientOrg', { 
-		controller: 'clientOrgController',
-		templateUrl: '/views/addClientOrg.html'
-	})   
-	.when('/createFloorPlan', { 
-		controller: 'MyCtrl',
-		templateUrl: '/views/floorPlanAngular.html'
-	})  
-	//for event org (temp)
-
-	.otherwise(
-			{ redirectTo: '/login'}
-	)
-	$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
-});
- */
 var app = angular.module('app', [ 'ui.router',
                                   'ngAnimate', 
                                   'ui.calendar',
@@ -144,7 +61,7 @@ var app = angular.module('app', [ 'ui.router',
                                 			  .state('/reset',{
                                 				  url:'/reset',
                                 				  templateUrl: '/views/resetPassword.html',
-                                				  controller: 'usersController',
+                                				  controller: 'UserController',
                                 				  data: {
                                 					  authorizedRoles: [USER_ROLES.all]
                                 				  }
@@ -158,18 +75,9 @@ var app = angular.module('app', [ 'ui.router',
                                 				  }
                                 			  })
                                 			  .state('dashboard',{
-                                				  url:'/dashboard/:org',
+                                				  url:'/dashboard',
                                 				  templateUrl: 'views/index.html',
-                                				  controller: function($scope, $stateParams, $state, $sessionStorage) {
-                                					    $scope.headingTitle = "Pass List";
-                                					    if ($stateParams.org != sessionStorage.getItem('clientOrg')){
-                    										event.preventDefault();
-                                					    	$stateParams.org = sessionStorage.getItem('clientOrg');
-                                					    	
-                                					    	$state.reload();
-                                					    }
-                                					  },
-                                					 
+                                				  controller: 'UserController',
                                 				  data: {
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
@@ -589,6 +497,30 @@ var app = angular.module('app', [ 'ui.router',
                                 			  .state('dashboard.updateCategory',{
                                 				  url:'/updateCategoryEx',
                                 				  templateUrl: '/views/updateCategory.html',
+                                				  controller: 'configureTicketsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.configureDiscountsEx',{
+                                				  url:'/configureDiscountsEx',
+                                				  templateUrl: '/views/configureDiscountsEx.html',
+                                				  controller: 'configureTicketsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateDiscount',{
+                                				  url:'/updateDiscount',
+                                				  templateUrl: '/views/updateDiscount.html',
+                                				  controller: 'configureTicketsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addDiscount',{
+                                				  url:'/addDiscount',
+                                				  templateUrl: '/views/addDiscount.html',
                                 				  controller: 'configureTicketsController',
                                 				  data:{
                                 					  authorizedRoles:[USER_ROLES.organiser]

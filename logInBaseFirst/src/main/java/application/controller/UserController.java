@@ -303,14 +303,14 @@ public class UserController {
 			//Name to find client org
 			System.out.println("ERROR here 1");
 			String name = (String)jsonObject.get("name");
-			System.out.println("ERROR here 2");
-			String newname = (String)jsonObject.get("newname");
+			//System.out.println("ERROR here 2");
+			//String newname = (String)jsonObject.get("newname");
 
 
 
 			//new subsys
 			JSONArray subsysArr = (JSONArray)jsonObject.get("subsys");
-			System.err.println("Name is " + name + "NEW NAME IS " + newname + "subsys is: " + subsysArr.toString());
+			//System.err.println("Name is " + name + "NEW NAME IS " + newname + "subsys is: " + subsysArr.toString());
 
 			List<Subscription> sysToAdd = new ArrayList<Subscription>();
 			for(int i = 0; i < subsysArr.size(); i++){
@@ -319,25 +319,68 @@ public class UserController {
 
 			System.out.println("EDITING REACHED HERE LINE 209 GETTING CLIENT ORG OF NAME " + name);
 			ClientOrganisation orgToEdit = clientOrganisationRepository.getClientOrgByName(name);
-			System.out.println("ERROR here fkkkkkkkkk" + orgToEdit.getOrganisationName());
-			orgToEdit.setOrganisationName(newname);
+			/*System.err.println("ERROR here" + orgToEdit.getOrganisationName()+" " + name + " " + newname);
+			if(newname.equals("")){
+				orgToEdit.setOrganisationName(name);
+			}
+			else {			
+				orgToEdit.setOrganisationName(newname);
+			}*/
 			orgToEdit.setSystemSubscriptions(sysToAdd);
 			clientOrganisationRepository.saveAndFlush(orgToEdit);
 			System.out.println("GG");
-
 			//System.out.println("ORGANIZATION TO BE EDITED: " + OrgToEdit + "   " +name);
 			//userToEdit.setRoles(roles);
-
 		}catch(Exception e){
 			System.out.println("ERROR IN EDITING USER");
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
-
 	}
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_SUPERADMIN')")
+	@RequestMapping(value = "user/updateOrgDetails", method = RequestMethod.POST)
+	@ResponseBody //SERVICE CLASS
+	public ResponseEntity<Void> updateOrgDetails(@RequestBody String userJSON, HttpServletRequest rq) {
+		System.out.println("ERROR here GGGGG");
+		try{
+			Object obj = parser.parse(userJSON);
+			JSONObject jsonObject = (JSONObject) obj;
+			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+			//Name to find client org
+			System.err.println("ERROR here 1");
+			Long id = (Long)jsonObject.get("id");
+			String address = (String)jsonObject.get("address");
+			String name = (String)jsonObject.get("name");
+			System.err.println("ERROR here 2");
+			String postal = (String)jsonObject.get("postal");
+			System.err.println("postal" +postal);
+			String phone = (String)jsonObject.get("phone");
+			System.err.println("phone" +phone);
+			Date start_date = sdf.parse((String)jsonObject.get("start_date"));
+			System.err.println("start" +start_date);
+			Date end_date = sdf.parse((String)jsonObject.get("end_date"));
+			System.err.println("end" +end_date);
+			Double fee = Double.valueOf((String)jsonObject.get("fee"));
 
-
-
+			System.out.println("EDITING REACHED HERE LINE 209 GETTING CLIENT ORG OF ID " + id);
+			ClientOrganisation orgToEdit = clientOrganisationRepository.findOne(id);
+			System.out.println("CLIENT ORG NAME IS " + orgToEdit.getOrganisationName());				
+			orgToEdit.setOrganisationName(name);
+			orgToEdit.setAddress(address);
+			orgToEdit.setPostal(postal);
+			orgToEdit.setPhone(phone);
+			orgToEdit.setFee(fee);
+			orgToEdit.setStart_date(start_date);
+			orgToEdit.setEnd_date(end_date);
+			clientOrganisationRepository.saveAndFlush(orgToEdit);
+			System.out.println("CHANGES SAVED");
+		}catch(Exception e){
+			System.out.println("ERROR IN EDITING CLIENT ORG");
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 
 
 

@@ -128,12 +128,54 @@ app.factory('UserService', ['$http', '$q', function($http, $q){
                         return response.data;
                     }, 
                     function(errResponse){
+                   	 console.log(errResponse);
+
                         console.error('Error while fetching users');
                         return $q.reject(errResponse);
                     }
             );
         },
-     
+     verifyUser: function(userEmail){
+    	 console.log("verifying user");
+    	return $http({
+    		    url: REST_SERVICE_URI + '/verifyEmail', 
+    		    method: "GET",
+    		    params: {userEmail: userEmail}
+    		 }) .then(
+                     function(response){
+                    	 console.log(response);
+                    	 console.log(response.data.result);
+                      	return response.data.result;
+                    
+                      }, 
+                      function(errResponse){
+                      	console.log("Error, " + errResponse);
+                          return false;
+                      }
+              );
+        	 
+    	
+    	 
+     },
+     getSecurityQuestion: function(userEmail){
+    	 return $http({
+ 		    url: REST_SERVICE_URI + '/getSecurityQuestion', 
+		    method: "GET",
+		    params: {userEmail: userEmail}
+		 }) .then(
+                 function(response){
+                	 //console.log(response.data.question);
+                  	return response.data.question;
+                
+                  }, 
+                  function(errResponse){
+                  	console.log("Error, " + errResponse);
+                      return $q.reject(errResponse);
+                  }
+          );
+    	 
+    	 
+     },
     resetPassword: function(userEmail, userSecurity){
     	console.log(userSecurity);
     	console.log("POSTING TO "  + REST_SERVICE_URI + "/reset  WITH EMAIL OF " + userEmail);

@@ -39,8 +39,8 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		}
 		$scope.checkStatus = function (event) {
 			var isTrue = true;
-		    console.log("****");
-		    console.log(event.approvalStatus == "CANCELLED");
+		    //console.log("****");
+		    //console.log(event.approvalStatus == "CANCELLED");
 		    if(event.approvalStatus == "CANCELLED")
 				isTrue = false;
 		    return isTrue;
@@ -107,6 +107,8 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 	$scope.passEventToViewTix = function(id){
 		shareData.addData(id);
 	}
+	
+
 
 	$scope.requestForTicketSales = function(event){
 		ModalService.showModal({

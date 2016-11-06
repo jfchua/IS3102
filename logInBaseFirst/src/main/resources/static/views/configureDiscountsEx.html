@@ -1,0 +1,70 @@
+<script src="../angular/ConfigureTicketsController.js"></script>
+
+<div ng-cloak ng-controller="configureTicketsController as tixCtrl">
+
+	<div class="clearfix">
+		<ol class="breadcrumb no-bg no-m-t">
+			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
+			<li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
+			<li><a>Configure Discounts</a></li>
+		</ol>
+	</div>
+	<div class="col-md-9">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Discounts
+					<div class="panel-control pull-right">
+
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th><i></i> ID</th>
+							<th><i></i> Retailer Name</th>
+							<th><i></i> QR Code</th>
+							<th><i></i> Discount Message</th>
+
+							<th>Action</th>
+
+						</tr>
+					</thead>
+					<tbody>
+
+						<tr ng-repeat="x in discounts track by $index">
+							<td>{{ x.id }}</td>
+							<td>{{ x.retailerName }}</td>
+							<td>{{ x.QRCode }}</td>
+							<td>{{ x.discountMessage }}</td>
+
+							<td><a ui-sref="dashboard.updateDiscount"
+								ng-click="passDiscount(x)" tooltip-placement="top"
+								tooltip="Update Discount"><i
+									class="glyphicon glyphicon-pencil"></i></a> <a
+								ng-click="deleteDiscount(x)" tooltip-placement="top"
+								tooltip="Delete discount"><i
+									class="glyphicon glyphicon-trash"></i></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<br> <br> <br> <a ui-sref="dashboard.addDiscount"
+			tooltip-placement="right" tooltip="Add a new discount"><button
+				type="button" class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-plus"></i>
+			</button></a>
+		<br> <br> <br>
+
+	</div>
+</div>

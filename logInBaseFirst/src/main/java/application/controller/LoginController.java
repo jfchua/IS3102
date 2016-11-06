@@ -144,13 +144,47 @@ public class LoginController {
 		emailService.sendEmail(form.getEmail(), "Reset your password by clicking on the link", link);
 		return "home";
 	}*/
+	
+	//Forget password before login
+	@RequestMapping(value ="/user/verifyEmail", method = RequestMethod.GET)
+	public @ResponseBody String verifyEmail(@RequestParam String userEmail) throws URISyntaxException, UserNotFoundException {
+	
+		if (!userService.getUserByEmail(userEmail).isPresent() ) {
+			System.out.println("A User with that email does not exist");
+			JSONObject response = new JSONObject();
+			response.put("result", false);
+			return response.toString();
+		}
+		else {
+			System.out.println("A User with that email exist");
+			JSONObject response = new JSONObject();
+			response.put("result", true);
 
+			return response.toString();
+		}
+	}
+	
+	@RequestMapping(value ="/user/getSecurityQuestion", method = RequestMethod.GET)
+	public @ResponseBody String getSecurityQuestion(@RequestParam String userEmail) throws URISyntaxException, UserNotFoundException {
+		
+			User curUser = userService.getUserByEmail(userEmail).get();
+			String question = curUser.getSecurityQuestion();
+			System.out.println("security question is " + question);
+			JSONObject response = new JSONObject();
+			response.put("question", question);
+			return response.toString();
+		
+		//  return curUser.getClientOrganisation().getLogoFilePath();
+
+	}
+	
+	
 	@RequestMapping(value = "/user/reset", method = RequestMethod.POST)
 	public ResponseEntity<String> resetPassword(@RequestBody ResetData data) throws URISyntaxException, UserNotFoundException {
 		
 		String userEmail=data.getEmail();
 		String userSecurity=data.getSecurity();
-
+		System.out.println(userEmail + " "+ userSecurity);
 		System.out.println("Received Reset Password Request from  " + userEmail);
 
 		User userToReset = userService.getUserByEmail(userEmail).get();
@@ -160,7 +194,7 @@ public class LoginController {
 		}
 		if (!userService.getUserBySecurity(userToReset, userSecurity)) {
 			System.out.println("Security question mismatch!");
-			return new ResponseEntity<String>(geeson.toJson("Security Question mismatched!"),HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(geeson.toJson("Security Answer is invalid!"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		try{
 			System.out.println("Resetting password...");
