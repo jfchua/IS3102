@@ -1,9 +1,15 @@
-app.controller('ChartCtrl', ['$scope', '$timeout','$http','ModalService', function ($scope, $timeout,$http,ModalService) {
+app.controller('ChartCtrl', ['$scope', '$timeout','$http','ModalService','$state', function ($scope, $timeout,$http,ModalService,$state) {
 	$scope.test={hei:'hei', ha:'ha',ho:10, haha:11};
 	//$scope.eventTypeCount=[];
 	$scope.testnumbers="50,100,200,300,350,450,";
 	angular.element(document).ready(function () {
-
+		$scope.showAll=true;
+		$scope.show1=false;
+		$scope.show2=false;
+		$scope.show3=false;
+		$scope.show4=false;
+		$scope.show5=false;
+		$scope.printed=false;
 		$scope.date=new Date();
 		//RETRIEVE EVENTS COUNT AGAINST EVENT TYPE WHEN LOADED
 		$http.get("//localhost:8443/dataVisual/eventCountAgainstEventType").then(function(response){
@@ -100,7 +106,16 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http','ModalService', functi
      	    }
      	});
      }
-
+     $scope.haha=function(){
+    	 $scope.showAll=true;
+    	 $scope.show1=false;
+    	 $scope.show2=false;
+    	 $scope.show3=false;
+    	 $scope.show4=false;
+    	 $scope.show5=false;
+    	 if($scope.printed)
+    	 $state.reload();
+     }
  	$scope.checkDateErr = function(startDate,endDate) {
  		$scope.errMessage = '';
  		var curDate = new Date();
@@ -236,7 +251,7 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http','ModalService', functi
   	    });
   	}
    
-    
+ 
+  			 
 }]);
-
 

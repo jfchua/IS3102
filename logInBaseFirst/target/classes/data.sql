@@ -64,7 +64,7 @@ VALUES ('tkgs.zhao.mingsha@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIf
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('suntecexternal@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec external manager', '5');
 --User 14 to 21
-/*INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('goer1@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS1', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('goer2@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL2', '5');
@@ -79,9 +79,9 @@ VALUES ('goer6@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9k
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('goer7@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL7', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('goer8@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CHS8', '5');*/
+VALUES ('goer8@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CHS8', '5');
 --User 22 to 29
-/*INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('ext1@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS11', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('ext2@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL22', '5');
@@ -96,7 +96,7 @@ VALUES ('ext6@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9kl
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
 VALUES ('ext7@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL77', '5');
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('ext8@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CHS88', '5');*/
+VALUES ('ext8@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CHS88', '5');
 
 
 --Assign roles to users for testing
@@ -135,7 +135,7 @@ INSERT into users_roles values( 12,6);
 INSERT into users_roles values( 12,8);
 INSERT into users_roles values( 13,3);
 INSERT into users_roles values( 13,8);
-/*INSERT into users_roles values( 14,3);
+INSERT into users_roles values( 14,3);
 INSERT into users_roles values( 14,10);
 INSERT into users_roles values( 15,3);
 INSERT into users_roles values( 15,10);
@@ -166,7 +166,7 @@ INSERT into users_roles values( 27,8);
 INSERT into users_roles values( 28,3);
 INSERT into users_roles values( 28,8);
 INSERT into users_roles values( 29,3);
-INSERT into users_roles values( 29,8);*/
+INSERT into users_roles values( 29,8);
 
 --INSERT INTO message (subject,sender,recipient,message) values('subject','1@1','1@1','test');
 --INSERT INTO message (subject,sender,recipient,message) values('pikachu','dragonite','1@1','charmander');
@@ -212,25 +212,25 @@ INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('flooPlan1.png',123,2,80,1);
 INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('flooPlan1.png',123,3,80,1);
-/*INSERT INTO level(file_path, length, level_num, width, building_id)
+INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('flooPlan1.png',123,4,80,1);
 INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('flooPlan1.png',123,5,80,1);
 INSERT INTO level(file_path, length, level_num, width, building_id)
-VALUES('flooPlan1.png',123,6,80,1);*/
+VALUES('flooPlan1.png',123,6,80,1);
 
 --Expo West
-/*INSERT INTO level(file_path, length, level_num, width, building_id)
+INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('fP2.jpg',123,1,60,2);
 INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('fP2.jpg',123,2,60,2);
 INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('fP2.jpg',123,3,60,2);
 INSERT INTO level(file_path, length, level_num, width, building_id)
-VALUES('fP2.jpg',123,4,60,2);*/
-
+VALUES('fP2.jpg',123,4,60,2);
+/*
 --Expo North
-/*INSERT INTO level(file_path, length, level_num, width, building_id)
+INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('fP3.jpeg',123,1,60,3);
 INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('fP3.jpeg',123,2,60,3);
@@ -250,14 +250,14 @@ VALUES('fP4.png',123,2,80,4);*/
 INSERT INTO building_levels(building_id, levels_id)VALUES(1,1);
 INSERT INTO building_levels(building_id, levels_id)VALUES(1,2);
 INSERT INTO building_levels(building_id, levels_id)VALUES(1,3);
-/*INSERT INTO building_levels(building_id, levels_id)VALUES(1,4);
+INSERT INTO building_levels(building_id, levels_id)VALUES(1,4);
 INSERT INTO building_levels(building_id, levels_id)VALUES(1,5);
 INSERT INTO building_levels(building_id, levels_id)VALUES(1,6);
 
 INSERT INTO building_levels(building_id, levels_id)VALUES(2,7);
 INSERT INTO building_levels(building_id, levels_id)VALUES(2,8);
 INSERT INTO building_levels(building_id, levels_id)VALUES(2,9);
-INSERT INTO building_levels(building_id, levels_id)VALUES(2,10);*/
+INSERT INTO building_levels(building_id, levels_id)VALUES(2,10);
 /*
 INSERT INTO building_levels(building_id, levels_id)VALUES(3,11);
 INSERT INTO building_levels(building_id, levels_id)VALUES(3,12);
@@ -266,8 +266,8 @@ INSERT INTO building_levels(building_id, levels_id)VALUES(3,14);
 INSERT INTO building_levels(building_id, levels_id)VALUES(3,15);
 
 INSERT INTO building_levels(building_id, levels_id)VALUES(4,16);
-INSERT INTO building_levels(building_id, levels_id)VALUES(4,17);*/
-
+INSERT INTO building_levels(building_id, levels_id)VALUES(4,17);
+*/
 --Expo East
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
@@ -277,7 +277,7 @@ INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_i
 VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
-/*INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
@@ -349,7 +349,7 @@ VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
-VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);*/
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
 /*
 --Expo North
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
@@ -404,7 +404,7 @@ INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , 
 VALUES('Hall', 1, 100, true, 'HALL C1', 1, 2, 7, 1, 3);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
 VALUES('Hall', 1, 100, true, 'HALL D1', 1, 10, 7, 1, 4);
-/*INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
 VALUES('Hall', 1, 100, true, 'HALL A2', 1, 16, 7, 2, 5);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
 VALUES('Hall', 1, 100, true, 'HALL B2', 1, 28, 7, 2, 6);
@@ -476,7 +476,7 @@ VALUES('Hall', 1, 100, true, 'HALL F4', 1, 16, 7, 10, 38);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
 VALUES('Hall', 1, 100, true, 'HALL G4', 1, 28, 7, 10, 39);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL H4', 1, 28, 7, 10, 40);*/
+VALUES('Hall', 1, 100, true, 'HALL H4', 1, 28, 7, 10, 40);
 /*
 --Expo North
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
@@ -535,7 +535,7 @@ INSERT INTO event(approval_status, event_description, event_end_date, event_star
 VALUES('APPROVED','hahaha1','2016-09-03 22:00:00', '2016-09-01 10:00:00', 'Conference', 'CONFERENCE', null, 0, 'PAID', 12);		
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
 VALUES('APPROVED','hahaha2','2016-09-08 22:00:00', '2016-09-06 10:00:00', 'Annual Conference', 'CONFERENCE', null, 0, 'PAID', 12);		
-/*INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
+INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
 VALUES('APPROVED','hahaha3','2016-09-12 22:00:00', '2016-09-10 10:00:00', 'Flea Market', 'FAIR', null, 0, 'PAID', 12);		
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)		
 VALUES('APPROVED','hahaha4','2016-09-12 22:00:00', '2016-09-11 10:00:00', 'Meeting', 'CONFERENCE', null, 0, 'PAID', 12);		
@@ -566,7 +566,7 @@ VALUES('APPROVED','hahaha16','2016-10-29 22:00:00', '2016-10-27 10:00:00', 'Mode
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
 VALUES('APPROVED','hahaha17','2016-11-03 22:00:00', '2016-11-03 10:00:00', 'Party', 'CONCERT', null, 1, 'PAID', 12);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
-VALUES('APPROVED','hahaha18','2016-11-04 22:00:00', '2016-11-03 10:00:00', 'Reunion Dinner', 'LIFESTYLE', null, 0, 'UNPAID', 12);*/
+VALUES('APPROVED','hahaha18','2016-11-04 22:00:00', '2016-11-03 10:00:00', 'Reunion Dinner', 'LIFESTYLE', null, 0, 'UNPAID', 12);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
 VALUES('APPROVED','hahaha19','2016-11-12 22:00:00', '2016-11-11 10:00:00', 'Dance Competition', 'CONCERT', null, 1, 'PAID', 12);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
@@ -574,7 +574,7 @@ VALUES('APPROVED','hahaha20','2016-11-16 22:00:00', '2016-11-15 10:00:00', 'Data
 
 INSERT INTO user_events(user_id, events_id)VALUES(12, 1);
 INSERT INTO user_events(user_id, events_id)VALUES(12, 2);	
-/*INSERT INTO user_events(user_id, events_id)VALUES(23, 3);
+INSERT INTO user_events(user_id, events_id)VALUES(23, 3);
 INSERT INTO user_events(user_id, events_id)VALUES(24, 4);
 INSERT INTO user_events(user_id, events_id)VALUES(25, 5);
 INSERT INTO user_events(user_id, events_id)VALUES(26, 6);
@@ -591,9 +591,9 @@ INSERT INTO user_events(user_id, events_id)VALUES(26, 16);
 INSERT INTO user_events(user_id, events_id)VALUES(27, 17);
 INSERT INTO user_events(user_id, events_id)VALUES(28, 18);
 INSERT INTO user_events(user_id, events_id)VALUES(29, 19);		
-INSERT INTO user_events(user_id, events_id)VALUES(12, 20);*/
-INSERT INTO user_events(user_id, events_id)VALUES(12, 3);
-INSERT INTO user_events(user_id, events_id)VALUES(12, 4);
+INSERT INTO user_events(user_id, events_id)VALUES(12, 20);
+--INSERT INTO user_events(user_id, events_id)VALUES(12, 3);
+--INSERT INTO user_events(user_id, events_id)VALUES(12, 4);
 
 --Insert 30 Bookings
 --1 to 10
@@ -603,7 +603,7 @@ INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room
 VALUES('2016-09-03 22:00:00', '2016-09-01 10:00:00', 12, 2, 1, 2);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-09-08 22:00:00', '2016-09-06 10:00:00', 22, 3, 2, 3);
-/*INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
+INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-09-12 22:00:00', '2016-09-10 10:00:00', 23, 2, 3, 2);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-09-12 22:00:00', '2016-09-10 10:00:00', 23, 4, 3, 4);
@@ -619,32 +619,32 @@ INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room
 VALUES('2016-10-03 22:00:00', '2016-10-03 10:00:00', 27, 1, 7, 1);
 --11 to 20
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-07 22:00:00', '2016-10-03 10:00:00', 28, 59, 8, 59);
+VALUES('2016-10-07 22:00:00', '2016-10-03 10:00:00', 28, 29, 8, 29);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-07 22:00:00', '2016-10-03 10:00:00', 28, 60, 8, 60);
+VALUES('2016-10-07 22:00:00', '2016-10-03 10:00:00', 28, 25, 8, 25);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-08 22:00:00', '2016-10-06 10:00:00', 29, 57, 9, 58);
+VALUES('2016-10-08 22:00:00', '2016-10-06 10:00:00', 29, 22, 9, 22);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-12 22:00:00', '2016-10-11 10:00:00', 12, 35, 10, 35);
+VALUES('2016-10-12 22:00:00', '2016-10-11 10:00:00', 12, 26, 10, 26);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-13 22:00:00', '2016-10-12 10:00:00', 12, 36, 11, 36);
+VALUES('2016-10-13 22:00:00', '2016-10-12 10:00:00', 12, 16, 11, 16);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-18 22:00:00', '2016-10-16 10:00:00', 22, 31, 12, 31);
+VALUES('2016-10-18 22:00:00', '2016-10-16 10:00:00', 22, 11, 12, 11);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-18 22:00:00', '2016-10-16 10:00:00', 22, 32, 12, 32);
+VALUES('2016-10-18 22:00:00', '2016-10-16 10:00:00', 22, 22, 12, 22);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-22 22:00:00', '2016-10-20 10:00:00', 23, 14, 13, 14);
+VALUES('2016-10-22 22:00:00', '2016-10-20 10:00:00', 23, 33, 13, 33);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-22 22:00:00', '2016-10-22 10:00:00', 24, 35, 14, 35);
+VALUES('2016-10-22 22:00:00', '2016-10-22 10:00:00', 24, 6, 14, 6);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-10-26 22:00:00', '2016-10-26 10:00:00', 25, 2, 15, 2);
 --21 to 30
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-29 22:00:00', '2016-10-27 10:00:00', 26, 49, 16, 49);
+VALUES('2016-10-29 22:00:00', '2016-10-27 10:00:00', 26, 33, 16, 33);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-29 22:00:00', '2016-10-27 10:00:00', 26, 50, 16, 50);
+VALUES('2016-10-29 22:00:00', '2016-10-27 10:00:00', 26, 22, 16, 22);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-10-29 22:00:00', '2016-10-27 10:00:00', 26, 51, 16, 51);
+VALUES('2016-10-29 22:00:00', '2016-10-27 10:00:00', 26, 11, 16, 11);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-11-03 22:00:00', '2016-11-03 10:00:00', 27, 2, 17, 2);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
@@ -658,8 +658,8 @@ VALUES('2016-11-16 22:00:00', '2016-11-15 10:00:00', 12, 4, 20, 4);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-11-16 22:00:00', '2016-11-15 10:00:00', 12, 5, 20, 5);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
-VALUES('2016-11-16 22:00:00', '2016-11-15 10:00:00', 12, 6, 20, 6);*/
-
+VALUES('2016-11-16 22:00:00', '2016-11-15 10:00:00', 12, 6, 20, 6);
+/*
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-11-12 22:00:00', '2016-11-11 10:00:00', 29, 1, 3, 1);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
@@ -668,7 +668,7 @@ INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room
 VALUES('2016-11-16 22:00:00', '2016-11-15 10:00:00', 12, 5, 4, 3);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-11-16 22:00:00', '2016-11-15 10:00:00', 12, 6, 4, 4);
-
+*/
 INSERT INTO maintenance VALUES (1, 'Repair projector', '2016-11-02 22:00:00', '2016-11-01 10:00:00');
 INSERT INTO maintenance VALUES (2, 'Cleaning', '2016-11-18 22:00:00', '2016-11-16 10:00:00');
 INSERT INTO maintenance_vendors VALUES (1, 1);

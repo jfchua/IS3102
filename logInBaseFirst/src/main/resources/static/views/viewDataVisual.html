@@ -1,8 +1,9 @@
 <div class="clearfix">
 	<ol class="breadcrumb no-bg no-m-t">
 		<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-		<li><a href="#/dashboard">Workspace</a></li>
-		<li><a>View Data Visualisation</a></li>
+		<li><a ui-sref="dashboard.workspace">Workspace</a></li>
+		<li><a ng-click="haha()">View Data Report</a></li>
+		<li><a ng-hide="showAll">View a Chart</a></li>
 	</ol>
 </div>
 <div class="panel panel-default">
@@ -24,10 +25,10 @@
 			</div>
 			<hr>
 			<div class="row">
-				<div class="col-md-6">
-					<div id="pie-chart">
+				<div class="col-md-6" ng-show="showAll||show1">
+					<div id="pie-chart" >
 						<div class="panel panel-primary">
-							<div class="panel-heading">
+							<div class="panel-heading" ng-click="show1=true;showAll=false;">
 								<h3 class="panel-title">
 									Percentage of event types
 									<div class="panel-control pull-right">
@@ -55,10 +56,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-6" ng-show="showAll||show2">
 					<div id="eventThreeMonth">
 						<div class="panel panel-primary">
-							<div class="panel-heading">
+							<div class="panel-heading" ng-click="show2=true;showAll=false">
 								<h3 class="panel-title">
 									Number of events in the last three month
 									<div class="panel-control pull-right">
@@ -75,13 +76,14 @@
 					</div>
 				</div>
 
+
 			</div>
 			<hr>
-			<div ng-controller="LineChartCtrl as lineChartCtrl">
-				<div class="row">
-					<div class="col-lg-12" id="pie-chart">
+			<div ng-controller="LineChartCtrl as lineChartCtrl"> 
+				<div class="row" ng-show="showAll||show3">
+					<div class="col-lg-12" id="pie-chart" >
 						<div class="panel panel-primary">
-							<div class="panel-heading">
+							<div class="panel-heading" ng-click="$parent.show3=true;$parent.showAll=false;">
 								<h3 class="panel-title">
 									Occupancy Rate for The Whole Year
 									<div class="panel-control pull-right">
@@ -98,11 +100,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<div id="">
+				<div class="row" ng-show="showAll||show4">
+					<div class="col-md-6" >
+						<div id="ocupancyRateUnitsSelected">
 							<div class="panel panel-primary">
-								<div class="panel-heading">
+								<div class="panel-heading" ng-click="$parent.show4=true;$parent.showAll=false;">
 									<h3 class="panel-title">
 										Ocupancy Rate for Units Selected
 										<div class="panel-control pull-right">
@@ -197,11 +199,11 @@
 			</div>
 
 
-				<div class="row">
+				<div class="row"  ng-show="showAll||show5">
 					<div class="col-md-6">
 						<div id="">
 							<div class="panel panel-primary">
-								<div class="panel-heading">
+								<div class="panel-heading" ng-click="show5=true;showAll=false">
 									<h3 class="panel-title">
 										Event Count Over a Period
 										<div class="panel-control pull-right">
@@ -264,7 +266,7 @@
 			<div class="row">
 				<div class="col-sm-12 invoice-block">
 
-					<br> <a onclick="javascript:window.print();"
+					<br> <a onclick="javascript:window.print();" ng-click="printed=true;"
 						class="btn btn-bordered btn-primary hidden-print pull-right">
 						Print <i class="fa fa-print"></i>
 					</a>
