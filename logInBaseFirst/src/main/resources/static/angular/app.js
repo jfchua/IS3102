@@ -3295,7 +3295,7 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 //===========================================================================
 //6. Create client organisation.
 //===========================================================================
-app.controller('clientOrgController', ['$scope', '$http','$location','ModalService', function ($scope, $http, $location,ModalService) {
+/*app.controller('clientOrgController', ['$scope', '$http','$location','ModalService', function ($scope, $http, $location,ModalService) {
 	$scope.genders=['Property System','Event Management System','Finance System'];
 	$scope.selection=[];
 
@@ -3373,7 +3373,7 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 				console.log("in dissmiss");
 			};
 		});
-	};
+	};*/
 
 	/*$scope.view = function(){
 			var dataObj = {
@@ -3386,14 +3386,14 @@ app.controller('clientOrgController', ['$scope', '$http','$location','ModalServi
 			}
 		};*/
 
-}]);
+//}]);
 
 
 
 
 
 //////////VIEW CLIENT ORGS//////////
-
+/*
 app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
                                   function($scope, $http,$location,ModalService) {
 
@@ -3609,7 +3609,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 		})
 	}
 }
-]);
+]);*/
 //////END VIEW CLIENT ORGS/////////////
 
 
