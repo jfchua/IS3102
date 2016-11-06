@@ -17,6 +17,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import application.enumeration.Subscription;
+
 @Entity
 @Table(name = "client_organisation")
 public class ClientOrganisation {
@@ -43,7 +45,7 @@ public class ClientOrganisation {
 	@Column(name = "systemSubscriptions",nullable = true)
 	@ElementCollection //
 	@JsonIgnore
-	private List<String> systemSubscriptions;
+	private List<Subscription> systemSubscriptions;
 	
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Building> buildings = new HashSet<Building>();
@@ -167,13 +169,13 @@ public class ClientOrganisation {
 
 
 
-	public List<String> getSystemSubscriptions() {
+	public List<Subscription> getSystemSubscriptions() {
 		return systemSubscriptions;
 	}
 
 
 
-	public void setSystemSubscriptions(List<String> systemSubscriptions) {
+	public void setSystemSubscriptions(List<Subscription> systemSubscriptions) {
 		this.systemSubscriptions = systemSubscriptions;
 	}
 
