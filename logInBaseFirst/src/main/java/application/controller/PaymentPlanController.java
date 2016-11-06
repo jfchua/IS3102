@@ -495,7 +495,7 @@ public class PaymentPlanController {
 			for(Event ev : events){
 				if(ev.getPaymentPlan() != null){
 				PaymentPlan p = ev.getPaymentPlan();
-				if(!p.getPayable().equals(0.00))
+				if(!p.getPayable().equals(0.00)&&(!p.getInvoice_due()))
 					payments.add(p);
 				}
 			}
@@ -928,6 +928,7 @@ public class PaymentPlanController {
 			boolean bl = paymentPlanService.generatePayment(client, p.getId(), invoice);
 			System.out.println("*******GENERATE PAYMENT????"+bl);
 			System.err.println("path is " + path);
+			
 			FileOutputStream fileOutputStream = new FileOutputStream(path);
 			JasperRunManager.runReportToPdfStream(jasperStream, fileOutputStream, parameters,conn);
 			fileOutputStream.flush();
@@ -939,7 +940,7 @@ public class PaymentPlanController {
 			String email = "Please pay the amount stated in the invoice within "+ paypol.getNumOfDueDays() +
 					" days.";
 			emailService.sendEmailWithAttachment(user.getEmail(), "Invoice for payment plan id "+ p.getId(), email , path);
-
+			
 
 		} catch (ParseException e1) {
 			System.out.println("at /download invoice there was an error parsing the json string received");
@@ -1024,6 +1025,7 @@ public class PaymentPlanController {
 			boolean bl = paymentPlanService.generatePayment(client, p.getId(), invoice);
 			System.out.println("*******GENERATE PAYMENT????"+bl);
 			System.err.println("path is " + path);
+			if(bl){
 			FileOutputStream fileOutputStream = new FileOutputStream(path);
 			JasperRunManager.runReportToPdfStream(jasperStream, fileOutputStream, parameters,conn);
 			fileOutputStream.flush();
@@ -1035,7 +1037,7 @@ public class PaymentPlanController {
 			String email = "Please pay the amount stated in the invoice within "+ paypol.getNumOfDueDays() +
 					" days.";
 			emailService.sendEmailWithAttachment(user.getEmail(), "Invoice for payment plan id "+ p.getId(), email , path);
-
+			}
 
 		} catch (ParseException e1) {
 			System.out.println("at /download invoice there was an error parsing the json string received");
@@ -1098,10 +1100,7 @@ public class PaymentPlanController {
 				parameters.put("number", invoice);			
 			}
 			else{
-				Iterator iter = pays.iterator();
-				while (iter.hasNext()){
-					counter++;							
-				}
+				counter = pays.size() +1;
 				invoice = (paymentId + "-" + counter);		
 				//invoice = String.valueOf(paymentId + "-" + pays.size());
 				System.err.println(invoice);

@@ -706,6 +706,8 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 			if(pay1.isPresent()){
 				System.out.println("INSIDE IF");
 				PaymentPlan pay = pay1.get();
+				if((!pay.getPayments().isEmpty())&& !pay.getInvoice_due())
+					return false;
 				Set<Payment> payments = pay.getPayments();
 				Payment p = new Payment();
 				p.setInvoice(invoice);

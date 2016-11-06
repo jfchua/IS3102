@@ -38,8 +38,42 @@
 							id="orgEmail" placeholder="Enter Organisation IT Admin's name"
 							required>
 					</div>
-
-
+                    <div class="form-group">
+						<label for="exampleInput">Subscription Fee (After GST)</label> <input
+							type="number" step="0.01" min="0" ng-model="clientOrg.fee" class="form-control underline"
+							id="orgEmail" placeholder="Enter Organisation After GST Subscription Fee"
+							required>
+					</div>
+					<div class="form-group">
+						<label for="exampleInput">Start Date</label> <input
+							type="datetime-local" step="86400"  ng-model="clientOrg.start"
+							ng-change='checkDateErr(eclientOrg.start,clientOrg.end)'
+							class="form-control underline" placeholder="Enter start date">
+					</div>
+					<div class="form-group">
+						<label for="exampleInput">End Date</label> <input
+							type="datetime-local" step="86400"  ng-model="clientOrg.end"
+							ng-change='checkDateErr(clientOrg.start,clientOrg.end)'
+							class="form-control underline" placeholder="Enter end date">
+					</div>
+					<div class="form-group">
+						<label for="exampleInput">Address</label> <input required
+							type="text" ng-model="clientOrg.address"
+							class="form-control underline" id="address"
+							placeholder="Enter address">
+					</div>
+					<div class="form-group">
+						<label for="exampleInput">Postal Code</label> <input required
+							type="text" ng-model="clientOrg.postal"
+							class="form-control underline" id="postalCode"
+							placeholder="Enter postal code">
+					</div>
+					<div class="form-group">
+						<label for="exampleInput">Contact Number</label> <input required
+							type="text" ng-model="clientOrg.phone"
+							class="form-control underline" id="phone"
+							placeholder="Enter contact number">
+					</div>
 					<div ng-repeat="gender in genders">
 						<div class="action-checkbox">
 							<input id="{{gender}}" type="checkbox" value="{{gender}}"
