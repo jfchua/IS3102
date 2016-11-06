@@ -32,71 +32,70 @@ values ("Suntec", "3 Temasek Boulevard", "2017-06-30 22:00:00", "25000.00", "038
 --Algattas is client_organisation 3
 --insert into client_organisation (organisation_name, address, postal, phone,themecolour,logo_file_path) 
 --values ("Algattas", "73 Ubi Road 1","408733", "31580456","red","algattasLogo.png");
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1 ,'Kenneth LIM' , '2');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1 ,'Kenneth LIM' , '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6','favourite number' );
 --Algattas superadmin is user 1
 --User 2 to 9
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('admin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Jin Fa CHUA' , '3');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('user@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Kok Hwee TAN', '4');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('event@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Hailing ZHANG', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('jaydentkh@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'JayDen TAN', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('property@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'property manager', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('finance@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'finance manager', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('ticketing@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'ticketing manager', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('exteve@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'external event organiser', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('admin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Jin Fa CHUA' , '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'mother''s maiden name');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('user@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Kok Hwee TAN', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('event@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Hailing ZHANG', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'favourite food');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('jaydentkh@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'JayDen TAN', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'favourie animal');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('property@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'property manager', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('finance@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'finance manager', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('ticketing@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'ticketing manager', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('exteve@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1, 'external event organiser', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'favourite number');
 --User 10 to 11
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('suntecadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec Admin', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('suntecall@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec All roles', '5');
-
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('suntecadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec Admin', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('suntecall@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec All roles', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'favourite number');
 --User 12 to 13
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('tkgs.zhao.mingsha@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Mingsha ZHAO', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('suntecexternal@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec external manager', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('tkgs.zhao.mingsha@gmail.com', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'Mingsha ZHAO', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('suntecexternal@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',2, 'Suntec external manager', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6', 'favourite number');
 --User 14 to 21
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('goer1@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS1', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('goer2@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL2', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('goer3@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'TKH3', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('goer4@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CJF4', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('goer5@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'KLZW5', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('goer6@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS6', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('goer7@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL7', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('goer8@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CHS8', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('goer1@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS1', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('goer2@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL2', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('goer3@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'TKH3', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('goer4@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CJF4', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('goer5@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'KLZW5', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('goer6@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS6', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('goer7@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL7', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('goer8@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CHS8', '5', 'favourite number');
 --User 22 to 29
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('ext1@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS11', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('ext2@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL22', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('ext3@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'TKH33', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('ext4@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CJF44', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('ext5@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'KLZW55', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('ext6@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS66', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('ext7@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL77', '5');
-INSERT INTO user (email, password_hash,client_organisation_id, name ,security)
-VALUES ('ext8@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CHS88', '5');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('ext1@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS11', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('ext2@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL22', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('ext3@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'TKH33', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('ext4@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CJF44', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('ext5@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'KLZW55', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('ext6@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZMS66', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('ext7@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'ZHL77', '5', 'favourite number');
+INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
+VALUES ('ext8@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1,'CHS88', '5', 'favourite number');
 
 
 --Assign roles to users for testing
@@ -240,7 +239,6 @@ INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('fP3.jpeg',123,4,60,3);
 INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('fP3.jpeg',123,5,60,3);
-
 --Expo South
 INSERT INTO level(file_path, length, level_num, width, building_id)
 VALUES('fP4.png',123,1,80,4);
@@ -264,7 +262,6 @@ INSERT INTO building_levels(building_id, levels_id)VALUES(3,12);
 INSERT INTO building_levels(building_id, levels_id)VALUES(3,13);
 INSERT INTO building_levels(building_id, levels_id)VALUES(3,14);
 INSERT INTO building_levels(building_id, levels_id)VALUES(3,15);
-
 INSERT INTO building_levels(building_id, levels_id)VALUES(4,16);
 INSERT INTO building_levels(building_id, levels_id)VALUES(4,17);
 */
@@ -384,7 +381,6 @@ INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_i
 VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
-
 --Expo South
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);

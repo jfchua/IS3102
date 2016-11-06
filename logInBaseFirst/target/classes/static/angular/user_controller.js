@@ -12,8 +12,8 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 	self.user={id:null,username:'',address:'',email:''};
 	self.users=[];
 	self.changePasswordInfo={id:parseInt($stateParams.id),token:$stateParams.token,password:''};
-
-
+	$scope.securityPlaceholder = 'Security Question';
+$scope.verified = false;
 
 	self.submitChangePass = submitChangePass;
 	self.submitResetPass = submitResetPass;
@@ -46,13 +46,10 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 				Auth.setUser(response);
 				//$location.path("/workspace");
 				console.log(response);
-				$http.get("//localhost:8443/user/viewCurrentUser").then(function(responseUser){
-					$rootScope.userInfo = angular.fromJson(responseUser.data);
-					sessionStorage.setItem('clientOrg', responseUser.data.client);
-					sessionStorage.setItem('userInfo', responseUser.data);
-					console.log(responseUser.data);
-					$state.go('dashboard', {org :$rootScope.userInfo.client});
-				})
+				console.log(response);
+				console.log(response.principal.user.clientOrganisation.organisationName);
+					$state.go('dashboard', {org :response.principal.user.clientOrganisation.organisationName});
+					//$state.go('dashboard.workspace');
 				//return true;
 			} else {
 				console.log("NO VERIFIED");
@@ -91,13 +88,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 				
 				console.log("LOGGED IN");
 				self.error = false;
-				
-				 $timeout(function() {
-					 //$state.go('dashboard', {org :'suntec'});
-					 console.log($scope.userInfo.client + " is here");
-				     $state.go('dashboard.workspace');
-				      },1000);
-				
+
 			} else {
 				console.log("NOT LOGGED IN");
 				$location.path("/login");
@@ -130,6 +121,27 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 				}
 		);
 	}
+	 $scope.verifyEmail = function() {
+		console.log("Email is verifying" + $scope.ctrl.email);
+		UserService.verifyUser($scope.ctrl.email).then(function(result){
+			console.log(result);
+			if (result) {
+				UserService.getSecurityQuestion($scope.ctrl.email).then(function(response){
+					var question = response;
+					$scope.verified = true;
+					//console.log(question);
+					$scope.securityPlaceholder = "What is your " + question;
+				})
+				console.log("Email is verified");
+			}
+			else {
+				alert("Email is not found");
+				$scope.securityPlaceholder = 'Wrong email';
+			}
+		})
+		
+	}
+	
 	function resetPassword(userEmail, userSecurity){
 		UserService.resetPassword(userEmail, userSecurity)
 		.then(
@@ -138,7 +150,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 				},
 				function(errResponse){
 					console.log(errResponse);
-						alert("The email or the security question is incorrect!");			
+						alert("The email security answer is incorrect!");			
 						
 				}
 		);
@@ -157,8 +169,11 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 		}
 		else{
 			console.log("Resetting... password for email: " + $scope.ctrl.email);
-			resetPassword($scope.ctrl.email, $scope.ctrl.security);
+			 if (resetPassword($scope.ctrl.email, $scope.ctrl.security)){
 			console.log("Resetted password for email: " + $scope.ctrl.email);
+			 }
+			 else
+				 console.log("Error in resetting password");
 			$scope.ctrl.email = '';
 			$scope.ctrl.security = '';
 		}
