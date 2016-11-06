@@ -96,7 +96,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 					 //$state.go('dashboard', {org :'suntec'});
 					 console.log($scope.userInfo.client + " is here");
 				     $state.go('dashboard.workspace');
-				      }, 1000);
+				      },1000);
 				
 			} else {
 				console.log("NOT LOGGED IN");

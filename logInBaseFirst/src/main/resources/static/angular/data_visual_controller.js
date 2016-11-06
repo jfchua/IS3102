@@ -4,7 +4,7 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $ti
 	$scope.testnumbers="50,100,200,300,350,450,";
 	angular.element(document).ready(function () {
 
-
+		$scope.date=new Date();
 		//RETRIEVE EVENTS COUNT AGAINST EVENT TYPE WHEN LOADED
 		$http.get("//localhost:8443/dataVisual/eventCountAgainstEventType").then(function(response){
 
@@ -63,8 +63,8 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $ti
     	     $scope.eventCountTimeSeminar.push(oneData.seminar);
  		});
     	 
-         var chart = c3.generate({
-     	    bindto: '#chart',
+         var chartEventTime = c3.generate({
+     	    bindto: '#chartEventTime',
      	    data: {
      	        x: 'x',
      	        xFormat: '%Y-%m',
@@ -82,7 +82,8 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $ti
      	       types: {
      	    	  Total: 'line',
   	              
-  	          }
+  	          },
+  	        labels: true
      	    },
      	  
      	    axis: {

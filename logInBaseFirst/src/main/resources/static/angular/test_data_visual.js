@@ -135,29 +135,34 @@ app.controller('LineChartCtrl', ['$scope', '$timeout','$http', function ($scope,
 					$scope.eventCountTimeData.push(oneData.percent);
 				});
 
-				var chart = c3.generate({
-					bindto: '#chart',
+				var chartOccupancy = c3.generate({
+					bindto: '#chartOccupancy',
 					data: {
-						x: 'x',
+						 x: 'x',
+			     	  
 						columns: [
 						          $scope.xData,
 						          $scope.eventCountTimeData
 						          ],
-						          type: 'line'
+						          type: 'area',
+						          labels: true
 					},		     	  
 					axis: {
 						y: {
 							tick: {
 								format: d3.format(",%")
 							}
-						}
+						},
+						x: {
+				            type: 'category' // this needed to load string x value
+				        }
 					}
 				});
 			}
 		}	
 		
 		$scope.generateAnnualChart = function(){
-			1
+			
 			$http.get("//localhost:8443/dataVisual/occupancyAgainstTime").then(function(response){
 				$scope.occupancy = response.data;
 				console.log($scope.occupancy);
@@ -185,7 +190,8 @@ app.controller('LineChartCtrl', ['$scope', '$timeout','$http', function ($scope,
 						          $scope.xData,
 						          $scope.eventCountTimeData
 						          ],
-						          type: 'line'
+						          type: 'line',
+						          labels: true
 					},		     	  
 					axis: {
 						x: {
@@ -206,6 +212,7 @@ app.controller('LineChartCtrl', ['$scope', '$timeout','$http', function ($scope,
 				});
 			}
 		}	
+		$scope.generateAnnualChart();
 	});
 
 

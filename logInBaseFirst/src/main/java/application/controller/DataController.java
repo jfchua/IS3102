@@ -125,7 +125,7 @@ public class DataController {
 			    Set<BookingAppl> bookings = unit.getBookings();
 			    System.err.println("booking size is " + bookings.size());
 			    JSONObject obj1 = new JSONObject();
-				obj1.put("unit", id);	
+				obj1.put("unit", unit.getUnitNumber());	
 				Double totalH = 0.0;
 				for(BookingAppl b : bookings){
 					System.out.println(b.getEvent_start_date_time());
