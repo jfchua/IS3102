@@ -104,7 +104,11 @@ public class EngagementController {
 		}
 		catch (Exception e){
 			System.err.println(e.getMessage());
-			return new ResponseEntity<String>(gson.toJson("Sorry, the QR code is invalid"),HttpStatus.INTERNAL_SERVER_ERROR);
+			Discount d = new Discount();
+			d.setDiscountMessage("Sorry, the QR code is invalid");
+			d.setQRCode("filler");
+			d.setRetailerName(" ");
+			return new ResponseEntity<String>(gson.toJson(d),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
