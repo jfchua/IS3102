@@ -17,6 +17,12 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 			console.log(plan.nextPayment == plan.subsequent);
 			return (plan.nextPayment == plan.subsequent)&&(plan.payable > 0);
 		}
+		
+		$scope.checkFinish = function(plan){
+			console.log("MSMSMS");
+			console.log(plan.payable > 0);
+			return (plan.payable > 0);
+		}
 	});
 	$scope.generateInvoice = function(id){
 		var dataObj = {
@@ -357,7 +363,7 @@ app.controller('receivedPController', ['$scope', '$http','$state','$routeParams'
 		$scope.data = {};
 		var dataObj = {			
 				id: $scope.paymentPlan.id,
-				amountPaid: $scope.amountPaid,
+				amountPaid: ($scope.amountPaid).toString(),
 				cheque: $scope.chequeNum,
 				nextInvoice: $scope.paymentPlan.nextInvoice,
 		};

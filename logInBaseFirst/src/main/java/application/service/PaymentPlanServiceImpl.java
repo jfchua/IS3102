@@ -249,12 +249,17 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				PaymentPlan pay = pay1.get();
 				Set<Payment> payments = pay.getPayments();
 				Payment payment = new Payment();
+				System.err.println("next invoice " + nextInvoice);
 				for(Payment p : payments){
-					if(p.getInvoice().equals(nextInvoice))
+					System.err.println(p.getInvoice());
+					if(p.getInvoice()!= null && p.getInvoice().equals(nextInvoice)){
 						payment = p;
+						break;
+					}
 				}
-				if(payment.getInvoice().isEmpty())
-					return false;
+				System.err.println("payment invoice " + payment.getInvoice());
+				//if(payment.getInvoice().isEmpty())
+					//return false;
 				Double payable = pay.getPayable();
 				System.out.println("payable " + payable);
 				Event event = pay.getEvent();
@@ -541,9 +546,11 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 				System.out.println("outstanding");
 				Set<Event> events = user.getEvents();
 				for(Event e : events){
+					if(e.getPaymentPlan()!= null && (!e.getPaymentPlan().getPayments().isEmpty())){
 					Set<Payment> pays = e.getPaymentPlan().getPayments();
 					for(Payment p : pays)
 						payments.add(p);
+				}
 				}
 				return payments;
 			}   
