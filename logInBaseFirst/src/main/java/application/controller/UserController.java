@@ -1,11 +1,8 @@
 package application.controller;
 
 import java.security.Principal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -104,17 +101,17 @@ public class UserController {
 		try{
 			Object obj = parser.parse(clientOrgJSON);
 			JSONObject jsonObject = (JSONObject) obj;
-			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+
 			String name = (String)jsonObject.get("name");
 			String email = (String)jsonObject.get("email");
 			String nameAdmin = (String)jsonObject.get("nameAdmin");
-			Double fee = Double.valueOf((String)jsonObject.get("fee"));
+
 			JSONArray rolesArr = (JSONArray)jsonObject.get("subscription");
-			Date start = sdf.parse((String)jsonObject.get("start"));
-			Date end = sdf.parse((String)jsonObject.get("end"));
-			String address = (String)jsonObject.get("address");
-			String postal = (String)jsonObject.get("postal");
-			String phone = (String)jsonObject.get("phone");
+			/*String[] subsToAdd = new String[rolesArr.size()];
+ 			for(int i = 0; i < rolesArr.size(); i++){
+ 				subsToAdd[i]  = (String)rolesArr.get(i);
+ 			}*/
+
 			List<Subscription> subsToAdd = new ArrayList<Subscription>();
 			for(int i = 0; i < rolesArr.size(); i++){
 				subsToAdd.add(Subscription.valueOf((String)rolesArr.get(i)));
@@ -122,7 +119,7 @@ public class UserController {
 
 			System.out.println("adding new client organisation" + name + " with it admin user: " + email);
 			//if ( !clientOrganisationService.createNewClientOrganisation(name, email,subsToAdd,nameAdmin) ) return new ResponseEntity<String>( HttpStatus.CONFLICT);
-			clientOrganisationService.createNewClientOrganisation(name, email,subsToAdd,nameAdmin, fee, start, end, address, postal, phone); 
+			clientOrganisationService.createNewClientOrganisation(name, email,subsToAdd,nameAdmin); 
 			System.out.println( "CREATED CLIENT ORGANISATION : " + userService.getUserByEmail(email).get().getClientOrganisation().getOrganisationName() );
 			//TEST FOR CREATING NEW USER
 			/*Set<Role> userRolesToAddIn2 = new HashSet<Role>();
@@ -680,7 +677,7 @@ public class UserController {
 			AuditLog al = new AuditLog();
 			al.setTimeToNow();
 			al.setSystem("User Management");
-			al.setAction("Changed password");
+			al.setAction("Changed Security Password");
 			al.setUser(currUser);
 			al.setUserEmail(currUser.getEmail());
 			auditLogRepository.save(al);
