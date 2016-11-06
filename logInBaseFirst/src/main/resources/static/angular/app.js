@@ -75,7 +75,7 @@ var app = angular.module('app', [ 'ui.router',
                                 				  }
                                 			  })
                                 			  .state('dashboard',{
-                                				  url:'/dashboard/:org',
+                                				  url:'/dashboard',
                                 				  templateUrl: 'views/index.html',
                                 				  controller: 'UserController',
                                 				  data: {
