@@ -495,7 +495,7 @@ public class PaymentPlanController {
 			for(Event ev : events){
 				if(ev.getPaymentPlan() != null){
 				PaymentPlan p = ev.getPaymentPlan();
-				if(!p.getPayable().equals(0.00))
+				if(!p.getPayable().equals(0.00)&&(!p.getInvoice_due()))
 					payments.add(p);
 				}
 			}
@@ -1100,10 +1100,7 @@ public class PaymentPlanController {
 				parameters.put("number", invoice);			
 			}
 			else{
-				Iterator iter = pays.iterator();
-				while (iter.hasNext()){
-					counter++;							
-				}
+				counter = pays.size() +1;
 				invoice = (paymentId + "-" + counter);		
 				//invoice = String.valueOf(paymentId + "-" + pays.size());
 				System.err.println(invoice);
