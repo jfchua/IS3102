@@ -594,6 +594,30 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
+                                			  .state('dashboard.configureDiscountsEx',{
+                                				  url:'/configureDiscountsEx',
+                                				  templateUrl: '/views/configureDiscountsEx.html',
+                                				  controller: 'configureTicketsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateDiscount',{
+                                				  url:'/updateDiscount',
+                                				  templateUrl: '/views/updateDiscount.html',
+                                				  controller: 'configureTicketsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addDiscount',{
+                                				  url:'/addDiscount',
+                                				  templateUrl: '/views/addDiscount.html',
+                                				  controller: 'configureTicketsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
                                 			  .state('dashboard.feedbackEx',{
                                 				  url:'/viewFeedbackEx',
                                 				  templateUrl: '/views/viewFeedback.html',

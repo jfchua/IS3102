@@ -6,7 +6,7 @@
 	</ol>
 </div>
 <div class="row">
-	<div class="col-lg-9" id="screenshotChart">
+	<div class="col-lg-9" >
 		<div class="panel panel-primary">
 			<div class="panel-heading">
 				<h3 class="panel-title">
@@ -26,13 +26,13 @@
 			<div class="panel-body">
 				<form>
 					<div class="form-group">
-						<label for="exampleInput">Event Start Date</label> <input
+						<label for="exampleInput">Start Date</label> <input
 							type="datetime-local" step="86400"  ng-model="event.event_start_date"
 							ng-change='checkDateErr(event.event_start_date,event.event_end_date)'
 							class="form-control underline" placeholder="Enter start date">
 					</div>
 					<div class="form-group">
-						<label for="exampleInput">Event End Date</label> <input
+						<label for="exampleInput">End Date</label> <input
 							type="datetime-local" step="86400"  ng-model="event.event_end_date"
 							ng-change='checkDateErr(event.event_start_date,event.event_end_date)'
 							class="form-control underline" placeholder="Enter end date">

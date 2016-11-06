@@ -53,6 +53,9 @@ public class User {
 	@Column(name = "security", nullable = false)
 	private String security;
 	
+	@Column(name = "security_question", nullable = false)
+	private String securityQuestion;
+	
 	//// CREATE NEW USER//////////////	
 	@Column(name = "name", nullable = false, updatable = true)
 	private String name;
@@ -245,5 +248,13 @@ public class User {
 
 	public void setSecurity(String security) {
 		this.security = security;
+	}
+	
+	public String getSecurityQuestion() {
+		return securityQuestion;
+	}
+
+	public void setsecurityQuestion(String securityQuestion) {
+		this.securityQuestion = securityQuestion;
 	}
 }

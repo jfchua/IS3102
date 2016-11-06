@@ -68,7 +68,7 @@ app.factory('Auth', function($window, $sessionStorage){
 			authService.hasRoles = function(authorizedRoles){
 				for (j = 0; j < userRoles.length; j++) {
 					if (userRoles[j] == authorizedRoles) {
-						console.log("Returning authorized");
+						//console.log("Returning authorized");
 						return true;
 					}
 				}

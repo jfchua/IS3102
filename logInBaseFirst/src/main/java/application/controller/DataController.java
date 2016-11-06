@@ -125,7 +125,7 @@ public class DataController {
 			    Set<BookingAppl> bookings = unit.getBookings();
 			    System.err.println("booking size is " + bookings.size());
 			    JSONObject obj1 = new JSONObject();
-				obj1.put("unit", id);	
+				obj1.put("unit", unit.getUnitNumber());	
 				Double totalH = 0.0;
 				for(BookingAppl b : bookings){
 					System.out.println(b.getEvent_start_date_time());
@@ -435,7 +435,89 @@ public class DataController {
 			}
 	}        
 
-	
+		
+		@PreAuthorize("hasAnyAuthority('ROLE_USER')")
+		//use JSON OBJECT obj.put to put the various data into a JSON array
+		@RequestMapping(value = "/eventCountAgainstTimeCust", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<String> eventCountAgainstTimeCust( @RequestBody String infoJSON,HttpServletRequest rq)  throws UserNotFoundException {
+        	DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+			Principal principal = rq.getUserPrincipal();
+			Optional<User> user1 = userService.getUserByEmail(principal.getName());
+			//Optional<EventOrganizer> eventOrg1 = eventOrganizerService.getEventOrganizerByEmail(principal.getName());
+			if (!user1.isPresent()){
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+			}
+			try{
+
+				User user = user1.get();
+				ClientOrganisation client = user.getClientOrganisation();
+				Set<Event> events=eventService.getAllEvents(client);
+                
+                Object obj = parser.parse(infoJSON);
+			JSONObject jsonObject = (JSONObject) obj;
+                Date start = sdf.parse((String)jsonObject.get("start"));
+			System.out.println(start);
+			Date end = sdf.parse((String)jsonObject.get("end"));
+            System.out.println(end);
+				Calendar cal = Calendar.getInstance();	
+			
+				String[] arrayType={"concert","conference","fair","family","lifestyle","seminar"};
+		
+				
+				List<Set<Event>> countsByMonths=countEventByMonths( events, start, end);
+
+				System.out.println("test output 235");
+				JSONArray arrayToReturn = new JSONArray(); 
+				SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM");
+				cal.setTime(start);	
+				for(Set<Event> countByMonth:countsByMonths){
+					JSONObject oneMonth = new JSONObject();
+					oneMonth.put("count", countByMonth.size());
+					Date label=cal.getTime();
+					oneMonth.put("label", ft.format(label));
+					arrayToReturn.add(oneMonth);
+					List<Set<Event>> countByMonthByTypes=countAgainstEventType(countByMonth);
+					int indexForType=0;						
+					for(Set<Event> countByMonthType:countByMonthByTypes){			
+						oneMonth.put(arrayType[indexForType],countByMonthType.size());
+						indexForType++;
+					}
+					cal.add(Calendar.MONTH, 1);
+
+				}
+				System.out.println("test output 245");
+				System.out.println(arrayToReturn.size());
+
+				/*
+					for(int i=monthsCount.length-1;i>=0;i--){
+						JSONObject oneMonth = new JSONObject();
+						oneMonth.put("count", monthsCount[i]);
+
+						cal = Calendar.getInstance();	
+						cal.setTime();
+						Date result = cal.getTime();						
+						oneMonth.put("label", ft.format(result));
+						arrayToReturn.add(oneMonth);
+
+					}
+				 */
+
+				//JSONObject bd = new JSONObject(); 
+				//bd.put("error", "cannot fetch"); 
+
+
+
+
+				return new ResponseEntity<String>(arrayToReturn.toString(), HttpStatus.OK);	
+			}
+			catch (Exception e){
+				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);
+			}
+		}
+		
+		
 		private List<Set<Event>> countAgainstEventType( Set<Event> events)  {
 			Set<Event> countCONCERT=new HashSet<Event>();
 			Set<Event> countCONFERENCE=new HashSet<Event>();

@@ -5,64 +5,31 @@
 		<li><a>View Data Visualisation</a></li>
 	</ol>
 </div>
-
-<div class="row">
-	<div class="col-lg-9" id="screenshotChart">
-		<div class="panel panel-primary">
-			<div class="panel-heading">
-				<h3 class="panel-title">
-					Data Visualisation (Links don't work!!)
-					<div class="panel-control pull-right">
-
-						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
-							class="panelButton"><i class="fa fa-minus"></i></a> <a
-							class="panelButton"><i class="fa fa-remove"></i></a>
-
-					</div>
-				</h3>
+<div class="panel panel-default">
+	<div class="panel-body">
+		<div class="invoice">
+			<div class="row">
+				<div class="col-md-6">
+					<span class="text text-muted">&nbsp;Data Visualisation
+						Report</span>
+				</div>
+				<div class="col-md-6 text-right">
+					<p class="text-dark">
+						{{date | date:'yyyy-MM-dd'}} <br>
+						<small class="text-light"> By {{userName}}, <strong
+							class="text-dark">{{clientName}}</strong>
+						</small>
+					</p>
+				</div>
 			</div>
-			<div class="panel-body">
-
-				<div class=" col-lg-2">
-
-					<div class="panel panel-primary">
-
-						<div class="panel-heading">
-							<h3 class="panel-title text-center">
-								Select Event
-								<div class="panel-control pull-right"></div>
-							</h3>
-						</div>
-					</div>
-
-					<div class="panel panel-info">
-
-						<div class="panel-heading">
-							<div class="dropdown">
-								<button class="btn btn-info btn-lg dropdown-toggle"
-									type="button" id="dropdownMenu1" data-toggle="dropdown"
-									aria-haspopup="true" aria-expanded="true">
-									Event <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-									<li><a href="#">Jay Chou 2016</a></li>
-									<li><a href="#">IT Show 2016</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-
-
-
-
-					<div class="panel panel-info">
-
-
+			<hr>
+			<div class="row">
+				<div class="col-md-6">
+					<div id="pie-chart">
 						<div class="panel panel-primary">
-
 							<div class="panel-heading">
-								<h3 class="panel-title text-center">
-									Select Time Period
+								<h3 class="panel-title">
+									Percentage of event types
 									<div class="panel-control pull-right">
 										<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
 											class="panelButton"><i class="fa fa-minus"></i></a> <a
@@ -70,84 +37,240 @@
 									</div>
 								</h3>
 							</div>
+							<div class="panel-body">
+								<c3chart bindto-id="pie-plot1-chart" ng-if="eventTypeCount">
+								<chart-column column-id="Conert"
+									column-values="{{eventTypeCount.concert}}" column-type="pie" />
+								<chart-column column-id="Conference"
+									column-values="{{eventTypeCount.conference}}" column-type="pie" />
+								<chart-column column-id="Fair"
+									column-values="{{eventTypeCount.fair}}" column-type="pie" /> <chart-column
+									column-id="Family" column-values="{{eventTypeCount.family}}"
+									column-type="pie" /> <chart-column column-id="Lifestyle"
+									column-values="{{eventTypeCount.lifestyle}}" column-type="pie" />
+								<chart-column column-id="Seminar"
+									column-values="{{eventTypeCount.seminar}}" column-type="pie" />
+								<chart-legend show-legend="true" legend-position="right" /> </c3chart>
+							</div>
 						</div>
-						<div class="panel-heading">
-							<div class="dropdown">
-								<button class="btn btn-info btn-lg dropdown-toggle"
-									type="button" id="dropdownMenu1" data-toggle="dropdown"
-									aria-haspopup="true" aria-expanded="true">
-									Date <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-									<li><a href="#">Show calendar here </a></li>
-								</ul>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div id="eventThreeMonth">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title">
+									Number of events in the last three month
+									<div class="panel-control pull-right">
+										<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+											class="panelButton"><i class="fa fa-minus"></i></a> <a
+											class="panelButton"><i class="fa fa-remove"></i></a>
+									</div>
+								</h3>
+							</div>
+							<div class="panel-body">
+								<div id="chartEventTime"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<hr>
+			<div ng-controller="LineChartCtrl as lineChartCtrl">
+				<div class="row">
+					<div class="col-lg-12" id="pie-chart">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title">
+									Occupancy Rate for The Whole Year
+									<div class="panel-control pull-right">
+										<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+											class="panelButton"><i class="fa fa-minus"></i></a> <a
+											class="panelButton"><i class="fa fa-remove"></i></a>
+									</div>
+								</h3>
+							</div>
+							<div></div>
+							<div class="panel-body">
+								<div id="chart1"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div id="">
+							<div class="panel panel-primary">
+								<div class="panel-heading">
+									<h3 class="panel-title">
+										Ocupancy Rate for Units Selected
+										<div class="panel-control pull-right">
+											<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+												class="panelButton"><i class="fa fa-minus"></i></a> <a
+												class="panelButton"><i class="fa fa-remove"></i></a>
+										</div>
+									</h3>
+								</div>
+								<div class="panel-body">
+									<div id="chartOccupancy"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div id="">
+							<div class="panel panel-primary">
+								<div class="panel-heading">
+									<h3 class="panel-title">
+										Select Units
+										<div class="panel-control pull-right">
+											<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+												class="panelButton"><i class="fa fa-minus"></i></a> <a
+												class="panelButton"><i class="fa fa-remove"></i></a>
+										</div>
+									</h3>
+								</div>
+								<div class="panel-body">
+									<form>
+										<div class="form-group">
+											<label for="exampleInput">Event Start Date</label> <input
+												type="datetime-local" step="86400"
+												ng-model="event.event_start_date"
+												ng-change='checkDateErr(event.event_start_date,event.event_end_date)'
+												class="form-control underline"
+												placeholder="Enter start date">
+										</div>
+										<div class="form-group">
+											<label for="exampleInput">Event End Date</label> <input
+												type="datetime-local" step="86400"
+												ng-model="event.event_end_date"
+												ng-change='checkDateErr(event.event_start_date,event.event_end_date)'
+												class="form-control underline" placeholder="Enter end date">
+										</div>
+										<div class="form-group">
+											<label for="building" class="control-label">Select
+												Building</label> <select name="building"
+												ng-model="currentlySelectedBuilding"
+												ng-options="x.id as x.name for x in buildings"
+												ng-change="getLevel(currentlySelectedBuilding)"
+												class="form-control underline">
+											</select>
+										</div>
+
+										<div class="form-group">
+											<label for="level" class="control-label">Select Level</label>
+											<select name="level" ng-model="currentlySelectedLevel"
+												ng-options="x.id as x.levelNum for x in levels"
+												ng-change="getUnit(currentlySelectedLevel)"
+												class="form-control underline">
+											</select>
+										</div>
+										<div class="form-group">
+											<ul class="list-group" name="units">
+												<li ng-repeat="unit in selectedUnits"
+													class="list-group-item" style="display: inline;">{{unit.unitNumber}}
+													<button ng-click="deleteUnit(unit);">
+														<i class="glyphicon glyphicon-trash"></i>
+													</button>
+												</li>
+											</ul>
+										</div>
+										<div class="form-group">
+											<label for="unit" class="control-label">Select Unit</label> <select
+												name="unit" ng-model="currentlySelectedUnit"
+												ng-options="x as x.unitNumber for x in units| filter: { rentable : true }"
+												ng-change="selectUnit();" class="form-control underline">
+											</select>
+										</div>
+										<button class="progress-button primary-progress"
+											data-style="shrink" data-horizontal
+											ng-click="generateChart()">Generate Chart</button>
+										&nbsp;
+									</form>
+								</div>
 							</div>
 						</div>
 					</div>
 
 				</div>
 			</div>
-		</div>
 
 
-		<div class="col-lg-6" id="pie-chart">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">
-						Percentage of event types
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
-								class="panelButton"><i class="fa fa-minus"></i></a> <a
-								class="panelButton"><i class="fa fa-remove"></i></a>
+				<div class="row">
+					<div class="col-md-6">
+						<div id="">
+							<div class="panel panel-primary">
+								<div class="panel-heading">
+									<h3 class="panel-title">
+										Event Count Over a Period
+										<div class="panel-control pull-right">
+											<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+												class="panelButton"><i class="fa fa-minus"></i></a> <a
+												class="panelButton"><i class="fa fa-remove"></i></a>
+										</div>
+									</h3>
+								</div>
+								<div class="panel-body">
+									<div id="chartEventCountTimeCust"></div>
+								</div>
+							</div>
 						</div>
-					</h3>
-				</div>
-				<div class="panel-body">
-					<c3chart bindto-id="pie-plot1-chart" ng-if="eventTypeCount">
-					<chart-column column-id="Conert"
-						column-values="{{eventTypeCount.concert}}" column-type="pie" /> <chart-column
-						column-id="Conference"
-						column-values="{{eventTypeCount.conference}}" column-type="pie" />
-					<chart-column column-id="Fair"
-						column-values="{{eventTypeCount.fair}}" column-type="pie" /> <chart-column
-						column-id="Family" column-values="{{eventTypeCount.family}}"
-						column-type="pie" /> <chart-column column-id="Lifestyle"
-						column-values="{{eventTypeCount.lifestyle}}" column-type="pie" />
-					<chart-column column-id="Seminar"
-						column-values="{{eventTypeCount.seminar}}" column-type="pie" /> <chart-legend
-						show-legend="true" legend-position="right" /> </c3chart>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-lg-6" id="eventThreeMonth">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">
-						Number of events in the last three month
-						<div class="panel-control pull-right">
-							<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
-								class="panelButton"><i class="fa fa-minus"></i></a> <a
-								class="panelButton"><i class="fa fa-remove"></i></a>
+					</div>
+					<div class="col-md-6">
+						<div id="">
+							<div class="panel panel-primary">
+								<div class="panel-heading">
+									<h3 class="panel-title">
+										Select Dates
+										<div class="panel-control pull-right">
+											<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+												class="panelButton"><i class="fa fa-minus"></i></a> <a
+												class="panelButton"><i class="fa fa-remove"></i></a>
+										</div>
+									</h3>
+								</div>
+								<div class="panel-body">
+									<form>
+										<div class="form-group">
+											<label for="exampleInput">Start Date</label> <input
+												type="datetime-local" step="86400"
+												ng-model="start_date"
+												ng-change='checkDateErr(start_date,end_date)'
+												class="form-control underline"
+												placeholder="Enter start date">
+										</div>
+										<div class="form-group">
+											<label for="exampleInput">End Date</label> <input
+												type="datetime-local" step="86400"
+												ng-model="end_date"
+												ng-change='checkDateErr(start_date,end_date)'
+												class="form-control underline" placeholder="Enter end date">
+										</div>
+										<button class="progress-button primary-progress"
+											data-style="shrink" data-horizontal
+											ng-click="generateEventTimeChartCust()">Generate
+											Chart</button>
+										&nbsp;
+									</form>
+								</div>
+							</div>
 						</div>
-					</h3>
+					</div>
+
 				</div>
-				<div class="panel-body">
-					<div id="chart"></div>
+	
+
+			<div class="row">
+				<div class="col-sm-12 invoice-block">
+
+					<br> <a onclick="javascript:window.print();"
+						class="btn btn-bordered btn-primary hidden-print pull-right">
+						Print <i class="fa fa-print"></i>
+					</a>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<a onclick="javascript:window.print();"
-	class="btn btn-bordered btn-primary hidden-print pull-right"> Print
-	<i class="fa fa-print"></i>
-</a>
-<div class="col-md-1">
-	<br> <a ng-click="downloadPlan()" id="download"
-		tooltip-placement="right" tooltip="Download Floor Plan"><button
-			type="button" class="btn btn-primary btn-circle btn-lg">
-			<i class="glyphicon glyphicon-download-alt"></i>
-		</button></a>
 
-</div>

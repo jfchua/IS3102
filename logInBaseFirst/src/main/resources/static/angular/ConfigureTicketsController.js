@@ -3,6 +3,7 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 	angular.element(document).ready(function () {
 		$scope.data = {};
 		var tempObj= {eventId: $rootScope.event.id};
+		console.log("TTTTTT" + JSON.stringify(tempObj));
 		console.log(tempObj)
 		$http.post("//localhost:8443/viewTicketCategories",JSON.stringify(tempObj)).then(function(response){
 			$scope.tickets = response.data;
@@ -10,10 +11,22 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 			console.log($scope.tickets);
 
 		},function(response){
+			console.log("did not view all ticket categories");
+			//console.log("response is : ")+JSON.stringify(response);
+		}	
+		)
+
+		$http.post("//localhost:8443/getDiscounts",JSON.stringify(tempObj)).then(function(response){
+			$scope.discounts = response.data;
+			console.log("DISPLAY ALL discounts");
+			console.log($scope.tickets);
+
+		},function(response){
 			alert("did not view all ticket categories");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
+
 	});
 
 	$scope.passCategory = function(category){	
@@ -25,6 +38,142 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 		//$state.go("dashboard.configureTickets");
 	}
 
+	$scope.passDiscount = function(dis){	
+		console.log("PASSINGATEGORY1" + JSON.stringify(dis));
+		shareData.addData(dis);
+	}
+
+	$scope.submitAddDiscount = function(){
+
+		if ( !$scope.retailerName || !$scope.discountMessage ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Please ensure you have entered all fields correctly',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		var dataObj = {
+				eventId: $rootScope.event.id,
+				retailerName: $scope.retailerName,
+				message: $scope.discountMessage			
+		};
+
+		$http.post("//localhost:8443/addDiscount", JSON.stringify(dataObj)).then(function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Discount added successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureDiscountsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+		},function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Server error in adding discount',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureDiscountsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+		});
+
+
+
+
+	}
+
+
+	$scope.deleteDiscount = function(dis){
+		var dataObj = {			
+				eventId: dis.id						
+		};
+		$http.post("//localhost:8443/deleteDiscount", JSON.stringify(dataObj)).then(function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Discount deleted successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go($state.current, {}, {reload: true}); 
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
+
+		},function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: response.data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+		});
+	}
 
 	$scope.deleteCat = function(category){
 		var dataObj = {			
@@ -385,5 +534,95 @@ app.controller('updateCategoryController', ['$scope', '$http','$state','$rootSco
 		});
 	}
 }]);
+
+app.controller('updateDiscountController', ['$scope','$rootScope','$http','$state','shareData','ModalService', function ($scope, $rootScope, $http,$state, shareData,ModalService) {
+	angular.element(document).ready(function () {
+		$scope.dis = angular.copy(shareData.getData());
+		$scope.id = $scope.dis.id;
+		$scope.retailerName = $scope.dis.retailerName;
+		$scope.discountMessage = $scope.dis.discountMessage;
+
+	})
+
+	$scope.updateDiscount = function(){	
+
+		if ( !$scope.retailerName || !$scope.discountMessage ){
+			alert($scope.retailerName + " " +$scope.discountMessage );
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Please ensure you have entered all fields correctly',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+
+		var dataObj = {			
+				discountId: $scope.id,
+				retailerName: $scope.retailerName,
+				message: $scope.discountMessage						
+		};
+		$http.post("//localhost:8443/updateDiscount", JSON.stringify(dataObj)).then(function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Discount updated successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureDiscountsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+
+		},function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Server error in updating discount',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureDiscountsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+		});
+	}
+
+
+}])
 
 
