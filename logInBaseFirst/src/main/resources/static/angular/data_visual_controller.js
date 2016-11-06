@@ -1,4 +1,4 @@
-app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $timeout,$http) {
+app.controller('ChartCtrl', ['$scope', '$timeout','$http','ModalService', function ($scope, $timeout,$http,ModalService) {
 	$scope.test={hei:'hei', ha:'ha',ho:10, haha:11};
 	//$scope.eventTypeCount=[];
 	$scope.testnumbers="50,100,200,300,350,450,";
@@ -101,7 +101,119 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http', function ($scope, $ti
      	});
      }
 
-  
+ 	$scope.checkDateErr = function(startDate,endDate) {
+ 		$scope.errMessage = '';
+ 		var curDate = new Date();
+
+ 		if(new Date(startDate) > new Date(endDate)){
+ 			ModalService.showModal({
+
+ 				templateUrl: "views/errorMessageTemplate.html",
+ 				controller: "errorMessageModalController",
+ 				inputs: {
+ 					message: "End Date should be greater than start date",
+ 				}
+ 			}).then(function(modal) {
+ 				modal.element.modal();
+ 				modal.close.then(function(result) {
+ 					console.log("OK");
+ 					$scope.end_date = '';
+ 				});
+ 			});
+
+ 			$scope.dismissModal = function(result) {
+ 				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+ 				console.log("in dissmiss");
+ 			};
+
+ 			return false;
+ 		}
+ 	};
+ 	
+     $scope.generateEventTimeChartCust = function(){
+			var dataObj = {
+					
+					start: ($scope.start_date).toString(),
+					end: ($scope.end_date).toString(),
+			};
+			console.log(($scope.start_date).toString());
+			console.log(($scope.end_date).toString());
+			console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+			var send = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/dataVisual/eventCountAgainstTimeCust',
+				data    : dataObj //forms user object
+			});
+			send.success(function(response){
+				console.log(response);
+				$scope.eventCountTimeCust=response;
+				console.log($scope.eventCountTimeCust);
+				$scope.changeFormatForEventTimeCust($scope.eventCountTimeCust);
+			});
+			send.error(function(response){
+				alert("get customised event count failure");
+			});
+
+			
+			}
+    var xDataCust=['x'];
+    var eventCountTimeDataCust=['Total'];
+     var eventCountTimeConcertCust=['Concert'];
+     var eventCountTimeConferenceCust=['Conference'];
+     var eventCountTimeFairCust=['Fair'];
+    var eventCountTimeFamilyCust=['Family'];
+     var eventCountTimeLifestyleCust=['Lifestyle'];
+     var eventCountTimeSeminarCust=['Seminar'];
+     $scope.changeFormatForEventTimeCust = function(eventCountTime){
+    	 angular.forEach(eventCountTime, function(oneData) {
+    		 xDataCust.push(oneData.label);
+    		 eventCountTimeDataCust.push(oneData.count);
+    		 eventCountTimeConcertCust.push(oneData.concert);
+    	     eventCountTimeConferenceCust.push(oneData.conference);
+    	     eventCountTimeFairCust.push(oneData.fair);
+    	     eventCountTimeFamilyCust.push(oneData.family);
+    	     eventCountTimeLifestyleCust.push(oneData.lifestyle);
+    	     eventCountTimeSeminarCust.push(oneData.seminar);
+ 		});
+    	 
+         var chartEventCountTimeCust = c3.generate({
+     	    bindto: '#chartEventCountTimeCust',
+     	    data: {
+     	        x: 'x',
+     	        xFormat: '%Y-%m',
+     	        columns: [
+     	                xDataCust,
+     	                eventCountTimeDataCust,
+     	               eventCountTimeConcertCust,
+     	      	     eventCountTimeConferenceCust,
+     	      	     eventCountTimeFairCust,
+     	      	     eventCountTimeFamilyCust,
+     	      	     eventCountTimeLifestyleCust,
+     	      	     eventCountTimeSeminarCust,
+     	                ],
+     	        type: 'bar',
+     	       types: {
+     	    	  Total: 'line',
+  	              
+  	          },
+  	        labels: true
+     	    },
+     	  
+     	    axis: {
+     	        x: {
+     	            type: 'category',
+     	            // if true, treat x value as localtime (Default)
+     	            // if false, convert to UTC internally
+     	            localtime: true,
+     	            tick: {
+     	                format: '%Y-%m'
+     	            },
+     	         
+     	        }
+     	    }
+     	});
+     }	
 
     $scope.downloadPlan = function () {
   	  console.log("her0");
