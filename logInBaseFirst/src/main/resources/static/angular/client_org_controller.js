@@ -159,7 +159,7 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 //////////VIEW CLIENT ORGS//////////
 
 app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalService',
-                                  function($scope, $http,$state, $location,ModalService) {
+                                  function($scope, $http, $location,$state,ModalService) {
 
 	$scope.genders=['COMMONINFRA','PROPERTY','EVENT','FINANCE', 'TICKETING', 'BI'];
 	$scope.selection=[];
@@ -205,14 +205,14 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 
 
 	$scope.entity = {};
-	$scope.name = "";
+	/*$scope.name = "";
 
 
 	$scope.updateValue = function(name){
 		$scope.name = name;
 
-	};
-	console.log("SENDING THE NAME: " + $scope.name);
+	};*/
+	//console.log("SENDING THE NAME: " + $scope.name);
 	$scope.save = function(index){
 		$scope.Profiles[index].editable = true;
 		//$scope.entity = $scope.Profiles[index];
@@ -220,15 +220,15 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 		//$scope.entity.index = index;
 		$scope.entity.editable = true;
 
-		$scope.name="";
-		$scope.updateValue = function(name){
+		//$scope.name="";
+		//$scope.updateValue = function(name){
 			//alert("addgin " + name + " to " + $scope.name);
-			$scope.name = name;
+			//$scope.name = name;
 			
-		};
+		//};
 
 		var Edit = {
-				newname: $scope.name,
+				//newname: $scope.name,
 				name: $scope.entity.organisationName,
 				subsys: $scope.selection		
 		}
@@ -270,11 +270,14 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 		});
 
 	}
-
+	
 	$scope.showModal = function(profile,$parent) {
 		console.log("hahahaha");
 		console.log(profile);
+		profile.start_date = new Date(profile.start_date);
+		profile.end_date = new Date(profile.end_date);
 	    // Just provide a template url, a controller and call 'showModal'.
+		
 	    ModalService.showModal({
 	    	
 	    	      templateUrl: "views/updateOrgTemplate.html",
@@ -287,11 +290,15 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 	    	      modal.element.modal();
 	    	      modal.close.then(function(result) {
 	    	      var profile = result.profile;
+	    	      if(profile == null)
+	    	    	  $state.reload();
+	    	      else
+	    	    	  $parent.updateClient(profile);
+	    	     
 	    	      // console.log("in then");
-	    	      // console.log("scope test1");
-	    	       $parent.updateClient(profile);
+	    	      // console.log("scope test1");	    	       
 	    	      // console.log("scope test2");
-	    	       //$state.reload();
+	    	       
 	    	      });
 	    	    });
 
@@ -311,6 +318,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 			  var dataObj = {
 				        id: profile.id,
 				        address: profile.address,
+				        name: profile.organisationName,
 				        postal: profile.postal,
 				        phone: profile.phone,
 				        start_date: (profile.start_date).toString(),
@@ -329,7 +337,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 						modal.element.modal();
 						modal.close.then(function(result) {
 							console.log("OK");
-							$state.go("dashboard.worksapce");
+							$state.go("dashboard.viewClientOrgs");
 						});
 					});
 
@@ -346,13 +354,13 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 		 
 	$scope.checkRole =function(role,profile){
 		var roles=profile.systemSubscriptions;
-		console.log(roles);
+		//console.log(roles);
 		var hasRole=false;
 		var index = 0;
 		angular.forEach(roles, function(item){             
 			if(hasRole==false&&role == roles[index]){	
 				hasRole=true;
-				console.log(hasRole);
+				//console.log(hasRole);
 			}else{
 				index = index + 1;
 			}
@@ -475,7 +483,7 @@ app.controller('updateOrgController', ['$scope', '$element', 'title', 'close', '
     
     //  Now call close, returning control to the caller.
     close({
-    	profile:$scope.profile
+    
     }, 500); // close, but give 500ms for bootstrap to animate
   };
 

@@ -33,13 +33,14 @@
                     </thead>
                 <tbody>
 		              <tr ng-repeat="profile in Profiles | orderBy:'$index'">
-			             <td><div ng-show="profile.editable">Current Name: </div>
+			             <td>
+			             <!--  <div ng-show="profile.editable">Current Name: </div>
                              <div>{{profile.organisationName }}</div>
                              <div ng-show="profile.editable">New Name: </div>
                              <div ng-show="profile.editable"><input type="text" ng-model="ctrl.profile.name" placeholder="{{profile.organisationName}}"
 			                     ng-change="updateValue(ctrl.profile.name)"
-                                                                    ng-show="profile.editable" required> </div>
-                          
+                                                                    ng-show="profile.editable" required> </div>-->
+                          <div>{{profile.organisationName }}</div>
                           </td>
 			             <td>
                                  <div ng-repeat="role in genders">
@@ -58,10 +59,10 @@
 			                 </div>
 			             </td>
                             <td>
-                                <a  ng-click="edit($index)" ng-hide="profile.editable" tooltip-placement="top" tooltip="Update client"><i class="glyphicon glyphicon-pencil"></i></a>
+                                <a  ng-click="edit($index)" ng-hide="profile.editable" tooltip-placement="top" tooltip="Update client subscription"><i class="glyphicon glyphicon-pencil"></i></a>
                                 <a   ng-click="delete($index)" ng-hide="profile.editable" tooltip-placement="top" tooltip="Delete client"><i class="glyphicon glyphicon-trash"></i></a>
                                 <a  ng-click="save($index)" ng-show="profile.editable" tooltip-placement="top" tooltip="Save client"><i class="glyphicon glyphicon-floppy-disk"></i></a>
-                                <a  ng-click="showModal(profile,$parent)" tooltip-placement="top" tooltip="View and edit details"><i class="glyphicon glyphicon-eye-open"></i></a>
+                                <a  ng-click="showModal(profile,$parent)" tooltip-placement="top" tooltip="Edit client details"><i class="glyphicon glyphicon-eye-open"></i></a>
                             </td> 
 		</tr>
                     </tbody>

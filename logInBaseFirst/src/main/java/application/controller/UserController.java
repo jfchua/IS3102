@@ -303,14 +303,14 @@ public class UserController {
 			//Name to find client org
 			System.out.println("ERROR here 1");
 			String name = (String)jsonObject.get("name");
-			System.out.println("ERROR here 2");
-			String newname = (String)jsonObject.get("newname");
+			//System.out.println("ERROR here 2");
+			//String newname = (String)jsonObject.get("newname");
 
 
 
 			//new subsys
 			JSONArray subsysArr = (JSONArray)jsonObject.get("subsys");
-			System.err.println("Name is " + name + "NEW NAME IS " + newname + "subsys is: " + subsysArr.toString());
+			//System.err.println("Name is " + name + "NEW NAME IS " + newname + "subsys is: " + subsysArr.toString());
 
 			List<Subscription> sysToAdd = new ArrayList<Subscription>();
 			for(int i = 0; i < subsysArr.size(); i++){
@@ -319,13 +319,13 @@ public class UserController {
 
 			System.out.println("EDITING REACHED HERE LINE 209 GETTING CLIENT ORG OF NAME " + name);
 			ClientOrganisation orgToEdit = clientOrganisationRepository.getClientOrgByName(name);
-			System.out.println("ERROR here" + orgToEdit.getOrganisationName());
+			/*System.err.println("ERROR here" + orgToEdit.getOrganisationName()+" " + name + " " + newname);
 			if(newname.equals("")){
 				orgToEdit.setOrganisationName(name);
 			}
 			else {			
 				orgToEdit.setOrganisationName(newname);
-			}
+			}*/
 			orgToEdit.setSystemSubscriptions(sysToAdd);
 			clientOrganisationRepository.saveAndFlush(orgToEdit);
 			System.out.println("GG");
@@ -354,14 +354,19 @@ public class UserController {
 			String name = (String)jsonObject.get("name");
 			System.err.println("ERROR here 2");
 			String postal = (String)jsonObject.get("postal");
+			System.err.println("postal" +postal);
 			String phone = (String)jsonObject.get("phone");
+			System.err.println("phone" +phone);
 			Date start_date = sdf.parse((String)jsonObject.get("start_date"));
+			System.err.println("start" +start_date);
 			Date end_date = sdf.parse((String)jsonObject.get("end_date"));
+			System.err.println("end" +end_date);
 			Double fee = Double.valueOf((String)jsonObject.get("fee"));
 
 			System.out.println("EDITING REACHED HERE LINE 209 GETTING CLIENT ORG OF ID " + id);
 			ClientOrganisation orgToEdit = clientOrganisationRepository.findOne(id);
 			System.out.println("CLIENT ORG NAME IS " + orgToEdit.getOrganisationName());				
+			orgToEdit.setOrganisationName(name);
 			orgToEdit.setAddress(address);
 			orgToEdit.setPostal(postal);
 			orgToEdit.setPhone(phone);
