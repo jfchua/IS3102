@@ -144,6 +144,7 @@ public class TicketingServiceImpl implements TicketingService {
 		bd.put("startDate", sdf.format(e.getEvent_start_date())); 
 		bd.put("endDate", sdf.format(e.getEvent_end_date())); 
 		bd.put("description", e.getEvent_description());
+		bd.put("filePath", e.getFilePath());
 		ArrayList<String> t = new ArrayList<String>();
 		Set<BookingAppl> bookings = e.getBookings();
 		for ( BookingAppl book : bookings){
@@ -232,7 +233,7 @@ public class TicketingServiceImpl implements TicketingService {
 				t.setPurchase_date(new Date());
 				t.setEnd_date(c.getEvent().getEvent_end_date());
 				t.setStart_date(c.getEvent().getEvent_start_date());
-				t.setTicketDetails(c.getEvent().getEvent_title() + ":" + c.getCategoryName());
+				t.setTicketDetails(c.getEvent().getEvent_title() + " : " + c.getCategoryName());
 
 				SecureRandom random = new SecureRandom();
 				String toUuid = new BigInteger(130,random).toString(32);
@@ -311,6 +312,29 @@ public class TicketingServiceImpl implements TicketingService {
 		}
 		return true;
 
+
+	}
+
+	@Override
+	public boolean redeemTicket(String qrCode) {
+		Ticket t = ticketRepository.getTicketByCode(qrCode);
+		if ( t == null){
+			return false;
+		}
+		else{
+			try{
+				if ( t.isRedeemed() ){
+					return false;
+				}
+				t.setRedeemed(true);
+				ticketRepository.save(t);
+				return true;
+			}
+			catch(Exception e){
+				System.err.println("Redeem ticket error " + e.getMessage());
+			}
+		}
+		return false;
 
 	}
 }

@@ -61,7 +61,7 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 				templateUrl: "views/errorMessageTemplate.html",
 				controller: "errorMessageModalController",
 				inputs: {
-					message: response,
+					message: response.data,
 				}
 			}).then(function(modal) {
 				modal.element.modal();
@@ -81,8 +81,7 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 	$scope.submitAddCategory = function(){
 		//categoryName $scope.numTickets);
 		//categoryPrice
-		alert(typeof $scope.numTickets);
-		alert(typeof $scope.categoryPrice);
+
 		if ( !$scope.categoryName || !$scope.categoryPrice || !$scope.numTickets ){
 			ModalService.showModal({
 
@@ -90,6 +89,28 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 				controller: "errorMessageModalController",
 				inputs: {
 					message: 'Please ensure you have entered all fields correctly',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		else if ( $scope.categoryName.length > 30 ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Category name should not be longer than 30 characters',
 				}
 			}).then(function(modal) {
 				modal.element.modal();
@@ -229,6 +250,28 @@ app.controller('updateCategoryController', ['$scope', '$http','$state','$rootSco
 				controller: "errorMessageModalController",
 				inputs: {
 					message: 'Please ensure you have entered all fields correctly',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		else if ( $scope.categoryName.length > 30 ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Category name should not be longer than 30 characters',
 				}
 			}).then(function(modal) {
 				modal.element.modal();

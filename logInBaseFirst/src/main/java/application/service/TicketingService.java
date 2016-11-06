@@ -24,6 +24,8 @@ public interface TicketingService {
 	public int checkTickets(int numTickets, Long categoryId);
 
 	boolean updateCategory(Long catId, String catName, double price, int numTix) throws EventNotFoundException;
+	
+	boolean redeemTicket(String qrCode);
 
 	boolean registerNewUser(String name, String email, String pass) throws EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException;
 
