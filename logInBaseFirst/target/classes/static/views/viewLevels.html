@@ -31,7 +31,7 @@
                                </tr>
                             </thead>
                             <tbody>  
-                            <tr ng-repeat="x in levels ">
+                            <tr ng-repeat="x in levels | orderBy:'levelNum'">
                              <td>{{x.id}}</td>
                              <td>{{ x.levelNum }}</td>
                              <td>{{ x.length }}</td>

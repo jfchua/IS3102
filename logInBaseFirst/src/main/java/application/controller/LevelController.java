@@ -284,7 +284,7 @@ public class LevelController {
 			// Call $http.post(URL,(String)id);
 			@RequestMapping(value = "/deleteLevel", method = RequestMethod.POST)
 			@ResponseBody
-			public ResponseEntity<Void> deleteLevel(@RequestBody String levelJSON, HttpServletRequest rq) throws UserNotFoundException {
+			public ResponseEntity<String> deleteLevel(@RequestBody String levelJSON, HttpServletRequest rq) throws UserNotFoundException {
 				Principal principal = rq.getUserPrincipal();
 				Optional<User> usr = userService.getUserByEmail(principal.getName());
 				if ( !usr.isPresent() ){
@@ -301,13 +301,13 @@ public class LevelController {
 					boolean bl = levelService.deleteLevel(client, levelId);
 					if(!bl){
 						System.out.println("cannot delete");
-						return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+						return new ResponseEntity<String>(geeson.toJson("Unable to delete level with existing events"),HttpStatus.INTERNAL_SERVER_ERROR);
 					}	
 				}
 				catch (Exception e){
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+					return new ResponseEntity<String>(geeson.toJson("Server error deleting building"),HttpStatus.INTERNAL_SERVER_ERROR);
 				}
-				return new ResponseEntity<Void>(HttpStatus.OK);
+				return new ResponseEntity<String>(HttpStatus.OK);
 			}
 			
 	         @PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")

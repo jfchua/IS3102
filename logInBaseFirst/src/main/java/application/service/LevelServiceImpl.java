@@ -8,25 +8,53 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import application.entity.Area;
+import application.entity.BookingAppl;
 import application.entity.Building;
 import application.entity.ClientOrganisation;
 import application.entity.Level;
+import application.entity.MaintenanceSchedule;
+import application.entity.Square;
+import application.entity.Unit;
+import application.entity.UnitAttributeValue;
 import application.exception.InvalidFileUploadException;
+import application.repository.AreaRepository;
+import application.repository.BookingApplRepository;
 import application.repository.BuildingRepository;
 import application.repository.LevelRepository;
+import application.repository.MaintenanceScheduleRepository;
+import application.repository.SquareRepository;
+import application.repository.UnitAttributeValueRepository;
 @Service
 public class LevelServiceImpl implements LevelService {
 	private final LevelRepository levelRepository;
 	private final BuildingRepository buildingRepository;
+	/*private final BookingApplRepository bookingApplRepository;
+	private final MaintenanceScheduleRepository maintRepository;
+	private final AreaRepository areaRepository;
+	private final SquareRepository squareRepository;
+	private final UnitAttributeValueRepository unitAttributeValueRepository;*/
+	private final UnitService unitService;
 	private static final Logger LOGGER = LoggerFactory.getLogger(LevelServiceImpl.class);
 	
 	@Autowired
-	public LevelServiceImpl(LevelRepository levelRepository,BuildingRepository buildingRepository) {
+	public LevelServiceImpl(LevelRepository levelRepository,BuildingRepository buildingRepository,
+			/*BookingApplRepository bookingApplRepository, MaintenanceScheduleRepository maintRepository,
+			AreaRepository areaRepository, UnitAttributeValueRepository unitAttributeValueRepository, SquareRepository squareRepository*/
+			UnitService unitService) {
 		//super();
 		this.levelRepository =levelRepository;
 		this.buildingRepository = buildingRepository;
+		/*this.bookingApplRepository = bookingApplRepository;
+		this.maintRepository = maintRepository;
+		this.areaRepository = areaRepository;
+		this.unitAttributeValueRepository = unitAttributeValueRepository;
+		this.squareRepository = squareRepository;*/
+		this.unitService = unitService;
 	}
 	
 	@Override
@@ -126,15 +154,34 @@ public class LevelServiceImpl implements LevelService {
 		// TODO Auto-generated method stub
 		try{
 			
-			Optional<Level> level = getLevelById(id);
-			if(level.isPresent()){			
-				Building build = level.get().getBuilding();
+			Optional<Level> level1 = getLevelById(id);
+			if(level1.isPresent()){	
+				Level level = level1.get();
+				Set<Unit> units = level.getUnits();
+				for(Unit unit : units){
+					if(!unitService.checkBookings(unit.getId())){
+						return false;
+					}
+					else{
+						if(unitService.deleteUnit(unit.getId(),id)){
+							System.out.println("DELETED");
+						}else{
+							return false;
+						}
+					}	
+				}
+				Building build = level.getBuilding();
+				System.err.println(build.getName());
+				System.err.println(client.getBuildings().contains(build));
 				if(client.getBuildings().contains(build)){
 				Set<Level> levels = build.getLevels();
-				levels.remove(level.get());
+				System.err.println("get levels "+levels.size());
+				levels.remove(level);
+				System.err.println("finish delete level from building");
 				build.setLevels(levels);
-				levelRepository.delete(level.get());
-				buildingRepository.save(build);
+				levelRepository.delete(level);
+				buildingRepository.flush();
+				System.err.println("finish delete level");
 			}
 			}
 			}catch(Exception e){
