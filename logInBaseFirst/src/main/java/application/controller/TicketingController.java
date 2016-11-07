@@ -2,6 +2,7 @@ package application.controller;
 
 import java.io.File;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +50,7 @@ import application.repository.BuildingRepository;
 import application.repository.CategoryRepository;
 import application.repository.FeedbackRepository;
 import application.service.BookingService;
+import application.service.EmailService;
 import application.service.EngagementService;
 import application.service.EventExternalService;
 import application.service.EventService;
@@ -67,15 +69,17 @@ public class TicketingController {
 	private final EventService eventService;
 	private final EngagementService engagementService;
 	private final FeedbackRepository feedbackRepository;
+	private final EmailService emailService;
 	private final CategoryRepository categoryRepository;
 	private final BuildingRepository buildingRepository;
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 
 	@Autowired
-	public TicketingController(BuildingRepository buildingRepository, CategoryRepository categoryRepository, FeedbackRepository feedbackRepository,EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
+	public TicketingController(EmailService emailService, BuildingRepository buildingRepository, CategoryRepository categoryRepository, FeedbackRepository feedbackRepository,EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
 			UserService userService) {
 		super();
+		this.emailService = emailService;
 		this.eventExternalService = eeventService;
 		this.bookingService = bookingService;
 		this.buildingRepository = buildingRepository;
@@ -125,7 +129,7 @@ public class TicketingController {
 			long numTicketst = (long)jsonObject.get("numTickets");
 			int numTickets = (int)numTicketst;
 			System.err.println("gotten info of " + name + " " + price + " " + numTickets + " event id: " + eventId);
-
+			
 			boolean bl = ticketingService.addCategory(eventId, name, price, numTickets);
 			if ( bl ){
 				return new ResponseEntity<String>(HttpStatus.OK);
@@ -273,7 +277,7 @@ public class TicketingController {
 					 */
 					.serializeNulls()
 					.create();			    
-			
+
 			Date todayDate = new Date();
 			Set<Event> toDelete = new HashSet<>();
 
@@ -283,7 +287,7 @@ public class TicketingController {
 				}
 			}
 			events.removeAll(toDelete);
-			
+
 			String json = gson2.toJson(events);
 			String json2 = gson2.toJson("Server error in getting all the events");
 			System.out.println(json);
@@ -322,7 +326,7 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/tixViewBuilding",  method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> viewBuildingInfo(@RequestBody String eventId,HttpServletRequest rq) throws UserNotFoundException {
@@ -338,29 +342,29 @@ public class TicketingController {
 			Long id = (Long)jsonObject.get("eventId");
 			System.err.println("gotten location id of : "  + id);
 			Building build = buildingRepository.findOne(id);
-				Gson gson = new GsonBuilder()
-						.setExclusionStrategies(new ExclusionStrategy() {
-							public boolean shouldSkipClass(Class<?> clazz) {
-								return (clazz == Level.class)||(clazz == BookingAppl.class);
-							}
+			Gson gson = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == Level.class)||(clazz == BookingAppl.class);
+						}
 
-							/**
-							 * Custom field exclusion goes here
-							 */
-							@Override
-							public boolean shouldSkipField(FieldAttributes f) {
-								//TODO Auto-generated method stub
-								return false;
-								//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
-							}
-						})
 						/**
-						 * Use serializeNulls method if you want To serialize null values 
-						 * By default, Gson does not serialize null values
+						 * Custom field exclusion goes here
 						 */
-						.serializeNulls()
-						.create();			    
-			
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+							//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+						}
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();			    
+
 			return new ResponseEntity<String>(gson.toJson(build),HttpStatus.OK);
 		}
 		catch (Exception e){
@@ -368,7 +372,7 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 
 	@RequestMapping(value = "/tixViewEventCat",  method = RequestMethod.POST)
 	@ResponseBody
@@ -438,7 +442,7 @@ public class TicketingController {
 			Object obj1 = parser.parse(ticketsJSON);
 			JSONArray jsonObject = (JSONArray) obj1;
 			//JSONArray id = (JSONArray)jsonObject.get("ticketsJSON");
-
+			ArrayList<String> toEmail = new ArrayList();
 			for ( Object j : jsonObject){
 				JSONObject ticketInfo = (JSONObject) j;
 				String numTicketsString = (String)ticketInfo.get("numTickets");
@@ -446,8 +450,11 @@ public class TicketingController {
 				Long categoryId = (Long)ticketInfo.get("categoryId");
 				String paymentId = (String) ticketInfo.get("paymentId");
 				System.err.println("CALLED TICKETING SERVICE ONCE");
-				ticketingService.generateTicket(usr.get(), paymentId, numTickets.intValue(), categoryId);
+				String tt = ticketingService.generateTicket(usr.get(), paymentId, numTickets.intValue(), categoryId);
+				toEmail.add(tt);
 			}
+			emailService.sendEmailWithAttachment(usr.get().getEmail(), "Thank you for your purchase ", "Dear Customer, thank you for purchasing tickets. You may find pdf copies of the tickets attached which you may print and bring to the event. Alternatively, you can also use your ticket wallet in the mobile application." , toEmail.toArray(new String[0]));
+
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		//catch ( EventNotFoundException e){
@@ -759,7 +766,7 @@ public class TicketingController {
 
 	}	
 
-	
+
 	@RequestMapping(value = "/redeemTicket", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> redeemTicket(@RequestBody String qrCode,HttpServletRequest rq) throws UserNotFoundException {
@@ -776,9 +783,9 @@ public class TicketingController {
 			JSONObject jsonObject = (JSONObject) obj1;
 			String code = (String)jsonObject.get("code");
 			System.out.println("code is " + code);
-		
-			
-			
+
+
+
 
 			boolean bl = ticketingService.redeemTicket(code);
 			if ( bl ){
@@ -794,7 +801,7 @@ public class TicketingController {
 		}
 
 	}	
-	
+
 
 
 

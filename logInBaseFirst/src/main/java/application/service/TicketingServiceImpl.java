@@ -1,23 +1,44 @@
 package application.service;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SimpleTimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
+import javax.sql.DataSource;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import application.entity.BookingAppl;
 import application.entity.Building;
@@ -38,6 +59,8 @@ import application.repository.EventRepository;
 import application.repository.RoleRepository;
 import application.repository.TicketRepository;
 import application.repository.UserRepository;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperRunManager;
 
 @Service
 public class TicketingServiceImpl implements TicketingService {
@@ -51,6 +74,11 @@ public class TicketingServiceImpl implements TicketingService {
 	private final TicketRepository ticketRepository;
 	private final RoleRepository roleRepository;
 	private final EmailService emailService;
+
+	@Autowired
+	private ServletContext servletContext;
+	@Autowired
+	private ApplicationContext context;
 
 	@Autowired
 	public TicketingServiceImpl(EmailService emailService, RoleRepository roleRepository, UserService userService, TicketRepository ticketRepository, CategoryRepository categoryRepository, EventRepository eventRepository, EventService eventService,AuditLogRepository auditLogRepository, UserRepository userRepository) {
@@ -72,6 +100,11 @@ public class TicketingServiceImpl implements TicketingService {
 		try{
 
 			Set<Category> temp = e.get().getCategories();
+			for ( Category c : temp){
+				if ( c.getCategoryName().equalsIgnoreCase(catName)){
+					return false;
+				}
+			}
 			Category cat = new Category();
 			cat.setCategoryName(catName);
 			cat.setEvent(e.get());
@@ -87,11 +120,17 @@ public class TicketingServiceImpl implements TicketingService {
 
 		return false;
 	}
-	
+
 	@Override
 	public boolean updateCategory(Long catId, String catName, double price, int numTix) throws EventNotFoundException {
 		try{
 			Category c = categoryRepository.findOne(catId);
+			Set<Category> ttt = c.getEvent().getCategories();
+			for ( Category cx : ttt){
+				if ( cx.getCategoryName().equalsIgnoreCase(catName)){
+					return false;
+				}
+			}
 			c.setCategoryName(catName);
 			c.setNumOfTickets(numTix);
 			c.setPrice(price);
@@ -195,9 +234,9 @@ public class TicketingServiceImpl implements TicketingService {
 		System.out.println("Returning event info : " + bd.toString());
 		return bd.toString();
 	}
-	
+
 	public int checkTickets(int numTickets, Long categoryId){
-		
+
 		Category c = categoryRepository.findOne(categoryId);
 		int maxNumTix = c.getNumOfTickets();
 		int currentTixNum = c.getTickets().size();
@@ -210,9 +249,11 @@ public class TicketingServiceImpl implements TicketingService {
 		}
 	}
 
-	public boolean generateTicket(User user, String paymentId, int numTickets, Long categoryId){
+	public String generateTicket(User user, String paymentId, int numTickets, Long categoryId){
+		String uuid = "";
+		Category c = categoryRepository.findOne(categoryId);
 		try{
-			Category c = categoryRepository.findOne(categoryId);
+
 			/*if ( c.getTickets() != null ){
 				System.err.println("!=null");
 				Set<Ticket> tickets = c.getTickets();
@@ -237,21 +278,21 @@ public class TicketingServiceImpl implements TicketingService {
 
 				SecureRandom random = new SecureRandom();
 				String toUuid = new BigInteger(130,random).toString(32);
-				String uuid =  toUuid.substring(0,10);		
+				uuid =  toUuid.substring(0,10);		
 				t.setTicketUUID(uuid);
 				System.err.println(t.getTicketUUID());
 
 				//tickets.add(t);
 				//c.setTickets(tickets);
 				c.addTicket(t);
-	
+
 				Set<Ticket> ticketsUser = user.getTickets();
-	
+
 				ticketsUser.add(t);
-		
+
 				user.setTickets(ticketsUser);
 				ticketRepository.save(t);
-		
+
 
 				//categoryRepository.save(c);
 				//userRepository.save(user);
@@ -260,11 +301,95 @@ public class TicketingServiceImpl implements TicketingService {
 		catch ( Exception e){
 			System.err.println("Error at tix generation");
 			e.printStackTrace();
-			return false;
+			return null;
 		}
-		return true;
+		//return true;
 
+		//Gen qr code image
+		String myCodeText = uuid;
+		String filePath = servletContext.getRealPath("/") + "QRCODETOOVERWRITE.png";
+		System.err.println("FILE PATH IS " + filePath);
+		int size = 250;
+		String fileType = "png";
+		File myFile = new File(filePath);
+		try {
+
+			Map<EncodeHintType, Object> hintMap = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
+			hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+
+			// Now with zxing version 3.2.1 you could change border size (white border size to just 1)
+			hintMap.put(EncodeHintType.MARGIN, 1); /* default = 4 */
+			hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+
+			QRCodeWriter qrCodeWriter = new QRCodeWriter();
+			BitMatrix byteMatrix = qrCodeWriter.encode(myCodeText, BarcodeFormat.QR_CODE, size,
+					size, hintMap);
+			int CrunchifyWidth = byteMatrix.getWidth();
+			BufferedImage image = new BufferedImage(CrunchifyWidth, CrunchifyWidth,
+					BufferedImage.TYPE_INT_RGB);
+			image.createGraphics();
+
+			Graphics2D graphics = (Graphics2D) image.getGraphics();
+			graphics.setColor(Color.WHITE);
+			graphics.fillRect(0, 0, CrunchifyWidth, CrunchifyWidth);
+			graphics.setColor(Color.BLACK);
+
+			for (int i = 0; i < CrunchifyWidth; i++) {
+				for (int j = 0; j < CrunchifyWidth; j++) {
+					if (byteMatrix.get(i, j)) {
+						graphics.fillRect(i, j, 1, 1);
+					}
+				}
+			}
+			ImageIO.write(image, fileType, myFile);
+			//
+
+
+			System.err.println("Enter");
+			InputStream jasperStream = servletContext.getResourceAsStream("/jasper/TicketQR.jasper");
+
+
+
+			HashMap<String,Object> parameters = new HashMap<String,Object>();
+			String toPut = c.getEvent().getEvent_title() +"\n"+ " 1 "+  c.getCategoryName();
+			System.out.println(toPut);
+			parameters.put("ticketInformation",toPut );
+			parameters.put("qrcode",filePath );
+
+			Connection conn = null;
+			try {
+				DataSource ds = (DataSource)context.getBean("dataSource");
+
+				conn = ds.getConnection();
+				System.out.println(conn.toString());
+			} catch (SQLException e) {
+				System.out.println("************* ERROR: " + e.getMessage());
+				e.printStackTrace();
+			}
+			try{
+				String path = servletContext.getRealPath("/");
+				path += (c.getCategoryName() + "_" + uuid + ".pdf");	
+				System.err.println("path is " + path);
+
+				FileOutputStream fileOutputStream = new FileOutputStream(path);
+				JasperRunManager.runReportToPdfStream(jasperStream, fileOutputStream, parameters,new JREmptyDataSource());
+				fileOutputStream.flush();
+				fileOutputStream.close();
+				System.out.println("FLUSHED OUT THE LOG");
+				return path;
+				//emailService.sendEmailWithAttachment("kenneth1399@hotmail.com", "Invoice for payment plan id ", "bodymessage" , path);
+
+			}
+			catch(Exception exp){
+				exp.printStackTrace();
+			}
+		} catch (Exception e1) {
+			System.out.println("at /download invoice there was an error parsing the json string received");
+			e1.printStackTrace();
+		}
+		return null;
 	}
+
 
 	public boolean registerNewUser(String name, String userEmail, String password) throws EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException{
 		Pattern pat = Pattern.compile("^.+@.+\\..+$");
