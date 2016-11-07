@@ -34,7 +34,7 @@ public interface UserService {
 
 	boolean changePassword(long id, String password) throws UserNotFoundException;
 
-	public boolean changeSecurity(long id, String security) throws UserNotFoundException;
+	public boolean changeSecurity(long id, String security, String question) throws UserNotFoundException;
 	
 	boolean createNewUser(ClientOrganisation clientOrg,String name, String userEmail, Set<Role> roles) throws UserNotFoundException, EmailAlreadyExistsException, InvalidEmailException;
 

@@ -801,6 +801,38 @@ public class TicketingController {
 		}
 
 	}	
+	
+	
+	@RequestMapping(value = "/tixGetTransactionHistory",  method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<String> getTHistory(HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		try{
+			ArrayList<String> ans = ticketingService.viewTransactionHistory(usr.get().getId());
+			System.out.println(ans.size());
+			StringBuilder sb = new StringBuilder();
+			for ( String s : ans){
+				sb.append(s);
+			}
+
+			//Gson gson = new Gson();
+			//String json = gson.toJson(levels);
+			//System.out.println("Returning levels with json of : " + json);
+			//return json;
+
+			Gson gson = new Gson();	    
+
+			return new ResponseEntity<String>(gson.toJson(sb.toString()),HttpStatus.OK);
+		}
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting transaction history"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 
 
 
