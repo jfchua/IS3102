@@ -35,6 +35,7 @@ import com.google.gson.GsonBuilder;
 import application.entity.AuditLog;
 import application.entity.Building;
 import application.entity.ClientOrganisation;
+import application.entity.Event;
 import application.entity.Icon;
 import application.entity.Message;
 import application.entity.PaymentPolicy;
@@ -482,7 +483,7 @@ public class UserController {
 					.setExclusionStrategies(new ExclusionStrategy() {
 
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == Ticket.class) || (clazz == Message.class || clazz == ClientOrganisation.class || clazz == ToDoTask.class);
+							return (clazz == Ticket.class) || (clazz == Message.class || clazz == ClientOrganisation.class || clazz == ToDoTask.class || clazz == Event.class);
 						}
 
 						/**
@@ -707,12 +708,13 @@ public class UserController {
 		try{
 			Object obj = parser.parse(userJSON);
 			JSONObject jsonObject = (JSONObject) obj;
-			String security = (String)jsonObject.get("password");
-			String oldSecurity = (String)jsonObject.get("oldpassword");
+			String security = (String)jsonObject.get("security");
+			String oldSecurity = (String)jsonObject.get("oldsecurity");
+			String question = (String)jsonObject.get("question");
 			Principal principal = rq.getUserPrincipal();
 			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 			userService.checkOldSecurity(currUser.getId(),oldSecurity);
-			if ( !userService.changeSecurity(currUser.getId(), security) ){
+			if ( !userService.changeSecurity(currUser.getId(), security, question) ){
 				return new ResponseEntity<String>(gson.toJson("Server error in changing security answer"),HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			//BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
