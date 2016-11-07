@@ -669,6 +669,8 @@ public class UserController {
 			String oldpass = (String)jsonObject.get("oldpassword");
 			Principal principal = rq.getUserPrincipal();
 			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
+			if (currUser.getSecurity() == null || currUser.getSecurityQuestion()  == null)
+				return new ResponseEntity<String>(gson.toJson("Please set a security question and answer before resetting password"),HttpStatus.INTERNAL_SERVER_ERROR);
 			userService.checkOldPassword(currUser.getId(),oldpass);
 			if ( !userService.changePassword(currUser.getId(), pass) ){
 				return new ResponseEntity<String>(gson.toJson("Server error in changing password"),HttpStatus.INTERNAL_SERVER_ERROR);
