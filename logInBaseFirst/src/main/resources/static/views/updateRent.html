@@ -30,7 +30,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="unit in units | filter: { rentable : true }">
+						<tr ng-repeat="unit in units | filter: { rentable : true } |orderObjectBy:order_item:order_reverse">
 							<td>{{unit.unitNumber }}</td>
 							<td>{{unit.rent}}</td>
 							<td> <form name="thisForm"> <input input type="number"

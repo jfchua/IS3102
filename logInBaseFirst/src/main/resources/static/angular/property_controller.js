@@ -1032,6 +1032,30 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 			};
 			return;
 		}
+		
+		if ($scope.special.rate <= 0){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered a valid rate",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
 
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -1050,7 +1074,7 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 		});
 
 		console.log("SAVING THE RATE");
-		send.success(function(){
+		send.success(function(response){
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
@@ -1073,13 +1097,14 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 
 
 		});
-		send.error(function(){
-			ModalService.showModal({
-
+		send.error(function(response){
+			//console.log("***");
+			//console.log(response);
+			ModalService.showModal({       
 				templateUrl: "views/errorMessageTemplate.html",
 				controller: "errorMessageModalController",
 				inputs: {
-					message: 'Error in saving the rate'
+					message: response,
 				}
 			}).then(function(modal) {
 				modal.element.modal();
@@ -1215,6 +1240,32 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 			};
 			return;
 		}
+		
+		if ($scope.special.rate <= 0){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered a valid rate",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+
+		
 		$scope.data = {};
 		//$scope.building = JSON.parse(shareData.getData());
 		var dataObj = {					
@@ -1232,7 +1283,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 		});
 
 		console.log("UPDATING THE RATE");
-		send.success(function(){
+		send.success(function(response){
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
@@ -1254,19 +1305,19 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 			};
 
 		});
-		send.error(function(){
+		send.error(function(response){
 			ModalService.showModal({
 
 				templateUrl: "views/errorMessageTemplate.html",
 				controller: "errorMessageModalController",
 				inputs: {
-					message: 'Error updating the rate'
+					message: response,
 				}
 			}).then(function(modal) {
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllRates");
+					//$state.go("dashboard.viewAllRates");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -1362,6 +1413,19 @@ app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData
 	};	
 }])
 
+app.filter('orderObjectBy', function() {
+	  return function(items, field, reverse) {
+	    var filtered = [];
+	    angular.forEach(items, function(item) {
+	      filtered.push(item);
+	    });
+	    filtered.sort(function (a, b) {
+	      return (a[field] > b[field] ? 1 : -1);
+	    });
+	    if(reverse) filtered.reverse();
+	    return filtered;
+	  };
+	});
 
 //VIEW RENTS, UPDATE RENT
 app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$state','ModalService', function ($scope,  $timeout,$http ,shareData,$state,ModalService) {
@@ -1373,6 +1437,8 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 		$http.get("//localhost:8443/property/getAllUnits").then(function(response){
 			$scope.units = response.data;
 			$scope.allUnits= response.data;
+			$scope.order_item = "id";
+			$scope.order_reverse = false;
 			console.log("DISPLAY ALL UNITS OF CLIENT");
 			console.log(angular.fromJson(response.data));
 

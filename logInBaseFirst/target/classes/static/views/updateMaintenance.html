@@ -56,7 +56,7 @@
 							<ul class="list-group" name="units">
 								<li ng-repeat="selectedSchedulesUnit in selectedSchedulesUnits"
 									class="list-group-item">{{selectedSchedulesUnit.unitNumber}}
-									<button ng-click="deleteSchedulesUnit(selectedSchedulesUnit)">
+									<button ng-click="deleteSchedulesUnit(selectedSchedulesUnit); checkAvail()">
 										<i class="glyphicon glyphicon-trash"></i>
 									</button>
 								</li>
@@ -134,5 +134,15 @@
 				</form>
 			</div>
 		</div>
+	</div>
+	<div class="col-md-3">
+		<growl-notifications> <growl-notification
+			ng-if="avail == 'AVAILABLE!'"
+			class="growl-success alert-success fading"> <a
+			href="#" ng-click="$growlNotification.remove()" class="close"><i
+			class="fa fa-times"></i></a> Selected units are available</growl-notification> <growl-notification
+			ng-if="avail == 'NOT AVAILABLE!'" class="growl-error">
+		<a href="#" ng-click="$growlNotification.remove()" class="close"><i
+			class="fa fa-times"></i></a> Selected units are not available </growl-notification> </growl-notifications>
 	</div>
 </div>

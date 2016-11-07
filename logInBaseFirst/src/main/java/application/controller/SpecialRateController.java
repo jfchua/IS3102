@@ -47,7 +47,7 @@ public class SpecialRateController {
 	private final ClientOrganisationService clientOrganisationService;
 	private final UserService userService;
 	private final AuditLogRepository auditLogRepository;
-
+	private Gson geeson= new Gson();
 	private JSONParser parser = new JSONParser();
 
 	@Autowired
@@ -110,13 +110,13 @@ public class SpecialRateController {
 		//Call $http.post(URL,stringToAdd);
 		@RequestMapping(value = "/addSpecialRate", method = RequestMethod.POST)
 		@ResponseBody
-		public ResponseEntity<Void> addSpecialRate(@RequestBody String rateJSON,
+		public ResponseEntity<String> addSpecialRate(@RequestBody String rateJSON,
 				HttpServletRequest rq) throws UserNotFoundException {
 			System.out.println("start adding");
 			Principal principal = rq.getUserPrincipal();
 			Optional<User> usr = userService.getUserByEmail(principal.getName());
 			if ( !usr.isPresent() ){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 			}
 			try{
 				ClientOrganisation client = usr.get().getClientOrganisation();
@@ -132,15 +132,15 @@ public class SpecialRateController {
 				System.out.println("adding rate " + rate);
 				if(!bl){
 					System.out.println("invalid rate");
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+					return new ResponseEntity<String>(geeson.toJson("Period has already existed, please choose another period."), HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 					
 			}
 			catch (Exception e){
 				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);
 			}
-			return new ResponseEntity<Void>(HttpStatus.OK);	
+			return new ResponseEntity<String>(HttpStatus.OK);	
 		}	
 
 		//This method takes in a String which is the ID of the event to be deleted
@@ -174,11 +174,11 @@ public class SpecialRateController {
 				//Call $httpPost(Url,JSONData);
 				@RequestMapping(value = "/updateRate", method = RequestMethod.POST)
 				@ResponseBody
-				public ResponseEntity<Void> updateRate(@RequestBody String rateJSON, HttpServletRequest rq) throws UserNotFoundException {
+				public ResponseEntity<String> updateRate(@RequestBody String rateJSON, HttpServletRequest rq) throws UserNotFoundException {
 					Principal principal = rq.getUserPrincipal();
 					Optional<User> usr = userService.getUserByEmail(principal.getName());
 					if ( !usr.isPresent() ){
-						return new ResponseEntity<Void>(HttpStatus.CONFLICT); //NEED ERROR HANDLING BY RETURNING HTTP ERROR
+						return new ResponseEntity<String>(HttpStatus.CONFLICT); //NEED ERROR HANDLING BY RETURNING HTTP ERROR
 					}
 					try{
 					    ClientOrganisation client = usr.get().getClientOrganisation();
@@ -194,13 +194,13 @@ public class SpecialRateController {
 						boolean bl = specialRateService.updateSpecialRate(client, rateId, rate, description, period);
 						System.out.println("editing rate " + rateId);
 						if(!bl){
-							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+							return new ResponseEntity<String>(geeson.toJson("Period has already existed, please choose another period."), HttpStatus.INTERNAL_SERVER_ERROR);
 						}
 					}
 					catch (Exception e){
-						return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+						return new ResponseEntity<String>(HttpStatus.CONFLICT);
 					}
-					return new ResponseEntity<Void>(HttpStatus.OK);
+					return new ResponseEntity<String>(HttpStatus.OK);
 				}
 				
 		
