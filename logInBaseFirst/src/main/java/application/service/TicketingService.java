@@ -1,5 +1,6 @@
 package application.service;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import application.entity.Category;
@@ -26,6 +27,8 @@ public interface TicketingService {
 	boolean updateCategory(Long catId, String catName, double price, int numTix) throws EventNotFoundException;
 	
 	boolean redeemTicket(String qrCode);
+	
+	public ArrayList<String> viewTransactionHistory(Long userId) throws UserNotFoundException;
 
 	boolean registerNewUser(String name, String email, String pass) throws EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException;
 

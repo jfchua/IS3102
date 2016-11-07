@@ -428,7 +428,8 @@ public class UserController {
 				roles.add((String)rolesArr.get(i));
 			}
 			for (String r : roles ){
-				Role tempR = roleRepository.getRoleByName(r);
+				System.out.println(r);
+				Role tempR = roleRepository.getRoleByName(r.toUpperCase());
 				userRolesToAddIn.add(tempR);		
 				System.err.println(r);
 			}

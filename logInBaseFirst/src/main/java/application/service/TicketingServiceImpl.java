@@ -12,10 +12,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -249,6 +252,146 @@ public class TicketingServiceImpl implements TicketingService {
 		}
 	}
 
+	private class tempStorage{
+
+		private String paymentId;
+		private ArrayList<String> categories = new ArrayList<>();
+		private ArrayList<Integer> numTix = new ArrayList<>();
+		private Date purDate;
+
+
+		public Date getPurDate() {
+			return purDate;
+		}
+		public void setPurDate(Date purDate) {
+			this.purDate = purDate;
+		}
+		public String getPaymentId() {
+			return paymentId;
+		}
+		public void setPaymentId(String paymentId) {
+			this.paymentId = paymentId;
+		}
+		public ArrayList<String> getCategories() {
+			return categories;
+		}
+		public void setCategories(ArrayList<String> categories) {
+			this.categories = categories;
+		}
+		public ArrayList<Integer> getNumTix() {
+			return numTix;
+		}
+		public void setNumTix(ArrayList<Integer> numTix) {
+			this.numTix = numTix;
+		}
+		public void addCat(String cat){
+			this.categories.add(cat);
+		}
+		public void addTix(int idx){
+			if ( idx == this.numTix.size()){
+				this.numTix.add(1);
+				return;
+			}
+			int current = this.numTix.get(idx);
+			current++;
+			this.numTix.set(idx, current);
+		}
+
+		@Override
+		public String toString(){
+			String x =  "Payment ID: " + this.paymentId + "\n" + "Purchased: " +  new SimpleDateFormat("dd-MM-yyyy hh:mm a").format(this.purDate) + "\n";
+			for ( int i = 0; i < this.categories.size() ; i++){
+				x += this.getNumTix().get(i) + " " + this.getCategories().get(i) + "\n";
+			}
+			return x;
+		}
+
+	}
+
+	public ArrayList<String> viewTransactionHistory(Long userId) throws UserNotFoundException{
+		Optional<User> user = userService.getUserById(userId);
+		try{
+
+			Set<Ticket> tx = user.get().getTickets();
+			ArrayList<String> newList = new ArrayList<String>();
+			//Map<String,String> mapz =  new HashMap<>();
+			ArrayList<tempStorage> temp  = new ArrayList<>();
+			for ( Ticket tix: tx){
+				System.err.println(tix.getTicketDetails());
+				boolean found = false;
+				String paymentId = tix.getPaymentId();
+				if ( temp.size() == 0){
+					tempStorage p = new tempStorage();
+					p.addCat(tix.getPaymentId());
+					p.addTix(0);
+					p.setPaymentId(paymentId);
+					p.setPurDate(tix.getPurchase_date());
+					temp.add(p);	
+					continue;
+				}
+				Iterator<tempStorage> iterator = temp.iterator();
+				while(iterator.hasNext()){
+					tempStorage t = iterator.next();
+					System.err.println("inside line 330" + t.getPaymentId() + "  " + paymentId);
+					//Already 
+					if ( t.getPaymentId().equals(paymentId) ){
+						System.err.println("insie line 333");
+						found = true;
+						boolean found2 = false;
+						String catName = "";
+						int counter = 0;
+						for ( String cat : t.getCategories() ){
+							System.err.println("insideline 339");
+							catName = tix.getCategory().getCategoryName();
+							if ( cat.equalsIgnoreCase(catName)){
+								System.err.println("insideline 342");
+								found2 = true;
+								t.addTix(counter);													
+							}
+							System.err.println("insideline 346");
+							counter++;
+
+						}
+						System.err.println("insideline 350");
+						if ( !found2 ){
+							System.err.println("insideline 352");
+							t.addCat(catName);
+							t.addTix(t.getCategories().size()-1);
+						}
+						//Not exists yet
+
+					}
+
+				}
+				if ( !found ){
+					System.err.println("inside not found!");
+					tempStorage p = new tempStorage();
+					p.addCat(tix.getPaymentId());
+					p.addTix(0);
+					p.setPaymentId(paymentId);
+					p.setPurDate(tix.getPurchase_date());
+					temp.add(p);			
+				}
+
+			}
+			Collections.sort(temp, new Comparator<tempStorage>() {
+				public int compare(tempStorage o1, tempStorage o2) {
+					return o1.getPurDate().compareTo(o2.getPurDate());
+				}});
+			for ( tempStorage tempS : temp){
+				newList.add(tempS.toString());
+			}
+
+
+			return newList;
+		}
+		catch(Exception exp){
+			exp.printStackTrace();
+		}
+		return new ArrayList<String>();
+
+	}
+
 	public String generateTicket(User user, String paymentId, int numTickets, Long categoryId){
 		String uuid = "";
 		Category c = categoryRepository.findOne(categoryId);
@@ -351,7 +494,7 @@ public class TicketingServiceImpl implements TicketingService {
 
 
 			HashMap<String,Object> parameters = new HashMap<String,Object>();
-			String toPut = c.getEvent().getEvent_title() +"\n"+ " 1 "+  c.getCategoryName();
+			String toPut = "Event name: " + c.getEvent().getEvent_title() +"\n"+ " 1 "+  c.getCategoryName() +" ticket" +  "\n" + "Payment ID: " + paymentId;
 			System.out.println(toPut);
 			parameters.put("ticketInformation",toPut );
 			parameters.put("qrcode",filePath );

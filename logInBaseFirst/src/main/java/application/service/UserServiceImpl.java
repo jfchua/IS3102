@@ -205,6 +205,9 @@ public class UserServiceImpl implements UserService {
 		}
 		catch ( UserNotFoundException e ){			
 		}
+		for ( Role r : roles){
+			System.err.println(r.getName());
+		}
 		try{
 			//CREATE USER START
 			User user = new User();
