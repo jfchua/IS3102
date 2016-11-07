@@ -15,7 +15,7 @@ app.factory('Auth', function($window, $sessionStorage){
 				user = aUser;
 				//console.log("User " + user.name +" is set");
 				  sessionStorage.setItem('user', JSON.stringify(user));
-				  //console.log(sessionStorage.getItem('user'));
+				  sessionStorage.setItem('clientOrg', (user.principal.user.clientOrganisation.organisationName));
 				  console.log("token is set");
 				  for (i = 0; i<user.authorities.length;i++) {
 						userRoles [i] = user.authorities[i].authority;
