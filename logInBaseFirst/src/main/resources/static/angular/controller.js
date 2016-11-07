@@ -9,24 +9,18 @@ app.controller('passController', function($scope) {
     $scope.headingTitle = "Pass List";
 });
 
-app.controller('dashboardStateController', ['$state', '$stateParams', '$sessionStorage', '$location', '$window', function($state, $stateParams, $sessionStorage, $location, $window) {
-    //$scope.headingTitle = "Pass List";
-		console.log($stateParams);
-		console.log($stateParams.param);
-
+app.controller('dashboardStateController', ['$state', '$stateParams', '$sessionStorage', '$location',  function($state, $stateParams, $sessionStorage, $location) {
 		//this handles changing client organisation forcefully
 	    if ($stateParams.param != sessionStorage.getItem('clientOrg')){
 			event.preventDefault();
 			console.log(sessionStorage.getItem('clientOrg'));
 			console.log($stateParams.param);
 	    	$stateParams.param = sessionStorage.getItem('clientOrg');
-	    	//$state.reload();
 	    	console.log($stateParams.param);
 	    	alert('Error attempting to access beyond your organisation');
-			//$location.path('/dashboard/'+ ($stateParams.param)+'/workspace');
 			console.log("session at error attempting... in controller");
 			console.log($location.path());
 			$state.reload();	
-	    }
-	   	  }
+	    	}
+	}
 ]);
