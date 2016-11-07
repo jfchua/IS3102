@@ -60,7 +60,7 @@
 						<ul class="list-group" name="units">
 							<li ng-repeat="unit in selectedUnits" class="list-group-item"
 								style="display: inline;">{{unit.unitNumber}}
-								<button ng-click="deleteUnit(unit)">
+								<button ng-click="deleteUnit(unit); checkAvail()">
 									<i class="glyphicon glyphicon-trash"></i>
 								</button>
 							</li>

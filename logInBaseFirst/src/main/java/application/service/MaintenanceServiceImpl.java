@@ -59,7 +59,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         Set<MaintenanceSchedule> schedule = new HashSet<MaintenanceSchedule>();
         maint.setMaintenanceSchedule(schedule);
         String[] units = unitsId.split(" ");
-  		System.out.println(units[0]);
+        System.err.println(unitsId);
   		String[] vendors = vendorsId.split(" ");
   		//check role
   		/*
@@ -92,14 +92,15 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 					return false;
 				int count = maintenanceScheduleRepository.getNumberOfMaintenanceSchedules(uId, d1, d2);
 				int count2 = bookingApplRepository.getNumberOfBookings(uId, d1, d2);
+				System.err.println("for save maintenance count "+ count + " " + count2);
 				if((count != 0)||(count2!=0)){
 					isAvailable = false;
 					break;
 				}
 			}
 		}
-
-
+        System.err.println(isAvailable);
+ 
 		if(isAvailable){
 			 Set<Vendor> vendorList = maint.getVendors();
 			for(int i = 0; i<vendors.length; i ++){
@@ -195,13 +196,26 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 		            BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
 		            MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
 		            //System.out.println(b.getId());
-		            Maintenance maintFromSchedule = m.getMaintenance();
+		           // Maintenance maintFromSchedule = m.getMaintenance();
 		            //Event eventFromB = b.getEvent(); 
 		            //b is not null           
-		            if(!(maint.getId().equals(maintFromSchedule.getId()))||(b!=null)){
+		            /*if(!(maint.getId().equals(maintFromSchedule.getId()))||(b!=null)){
 		            	isAvailable = false;
 		            	break;
-		            }
+		            }*/
+		            Maintenance maintFromM = new Maintenance(); 
+					if(m!=null){
+						maintFromM  = m.getMaintenance();  
+						System.err.println(maintFromM.getDescription());
+						if(!(maint.getId().equals(maintFromM.getId()))){
+							isAvailable = false;
+							break;
+						}
+					}
+					else if(b!=null){
+						isAvailable = false;
+						break;
+					}
 				}
 				}
 				System.err.println("is available"+isAvailable);
@@ -440,10 +454,10 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 @Override
 public boolean checkAvailability(ClientOrganisation client, User user, String unitsId, Date start, Date end) {
 	Set<User> users = userRepository.getAllUsers(client);
-	boolean doesHave = false;
+	//boolean doesHave = false;
 	String[] units = unitsId.split(" ");
-	System.out.println(units[0]);
-	for(User u: users){
+	System.err.println(unitsId);
+	/*for(User u: users){
 		Set<Role> roles = u.getRoles();
 		for(Role r: roles){
 			if(r.getName().equals("ROLE_PROPERTY") && u.equals(user))
@@ -451,7 +465,7 @@ public boolean checkAvailability(ClientOrganisation client, User user, String un
 		}
 	}
 	if(!doesHave)
-		return false;
+		return false;*/
 	Date d1 = start;
 	Date d2 = end;
 	if(d1.compareTo(d2)>0)
@@ -464,9 +478,10 @@ public boolean checkAvailability(ClientOrganisation client, User user, String un
 			Unit unit = unit1.get();
 			if(!checkUnit(client, unit.getId()))
 				return false;
-			int count = bookingApplRepository.getNumberOfBookings(uId, d1, d2);
-			int count2 = maintenanceScheduleRepository.getNumberOfMaintenanceSchedules(uId, d1, d2);
-			if((count != 0)||(count2 != 0)){
+			int count = maintenanceScheduleRepository.getNumberOfMaintenanceSchedules(unit.getId(), d1, d2);
+			int count2 = bookingApplRepository.getNumberOfBookings(unit.getId(), d1, d2);
+			System.err.println("for save maintenance count "+ count + " " + count2);
+			if((count != 0)||(count2!=0)){
 				isAvailable = false;
 				break;
 			}
@@ -542,9 +557,17 @@ public boolean checkAvailabilityForUpdate(ClientOrganisation client, User user, 
 					System.out.println("elseeee");
 					BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
 					MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
-					System.out.println(b.getId());
-					Maintenance maintFromM = m.getMaintenance();          
-					if(!(maint.getId().equals(maintFromM.getId()))||(m!=null)){
+					//System.out.println(b.getId());
+					Maintenance maintFromM = new Maintenance(); 
+					if(m!=null){
+						maintFromM  = m.getMaintenance();  
+						System.err.println(maintFromM.getDescription());
+						if(!(maint.getId().equals(maintFromM.getId()))){
+							isAvailable = false;
+							break;
+						}
+					}
+					else if(b!=null){
 						isAvailable = false;
 						break;
 					}
