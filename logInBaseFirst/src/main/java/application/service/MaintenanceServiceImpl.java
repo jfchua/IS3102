@@ -6,10 +6,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import application.entity.BookingAppl;
@@ -19,11 +21,14 @@ import application.entity.Event;
 import application.entity.Level;
 import application.entity.Maintenance;
 import application.entity.MaintenanceSchedule;
+import application.entity.PaymentPlan;
 import application.entity.Role;
 import application.entity.Unit;
 import application.entity.User;
 import application.entity.Vendor;
+import application.exception.UserNotFoundException;
 import application.repository.BookingApplRepository;
+import application.repository.ClientOrganisationRepository;
 import application.repository.MaintenanceRepository;
 import application.repository.MaintenanceScheduleRepository;
 import application.repository.UnitRepository;
@@ -37,12 +42,15 @@ public class MaintenanceServiceImpl implements MaintenanceService {
      private final MaintenanceScheduleRepository maintenanceScheduleRepository;
      private final UnitRepository unitRepository;
      private final BookingApplRepository bookingApplRepository;
+     private final ClientOrganisationRepository clientOrganisationRepository;
+     private final MessageService messageService;
      private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
  	@Autowired
  	public MaintenanceServiceImpl(VendorRepository vendorRepository, MaintenanceRepository maintenanceRepository, 
  			 UserRepository userRepository, UnitRepository unitRepository, BookingApplRepository bookingApplRepository,
- 			 MaintenanceScheduleRepository maintenanceScheduleRepository) {
+ 			 MaintenanceScheduleRepository maintenanceScheduleRepository, ClientOrganisationRepository clientOrganisationRepository,
+ 			MessageService messageService) {
  		//super();
  		this.vendorRepository = vendorRepository;
  		this.unitRepository = unitRepository;
@@ -50,6 +58,8 @@ public class MaintenanceServiceImpl implements MaintenanceService {
  		this.userRepository = userRepository;
 		this.bookingApplRepository = bookingApplRepository;
 		this.maintenanceScheduleRepository= maintenanceScheduleRepository;
+		this.clientOrganisationRepository = clientOrganisationRepository;
+		this.messageService  = messageService;
  	}
 		
 	@Override
@@ -135,7 +145,8 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 			}
         	  maint.setDescription(description);
         	  maint.setStart(start);
-        	  maint.setEnd(end);        	 
+        	  maint.setEnd(end);    
+        	  maint.setClient(client.getId());
         	  //maint.setVendors(vendorList);
         	  maintenanceRepository.save(maint);      	  
 			}
@@ -615,5 +626,37 @@ public Optional<MaintenanceSchedule> getScheduleById(long id) {
 	return Optional.ofNullable(maintenanceScheduleRepository.findOne(id));
 }
 
-
+@Override
+//@Scheduled(fixedRate = 60000)
+@Scheduled(fixedRate = 86400000)
+public void alertForUpcomingMaintenance() throws UserNotFoundException {
+	// TODO Auto-generated method stub
+	System.out.println("START*****");
+	Set<Maintenance> maints = maintenanceRepository.fetchAllMaintenances();
+	for(Maintenance m : maints){
+		Date start = m.getStart();
+		Calendar cal = Calendar.getInstance();
+		long diff = start.getTime() - cal.getTime().getTime();
+		long diff1 = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+		if(diff1 == 3){			
+		    ClientOrganisation client =clientOrganisationRepository.findOne(m.getClient());
+		    Set<User> users = client.getUsers();
+		    Set<User> managers = new HashSet<User>();
+		    User admin = null;
+		    for(User u : users){
+		    	Set<Role> roles = u.getRoles();
+				for(Role r : roles){
+					if(r.getName().equals("ROLE_PROPERTY"))
+						managers.add(u);
+					else if(r.getName().equals("ROLE_ADMIN"))
+						admin = u;
+				}
+		    }
+		    for(User u1 : managers){
+		    	messageService.sendMessage(admin, u1, "Upcoming Maintenance", "There is an upcoming maintenance with id " +m.getId()
+		    	+ " and description for " +m.getDescription());
+		    }
+		}
+	}
+}
 }
