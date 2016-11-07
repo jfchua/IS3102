@@ -147,11 +147,11 @@ public class SpecialRateController {
 				// Call $http.post(URL,(String)id);
 				@RequestMapping(value = "/deleteRate", method = RequestMethod.POST)
 				@ResponseBody
-				public ResponseEntity<Void> deleteRate(@RequestBody String rateJSON, HttpServletRequest rq) throws UserNotFoundException {
+				public ResponseEntity<String> deleteRate(@RequestBody String rateJSON, HttpServletRequest rq) throws UserNotFoundException {
 					Principal principal = rq.getUserPrincipal();
 					Optional<User> usr = userService.getUserByEmail(principal.getName());
 					if ( !usr.isPresent() ){
-						return new ResponseEntity<Void>(HttpStatus.CONFLICT); //NEED ERROR HANDLING BY RETURNING HTTP ERROR
+						return new ResponseEntity<String>(HttpStatus.CONFLICT); //NEED ERROR HANDLING BY RETURNING HTTP ERROR
 					}
 					try{
 					    ClientOrganisation client = usr.get().getClientOrganisation();
@@ -160,13 +160,16 @@ public class SpecialRateController {
 						JSONObject jsonObject = (JSONObject) obj;
 						long rateId = (Long)jsonObject.get("id");
 						System.out.println(rateId);	
+						boolean bl1 = specialRateService.checkRate(client, rateId);
+						if(!bl1)
+							return new ResponseEntity<String>(geeson.toJson("Deleting a special rate attached to current events is not allowed."), HttpStatus.INTERNAL_SERVER_ERROR);
 						boolean bl=specialRateService.deleteSpecialRate(client, rateId);
 						System.out.println(bl);	
 					}
 					catch (Exception e){
-						return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+						return new ResponseEntity<String>(HttpStatus.CONFLICT);
 					}
-					return new ResponseEntity<Void>(HttpStatus.OK);
+					return new ResponseEntity<String>(HttpStatus.OK);
 				}	
 			
 				//This method takes in a JSON format which contains an object with 5 attributes
@@ -190,7 +193,11 @@ public class SpecialRateController {
 			            System.out.println(rate);
 			            System.out.println("rate2");
 						String period = (String)jsonObject.get("period");
-						String description = (String)jsonObject.get("description");		
+						String description = (String)jsonObject.get("description");	
+						boolean bl1 = specialRateService.checkRate(client, rateId);
+						System.err.println("attached to any events? "+ bl1);
+						if(!bl1)
+							return new ResponseEntity<String>(geeson.toJson("Updating a special rate attached to current events is not allowed."), HttpStatus.INTERNAL_SERVER_ERROR);
 						boolean bl = specialRateService.updateSpecialRate(client, rateId, rate, description, period);
 						System.out.println("editing rate " + rateId);
 						if(!bl){

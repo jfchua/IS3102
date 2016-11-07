@@ -1,5 +1,6 @@
 package application.service;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
@@ -20,7 +21,7 @@ public interface SpecialRateService {
 	
 	Optional<SpecialRate> getSpecialRateById(long id);
 	
-	void checkRate(ClientOrganisation client, long id);
+	boolean checkRate(ClientOrganisation client, long id) throws ParseException;
 	
-	boolean checkPeriod(String period, String date);
+	boolean checkPeriod(String period, Date date) throws ParseException;
 }

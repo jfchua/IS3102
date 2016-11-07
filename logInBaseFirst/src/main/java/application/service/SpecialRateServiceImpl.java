@@ -1,7 +1,10 @@
 package application.service;
 
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
@@ -126,10 +129,12 @@ public class SpecialRateServiceImpl implements SpecialRateService {
 		return Optional.ofNullable(specialRateRepository.findOne(id));
 	}
 	@Override
-	public void checkRate(ClientOrganisation client, long id) {
+	public boolean checkRate(ClientOrganisation client, long id) throws ParseException {
 		// TODO Auto-generated method stub
 		SpecialRate sp = Optional.ofNullable(specialRateRepository.findOne(id)).get();
 		Set<User> users = client.getUsers();
+		Calendar cal1 = Calendar.getInstance();
+		Date today = cal1.getTime();
 		for(User u: users){
 			Set<Role> roles = u.getRoles();
 			for(Role r: roles){
@@ -139,22 +144,44 @@ public class SpecialRateServiceImpl implements SpecialRateService {
 						Date start = e.getEvent_start_date();
 						Date end = e.getEvent_end_date();
 						if(DateUtils.isSameDay(start, end)){
-							if(checkPeriod(sp.getPeriod(), String.valueOf(start)) && e.getPaymentPlan() == null)
-								messageService.sendMessage(sender, e.getEventOrg(), "Changes in your event payment", msg)
+							if(checkPeriod(sp.getPeriod(), start) && e.getPaymentPlan() == null && today.before(start))
+								return false;
 						}else{
-						while(!DateUtils.isSameDay(start, end)){
-							
+							Calendar date = Calendar.getInstance();
+							date.setTime(start);
+						while(!DateUtils.isSameDay(date.getTime(), end)){
+							if(checkPeriod(sp.getPeriod(), date.getTime()) && e.getPaymentPlan() == null && today.before(start))
+								return false;
+							else
+								date.add(Calendar.DAY_OF_MONTH, 1);
 						}	
 						}
 					}
 				}				
 			}
 		}
+		return true;
 	}
+	
 	@Override
-	public boolean checkPeriod(String period, String date) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean checkPeriod(String period, Date date) throws ParseException {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		int month = cal.get(Calendar.MONTH);
+		String monthString = new DateFormatSymbols().getMonths()[month].substring(0,3);
+		DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+		if(period.equals(monthString.toUpperCase())){
+			return true;
+		}
+		else if ((period.length()!=3)&&(period.length()!=7) && DateUtils.isSameDay(sdf.parse(period),date)){
+			return true;
+		}
+		else if(((dayOfWeek == Calendar.SATURDAY)||(dayOfWeek == Calendar.SUNDAY))&&(period.equals("weekend"))){
+			return true;
+		}
+		else
+		    return false;
 	}
 
 }

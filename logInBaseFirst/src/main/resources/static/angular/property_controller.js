@@ -1317,7 +1317,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					//$state.go("dashboard.viewAllRates");
+					$state.go("dashboard.viewAllRates");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -1387,7 +1387,7 @@ app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData
 							templateUrl: "views/errorMessageTemplate.html",
 							controller: "errorMessageModalController",
 							inputs: {
-								message: 'Error deleting the special rate'
+								message: response.data,
 							}
 						}).then(function(modal) {
 							modal.element.modal();
