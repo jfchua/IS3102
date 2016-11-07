@@ -1,8 +1,8 @@
 app.controller('workspaceController', function ($scope, $http,shareData,Auth) {
  angular.element(document).ready(function () {
 	 $scope.$parent.eventSources.length=0;
-	   	console.log( $scope.eventSources);
-	   	console.log( $scope.$parent.eventSources);
+	   	//console.log( $scope.eventSources);
+	   	//console.log( $scope.$parent.eventSources);
 		
 		//VIEW EVENTS
 		if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
@@ -31,8 +31,8 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 	
 	 angular.element(document).ready(function () {
 		 //angular.element(document.getElementById('body-container')).ready(function () {
-		 console.log("in dashboard");
-		 console.log(Auth.getUser());
+		// console.log("in dashboard");
+		 //console.log(Auth.getUser());
 		 var userObj=Auth.getUser();
 
 		 var client=userObj.principal.user.clientOrganisation;
@@ -43,14 +43,14 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 			 $scope.logo = client.logoFilePath;
 		 else
 			 $scope.logo="img/ifms.png";
-		 console.log($scope.logo);
+		 //console.log($scope.logo);
 		 //CHANGE THEME COLOUR
 		 if(client.themeColour){
 			 $('<link>')
 			 .appendTo('head')
 			 .attr({type : 'text/css', rel : 'stylesheet'})
 			 .attr('href', 'css/styles/app-'+client.themeColour+'.css');
-			 console.log("THEME IS "+client.themeColour);
+			// console.log("THEME IS "+client.themeColour);
 		 }
 		 //GET USER NAME
 		 $scope.userName=userObj.principal.user.name;
@@ -178,7 +178,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				    	}
 				    });
 				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
-				    console.log( $scope.eventSources);
+				    //console.log( $scope.eventSources);
 					}
 			},function(response){
 				//alert(response);
@@ -266,7 +266,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				    	}
 				    });
 				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
-				    console.log( $scope.eventSources);
+				  //  console.log( $scope.eventSources);
 					}
 			},function(response){
 				//alert(response);
@@ -348,7 +348,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 					}).success(function (result) {
 						$scope.saved = result;
 						//$state.reload();
-						console.log("test");
+						
 			
 					
 					}).error(function(result){
@@ -396,8 +396,8 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 								//GET TODOS	
 								getTdList();
 								$scope.eventSources.length=0;
-								console.log("after add");
-								console.log($scope.eventSources);
+								//console.log("after add");
+								//console.log($scope.eventSources);
 								//VIEW EVENTS
 								if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
 									console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");
@@ -465,8 +465,8 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 									
 								}*/
 								$scope.eventSources.length=0;
-								console.log("after add");
-								console.log($scope.eventSources);
+								//console.log("after add");
+								//console.log($scope.eventSources);
 								//VIEW EVENTS
 								/*if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
 									console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");

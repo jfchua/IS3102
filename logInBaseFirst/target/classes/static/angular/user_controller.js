@@ -44,12 +44,9 @@ $scope.verified = false;
 				console.log("VERIFIED WITH NAME: " + response.name);
 				$rootScope.authenticated = true;
 				Auth.setUser(response);
-				//$location.path("/workspace");
-				console.log(response);
 				console.log(response);
 				console.log(response.principal.user.clientOrganisation.organisationName);
-					$state.go('dashboard', {org :response.principal.user.clientOrganisation.organisationName});
-					//$state.go('dashboard.workspace');
+				$state.go('dashboard', {param :response.principal.user.clientOrganisation.organisationName});
 				//return true;
 			} else {
 				console.log("NO VERIFIED");
@@ -84,15 +81,11 @@ $scope.verified = false;
 		authenticate(self.credentials, function() {
 			console.log("got true or false from authenticate");
 			if ($rootScope.authenticated) {
-				//$location.path("/dashboard/workspace");
-				
 				console.log("LOGGED IN");
 				self.error = false;
-
 			} else {
 				console.log("NOT LOGGED IN");
 				$location.path("/login");
-
 				self.error = true;
 			}
 		});

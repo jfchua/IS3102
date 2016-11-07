@@ -91,12 +91,12 @@
             </li>
             
             <li  ng-show="IsExtEve()" ng-controller="AccountController" class="active">
-			<a href="#">
+			<a ui-sref="dashboard.viewFloorPlanEx">
 					<span class="fa fa-building"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
-					<li class="sidemenu-header">{{ 'Property Details(To Be Added)' | translate }}</li>
-					<li><a  href="#">{{ 'View Property' | translate }}</a></li>
+					<li class="sidemenu-header">{{ 'Property Details' | translate }}</li>
+					<li><a  ui-sref="dashboard.viewFloorPlanEx">{{ 'View Property' | translate }}</a></li>
 				</ul>
             </li>
 			
