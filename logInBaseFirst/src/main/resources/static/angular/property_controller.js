@@ -506,10 +506,10 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 					},function(response){
 						ModalService.showModal({
 
-							templateUrl: "views/errorpMessageTemplate.html",
+							templateUrl: "views/errorMessageTemplate.html",
 							controller: "errorMessageModalController",
 							inputs: {
-								message: response
+								message: response.data,
 							}
 						}).then(function(modal) {
 							modal.element.modal();
@@ -913,65 +913,83 @@ app.controller('levelController', ['$scope', '$http','shareData','$state','Modal
 	}
 
 	$scope.deleteLevel = function(){
-		if(confirm('CONFIRM TO DELETE LEVEL '+$scope.level.levelNum+'?')){
-			$scope.data = {};
-			console.log("Start deleting");
-			//$scope.level = shareData.getData();
-			console.log($scope.level.id);
-			var tempObj ={levelId:$scope.level.id};
-			console.log("fetch id "+ tempObj);
-			//var buildings ={name: $scope.name, address: $scope.address};
-			$http.post("//localhost:8443/level/deleteLevel", JSON.stringify(tempObj)).then(function(response){
-				//$scope.buildings = response.data;
-				console.log("Delete the LEVEL");
-				shareData.addData(building); 
-				console.log(building);
-				ModalService.showModal({
+		
+		
+		
+		ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: "Do you wish to delete level " +$scope.level.levelNum+' ?',
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					console.log("START DELETE");
+					$scope.data = {};
+					var tempObj ={levelId:$scope.level.id};
+					console.log("fetch id "+ tempObj);
 
-					templateUrl: "views/popupMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: 'Level '+$scope.level.levelNum+' deleted successfully! Going back to view levels'
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-						$state.go("dashboard.viewLevels");
-					});
-				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
+					$http.post("//localhost:8443/level/deleteLevel", JSON.stringify(tempObj)).then(function(response){
+						//$scope.buildings = response.data;
+						console.log("Delete the LEVEL");
+						ModalService.showModal({
 
-					console.log("in dissmiss");
-				};
-				$state.go("dashboard.viewLevels");
-			},function(response){
-				ModalService.showModal({
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Level successfully deleted',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								//$state.go("dashboard.viewLevels");
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
 
-					templateUrl: "views/errorMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: 'Error in deleting level'
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-						$state.go("dashboard.viewLevels");
-					});
-				});
-				$scope.dismissModal = function(result) {
-					close(result, 200); // close, but give 200ms for bootstrap to animate
-
-					console.log("in dissmiss");
-				};
-				//console.log("response is : ")+JSON.stringify(response);
-			}	
-			)
-		}
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+						//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
+						//$location.path("/viewBuilding");
 
 
+					},function(response){
+						//console.log(reponse);
+						ModalService.showModal({
+                    
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: response.data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								//$state.go("dashboard.viewLevels");
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+					}	
+					)
+				}
+			});
+		});
+
+		$scope.dismissModal = function(result) {
+			close(result, 200); // close, but give 200ms for bootstrap to animate
+
+			console.log("in dissmiss");
+		};
 	}
 
 }]);	
