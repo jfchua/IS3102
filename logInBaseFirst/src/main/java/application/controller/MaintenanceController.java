@@ -272,30 +272,36 @@ public class MaintenanceController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/checkAvailabilityForUpdate", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> checkAvailabilityForUpdate( String eventJSON,
+	public ResponseEntity<Void> checkAvailabilityForUpdate(@RequestBody String eventJSON,
 			HttpServletRequest rq) throws UserNotFoundException {
 		System.out.println("start check availability for events");
 		DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
 		Principal principal = rq.getUserPrincipal();
 		System.out.println(principal.getName());
 		Optional<User> user1 = userService.getUserByEmail(principal.getName());
+		System.err.println("111");
 		if ( !user1.isPresent() ){
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 		try{
+			System.err.println("112");
+			System.err.println(eventJSON);
 			User user = user1.get();
 			ClientOrganisation client = user.getClientOrganisation();
 			System.out.println(user.getName());
 			Object obj = parser.parse(eventJSON);
+			System.err.println("113");
 			JSONObject jsonObject = (JSONObject) obj;
+			System.err.println("114");
 			long maintId = (Long)jsonObject.get("id");
+			System.err.println(maintId);
 			JSONArray units = (JSONArray)jsonObject.get("units");
 			String unitsId = "";
 			for(int i = 0; i < units.size(); i++){
 				JSONObject unitObj = (JSONObject)units.get(i);		
-				System.out.println(unitObj.toString());
+				System.err.println("HAHAHA");
 				long unitId = (Long)unitObj.get("id");
-				System.out.println(unitId);
+				//System.out.println(unitId);
 				unitsId = unitsId+unitId + " ";
 				System.out.println(unitsId);
 			}
