@@ -50,10 +50,10 @@ public class User {
 	@Column(name = "password_hash", nullable = false)
 	private String passwordHash;
 
-	@Column(name = "security", nullable = false)
+	@Column(name = "security", nullable = true)
 	private String security;
 	
-	@Column(name = "security_question", nullable = false)
+	@Column(name = "security_question", nullable = true)
 	private String securityQuestion;
 	
 	//// CREATE NEW USER//////////////	
@@ -254,7 +254,8 @@ public class User {
 		return securityQuestion;
 	}
 
-	public void setsecurityQuestion(String securityQuestion) {
+	public void setSecurityQuestion(String securityQuestion) {
 		this.securityQuestion = securityQuestion;
 	}
+
 }
