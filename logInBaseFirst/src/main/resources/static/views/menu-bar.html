@@ -14,7 +14,7 @@
 			
 			<li  ng-show="IsUser()" ng-controller="AccountController" class="active">
 			<a ui-sref="dashboard.new">
-					<span class="glyphicon glyphicon-bell"></span>
+					<span class="glyphicon glyphicon-send"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Notification' | translate }}</li>
@@ -28,7 +28,7 @@
 			<li ng-show="IsProperty()" ng-controller="AccountController"
 						class="active">
 				<a ui-sref="dashboard.viewBuilding">
-					<span class="glyphicon glyphicon-road"></span>
+					<span class="fa fa-building-o"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Property' | translate }}</li>
@@ -42,7 +42,7 @@
 			
         <li ng-show="IsProperty()" ng-controller="AccountController" class="active">
 			<a ui-sref="dashboard.viewAllVendors">
-					<span class="glyphicon glyphicon-pawn"></span>
+					<span class="fa fa-wrench"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Vendor' | translate }}</li>
@@ -52,7 +52,7 @@
             </li>
           <li ng-show="IsProperty()" ng-controller="AccountController" class="active">
 			<a ui-sref="dashboard.viewMaintenance">
-					<span class="glyphicon glyphicon-list-alt"></span>
+					<span class="fa fa-table"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Maintenance' | translate }}</li>
@@ -65,7 +65,7 @@
 			<li ng-show="IsEvent()" ng-controller="AccountController"
 						class="active">
 				<a ui-sref="dashboard.viewAllEvents">
-					<span class="glyphicon glyphicon-list-alt"></span>
+					<span class="glyphicon glyphicon-calendar"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Manage Event' | translate }}</li>
@@ -92,7 +92,7 @@
             
             <li  ng-show="IsExtEve()" ng-controller="AccountController" class="active">
 			<a href="#">
-					<span class="glyphicon glyphicon-road"></span>
+					<span class="fa fa-building"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Property Details(To Be Added)' | translate }}</li>
@@ -102,7 +102,7 @@
 			
 			<li ng-show="IsAdmin()" ng-controller="AccountController" class="active">
 				<a ui-sref="dashboard.createNewUser">
-					<span class="glyphicon glyphicon-king"></span>
+					<span class="fa fa-users"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Users' | translate }}</li>
@@ -136,7 +136,7 @@
 			
 			 <li ng-show="IsSuperAdmin()" ng-controller="AccountController" class="active">
 				<a ui-sref="dashboard.viewClientOrgs">
-					<span class="glyphicon glyphicon-queen"></span>
+					<span class="fa fa-institution"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Client Organisation' | translate }}</li>
@@ -148,7 +148,7 @@
 			
 		<li  ng-show="IsFinance()" ng-controller="AccountController" class="active">
 			<a ui-sref="dashboard.viewAllPaymentPlans">
-					<span class="glyphicon glyphicon-blackboard"></span>
+					<span class="glyphicon glyphicon-piggy-bank"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Payment' | translate }}</li>
@@ -162,14 +162,14 @@
 			
 			
 				
-		<li  ng-show="IsUser()" ng-controller="AccountController" class="active">
+		<li  ng-show="IsManager()" ng-controller="AccountController" class="active">
 			<a ui-sref="dashboard.viewDataVisual">
-					<span class="glyphicon glyphicon-blackboard"></span>
+					<span class="fa fa-bar-chart-o"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Data Visualisation' | translate }}</li>
 					<li><a  ui-sref="dashboard.viewDataVisual">{{ 'View Event Data' | translate }}</a></li>
-					<li><a  ui-sref="dashboard.viewTestData">{{ 'View Property Data' | translate }}</a></li>
+					<li><a  ui-sref="dashboard.viewDataVisual">{{ 'View Property Data' | translate }}</a></li>
 				</ul>
             </li>
 		</ul>

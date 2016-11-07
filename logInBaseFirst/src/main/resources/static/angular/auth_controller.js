@@ -99,5 +99,11 @@ app.controller('AccountController', function($scope, Auth) {
 	$scope.IsSuperAdmin = function(){
 		return Auth.hasRoles('ROLE_SUPERADMIN');
 	}
+	$scope.IsTicketing = function(){
+		return Auth.hasRoles('ROLE_TICKETING');
+	}
+	$scope.IsManager = function(){
+		return Auth.hasRoles('ROLE_HIGHER');
+	}
 
 });
