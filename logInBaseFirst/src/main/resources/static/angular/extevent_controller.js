@@ -514,6 +514,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 
 		$scope.currentlySelectedUnit;
 		$scope.selectUnit = function(){
+			//ADD EVENTS AND MAINTS OF CURRENTLY SELECT UNIT
 			$scope.haha.length=0;
 			console.log("currently selected unit bookings");
 			console.log($scope.currentlySelectedUnit.bookings);
@@ -522,6 +523,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			console.log("currently selected unit schedules");
 			console.log($scope.currentlySelectedUnit.schedule);
 			getMaints($scope.currentlySelectedUnit.schedule);//put here or after for loop
+			//CHECK AND PREVENT DOUBLE SELECTION OF THE SAME UNIT
 			var duplicate = false;
 			var index = 0;
 			angular.forEach($scope.selectedUnits, function() {

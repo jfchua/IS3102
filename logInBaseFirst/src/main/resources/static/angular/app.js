@@ -75,9 +75,9 @@ var app = angular.module('app', [ 'ui.router',
                                 				  }
                                 			  })
                                 			  .state('dashboard',{
-                                				  url:'/dashboard',
+                                				  url:'/dashboard/:param',
                                 				  templateUrl: 'views/index.html',
-                                				  controller: 'UserController',
+                                				  controller: 'dashboardStateController',
                                 				  data: {
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
