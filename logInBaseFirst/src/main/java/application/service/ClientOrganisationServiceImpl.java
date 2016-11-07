@@ -91,7 +91,7 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 			user.setEmail(adminEmail);
 			user.setName(nameAdmin);
 			user.setSecurity("5");
-			//Create and set random password
+			user.setsecurityQuestion("favourite number");
 			SecureRandom random = new SecureRandom();
 			String t = new BigInteger(130,random).toString(32);
 			String password =  t.substring(0,10);		

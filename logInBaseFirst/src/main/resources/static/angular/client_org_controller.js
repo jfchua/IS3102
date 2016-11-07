@@ -72,7 +72,108 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 	$scope.submit = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
-		console.log("** Passing data object of " + dataObj);
+		console.log("** Passing data object of");
+		//console.log($scope.clientOrg);
+		
+		if (!$scope.clientOrg|| !$scope.clientOrg.name || !$scope.clientOrg.address || !$scope.clientOrg.postal || !$scope.clientOrg.phone || !$scope.clientOrg.fee
+				||!$scope.clientOrg.start || !$scope.clientOrg.end || !$scope.clientOrg.nameAdmin || !$scope.clientOrg.email){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered all fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		
+		if (!(/^[0-9]{6}$/.test($scope.clientOrg.postal))){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered a valid postal code",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		
+		if ( $scope.clientOrg.phone.length < 3 ||  $scope.clientOrg.phone.length > 11 ||!(/^[0-9]+$/.test( $scope.clientOrg.phone))  ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered a valid contact number",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+
+		/*
+		if (!(/^.+@.+\\..+$/.test($scope.clientOrg.email))){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered a valid email address",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}*/
+			
+		
 		var dataObj = {
 				name: $scope.clientOrg.name,
 				email: $scope.clientOrg.email,
@@ -272,10 +373,11 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 	}
 	
 	$scope.showModal = function(profile,$parent) {
-		console.log("hahahaha");
-		console.log(profile);
+		//console.log("hahahaha");
+		//console.log(profile);
 		profile.start_date = new Date(profile.start_date);
 		profile.end_date = new Date(profile.end_date);
+		
 	    // Just provide a template url, a controller and call 'showModal'.
 		
 	    ModalService.showModal({
@@ -313,6 +415,79 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 		 $scope.updateClient=function(profile){
 			 console.log("Update the client other details");
 			
+			 if (!profile.address || !profile.organisationName || !profile.postal || !profile.phone || !profile.fee
+						||!profile.start_date || !profile.end_date){
+					ModalService.showModal({
+
+						templateUrl: "views/errorMessageTemplate.html",
+						controller: "errorMessageModalController",
+						inputs: {
+							message: "Ensure that you have entered all fields",
+						}
+					}).then(function(modal) {
+						modal.element.modal();
+						modal.close.then(function(result) {
+							console.log("OK");
+							$state.reload();
+						});
+					});
+
+					$scope.dismissModal = function(result) {
+						close(result, 200); // close, but give 200ms for bootstrap to animate
+
+						console.log("in dissmiss");
+					};
+					return;
+				}
+				
+				if (!(/^[0-9]{6}$/.test(profile.postal))){
+					ModalService.showModal({
+
+						templateUrl: "views/errorMessageTemplate.html",
+						controller: "errorMessageModalController",
+						inputs: {
+							message: "Ensure that you have entered a valid postal code",
+						}
+					}).then(function(modal) {
+						modal.element.modal();
+						modal.close.then(function(result) {
+							console.log("OK");
+                            $state.reload();
+						});
+					});
+
+					$scope.dismissModal = function(result) {
+						close(result, 200); // close, but give 200ms for bootstrap to animate
+
+						console.log("in dissmiss");
+					};
+					return;
+				}
+				
+				if ( profile.phone.length < 3 ||  profile.phone.length > 11 ||!(/^[0-9]+$/.test(profile.phone))  ){
+					ModalService.showModal({
+
+						templateUrl: "views/errorMessageTemplate.html",
+						controller: "errorMessageModalController",
+						inputs: {
+							message: "Ensure that you have entered a valid contact number",
+						}
+					}).then(function(modal) {
+						modal.element.modal();
+						modal.close.then(function(result) {
+							console.log("OK");
+							$state.reload();
+						});
+					});
+
+					$scope.dismissModal = function(result) {
+						close(result, 200); // close, but give 200ms for bootstrap to animate
+
+						console.log("in dissmiss");
+					};
+					return;
+				}
+				
 			// console.log("scope test3");
 		//	 console.log(   angular.element(document.getElementById('1')).scope());
 			  var dataObj = {
@@ -470,7 +645,7 @@ app.controller('updateOrgController', ['$scope', '$element', 'title', 'close', '
   $scope.title = title;
   $scope.profile=profile;
   console.log(title);
-  console.log(profile);
+  //console.log(profile);
   console.log($element);
   //  This close function doesn't need to use jQuery or bootstrap, because
   //  the button has the 'data-dismiss' attribute.
