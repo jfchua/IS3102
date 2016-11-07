@@ -45,11 +45,12 @@ $scope.verified = false;
 				$rootScope.authenticated = true;
 				Auth.setUser(response);
 				//$location.path("/workspace");
-				console.log(response);
+				
 				console.log(response);
 				console.log(response.principal.user.clientOrganisation.organisationName);
-					$state.go('dashboard', {org :response.principal.user.clientOrganisation.organisationName});
-					//$state.go('dashboard.workspace');
+				
+					$state.go('dashboard', {param :sessionStorage.getItem('clientOrg')});
+					
 				//return true;
 			} else {
 				console.log("NO VERIFIED");

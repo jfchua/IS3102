@@ -15,8 +15,9 @@ app.factory('Auth', function($window, $sessionStorage){
 				user = aUser;
 				//console.log("User " + user.name +" is set");
 				  sessionStorage.setItem('user', JSON.stringify(user));
-				  //console.log(sessionStorage.getItem('user'));
-				  console.log("token is set");
+				  sessionStorage.setItem('clientOrg', (user.principal.user.clientOrganisation.organisationName));
+				  console.log(sessionStorage.getItem('user'));
+				  console.log(sessionStorage.getItem('clientOrg'));
 				  for (i = 0; i<user.authorities.length;i++) {
 						userRoles [i] = user.authorities[i].authority;
 						console.log("Authority present is " + userRoles[i]);
@@ -98,12 +99,6 @@ app.controller('AccountController', function($scope, Auth) {
 
 	$scope.IsSuperAdmin = function(){
 		return Auth.hasRoles('ROLE_SUPERADMIN');
-	}
-	$scope.IsTicketing = function(){
-		return Auth.hasRoles('ROLE_TICKETING');
-	}
-	$scope.IsManager = function(){
-		return Auth.hasRoles('ROLE_HIGHER');
 	}
 
 });
