@@ -1,4 +1,4 @@
-/*app.run(['$rootScope', 'AUTH_EVENTS', 'Auth' ,'$location','$window', '$sessionStorage','$state','$stateParams','$http', function ($rootScope, AUTH_EVENTS, Auth, $location, $window , $sessionStorage, $state, $stateParams, $http) {
+app.run(['$rootScope', 'AUTH_EVENTS', 'Auth' ,'$location','$window', '$sessionStorage','$state','$stateParams','$http', function ($rootScope, AUTH_EVENTS, Auth, $location, $window , $sessionStorage, $state, $stateParams, $http) {
 
 			$rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 			
@@ -7,9 +7,9 @@
 				//no idea how to put multiple conditions together, && and || doesnt seem to work
 				if (fromState.name !== '/login' && toState.name !== '/login' 
 					&& toState.name !== 'dashboard' && fromState.name !== 'dashboard') {
+					
 					console.log(fromState.name);
 					console.log(toState.name);
-					if (fromState.name !== 'dashboard.workspace' && toState.name !== 'dashboard.workspace' ) {
 							if (sessionStorage.getItem('user') && $stateParams.org === undefined) {
 								console.log('statechange sessionStorage get item is not null');					
 								Auth.setUser(JSON.parse(sessionStorage.getItem('user')));	
@@ -22,7 +22,10 @@
 									
 									//console.log($rootScope.userInfo+" gathering /login details");
 									//console.log($rootScope.userInfo.client+ ' in second part');
-							else if ($stateParams.org != sessionStorage.getItem('clientOrg')){
+							else if ($stateParams.param != sessionStorage.getItem('clientOrg')){
+								console.log(toParams);
+								console.log(fromParams);
+
 											event.preventDefault();
 											console.log($stateParams.org);
 											$stateParams.org = sessionStorage.getItem('clientOrg');
@@ -33,7 +36,7 @@
 							//}
 						//}
 				
-				}
+							}
 					}
 				}
 			//	})
@@ -69,9 +72,9 @@
 			
 				
 			
-			/*
-				}
+			
+				
 			
 			);
 
-		}])*/
+		}])
