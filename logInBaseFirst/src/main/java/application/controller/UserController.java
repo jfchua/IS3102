@@ -428,8 +428,7 @@ public class UserController {
 				roles.add((String)rolesArr.get(i));
 			}
 			for (String r : roles ){
-				System.out.println(r);
-				Role tempR = roleRepository.getRoleByName(r.toUpperCase());
+				Role tempR = roleRepository.getRoleByName(r);
 				userRolesToAddIn.add(tempR);		
 				System.err.println(r);
 			}
@@ -669,6 +668,10 @@ public class UserController {
 			String oldpass = (String)jsonObject.get("oldpassword");
 			Principal principal = rq.getUserPrincipal();
 			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
+			System.out.println(currUser.getSecurity() + " " + currUser.getSecurityQuestion());
+			if (currUser.getSecurity() == null || currUser.getSecurityQuestion()  == null)
+				return new ResponseEntity<String>(gson.toJson("Please set a security question and anwser before resetting password"),HttpStatus.INTERNAL_SERVER_ERROR);
+
 			userService.checkOldPassword(currUser.getId(),oldpass);
 			if ( !userService.changePassword(currUser.getId(), pass) ){
 				return new ResponseEntity<String>(gson.toJson("Server error in changing password"),HttpStatus.INTERNAL_SERVER_ERROR);
