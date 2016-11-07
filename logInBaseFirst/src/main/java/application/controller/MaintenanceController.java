@@ -651,8 +651,8 @@ public class MaintenanceController {
 
 		sb.append("WHERE (CLIENT = ");
 		
-		sb.append(client.getId() + "  AND COMMENCE >= '");
-		sb.append(arr1[0] + " 00:00:00 ' AND COMMENCE <= '");
+		sb.append(client.getId() + "  AND START >= '");
+		sb.append(arr1[0] + " 00:00:00 ' AND START <= '");
 
 		
 		sb.append(arr2[0] +  " 23:59:59 ')");
