@@ -46,7 +46,7 @@ $scope.verified = false;
 				Auth.setUser(response);
 				console.log(response);
 				console.log(response.principal.user.clientOrganisation.organisationName);
-				$state.go('dashboard', {param :response.principal.user.clientOrganisation.organisationName});
+				$state.go('dashboard.workspace', {param :response.principal.user.clientOrganisation.organisationName});
 				//return true;
 			} else {
 				console.log("NO VERIFIED");

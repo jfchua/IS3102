@@ -10,30 +10,25 @@ app.run(['$rootScope', 'AUTH_EVENTS', 'Auth' ,'$location','$window', '$sessionSt
 					
 					console.log(fromState.name);
 					console.log(toState.name);
-							if (sessionStorage.getItem('user') && $stateParams.org === undefined) {
+							if (sessionStorage.getItem('user') && $stateParams.param === undefined) {
 								console.log('statechange sessionStorage get item is not null');					
 								Auth.setUser(JSON.parse(sessionStorage.getItem('user')));	
 							}
-							//can refresh, but cant refresh into change url
-								//if ($location.path() != '/login') {
-									//console.log($rootScope.userInfo+" gathering /login details");
-									//if ($location.path().indexOf($stateParams.org) != 11){
-								//if (($rootScope.userInfo !== undefined) && ($rootScope.userInfo !== null)) {
-									
-									//console.log($rootScope.userInfo+" gathering /login details");
-									//console.log($rootScope.userInfo.client+ ' in second part');
-							else if ($stateParams.param != sessionStorage.getItem('clientOrg')){
+							
+							if ($stateParams.param != sessionStorage.getItem('clientOrg')){
 								console.log(toParams);
 								console.log(fromParams);
-
-											event.preventDefault();
-											console.log($stateParams.org);
-											$stateParams.org = sessionStorage.getItem('clientOrg');
-											console.log(sessionStorage.getItem('clientOrg'));
-											alert('Error attempting to access beyond your organisation');
-											$location.path('/dashboard/'+ (sessionStorage.getItem('clientOrg'))+'/workspace');
-											$state.go('dashboard.workspace');
-							//}
+								console.log(fromState.name);
+								console.log(toState.name);
+								event.preventDefault();
+								console.log($stateParams.param);
+							    $stateParams.param = sessionStorage.getItem('clientOrg');
+								console.log(sessionStorage.getItem('clientOrg'));
+								//alert('Error attempting to access beyond your organisation');
+								//$location.path('/dashboard/'+ (sessionStorage.getItem('clientOrg'))+'/workspace');
+								console.log("session at error attempting...");
+								$state.go(toState.name, {param : $stateParams.param});					
+												//}
 						//}
 				
 							}
