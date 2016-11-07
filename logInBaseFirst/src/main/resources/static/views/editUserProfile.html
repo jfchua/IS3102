@@ -107,6 +107,12 @@
 							placeholder="Enter your old security answer" required>
 					</div>
 					<div class="form-group">
+						<label for="exampleInput">Select a security question</label> <div>
+							<select ng-model="selectedQuestion" required>
+								<option ng-repeat="x in question" value="{{x.question}}">{{x.question}}</option>
+							</select></div>
+					</div>
+					<div class="form-group">
 						<label for="exampleInput">Enter new security answer</label> <input
 							type="password" ng-model="userProfile.security1"
 							class="form-control" id="security1"
