@@ -161,19 +161,21 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-	public boolean changeSecurity(long id, String security) throws UserNotFoundException{
+	public boolean changeSecurity(long id, String security, String question) throws UserNotFoundException{
 
 
 		try{
 			Optional<User> user = getUserById(id);
 			System.out.println("Setting user with ID" + user.get().getId() + "to security " + security);
+			//Changing security answer
 			BCryptPasswordEncoder t = new BCryptPasswordEncoder();
 			String newSecurity = t.encode(security);
 			user.get().setSecurity(newSecurity);	
 			System.out.println("Set user with new security answer of " + newSecurity);
 			userRepository.saveAndFlush(user.get());
 			System.out.println("Set new password to " + user.get().getPasswordHash());
-
+			String securityQuestion = question;
+			user.get().setSecurityQuestion(securityQuestion);
 		}
 		catch ( UserNotFoundException e){
 			throw e;
@@ -229,7 +231,7 @@ public class UserServiceImpl implements UserService {
 
 			userRepository.save(user);
 			clientOrganisationRepository.save(clientOrg);
-			emailService.sendEmail(userEmail, "New IFMS account created", "Please log in using your email and this generated password: " + password);
+			emailService.sendEmail(userEmail, "New IFMS account created", "Please log in using your email and this generated password: " + password + " . Please remember to set your security question to have access to password retrieval services.");
 
 
 		}
