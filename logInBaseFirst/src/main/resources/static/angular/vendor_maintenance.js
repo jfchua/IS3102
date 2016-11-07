@@ -602,7 +602,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 		console.log("GETTING THE ALL UNITS INFO")
 		var getUnits = $http({
 			method  : 'POST',
-			url     : 'https://localhost:8443/property/viewUnits/',
+			url     : 'https://localhost:8443/property/viewUnitsWithBookings/',
 			data    : dataObj,
 		});
 		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
@@ -618,6 +618,17 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 
 		$scope.currentlySelectedUnit;
 		$scope.selectUnit = function(){
+			//ADD EVENTS AND MAINTS OF CURRENTLY SELECT UNIT
+			$scope.haha.length=0;
+			console.log("currently selected unit bookings");
+			console.log($scope.currentlySelectedUnit.bookings);
+
+			getEvents($scope.currentlySelectedUnit.bookings);
+			console.log("currently selected unit schedules");
+			console.log($scope.currentlySelectedUnit.schedule);
+			getMaints($scope.currentlySelectedUnit.schedule);//put here or after for loop
+			
+			//CHECK AND PREVENT DOUBLE SELECTION OF THE SAME UNIT
 			var duplicate = false;
 			var index = 0;
 			angular.forEach($scope.selectedUnits, function() {
@@ -836,6 +847,72 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 			//END SHOWMODAL
 		});
 	};
+	
+	$scope.uiConfig = {
+			calendar:{
+				width: 300,
+				editable:false,
+				header:{
+					left: 'month agendaWeek agendaDay',
+					center: 'title',
+					right: 'today prev,next'
+				},
+				eventClick: $scope.alertEventOnClick,
+				eventDrop: $scope.alertOnDrop,
+				eventResize: $scope.alertOnResize
+			}
+	};
+
+
+	$scope.haha=[];
+	//RETRIEVE EVENTS
+	//$scope.eventsFormated=[];
+	var getEvents = function(bookings){
+		//need to changed to same as workspace calendar view all events with status success approved,processing	
+		var index=0;
+		angular.forEach(bookings, function() {
+
+			var booking=[{start: bookings[index].event_start_date_time,
+				end: bookings[index].event_end_date_time,	         
+				title:'Booked',
+				allDay: false,
+				color: 'IndianRed',
+				overlap:false
+			}];
+
+			$scope.haha.push(booking);
+			index = index + 1;
+		});	
+
+
+
+
+	}
+	// getEvents(); 
+
+
+	//RETRIEVE MAINTENANCES
+	//$scope.eventsFormated=[];
+	var getMaints = function(schedules){
+		var index=0;
+		angular.forEach(schedules, function() {
+
+			var maint=[{start: schedules[index].start_time,
+				end: schedules[index].end_time,	         
+				title:"Maintenance",
+				allDay: false,
+				color: 'SteelBlue'
+			}];
+
+			$scope.haha.push(maint);
+			index = index + 1;
+		});
+		//var buildings ={name: $scope.name, address: $scope.address};
+		console.log( $scope.haha);
+
+
+	}
+
 
 }]);
 
