@@ -637,7 +637,7 @@ public void alertForUpcomingMaintenance() throws UserNotFoundException {
 		Date start = m.getStart();
 		Calendar cal = Calendar.getInstance();
 		long diff = start.getTime() - cal.getTime().getTime();
-		long diff1 = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+		long diff1 = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 		if(diff1 == 3){			
 		    ClientOrganisation client =clientOrganisationRepository.findOne(m.getClient());
 		    Set<User> users = client.getUsers();

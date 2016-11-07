@@ -1341,6 +1341,15 @@ app.controller('maintenanceController',['$scope', '$http','$state','$routeParams
 		});
 	};
 	
+	$scope.runTimer = function(){
+		$http.get("//localhost:8443/maintenance/runTimer").then(function(response){
+			alert("timer is running");
+		},function(response){
+			alert("fail to activate timer");
+		}	
+		)	
+	}
+	
 	$scope.getMaintenance = function(id){		
 		$scope.dataToShare = [];	  
 		$scope.shareMyData = function (myValue) {

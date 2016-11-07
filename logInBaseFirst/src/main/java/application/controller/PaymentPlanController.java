@@ -1190,5 +1190,25 @@ public class PaymentPlanController {
 	}
 
 
+	@RequestMapping(value = "/runTimer", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Void> runTimer(HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();	   				
+			paymentPlanService.alertForOverduePayment();
+			System.out.println("finish sending alerts");
+			return new ResponseEntity<Void>(HttpStatus.OK);	
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+	}
+	
+	
 }
 

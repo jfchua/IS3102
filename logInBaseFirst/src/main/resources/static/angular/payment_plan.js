@@ -47,6 +47,15 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 		}); 
 	}
 	
+	$scope.runTimer = function(){
+		$http.get("//localhost:8443/payment/runTimer").then(function(response){
+			alert("timer is running");
+		},function(response){
+			alert("fail to activate timer");
+		}	
+		)	
+	}
+	
 	$scope.paymentPlanNull = function(paymentPlan){
 		  return !(paymentPlan === null)
 	}
