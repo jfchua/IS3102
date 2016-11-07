@@ -666,8 +666,8 @@ VALUES('2016-11-16 22:00:00', '2016-11-15 10:00:00', 12, 5, 4, 3);
 INSERT INTO booking_appl(event_end_date_time, event_start_date_time, owner, room, event_id, unit_id)
 VALUES('2016-11-16 22:00:00', '2016-11-15 10:00:00', 12, 6, 4, 4);
 */
-INSERT INTO maintenance VALUES (1, 'Repair projector', '2016-11-02 22:00:00', '2016-11-01 10:00:00');
-INSERT INTO maintenance VALUES (2, 'Cleaning', '2016-11-18 22:00:00', '2016-11-16 10:00:00');
+INSERT INTO maintenance VALUES (1, 1, 'Repair projector', '2016-11-02 22:00:00', '2016-11-01 10:00:00');
+INSERT INTO maintenance VALUES (2, 1, 'Cleaning', '2016-11-18 22:00:00', '2016-11-16 10:00:00');
 INSERT INTO maintenance_vendors VALUES (1, 1);
 INSERT INTO maintenance_vendors VALUES (1, 2);
 INSERT INTO maintenance_vendors VALUES (2, 1);

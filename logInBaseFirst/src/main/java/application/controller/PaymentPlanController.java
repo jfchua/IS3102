@@ -1167,9 +1167,9 @@ public class PaymentPlanController {
 		sb.append(arr1[0] + " 00:00:00 ' AND PAID <= '");
 
 		//sb.append(arr1[0] +" AND PAID <= " + arr2[0]);
-		sb.append(arr2[0] +  " 23:59:59 ')");
-		sb.append(arr2[0] +  " 23:59:59 ') AND (CLIENT = ");
-		sb.append(client.getId() + "')");
+		//sb.append(arr2[0] +  " 23:59:59 ')");
+		sb.append(arr2[0] +  " 23:59:59 ' AND CLIENT = ");
+		sb.append(client.getId() + ")");
 		System.err.println("Query parameter is : " + sb.toString());
 		parameters.put("criteria", sb.toString());
 		Connection conn = null;

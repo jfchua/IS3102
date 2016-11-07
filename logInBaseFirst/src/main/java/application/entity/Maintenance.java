@@ -17,10 +17,10 @@ public class Maintenance {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 	 
-	 @Column(name = "start", nullable = false)
+	 @Column(name = "commence", nullable = false)
 	 private Date start;
 	 
-	 @Column(name = "end", nullable = false)
+	 @Column(name = "finish", nullable = false)
 	 private Date end;
 	 
 	 @Column(name = "description", nullable = false)

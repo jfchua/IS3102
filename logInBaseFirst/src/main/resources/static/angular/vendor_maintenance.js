@@ -1318,6 +1318,29 @@ app.controller('maintenanceController',['$scope', '$http','$state','$routeParams
         return (new Date(dateString) > daysAgo);
 	}
 	});
+	
+	$scope.generateReport = function(){
+		$scope.data = {};
+
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/maintenance/downloadReport',
+			responseType: 'arraybuffer'
+		});
+
+		console.log("DOWNLOADING");
+		send.success(function(data){
+			console.log(JSON.stringify(data));
+			var file = new Blob([data], {type: 'application/pdf'});
+			var fileURL = URL.createObjectURL(file);
+			window.open(fileURL);
+			alert('DOWNLOADED!');
+		});
+		send.error(function(data){
+			alert('DOWNLOAD GOT ERROR!');
+		});
+	};
+	
 	$scope.getMaintenance = function(id){		
 		$scope.dataToShare = [];	  
 		$scope.shareMyData = function (myValue) {
