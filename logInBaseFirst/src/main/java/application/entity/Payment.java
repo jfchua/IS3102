@@ -35,6 +35,9 @@ public class Payment {
 	 @Column(name = "invoice")
 	 private String invoice;
 	 
+	 @Column(name = "client")
+	 private Long client;
+	 
 	 @Column(name = "cheque")
 	 private String cheque;
 	 /*
@@ -86,6 +89,16 @@ public String getCheque() {
 	public Long getId() {
 		return id;
 	}
+
+	public Long getClient() {
+		return client;
+	}
+
+	public void setClient(Long client) {
+		this.client = client;
+	}
+	
+	
 /*
 	public PaymentPlan getPaymentPlan() {
 		return paymentPlan;

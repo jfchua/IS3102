@@ -8,6 +8,7 @@ import application.entity.Maintenance;
 import application.entity.MaintenanceSchedule;
 import application.entity.Unit;
 import application.entity.User;
+import application.exception.UserNotFoundException;
 
 public interface MaintenanceService {
 	boolean createMaintenance(ClientOrganisation client, String unitId, String vendorId, Date start, Date end, String description);
@@ -37,6 +38,8 @@ public interface MaintenanceService {
 	boolean checkAvailabilityForUpdate(ClientOrganisation client, User user,long maintId, String unitsId, Date start, Date end);
 	
 	boolean deleteSchedule(ClientOrganisation client, long scheduleId);
+	
+	void alertForUpcomingMaintenance() throws UserNotFoundException;
 	
 	Optional<MaintenanceSchedule> getScheduleById(long id);
 }

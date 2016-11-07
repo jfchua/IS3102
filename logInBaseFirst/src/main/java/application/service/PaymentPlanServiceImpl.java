@@ -272,6 +272,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 					return false;
 				Calendar cal = Calendar.getInstance();
 				payment.setPaid(cal.getTime());
+				payment.setClient(client.getId());
 				//System.out.println(cal.getTime());
 				//DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.");
 				//String[] arr1 = String.valueOf(sdf.format(cal.getTime())).split(" ");
