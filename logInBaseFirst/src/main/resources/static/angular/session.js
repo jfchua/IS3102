@@ -4,34 +4,19 @@ app.run(['$rootScope', 'AUTH_EVENTS', 'Auth' ,'$location','$window', '$sessionSt
 			
 				var authorizedRoles = toState.data.authorizedRoles;
 				console.log("Next authorized roles are " + authorizedRoles);
-				//no idea how to put multiple conditions together, && and || doesnt seem to work
 				if (fromState.name !== '/login' && toState.name !== '/login' 
 					&& toState.name !== 'dashboard' && fromState.name !== 'dashboard') {
 					
-					console.log(fromState.name);
-					console.log(toState.name);
-							if (sessionStorage.getItem('user') && $stateParams.param === undefined) {
-								console.log('statechange sessionStorage get item is not null');					
-								Auth.setUser(JSON.parse(sessionStorage.getItem('user')));	
-							}
+					if (sessionStorage.getItem('user') && $stateParams.param === undefined) {
+						console.log('statechange sessionStorage get item is not null');					
+					 	Auth.setUser(JSON.parse(sessionStorage.getItem('user')));	
+					  }
 							
-							if ($stateParams.param != sessionStorage.getItem('clientOrg')){
-								console.log(toParams);
-								console.log(fromParams);
-								console.log(fromState.name);
-								console.log(toState.name);
-								event.preventDefault();
-								console.log($stateParams.param);
-							    $stateParams.param = sessionStorage.getItem('clientOrg');
-								console.log(sessionStorage.getItem('clientOrg'));
-								//alert('Error attempting to access beyond your organisation');
-								//$location.path('/dashboard/'+ (sessionStorage.getItem('clientOrg'))+'/workspace');
-								console.log("session at error attempting...");
-								$state.go(toState.name, {param : $stateParams.param});					
-												//}
-						//}
-				
-							}
+				 	if ($stateParams.param != sessionStorage.getItem('clientOrg')){
+						event.preventDefault();
+						$stateParams.param = sessionStorage.getItem('clientOrg');
+						$state.go(toState.name, {param : $stateParams.param});					
+						}
 					}
 				}
 			//	})
