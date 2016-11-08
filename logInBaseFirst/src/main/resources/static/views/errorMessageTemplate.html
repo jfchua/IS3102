@@ -1,7 +1,7 @@
 <div class="modal fade">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
-			<div class="modal-header" style="background-color:#de6764;">
+			<div class="modal-header" style="background-color: #de6764;">
 				<button type="button" class="close" ng-click="close()"
 					data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title">Error</h4>
@@ -9,13 +9,16 @@
 			<div class="modal-body">
 				<p></p>
 				<div class="panel-body">
-					<div >
-					<p class="text-center">{{message}}</p>
+					<div>
+						<p class="text-center">
+							<span class="glyphicon glyphicon-exclamation-sign fa-5x"></span>
+						</p>
+						<p class="text-center">{{message}}</p>
 
 					</div>
-					</div>
+				</div>
 
-				
+
 
 			</div>
 			<div class="modal-footer">
