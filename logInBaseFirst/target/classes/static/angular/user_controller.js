@@ -46,11 +46,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 				Auth.setUser(response);
 				console.log(response);
 				console.log(response.principal.user.clientOrganisation.organisationName);
-<<<<<<< HEAD
-				$state.go('dashboard', {param :response.principal.user.clientOrganisation.organisationName});
-=======
 				$state.go('dashboard.workspace', {param :response.principal.user.clientOrganisation.organisationName});
->>>>>>> 7ddaa2b1838365993fbf6fd0daede5137d08b487
 				//return true;
 			} else {
 				console.log("NO VERIFIED");

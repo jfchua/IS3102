@@ -9,7 +9,7 @@
 			<li><a>Upate Maintenance</a></li>
 		</ol>
 	</div>
-	<div class="col-md-9">
+	<div class="col-md-6">
 		<div class="panel panel-primary">
 
 			<div class="panel-heading">
@@ -28,7 +28,7 @@
 					<div class="form-group">
 						<ul class="list-group" name="vendors">
 							<li ng-repeat="vendor in maintenance.vendors"
-								class="list-group-item">{{vendor.name}}
+								class="list-group-item" style="display: inline;">{{vendor.name}}
 								<button ng-click="deleteVendor(vendor)">
 									<i class="glyphicon glyphicon-trash"></i>
 								</button>
@@ -50,12 +50,11 @@
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">Units Selected Previously</label>
-						<button ng-click="resetMaintSchedules()">Reset to last
-							change</button>
+						
 						<div class="form-group">
 							<ul class="list-group" name="units">
 								<li ng-repeat="selectedSchedulesUnit in selectedSchedulesUnits"
-									class="list-group-item">{{selectedSchedulesUnit.unitNumber}}
+									class="list-group-item" style="display: inline;">{{selectedSchedulesUnit.unitNumber}}
 									<button ng-click="deleteSchedulesUnit(selectedSchedulesUnit); checkAvail()">
 										<i class="glyphicon glyphicon-trash"></i>
 									</button>
@@ -126,15 +125,24 @@
 							placeholder="Enter description">
 					</div>
 					<button class="progress-button primary-progress"
-						data-style="shrink" data-horizontal ng-click="updateMaintenance()">Submit</button>
+						data-style="shrink" data-horizontal progress-button="updateMaintenance()" >Submit</button>
 					&nbsp;
 					<button class="progress-button primary-progress"
 						data-style="shrink" data-horizontal
-						ng-click="resetMaintSchedules()">Reset</button>
+						progress-button="resetMaintSchedules()">Reset</button>
 				</form>
 			</div>
 		</div>
 	</div>
+	<div class="col-md-6">
+		<div class="conter-wrapper">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div ui-calendar="uiConfig.calendar" ng-model="haha"></div>
+				</div>
+			</div>
+		</div>
+		</div>
 	<div class="col-md-3">
 		<growl-notifications> <growl-notification
 			ng-if="avail == 'AVAILABLE!'"
