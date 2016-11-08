@@ -56,18 +56,18 @@
 										class="glyphicon glyphicon-trash"></i></a> <a
 										ui-sref="dashboard.viewBookingEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="View Bookings"><i
-										class="glyphicon glyphicon-eye-open"></i></a> <a
-										ng-hide=x.hasTicket ng-click="requestForTicketSales(x)"
+										class="glyphicon glyphicon-eye-open"></i></a><div ng-show = "IsTicketingSub()"></div> <a
+										ng-hide="x.hasTicket" ng-click="requestForTicketSales(x)"
 										tooltip-placement="top" tooltip="Request Ticket Sales"><i
-										class="glyphicon glyphicon-shopping-cart"></i></a> <a
+										class="glyphicon glyphicon-shopping-cart"></i></a></div> <a
 										ui-sref="dashboard.configureDiscountsEx"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Discounts"><i
-										class="glyphicon glyphicon-usd"></i></a> <a ng-show=x.hasTicket
+										class="glyphicon glyphicon-usd"></i></a> <a ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Tickets"><i
 										class="glyphicon glyphicon-shopping-cart"></i></a><a
-										ui-sref="dashboard.viewTicketSalesEx" ng-show=x.hasTicket
+										ui-sref="dashboard.viewTicketSalesEx" ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToViewTix(x.id)" tooltip-placement="top"
 										tooltip="View Ticket Sales"><i
 										class="glyphicon glyphicon-list"></i></a>
