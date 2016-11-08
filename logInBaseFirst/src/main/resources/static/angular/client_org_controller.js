@@ -1,7 +1,9 @@
 app.controller('clientOrgController', ['$scope', '$http','$state','$location','ModalService', function ($scope, $http, $state, $location, ModalService) {
-	$scope.genders=['COMMONINFRA','PROPERTY','EVENT','FINANCE', 'TICKETING', 'BI'];
+	//$scope.genders=['COMMONINFRA','PROPERTY','EVENT','FINANCE', 'TICKETING', 'BI'];
+	$scope.genders=['FINANCE', 'TICKETING', 'BI'];
 	$scope.selection=[];
-
+    $scope.systems = ['COMMONINFRA','PROPERTY','EVENT'];
+    console.log($scope.systems);
 	$scope.toggleSelection = function toggleSelection(gender) {
 		var idx = $scope.selection.indexOf(gender);
 		if (idx > -1) {
@@ -74,6 +76,10 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 		$scope.data = {};
 		console.log("** Passing data object of");
 		//console.log($scope.clientOrg);
+		
+		angular.forEach($scope.systems, function(item){             
+			$scope.selection.push(item);
+		});      
 		
 		if (!$scope.clientOrg|| !$scope.clientOrg.name || !$scope.clientOrg.address || !$scope.clientOrg.postal || !$scope.clientOrg.phone || !$scope.clientOrg.fee
 				||!$scope.clientOrg.start || !$scope.clientOrg.end || !$scope.clientOrg.nameAdmin || !$scope.clientOrg.email){
@@ -262,10 +268,10 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalService',
                                   function($scope, $http, $location,$state,ModalService) {
 
-	$scope.genders=['COMMONINFRA','PROPERTY','EVENT','FINANCE', 'TICKETING', 'BI'];
+	$scope.genders=['COMMONINFRA','PROPERTY','EVENT', 'FINANCE', 'TICKETING', 'BI'];
 	$scope.selection=[];
-
-	$scope.toggleSelection = function toggleSelection(gender) {
+	$scope.systems = ['COMMONINFRA','PROPERTY','EVENT'];
+    $scope.toggleSelection = function toggleSelection(gender) {
 		var idx = $scope.selection.indexOf(gender);
 		if (idx > -1) {
 			// is currently selected
@@ -303,7 +309,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 		//$location.path('/viewUserList');
 	}
 	$scope.send();
-
+    
 
 	$scope.entity = {};
 	/*$scope.name = "";
@@ -314,6 +320,10 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 
 	};*/
 	//console.log("SENDING THE NAME: " + $scope.name);
+	$scope.check = function(gender){
+		var index = ($scope.genders).indexOf(gender);
+		return (index<3);
+	}
 	$scope.save = function(index){
 		$scope.Profiles[index].editable = true;
 		//$scope.entity = $scope.Profiles[index];
@@ -327,7 +337,9 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 			//$scope.name = name;
 			
 		//};
-
+		angular.forEach($scope.systems, function(item){             
+			$scope.selection.push(item);
+		});     
 		var Edit = {
 				//newname: $scope.name,
 				name: $scope.entity.organisationName,
