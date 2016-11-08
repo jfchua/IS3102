@@ -163,6 +163,7 @@ public class TicketingController {
 			Object obj1 = parser.parse(eventId);
 			JSONObject jsonObject = (JSONObject) obj1;
 			Long id = (Long)jsonObject.get("eventId");
+			//if(!ticketingService.getCategories(id).isEmpty()){
 			Set<Category> catToReturn = ticketingService.getCategories(id);
 
 			Gson gson2 = new GsonBuilder()
@@ -188,13 +189,15 @@ public class TicketingController {
 			String json = gson2.toJson(catToReturn);
 			System.out.println("CAT TO RETURN IS " + json);
 			return new ResponseEntity<String>(json,HttpStatus.OK);
-
+			//}
 
 		}
 		catch ( EventNotFoundException e){
+			System.err.println("EVENT NOT FOUND");
 			return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch ( Exception e){
+			System.err.println("DONT KNOW WHAT EXCEPTION");
 			return new ResponseEntity<String>(geeson.toJson("Server error in getting categories"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -731,11 +734,12 @@ public class TicketingController {
 			System.err.println("after try" + obj1.toString());
 			JSONObject jsonObject = (JSONObject) obj1;
 			Long catId = (Long)jsonObject.get("categoryId");
-			double price = -1;
+			//double price = -1;
 			System.err.println("gotten catid " + catId);
 			String name = (String)jsonObject.get("name");
-			Object pricet = jsonObject.get("price");
-			if ( pricet instanceof Double){
+			Double price = Double.valueOf((String)jsonObject.get("price"));
+			
+			/*if ( pricet instanceof Double){
 				price = (double)pricet;
 			}
 			else if ( pricet instanceof Integer){
@@ -745,16 +749,18 @@ public class TicketingController {
 				System.err.println("its of type long");
 				long theprice = (long)jsonObject.get("price");
 				price = (int)theprice;
-			}
+			}*/
 			System.err.println("price is now " + price);
 			long numTicketst = (long)jsonObject.get("numTickets");
 			int numTickets = (int)numTicketst;
 			System.err.println("gotten info of " + name + " " + price + " " + numTickets + " cat id: " + catId);
 
 			boolean bl = ticketingService.updateCategory(catId, name, price, numTickets);
-			if ( bl ){
-				return new ResponseEntity<String>(HttpStatus.OK);
-			}
+			System.out.println(bl);
+			if(!bl)
+				return new ResponseEntity<String>(geeson.toJson("Category name existed. Please change to another name."),HttpStatus.INTERNAL_SERVER_ERROR);
+			else;
+			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		catch ( EventNotFoundException e){
 			return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -763,7 +769,6 @@ public class TicketingController {
 		catch (Exception e){
 			return new ResponseEntity<String>(geeson.toJson("Server error in adding category" + e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<String>(geeson.toJson("Server error in getting categories"),HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}	
 

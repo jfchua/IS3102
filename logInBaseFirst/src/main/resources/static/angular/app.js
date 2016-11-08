@@ -511,9 +511,9 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateCategory',{
+                                			  .state('dashboard.updateCategoryEx',{
                                 				  url:'/updateCategoryEx',
-                                				  templateUrl: '/views/updateCategory.html',
+                                				  templateUrl: '/views/updateCategoryEx.html',
                                 				  controller: 'configureTicketsController',
                                 				  data:{
                                 					  authorizedRoles:[USER_ROLES.organiser]

@@ -27,6 +27,8 @@ public interface EventExternalService {
 	
 	Set<Event> getAllApprovedEventsByOrg(ClientOrganisation client, User eventOrg);
 	
+	Set<Event> getAllToBeApprovedEventsByOrg(ClientOrganisation client, User eventOrg);
+	
 	boolean editEvent(ClientOrganisation client, User eventOrg, long id, String unitsId, String event_title, String event_content, String event_description, String status,
 			Date event_start_date, Date event_end_date, String filePath);
 

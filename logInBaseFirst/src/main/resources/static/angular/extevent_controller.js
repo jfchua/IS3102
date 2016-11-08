@@ -75,11 +75,9 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		
 
 	});
-
+/*
 	$scope.viewApprovedEvents = function(){
 		$scope.data = {};
-		//var tempObj= {id:1};
-		//console.log(tempObj)
 		$http.get("//localhost:8443/event/viewApprovedEvents").then(function(response){
 			$scope.events = response.data;
 			console.log("DISPLAY ALL EVENT");
@@ -87,10 +85,9 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 
 		},function(response){
 			alert("did not view approved events");
-			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
-	}
+	}*/
 
 	$scope.getEvent = function(event){	
 		shareData.addData(event);
@@ -355,6 +352,112 @@ app.controller('viewApprovedEventsController', ['$scope', '$http','$state','$rou
 
 
 }]);
+
+
+
+//VIEW ALL APPROVED EVENTS
+app.controller('viewToBeApprovedEventsController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+
+	angular.element(document).ready(function () {
+		$scope.data = {};
+		//var tempObj= {id:1};
+		//console.log(tempObj)
+		$http.get("//localhost:8443/event/viewToBeApprovedEvents").then(function(response){
+			$scope.events = response.data;
+			console.log("DISPLAY ALL EVENT");
+			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
+
+		},function(response){
+			alert("did not view to be approved events");
+			//console.log("response is : ")+JSON.stringify(response);
+		}	
+		)
+
+	});
+
+
+	$scope.getEvent = function(event){	
+
+		shareData.addData(event);
+
+
+	}
+	$scope.passEvent = function(event){
+		shareData.addData(event);
+	}
+	$scope.getEventById= function(){
+
+		$scope.event1 = JSON.parse(shareData.getData());
+		$scope.event1.event_start_date = new Date($scope.event1.event_start_date);
+		$scope.event1.event_end_date = new Date($scope.event1.event_end_date);
+		var dataObj = {	
+				units:$scope.event1.units,
+				event_title: $scope.event1.event_title,
+				event_content: $scope.event1.event_content,
+				event_description: $scope.event1.event_description,
+				event_approval_status: $scope.event1.event_approval_status,	
+				event_start_date: $scope.event1.event_start_date,	
+				event_end_date: $scope.event1.event_end_date,
+				filePath: $scope.event1.filePath,
+		};
+		$scope.event = angular.copy($scope.event1)
+
+		var url = "https://localhost:8443/event/updateEvent";
+		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
+	}
+
+
+
+
+
+	$scope.getEventByIdForDelete= function(){
+
+		//var buildings ={name: $scope.name, address: $scope.address};
+		//$http.post("//localhost:8443/building/getBuilding", JSON.stringify(tempObj))
+		$scope.event = shareData.getData();
+
+		var url = "https://localhost:8443/event/deleteEvent";
+		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event);
+	}
+
+
+	$scope.getBookings = function(id){	
+		$scope.dataToShare = [];	  
+		$scope.shareMyData = function (myValue) {
+			//$scope.dataToShare = myValue;
+			//shareData.addData($scope.dataToShare);
+		}
+		$scope.url = "https://localhost:8443/booking/viewAllBookings/"+id;
+		//$scope.dataToShare = [];
+		console.log("GETTING THE EVENT INFO")
+		var getBookings = $http({
+			method  : 'GET',
+			url     : 'https://localhost:8443/booking/viewAllBookings/' + id        
+		});
+		console.log("Getting the bookings using the url: " + $scope.url);
+		getBookings.success(function(response){
+			//$scope.dataToShare.push(id);
+			//$location.path("/viewLevels/"+id);
+			console.log('GET Booking SUCCESS! ' + JSON.stringify(response));
+			console.log("ID IS " + id);
+			$scope.bookings = response.data;
+			shareData.addData(JSON.stringify(response));
+			//$location.path("/viewLevels");
+		});
+		getBookings.error(function(response){
+			$state.go("dashboard.viewAllEventsEx");
+			console.log('GET Booking FAILED! ' + JSON.stringify(response));
+		});
+
+	}
+
+
+
+}]);
+
+
+
+
 //DELETE EVENT
 app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
 	angular.element(document).ready(function () {
@@ -621,7 +724,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			console.log("get component success");
 		});
 		send.error(function(response){
-			alert("get component failure");
+			//alert("get component failure");
 		});
 
 		var send1 = $http({

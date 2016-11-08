@@ -31,6 +31,7 @@ import application.entity.Event;
 import application.entity.EventCreateForm;
 import application.entity.EventOrganizer;
 import application.entity.Level;
+import application.entity.Maintenance;
 import application.entity.MaintenanceSchedule;
 import application.entity.Payment;
 import application.entity.PaymentPlan;
@@ -111,7 +112,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 		}
 		if(doesHave){
 			for(Event ev: allEvents){
-				if(String.valueOf(ev.getApprovalStatus()).equals("APPROVED"))
+				if(String.valueOf(ev.getApprovalStatus()).equals("APPROVED")|| String.valueOf(ev.getApprovalStatus()).equals("SUCCESSFUL"))
 					approvedEvent.add(ev);
 			}
 			return approvedEvent;
@@ -187,8 +188,15 @@ public class EventExternalServiceImpl implements EventExternalService {
 						BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
 						MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
 						System.out.println(b.getId());
-						Event eventFromB = b.getEvent();            
-						if(!(event.getId().equals(eventFromB.getId()))||(m!=null)){
+						Event eventFromB = new Event();       
+						if(b!=null){
+							eventFromB  = b.getEvent();  
+							System.err.println(eventFromB.getEvent_title());
+							if(!(event.getId().equals(eventFromB.getId()))){
+								isAvailable = false;
+								break;
+							}
+						}else if(m!=null){
 							isAvailable = false;
 							break;
 						}
@@ -570,14 +578,15 @@ public class EventExternalServiceImpl implements EventExternalService {
 				Unit unit = unit1.get();
 				if(!checkUnit(client, unit.getId()))
 					return false;
-				int count = bookingApplRepository.getNumberOfBookings(uId, d1, d2);
-				int count2 = bookingApplRepository.getNumberOfBookings(Long.valueOf(units[i]), d1, d2);
+				int count = maintenanceScheduleRepository.getNumberOfMaintenanceSchedules(unit.getId(), d1, d2);
+				int count2 = bookingApplRepository.getNumberOfBookings(unit.getId(), d1, d2);
 				if((count != 0)||(count2 != 0)){
 					isAvailable = false;
 					break;
 				}
 			}
 		}
+		System.err.println(isAvailable);
 		return isAvailable;
 	}
 
@@ -648,8 +657,16 @@ public class EventExternalServiceImpl implements EventExternalService {
 						BookingAppl b = bookingApplRepository.getBookingEntity(Long.valueOf(units[i]), d1, d2);
 						MaintenanceSchedule m = maintenanceScheduleRepository.getMaintenanceScheduleEntity(Long.valueOf(units[i]), d1, d2);
 						System.out.println(b.getId());
-						Event eventFromB = b.getEvent();            
-						if(!(event.getId().equals(eventFromB.getId()))||(m!=null)){
+						Event eventFromB = new Event();       
+						if(b!=null){
+							eventFromB  = b.getEvent();  
+							System.err.println(eventFromB.getEvent_title());
+							if(!(event.getId().equals(eventFromB.getId()))){
+								isAvailable = false;
+								break;
+							}
+						}
+						else if(m!=null){
 							isAvailable = false;
 							break;
 						}
@@ -1131,5 +1148,29 @@ public class EventExternalServiceImpl implements EventExternalService {
 
 		}
 		return cats;
+	}
+
+	@Override
+	public Set<Event> getAllToBeApprovedEventsByOrg(ClientOrganisation client, User eventOrg) {
+		Set<Event> approvedEvent = new HashSet<Event>();
+		Set<Event> allEvents = eventOrg.getEvents();
+		Set<User> eventOrgs = userRepository.getAllUsers(client);
+		boolean doesHave = false;
+		for(User u: eventOrgs){
+			Set<Role> roles = u.getRoles();
+			for(Role r: roles){
+				if(r.getName().equals("ROLE_EXTEVE") && u.equals(eventOrg))
+					doesHave = true;
+			}
+		}
+		if(doesHave){
+			for(Event ev: allEvents){
+				if(String.valueOf(ev.getApprovalStatus()).equals("PROCESSING"))
+					approvedEvent.add(ev);
+			}
+			return approvedEvent;
+		}
+		else
+			return new HashSet<Event>();
 	}
 }

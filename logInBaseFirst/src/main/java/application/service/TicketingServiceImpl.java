@@ -133,24 +133,29 @@ public class TicketingServiceImpl implements TicketingService {
 	@Override
 	public boolean updateCategory(Long catId, String catName, double price, int numTix) throws EventNotFoundException {
 		try{
+			System.err.println("Start updating category");
 			Category c = categoryRepository.findOne(catId);
+			Event e = c.getEvent();
 			Set<Category> ttt = c.getEvent().getCategories();
 			for ( Category cx : ttt){
-				if ( cx.getCategoryName().equalsIgnoreCase(catName)){
+				System.err.println("Start updating category111");
+				if ( cx.getCategoryName().equalsIgnoreCase(catName) && cx.getEvent().getId() == e.getId() && cx.getId() != catId){
 					return false;
 				}
 			}
+			System.err.println("Start updating category2222");
 			c.setCategoryName(catName);
 			c.setNumOfTickets(numTix);
 			c.setPrice(price);
-			categoryRepository.save(c);
-			return true;
+			categoryRepository.flush();
+			
 		}
 		catch ( Exception ex){
 			System.err.println("update category error" + ex.getMessage());
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	@Override
