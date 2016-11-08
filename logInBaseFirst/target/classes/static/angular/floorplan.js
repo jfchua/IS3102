@@ -15,12 +15,8 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 	  		obj=shareData.getData();
 	  		level=obj.level
 	  		building=obj.building;
-	  		console.log("GET Level");
-	  		console.log(level);
-	  		console.log("GET BUILDING");
-	  		console.log(building);
-		    	console.log("GET LEVEL: ");
-		      console.log(level);
+	  		
+		    
 		      $scope.levelLength;
 		      $scope.levelWidth;
 		    //IN CASE OF GETTING AN ARRAY FROM SHAREDATA 
@@ -46,7 +42,7 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 		      $scope.levelLengthGrid=meter*(level.length);
 			    $scope.levelWidthGrid=meter*(level.width);	
 			    $scope.background=level.filePath;
-			    console.log( $scope.levelLengthGrid+" "+$scope.levelWidthGrid);
+			  
 			    
 		    //GET UNITS FROM levelIdObj
 		    levelId=level.id;
@@ -61,28 +57,23 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
 				})
 		      
 		    },function(response){
-		      console.log("DID NOT view");
-		      console.log("response is "+angular.fromJson(response.data).error);
+		      console.log("DID NOT VIEW UNITS");
+		     
 		    })
 		    
 		    
 		    //ADD UNIQUE UNIT TO LEGENDS
 		    $scope.addToLegend= function(unit){
-	  			//PUSH UNIQUE AREA TO LEGENDS
-	  		
-	  			//console.log(areas[0]);
-	  			//$scope.legends.push(areas[index]);
-	  			console.log("test legend");
-	  			console.log($scope.legends);
+	  			
   				var isDuplicate=false;
 	  			angular.forEach($scope.legends, function(legend){    
 		  				if((isDuplicate==false)&&(unit.description == legend.description)){	
 		  				
 		  					isDuplicate=true;
-		  					console.log(isDuplicate);
+		  					//console.log(isDuplicate);
 		  				}else{
 		  				
-		  				console.log(isDuplicate);
+		  				//console.log(isDuplicate);
 		  				}
 		  			
 	  				
@@ -93,37 +84,10 @@ app.controller('viewFloorPlanController', function ($scope, $http,shareData,$sta
   				}else{
   					$scope.legends.push(unit);
   				}
-	  			console.log($scope.legends);
+	  			
 	  			
 	  			}
-		    /*
-		    //RETRIEVE ICON WHEN LOADED
-			$http.get("//localhost:8443/property/viewIcons").then(function(response){			
-				console.log(angular.fromJson(response.data));
-				$scope.icons = response.data;
-				console.log($scope.icons);
-				console.log($scope.icons[0]);
-				console.log($scope.icons[0].iconType);
-				console.log($scope.icons[0].iconPath);
-				$scope.icon=$scope.icons[0];
-			},function(response){
-				alert("DID NOT VIEW ICONS");
-				
-			})
-			*/
-		    //GET BUILDING FROM levelIdObj
-		    /*
-		    var levelIdObj={id:level.id}
-		    $http.post('/level/getBuilding', JSON.stringify(levelIdObj)).then(function(response){
-		      console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
-		     building=response.data;
-		      console.log(building);
-		      console.log("Building ID IS " + building.id);
-		    },function(response){
-		      console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
-		    });	
-		    */
-		    console.log(building);
+		  
   });
   
   
@@ -172,26 +136,7 @@ $scope.twoOptions=[
      $scope.showDetail="unitNumber: "+thisUnit.unitNumber  +  " Unit Width: " + parseInt((thisUnit.square.height)*(level.length)/800) + "meter, Unit Length: " + parseInt((thisUnit.square.width)*(level.length)/800) +"meter";
      console.log($scope.showDetail);
       } 
-//  $scope.viewLevelsByBuildingId = function(){
-//    var buildingId;
-//    $scope.dataToShare = [];
-//    //get building id from levelId
-//    $http.post('/level/getBuilding', JSON.stringify(levelIdObj)).then(function(response){
-//      console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
-//      var building=response.data;
-//      console.log(building);
-//      //var temp=JSON.stringify(buildingJson)
-//      shareData.addData(building);
-//
-//      console.log("Building ID IS " + building.id);
-//
-//    },function(response){
-//      console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
-//    });
-//    
-//   
-//
-//    }
+
 
   
 
@@ -220,7 +165,7 @@ $scope.twoOptions=[
   //MODAL FOR VIEWING ONE UNIT
   $scope.complexResult = null;
 	 $scope.showModal = function(unit) {
-		 console.log(unit);
+		 //console.log(unit);
 		    // Just provide a template url, a controller and call 'showModal'.
 		    ModalService.showModal({
 		    	
@@ -305,11 +250,7 @@ app.controller('viewUnitController', ['$scope', '$element', 'title', 'close', 'u
 
 		  $scope.title = title;
 		  $scope.unit=unit;
-		  console.log(title);
-		  console.log(close);
-		  console.log($element);
-		  //  This close function doesn't need to use jQuery or bootstrap, because
-		  //  the button has the 'data-dismiss' attribute.
+
 		  $scope.close = function() {
 		 	  close({
 		     
@@ -334,81 +275,7 @@ app.controller('viewUnitController', ['$scope', '$element', 'title', 'close', 'u
 	
 }])
 
-/*
-//FLOORPLAN
-app.directive('draggable', function() {
-  console.log("test draggable directive");
-  jQuery = window.jQuery;
-  console.log(jQuery);
-  console.log(jQuery.ui);
-  return {
-    // A = attribute, E = Element, C = Class and M = HTML Comment
-    restrict:'A',
-    controller: 'floorPlanController',
 
-  
-    //The link function is responsible for registering DOM listeners as well as updating the DOM.
-    //link: function postLink(scope, element, attrs) {
-    link: function (scope, element, attrs) {
-      element.draggable({
-        //revert:'invalid'
-        containment: '#glassbox',
-        
-         obstacle: "#1",
-            preventCollision: true
-      
-        
-
-      });
-      element.on('drag', function (unit,evt, ui) {
-        //console.log(evt);
-        //  console.log(ui);
-        scope.$apply(function() {
-          if (scope.callback) { 
-            scope.callback({$evt: evt, $ui: ui }); 
-          }                
-        })
-      });
-    }
-  };
-})
-
-app.directive('resizable', function () {
-  console.log("test resiable directive");
-  // jQuery = window.jQuery;
-  //console.log(jQuery);
-  console.log("test jquery ui");
-  console.log(jQuery.ui);
-  return {
-
-    restrict: 'A',
-    controller: 'floorPlanController',
-    scope: {
-
-      callback: '&onResize'
-
-    },
-    link: function postLink(scope, element, attrs) {
-      element.resizable({
-        containment: '#glassbox'
-      });
-      console.log("test jquery ui");
-      element.on('resize', function (unit,evt, ui) {
-        //console.log(evt);
-        //  console.log(ui);
-        scope.$apply(function() {
-          if (scope.callback) { 
-            console.log("test jquery ui");
-            scope.callback({$evt: evt, $ui: ui }); 
-          }                
-        })
-      });
-    }
-  };
-})
-
-
-*/
 
 //UPDATE FLOOR PLAN
 app.controller('floorPlanController', function ($scope, $http,shareData,$state,ModalService) {
@@ -433,15 +300,13 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	      $scope.levelLength;
 	      $scope.levelWidth; 
 	      $scope.background=level.filePath;
-	      console.log($scope.background);
-	      console.log("GET LEVEL: ");
-	      console.log(level);
-	      if(!level.id){
-	    	  console.log("FAIL TO GET LEVEL: ");
-	        level=level[0];
-	        console.log("GET LEVEL:");
-	        console.log(level);
-	      }
+	      
+//	      if(!level.id){
+//	    	  console.log("FAIL TO GET LEVEL: ");
+//	        level=level[0];
+//	        console.log("GET LEVEL:");
+//	        console.log(level);
+//	      }
 	      
 	      //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
 	      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;
@@ -452,20 +317,20 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	      meter=(widthForFloorPlan-40)/(level.length);
 	      $scope.levelLengthGrid=meter*(level.length);
 		    $scope.levelWidthGrid=meter*(level.width);	
-		    console.log( $scope.levelLengthGrid+" "+$scope.levelWidthGrid);
+		   // console.log( $scope.levelLengthGrid+" "+$scope.levelWidthGrid);
 	      //GET UNITS
 	      levelId=level.id;
 	      levelIdObj={
 	          id:levelId
 	      }
 	      $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-	        console.log("pure response is "+response.data);
+	        //console.log("pure response is "+response.data);
 	
-	        console.log(angular.fromJson(response.data));
+	       // console.log(angular.fromJson(response.data));
 	        $scope.units=angular.fromJson(response.data);
 	        
 	      },function(response){
-	        console.log("DID NOT view");
+	        console.log("DID NOT VIEW UNITS");
 	        //console.log("response is "+angular.fromJson(response.data).error);
 	      })
 	      
@@ -486,9 +351,9 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 			
 			//GET ICON MENU
 			$http.get("//localhost:8443/property/getIconsMenu").then(function(response){			
-				console.log(response);
+			//	console.log(response);
 				var data = angular.fromJson(response.data);
-				console.log(data);
+			//	console.log(data);
 				$scope.iconMenu=[];
 				var index=0;
 				 angular.forEach(data, function(item){             
@@ -496,12 +361,12 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					   	iconMenuRow.push(data[index].name);
 					   
 					   	eval( 'var func = ' +data[index].funct ); //working
-					   	console.log(data[index].funct);
+				//	   	console.log(data[index].funct);
 					   	iconMenuRow.push(func);//working
 					   	$scope.iconMenu.push(iconMenuRow);//working
 					    // $scope.iconMenu.push([data[index]]);
 					     index++;
-					     console.log(iconMenuRow);
+				//	     console.log(iconMenuRow);
 					  }); 
 				// console.log("test icon menu");
 				// console.log($scope.iconMenu);
@@ -699,108 +564,8 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	 // $state.go("dashboard.viewLevels");
   }
   
-//  $scope.viewLevelsByBuildingId = function(){
-//    var buildingId;
-//    $scope.dataToShare = [];
-//    //get building id from levelId
-//    $http.post('/level/getBuildingId', JSON.stringify(levelIdObj)).then(function(response){
-//      console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
-//      var buildingJson=response.data;
-//      //console.log(buildingJson);
-//      //var temp=JSON.stringify(buildingJson)
-//      buildingId=buildingJson.buildingId;
-//
-//      console.log("Building ID IS " + buildingId);
-//
-//    },function(response){
-//      console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
-//    }).then(function() {
-//
-//      //get levels of building id and then save to share data
-//      $scope.url = "https://localhost:8443/level/viewLevels/"+buildingId;
-//      //$scope.dataToShare = [];
-//      console.log("GETTING THE LEVELS")
-//      var getLevels = $http({
-//        method  : 'GET',
-//        url     : 'https://localhost:8443/level/viewLevels/' + buildingId
-//
-//      });
-//
-//      console.log("Getting the levels using the url: " + $scope.url);
-//      getLevels.success(function(response){
-//        //$scope.dataToShare.push(id);
-//        //$location.path("/viewLevels/"+id);
-//        console.log('GET LEVELS SUCCESS! ' + JSON.stringify(response));
-//        console.log("ID IS " + buildingId);
-//        shareData.addData(JSON.stringify(response));
-//        //shareData.addDataId(JSON.stringify(id));
-//        //$location.path("/viewLevels");
-//      });
-//      getLevels.error(function(response){
-//        $state.go("dashboard.viewBuilding");//not sure
-//        console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
-//      });
-//
-//    })
-//  }
-  //$scope.showDetail="test";
-   $scope.showDetails= function (thisUnit) {   
-     console.log(thisUnit);
-    // console.log(event);
-    // console.log(event.target.classList);
-     $scope.showDetail="unitNumber: "+thisUnit.unitNumber  +  " Unit Width: " + parseInt((thisUnit.square.height)*(level.length)/800) + "meter, Unit Length: " + parseInt((thisUnit.square.width)*(level.length)/800) +"meter";
-     console.log($scope.showDetail);
-      } 
 
-  $scope.resize = function(unit,evt,ui) {
-
-    console.log("resize");
-
-    unit.square.width = parseInt(evt.size.width);//working restrict A
-    unit.square.height = parseInt(evt.size.height);
-    unit.square.left = parseInt(evt.position.left);
-    unit.square.top = parseInt(evt.position.top);
   
-  }
-  $scope.drag = function(unit,evt,ui) {
-
-    console.log(evt);
-    console.log("DRAGGING");
-    // $scope.units[x.id].square.width = ui.size.width;
-    //$scope.units[x.id].square.height = ui.size.height;
-    //$scope.units[unit.id-1].square.width = evt.size.width;
-    //$scope.units[unit.id-1].square.height = evt.size.height;
-    // console.log( evt.target);
-    // console.log(  evt.helper.context.clientHeight); //working
-    // console.log(  evt.helper[0].clientHeight); //working restrict E
-    unit.square.left = parseInt(evt.position.left);
-    unit.square.top = parseInt(evt.position.top);
-    unit.square.width = evt.helper.context.clientWidth;
-    unit.square.height = evt.helper.context.clientHeight;
-  }
-/*
-  $scope.remove = function(unit) { 
-	  if(confirm("CONFIRM TO DELETE UNIT "+unit.unitNumber+"?")){
-		 
-		    var index = $scope.units.indexOf(unit);
-		    $scope.units.splice(index, 1); 
-		   
-	  }
-    
-  }
-  $scope.removeCopy = function(unit) { 
-	  if(confirm("CONFIRM TO DELETE UNIT "+unit.unitNumber+"?")){
-		 
-		    var index = $scope.units.indexOf(unit);
-		    $scope.units.splice(index, 1); 
-		    $scope.update=[];
-		    angular.copy($scope.units, $scope.update);
-		    $scope.units=[];
-		    angular.copy($scope.update, $scope.units);
-	  }
-    
-  }
-  */
 	$scope.remove = function(unit) { 
 		
         ModalService.showModal({
@@ -926,15 +691,15 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
   var unitIds="";
   $scope.addToUnitIds=function(unitId){
     unitIds+=(unitId+" ");
-    console.log(unitIds);
+    //console.log(unitIds);
   }
 //  pass selected units ids to share data
   $scope.passUnitIds=function(){
     var stringToPassUnit=unitIds.substring(0,unitIds.length-1);
-    console.log(stringToPassUnit);
+   // console.log(stringToPassUnit);
     var objToPassUnit={'units':stringToPassUnit};
     shareData.addData(JSON.stringify(objToPassUnit));
-    console.log(JSON.stringify(objToPassUnit));
+   // console.log(JSON.stringify(objToPassUnit));
   }
   
   //MODAL FOR ONE UNIT
@@ -954,8 +719,11 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 		    	      modal.element.modal();
 		    	      modal.close.then(function(result) {
 		    	    	  if(result){  
-		    	    		  var unit  = result.unit;
-		    	    		  $parent.updateUnit(unit);
+		    	    		  if(result){
+		    	    			  var unit  = result.unit;
+			    	    		  $parent.updateUnit(unit);
+		    	    		  }
+		    	    		 
 		    	    		  }
 		    	      });
 		    	    });
@@ -974,9 +742,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 			                        
 			                       ];*/
 			
-			 console.log($scope.standardItems);
-			 console.log("gridster test ");
-			 console.log(meter);
+			
 			 $scope.gridsterOpts = {
 					 
 					 	
@@ -1027,10 +793,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					    }
 					};
 		
-			 console.log("test opts");
-			 console.log($scope.gridsterOpts.colWidth);
-			 console.log($scope.gridsterOpts.maxRows);
-			 console.log($scope.gridsterOpts.columns);
+			
 })
 
 
@@ -1043,9 +806,7 @@ app.controller('updateUnitController', ['$scope', '$element', 'title', 'close', 
 
 		  $scope.title = title;
 		  $scope.unit=unit;
-		  console.log(title);
-		  console.log(close);
-		  console.log($element);
+		  
 		  //  This close function doesn't need to use jQuery or bootstrap, because
 		  //  the button has the 'data-dismiss' attribute.
 		  $scope.close = function() {
@@ -1056,7 +817,7 @@ app.controller('updateUnitController', ['$scope', '$element', 'title', 'close', 
 
 		  //  This cancel function must use the bootstrap, 'modal' function because
 		  //  the doesn't have the 'data-dismiss' attribute.
-		  $scope.cancel = function() {
+		  $scope.cancel = function(result) {
 		    //  Manually hide the modal.
 		    $element.modal('hide');		    
 		    //  Now call close, returning control to the caller.

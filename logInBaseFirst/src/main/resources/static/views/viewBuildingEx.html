@@ -1,3 +1,7 @@
+<link rel="stylesheet" href="bower_components/angular-gridster/dist/angular-gridster.css" />
+
+<link rel="stylesheet" href="../css/floorplanGrid.css" type="text/css" />
+
 <div class="clearfix">
 	<ol class="breadcrumb no-bg no-m-t">
 		<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
@@ -28,7 +32,7 @@
 				<div>
 					<div ng-repeat="x in buildings | orderBy:'name'"
 						ng-show="$index == currentPage-1">
-						<img ng-show="x.picPath" class="svgtest" src="{{x.picPath}}"
+						<img ng-show="x.picPath"  src="{{x.picPath}}"
 							style='height: 100%; width: 100%; object-fit: contain'>
 						</td>
 					</div>

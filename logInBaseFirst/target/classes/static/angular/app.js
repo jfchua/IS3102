@@ -1185,7 +1185,7 @@ app.controller("userCtrl",['$scope','ModalService',
 
 //Create new user
 
-app.controller('createNewUserController', ['$scope','$http','ModalService',function($scope, $http,ModalService){
+app.controller('createNewUserController', ['$scope','$http','$state','ModalService',function($scope, $http, $state, ModalService){
 
 
 	var arr = ['ROLE_USER','ROLE_EVENT','ROLE_ADMIN','ROLE_PROPERTY','ROLE_EXTEVE'];

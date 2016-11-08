@@ -9,47 +9,42 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 		var obj=shareData.getData();
 		$scope.booking=obj.booking;
 		$scope.event=obj.event;
-		console.log($scope.booking);
-		console.log($scope.event);
+		//console.log($scope.booking);
+		//console.log($scope.event);
 		unit=obj.booking.unit;
 		bookingIdObj={id:$scope.booking.id};
 	 //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
 	      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;    
-	      console.log(widthForFloorPlan);
+	      //console.log(widthForFloorPlan);
 	      //meter=parseInt((widthForFloorPlan-40)/(unit.sizeX));
 	      meter=(widthForFloorPlan-24)/(unit.sizeX);
 	      $scope.unitLengthGrid=meter*(unit.sizeX);
 		  $scope.unitWidthGrid=meter*(unit.sizeY);	
 		  scale=meter/2;//one grid represent 0.5m
-		  console.log( $scope.unitLengthGrid+" "+$scope.unitWidthGrid);
+		 // console.log( $scope.unitLengthGrid+" "+$scope.unitWidthGrid);
 		//get event id from previous page
 		  			var getAreas= $http({
 		  				method  : 'POST',
 		  				url     : 'https://localhost:8443/area/viewAreas/',
 		  				data    : bookingIdObj,
 		  		});
-		  			console.log("REACHED HERE FOR VIEWING AREAS " + JSON.stringify(bookingIdObj));
+		  			//console.log("REACHED HERE FOR VIEWING AREAS " + JSON.stringify(bookingIdObj));
 		  			getAreas.success(function(response){
-		  				console.log(response);
+		  			//	console.log(response);
 		  				$scope.areas = response;
 		  				
 		  			});
 		  			getAreas.error(function(){
-		  				
+		  				console.log("DID NOT VIEW AREAS FOR EXTERNAL UNIT PLAN");
 		  			});		
 		  			
 		  			
 		  		  //RETRIEVE ICON WHEN LOADED
 					$http.get("//localhost:8443/property/viewIcons").then(function(response){			
-						//console.log(response.data);
 						$scope.icons = response.data;
-						console.log($scope.icons);
-						//console.log($scope.icons[0]);
-						//console.log($scope.icons[0].iconType);
-						//console.log($scope.icons[0].iconPath);
 						$scope.icon=$scope.icons[0];
 					},function(response){
-						alert("DID NOT VIEW ICONS");
+						console.log("DID NOT VIEW ICONS");
 						
 					})
 					
@@ -58,31 +53,28 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 					
 					//GET ICON MENU
 					$http.get("//localhost:8443/property/getIconsMenu").then(function(response){			
-						console.log(response);
 						var data = angular.fromJson(response.data);
-						console.log(data);
-						//$scope.iconMenu=[];
 						var index=0;
 						 angular.forEach(data, function(item){             
 							   	var iconMenuRow=[];
 							   	iconMenuRow.push(data[index].name);
 							   
 							   	eval( 'var func = ' +data[index].funct ); //working
-							   	console.log(data[index].funct);
+							   //	console.log(data[index].funct);
 							   	iconMenuRow.push(func);//working
 							   	$scope.menuOptions.push(iconMenuRow);//working
 							    // $scope.iconMenu.push([data[index]]);
 							     index++;
-							     console.log(iconMenuRow);
+							    // console.log(iconMenuRow);
 							  }); 
-						 console.log("test icon menu");
-						 console.log($scope.iconMenu);
+						 //console.log("test icon menu");
+						 //console.log($scope.iconMenu);
 						//console.log($scope.icons);
 						//console.log($scope.icons[0]);
 						//console.log($scope.icons[0].iconType);
 						//console.log($scope.icons[0].iconPath);
 					},function(response){
-						alert("DID NOT VIEW ICONS");
+						console.log("DID NOT VIEW ICONS");
 						
 					})
 		  		
@@ -135,29 +127,24 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 	  
 	 $scope.defaultIcon='./svg/entry.svg';
 	  $scope.addDefaultIcon = function (type) {   //note: passed in type is not used
-		  var dataObj = {
-				  id: $scope.booking.id,
-				  Areas:{
-					  Area:$scope.areas
-				  }
-		  };						
+						
 		
 			  var obj={bookingId:$scope.booking.id,type: $scope.defaultIcon};
 			  $http.post('/area/addDefaultIcon', JSON.stringify(obj)).then(function(response){
-				  $scope.areas=[];
-				  console.log("empty");
-				  console.log($scope.areas);
+				 // $scope.areas=[];
+				  //console.log("empty");
+				  //console.log($scope.areas);
 				  $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){
-					  console.log(angular.fromJson(response.data));
+					  //console.log(angular.fromJson(response.data));
 					  $scope.areas=angular.fromJson(response.data);
 
 				  },function(response){
-					  console.log("DID NOT view");
+					  console.log("DID NOT AREAS FOR EXTERNAL UNIT PLAN");
 					  //console.log("response is "+angular.fromJson(response.data).error);
 				  })
 			  },function(response){//else is not saved successfully
 				  console.log("DEFAULT ICON CANNOT BE ADDED");
-				  alert("DEFAULT ICON CANNOT BE ADDED");
+				 // alert("DEFAULT ICON CANNOT BE ADDED");
 			  })
 		 
 	  } //END ADD DEFAULT ICON
@@ -177,30 +164,24 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 		  console.log(iconId);
 		  console.log(icon);
 	
-		  
-		  var dataObj = {
-				  id: $scope.booking.id,
-				  Areas:{
-					  Area:$scope.areas
-				  }
-		  };      
+		   
 		 
 			  var saveIconObj={bookingId:$scope.booking.id,iconId:icon.id};
 			  $http.post('/area/addCustIcon', JSON.stringify(saveIconObj)).then(function(response){
-				  $scope.areas=[];
-				  console.log("empty");
-				  console.log($scope.areas);
+				 // $scope.areas=[];
+				 //console.log("empty");
+				  //console.log($scope.areas);
 				  $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){
-					  console.log(angular.fromJson(response.data));
+					  //console.log(angular.fromJson(response.data));
 					  $scope.areas=angular.fromJson(response.data);
 
 				  },function(response){
-					  console.log("DID NOT view");
+					  console.log("DID NOT VIEW AREAS FOR EXTERNAL AREA PLAN");
 					  //console.log("response is "+angular.fromJson(response.data).error);
 				  })
 			  },function(response){//else is not saved successfully
 				  console.log("CUST ICON CANNOT BE ADDED");
-				  alert("CUST ICON CANNOT BE ADDED");
+				 // alert("CUST ICON CANNOT BE ADDED");
 			 
 		  } )
 
@@ -220,11 +201,7 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 		shareData.addData(obj);
 	}
 
-	$scope.viewArea=function(){
-		
 
-
-	}
 	$scope.showDefaultUnitPlan= function(){
 		
 		var unitIdObj={unitId:unit.id,bookingId:$scope.booking.id};
@@ -249,29 +226,23 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 	}
 
 	  $scope.addArea = function () {  
-		  var dataObj = {
-				  id: $scope.booking.id,
-				  Areas:{
-					  Area:$scope.areas
-				  }
-		  };						
-		 	
+		 
 			  var dataObj={bookingId:$scope.booking.id};
 			  $http.post('/area/addArea', JSON.stringify(dataObj)).then(function(response){
-				  $scope.areas=[];
-				  console.log("empty");
-				  console.log($scope.areas);
+				  //$scope.areas=[];
+				  //console.log("empty");
+				  //console.log($scope.areas);
 				  $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){			
-					  console.log(angular.fromJson(response.data));
+					 // console.log(angular.fromJson(response.data));
 					  $scope.areas=angular.fromJson(response.data);
 	
 				  },function(response){
-					  console.log("DID NOT view");
+					  console.log("DID NOT VIEW AREAS FOR EXTERNAL AREA PLAN");
 					  //console.log("response is "+angular.fromJson(response.data));
 				  })
 			  },function(response){//else is not saved successfully
 				  console.log("AREA CANNOT BE ADDED");
-				  alert("AREA CANNOT BE ADDED");
+				 // alert("AREA CANNOT BE ADDED");
 			 
 		  } )
 	  }//END ADD AREA
@@ -279,36 +250,28 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 		$scope.updateArea=function(area){
 			 console.log("Update the area");
 			
-			// console.log("scope test3");
-		//	 console.log(   angular.element(document.getElementById('1')).scope());
-			  var dataObj = {
-				        id: $scope.booking.id,
-				        Areas:{
-				          Areas:$scope.areas
-				        }
-				    };
 			
 			  			var dataObj={area:area,bookingId:$scope.booking.id};
 			  			$http.post('/area/updateArea', JSON.stringify(dataObj)).then(function(response){
-			  				$scope.areas=[];
-			  				console.log("empty");
+			  			//	$scope.areas=[];
+			  				//console.log("empty");
 			  				//console.log($scope.units);
 			  				 $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){
-			  				        console.log(response.data);
+			  				       // console.log(response.data);
 			  				
-			  				        console.log(angular.fromJson(response.data));
+			  				        //console.log(angular.fromJson(response.data));
 			  				      $scope.areas=angular.fromJson(response.data);
 			  				  //  console.log("scope test4");
 			  					// console.log(   angular.element(document.getElementById('1')).scope());
 			  				       // $state.reload();//Can use
 			  				     
 			  				      },function(response){
-			  				        console.log("DID NOT view");
+			  				        console.log("DID NOT VIEW AREAS FOR EXTERNAL UNIT PLAN");
 			  				        //console.log("response is "+angular.fromJson(response.data).error);
 			  				      })
 			  		},function(response){//else is not saved successfully
 			  				console.log("AREA CANNOT BE EDITED");
-			  			alert("AREA CANNOT BE EDITED");
+			  			//alert("AREA CANNOT BE EDITED");
 			  		})
 			  		
 			  		
@@ -316,34 +279,52 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 		 };//END UPDATE AREA
 		 $scope.remove = function(area) { 
 				
-			  var dataObj = {
-				        id: $scope.booking.id,
-				        Areas:{
-				          Areas:$scope.area
-				        }
-				    };
-			
-			    	  if (confirm('CONFIRM TO DELETE THIS Area'+area.areaName+'?')) {
-			  			
-			  			var dataObj={id:area.id,bookingId:$scope.booking.id};
-			  			$http.post('/area/deleteArea', JSON.stringify(dataObj)).then(function(response){
-			  				$scope.areas=[];
-			  				 $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){
-			  				        console.log("pure response is "+response.data);
-			  				
-			  				        console.log("test anglar.fromJon"+angular.fromJson(response.data));
-			  				        $scope.areas=angular.fromJson(response.data);
-			  				
-			  				      },function(response){
-			  				        console.log("DID NOT view");
-			  				        //console.log("response is "+angular.fromJson(response.data).error);
-			  				      })
-			  		},function(response){//else is not saved successfully
-			  			console.log("AREA CANNOT BE DELETED");
-			  		
-			  		})
-			  		
-			  		}
+			 
+
+			 $scope.remove = function(area) { 
+							
+						  ModalService.showModal({
+								templateUrl: "views/yesno.html",
+								controller: "YesNoController",
+								inputs: {
+									message: "Do you wish to delete " +area.areaName+'?',
+								}
+							}).then(function(modal) {
+								modal.element.modal();
+								modal.close.then(function(result) {
+									if(result){
+									var dataObj={id:area.id,bookingId:$scope.booking.id};
+							  			$http.post('/area/deleteArea', JSON.stringify(dataObj)).then(function(response){
+						  				           console.log("Delete the area");
+											 $http.post('//localhost:8443/area/viewAreas', JSON.stringify(bookingIdObj)).then(function(response){
+						  				        console.log("pure response is "+response.data);
+						  				
+						  				        console.log("test anglar.fromJon"+angular.fromJson(response.data));
+						  				        $scope.areas=angular.fromJson(response.data);
+						  				
+						  				      },function(response){
+						  				        console.log("DID NOT view");
+						  				        //console.log("response is "+angular.fromJson(response.data).error);
+						  				      })
+
+
+										},function(response){
+												console.log("DID NOT DELETE AREA");
+										}	
+										)
+									}
+								});
+							});
+
+							$scope.dismissModal = function(result) {
+								close(result, 200); // close, but give 200ms for bootstrap to animate
+							};
+
+							//END SHOWMODAL
+						    
+						
+						   
+					}//END REMOVE
 			    
 			
 			   
@@ -353,7 +334,7 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 		console.log("Test: start saving areas");
 		var saveAreas=$scope.areas;
 		var areasString=angular.toJson(saveAreas);
-		console.log(areasString);
+		//console.log(areasString);
 
 		var dataObj = {
 				id: $scope.booking.id,
@@ -378,16 +359,16 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 
 	
 
-	$scope.showDetails= function (thisArea) {   
-		//console.log(thisArea.id); 
-
-		$scope.showDetail="id: "+ thisArea.id+", areaName: " + thisArea.areaName+", description: " + thisArea.description+"left: " + thisArea.square.left + ", top: " +  thisArea.square.top+ ", height: " + thisArea.square.height + ", width: " + thisArea.square.width;    
-
-	} 
+//	$scope.showDetails= function (thisArea) {   
+//		//console.log(thisArea.id); 
+//
+//		$scope.showDetail="id: "+ thisArea.id+", areaName: " + thisArea.areaName+", description: " + thisArea.description+"left: " + thisArea.square.left + ", top: " +  thisArea.square.top+ ", height: " + thisArea.square.height + ", width: " + thisArea.square.width;    
+//
+//	} 
 	
 	$scope.downloadPlan = function () {
-		  console.log("her0");
-		  console.log(html2canvas);
+//		  console.log("her0");
+//		  console.log(html2canvas);
 		
 		
 		  var canvasdiv = document.getElementById("glassboxGrid");
@@ -405,46 +386,7 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 		
 		    });
 		}
-	 
-	$scope.resize = function(area,evt,ui) {
 
-		console.log("resize");
-
-		area.square.width = evt.size.width;//working restrict A
-		area.square.height = evt.size.height;
-		area.square.left = parseInt(evt.position.left);
-		area.square.top = parseInt(evt.position.top);
-	}
-	$scope.drag = function(area,evt,ui) {
-
-		console.log(evt);
-		console.log("DRAGGING");
-		area.square.left = parseInt(evt.position.left);
-		area.square.top = parseInt(evt.position.top);
-		area.square.width = evt.helper.context.clientWidth;
-		area.square.height = evt.helper.context.clientHeight;
-	}
-
-
-
-	/*
-	    var areaIds="";
-	    $scope.addToAreaIds=function(areaId){
-	        areaIds+=(areaId+" ");
-	        console.log(areaIds);
-	    }
-
-	    $scope.passAreaIds=function(){
-	    	var stringToPassArea=areaIds.substring(0,areaIds.length-1);
-	    	console.log(stringToPassArea);
-	    	var objToPassArea={'areas':stringToPassArea};
-	    	shareData.addData(JSON.stringify(objToPassArea));
-	    	console.log(JSON.stringify(objToPassArea));
-	    }
-	 */
-	
-	 console.log("gridster test ");
-	 console.log(meter);
 	 $scope.gridsterOpts = {
 			 
 			 	
@@ -495,16 +437,12 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 			    }
 			};
 
-	 console.log("test opts");
-	 console.log($scope.gridsterOpts.colWidth);
-	 console.log($scope.gridsterOpts.maxRows);
-	 console.log($scope.gridsterOpts.columns);
-	 
+	
 	 
 	 //MODAL FOR ONE AREA
 	  $scope.complexResult = null;
 		 $scope.showModal = function(area,$parent) {
-			 console.log(area);
+			 //console.log(area);
 			    // Just provide a template url, a controller and call 'showModal'.
 			    ModalService.showModal({
 			    	
@@ -517,14 +455,13 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 			    	    }).then(function(modal) {
 			    	      modal.element.modal();
 			    	      modal.close.then(function(result) {
-			    	      var area  = result.area;
-			    	      // console.log("in then");
-			    	      // console.log("scope test1");
-			    	  	// console.log(   angular.element(document.getElementById('1')).scope());
-			    	       $parent.updateArea(area);
-			    	      // console.log("scope test2");
-			    	  	// console.log(   angular.element(document.getElementById('1')).scope());
-			    	       //$state.reload();
+			    	    	  if(result){
+			    	    		  var area  = result.area;
+						    	    
+					    	       $parent.updateArea(area);
+			    	    	  }
+			    	     
+			    	     
 			    	      });
 			    	    });
 
@@ -532,8 +469,8 @@ app.controller('areaPlanController', function ($scope, $http,shareData,ModalServ
 			  
 			  $scope.dismissModal = function(result) {
 				    close(result, 200); // close, but give 200ms for bootstrap to animate
-				    $parent.updateArea();
-				    console.log("in dissmiss");
+				    //$parent.updateArea();
+				    //console.log("in dissmiss");
 				 };
 })
 
@@ -546,11 +483,6 @@ app.controller('updateAreaController', ['$scope', '$element', 'title', 'close', 
 
 		  $scope.title = title;
 		  $scope.area=area;
-		  //console.log(title);
-		  //console.log(close);
-		  //console.log($element);
-		  //  This close function doesn't need to use jQuery or bootstrap, because
-		  //  the button has the 'data-dismiss' attribute.
 		  $scope.close = function() {
 		 	  close({
 		      area:$scope.area
@@ -559,15 +491,13 @@ app.controller('updateAreaController', ['$scope', '$element', 'title', 'close', 
 
 		  //  This cancel function must use the bootstrap, 'modal' function because
 		  //  the doesn't have the 'data-dismiss' attribute.
-		  $scope.cancel = function() {
+		  $scope.cancel = function(result) {
 
 		    //  Manually hide the modal.
 		    $element.modal('hide');
 		    
 		    //  Now call close, returning control to the caller.
-		    close({
-		    	area:$scope.area
-		    }, 500); // close, but give 500ms for bootstrap to animate
+		    close(result,500); // close, but give 500ms for bootstrap to animate
 		  };
 
 		
@@ -590,28 +520,28 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 		var obj=shareData.getData();
 		$scope.booking=obj.booking;
 		$scope.event=obj.event;
-		console.log($scope.booking);
-		console.log($scope.event);
+		//console.log($scope.booking);
+		//console.log($scope.event);
 		$scope.unit=obj.booking.unit;
 		bookingIdObj={id:$scope.booking.id};
 	 //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
 	      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;    
-	      console.log(widthForFloorPlan);
+	     // console.log(widthForFloorPlan);
 	     // meter=parseInt((widthForFloorPlan-40)/($scope.unit.sizeX));
 	      meter=(widthForFloorPlan-40)/($scope.unit.sizeX);
 	      $scope.unitLengthGrid=meter*($scope.unit.sizeX);
 		  $scope.unitWidthGrid=meter*($scope.unit.sizeY);	
 		  scale=meter/2;//one grid represent 0.5m
-		  console.log( $scope.unitLengthGrid+" "+$scope.unitWidthGrid);
+		  //console.log( $scope.unitLengthGrid+" "+$scope.unitWidthGrid);
 		//get event id from previous page
 		  			var getAreas= $http({
 		  				method  : 'POST',
 		  				url     : 'https://localhost:8443/area/viewAreas/',
 		  				data    : bookingIdObj,
 		  		});
-		  			console.log("REACHED HERE FOR VIEWING AREAS " + JSON.stringify(bookingIdObj));
+		  		//	console.log("REACHED HERE FOR VIEWING AREAS " + JSON.stringify(bookingIdObj));
 		  			getAreas.success(function(response){
-		  				console.log(response);
+		  			//	console.log(response);
 		  				$scope.areas = response;
 
 		  				angular.forEach($scope.areas, function(area){   
@@ -622,21 +552,22 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 		  			});
 		  			getAreas.error(function(){
 		  				//$scope.areas =[];
+		  				console.log("ERROR VIEWING ALL AREAS FOR EXTERNAL UNIT PLAN");
 		  			});	
 		  			
 		  			
 		  			$scope.addToLegend= function(area){
-		  			console.log("test legend");
-		  			console.log($scope.legends);
+		  			//console.log("test legend");
+		  			//console.log($scope.legends);
 	  				var isDuplicate=false;
 		  			angular.forEach($scope.legends, function(legend){    
 			  				if((isDuplicate==false)&&(area.description == legend.description)){	
 			  				
 			  					isDuplicate=true;
-			  					console.log(isDuplicate);
+			  					//console.log(isDuplicate);
 			  				}else{
 			  				
-			  				console.log(isDuplicate);
+			  				//console.log(isDuplicate);
 			  				}		  				
 		  			}); 
 		  			
@@ -645,7 +576,7 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 	  				}else{
 	  					$scope.legends.push(area);
 	  				}
-		  			console.log($scope.legends);
+		  			//console.log($scope.legends);
 		  			
 		  			}
 		  			
@@ -655,7 +586,7 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 	$scope.showDefaultUnitPlan= function(){
 		var unitIdObj={id:$scope.unit.id};
 		 $http.post('//localhost:8443/area/viewAreasDefault', JSON.stringify(unitIdObj)).then(function(response){
-			  console.log(angular.fromJson(response.data));
+			 // console.log(angular.fromJson(response.data));
 			  $scope.areas=angular.fromJson(response.data);
 			  angular.forEach($scope.areas, function(area){   
 					$scope.addToLegend(area);
@@ -663,7 +594,7 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 				})
 
 		  },function(response){
-			  console.log("DID NOT view");
+			  console.log("DID NOT VIEW AREAS FOR DEFAULT UNIT PLAN");
 			  //console.log("response is "+angular.fromJson(response.data).error);
 		  })
 		
@@ -681,18 +612,11 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 		shareData.addData(obj);
 	}
 
-	$scope.viewArea=function(){
-		
-
-
-	}
 	
-
 
 	
 	$scope.downloadPlan = function () {
-		  console.log("her0");
-		  console.log(html2canvas);
+		  
 		
 		
 		  var canvasdiv = document.getElementById("screenshot");
@@ -713,8 +637,7 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 	
 
 	
-	 console.log("gridster test ");
-	 console.log(meter);
+	 
 	 $scope.gridsterOpts = {
 			 
 			 	
@@ -765,16 +688,13 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 			    }
 			};
 
-	 console.log("test opts");
-	 console.log($scope.gridsterOpts.colWidth);
-	 console.log($scope.gridsterOpts.maxRows);
-	 console.log($scope.gridsterOpts.columns);
+	
 	 
 	 
 	 //MODAL FOR ONE AREA
 	  $scope.complexResult = null;
 		 $scope.showModal = function(area,$parent) {
-			 console.log(area);
+			 //console.log(area);
 			    // Just provide a template url, a controller and call 'showModal'.
 			    ModalService.showModal({
 			    	
@@ -787,14 +707,8 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 			    	    }).then(function(modal) {
 			    	      modal.element.modal();
 			    	      modal.close.then(function(result) {
-			    	      var area  = result.area;
-			    	      // console.log("in then");
-			    	      // console.log("scope test1");
-			    	  	// console.log(   angular.element(document.getElementById('1')).scope());
-			    	     //  $parent.updateArea(area);
-			    	      // console.log("scope test2");
-			    	  	// console.log(   angular.element(document.getElementById('1')).scope());
-			    	       //$state.reload();
+			    	      //var area  = result.area;
+			    	     
 			    	      });
 			    	    });
 
@@ -802,7 +716,7 @@ app.controller('viewAreaPlanController', function ($scope, $http,shareData,Modal
 			  
 			  $scope.dismissModal = function(result) {
 				    close(result, 200); // close, but give 200ms for bootstrap to animate
-				    console.log("in dissmiss");
+				    //console.log("in dissmiss");
 				 };
 })
 
@@ -816,23 +730,19 @@ app.controller('viewAreaController', ['$scope', '$element', 'title', 'close', 'a
 		  $scope.title = title;
 		  $scope.area=area;
 		 
-		  $scope.close = function() {
-		 	  close({
-		      area:$scope.area
-		    }, 500); // close, but give 500ms for bootstrap to animate
+		  $scope.close = function(result) {
+		 	  close(result, 500); // close, but give 500ms for bootstrap to animate
 		  };
 
 		  //  This cancel function must use the bootstrap, 'modal' function because
 		  //  the doesn't have the 'data-dismiss' attribute.
-		  $scope.cancel = function() {
+		  $scope.cancel = function(result) {
 
 		    //  Manually hide the modal.
 		    $element.modal('hide');
 		    
 		    //  Now call close, returning control to the caller.
-		    close({
-		    	area:$scope.area
-		    }, 500); // close, but give 500ms for bootstrap to animate
+		    close(result, 500); // close, but give 500ms for bootstrap to animate
 		  };
 
 		
