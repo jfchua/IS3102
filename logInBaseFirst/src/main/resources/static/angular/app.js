@@ -1193,6 +1193,7 @@ app.controller('createNewUserController', ['$scope','$http','ModalService',funct
 	var subz = sessionStorage.getItem('subscriptions');
 	if (subz.indexOf("TICKETING") > -1) {
 		arr.push('ROLE_TICKETING');
+		
 	} 
 	if (subz.indexOf("FINANCE") > -1) {
 		arr.push('ROLE_FINANCE');
@@ -1207,16 +1208,18 @@ app.controller('createNewUserController', ['$scope','$http','ModalService',funct
 
 	$scope.toggleSelection = function toggleSelection(gender) {
 		var idx = $scope.selection.indexOf(gender);
+		alert("index selected gender: " + idx);
 		if (idx > -1) {
 			// is currently selected
 			$scope.selection.splice(idx, 1);
 		}
 		else {
 			// is newly selected
-			$scope.selected = [];
-			$scope.selected.push(gender);
+			//$scope.selected = [];
+			$scope.selection.push(gender);
 			//$scope.selection.push(gender);
 		}
+		alert(JSON.stringify($scope.selection));
 	};
 
 
@@ -1229,7 +1232,7 @@ app.controller('createNewUserController', ['$scope','$http','ModalService',funct
 				name: $scope.ctrl.name,
 				roles: $scope.selection			
 		};
-
+alert(JSON.stringify(dataObj));
 		var create = $http({
 			method  : 'POST',
 			url     : 'https://localhost:8443/user/addNewUser',
@@ -1283,7 +1286,22 @@ app.controller('createNewUserController', ['$scope','$http','ModalService',funct
 app.controller('viewUserList', ['$scope','$http','$location','ModalService',
                                 function($scope, $http,$location,ModalService) {
 	//assign roles
-	$scope.genders=['ROLE_USER','ROLE_EVENT','ROlE_ADMIN','ROLE_PROPERTY','ROLE_FINANCE','ROLE_TICKETING','ROLE_EXTEVE'];
+	var arr = ['ROLE_USER','ROLE_EVENT','ROLE_ADMIN','ROLE_PROPERTY','ROLE_EXTEVE'];
+
+	var subz = sessionStorage.getItem('subscriptions');
+	if (subz.indexOf("TICKETING") > -1) {
+		arr.push('ROLE_TICKETING');
+		
+	} 
+	if (subz.indexOf("FINANCE") > -1) {
+		arr.push('ROLE_FINANCE');
+	} 
+	if (subz.indexOf("BI") > -1) {
+		arr.push('ROLE_HIGHER');
+	} 
+
+
+	$scope.genders= arr;
 
 	$scope.selection=[];
 
