@@ -745,6 +745,9 @@ insert into ticket values(1,'2016-11-12 22:00:00', 'P21', '2016-11-05 10:00:00',
 insert into ticket values(2,'2016-11-12 22:00:00', 'P22', '2016-11-05 10:00:00',false, '2016-11-11 10:00:00', 'single entry','*22*',1);
 insert into ticket values(3,'2016-11-16 22:00:00', 'P23', '2016-11-05 10:00:00',false, '2016-11-15 10:00:00', 'single entry','*23*',2);
 insert into ticket values(4,'2016-11-16 22:00:00', 'P24', '2016-11-05 10:00:00', false,'2016-11-15 10:00:00', 'single entry','*24*',2);
+
+insert into feedback values(1, '123', '2016-11-12 22:00:00', null, 'hahaha', 12);
+insert into event_feedbacks values(20, 1);
 /*
 insert into user_tickets values(14,1);
 insert into user_tickets values(14,2);

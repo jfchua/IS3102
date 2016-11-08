@@ -583,9 +583,9 @@ public class TicketingController {
 	}
 
 
-	@RequestMapping(value = "/tixGetFeedback",  method = RequestMethod.GET)
+	@RequestMapping(value = "/tixGetFeedback",  method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> tixGetFeedback(HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> tixGetFeedback(@RequestBody String eventJSON, HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
@@ -594,10 +594,15 @@ public class TicketingController {
 		System.err.println("inside tix buy ticket");
 		try{
 
+			Object obj1 = parser.parse(eventJSON);
+			JSONObject jsonObject = (JSONObject) obj1;
+			Long eventId = (Long)jsonObject.get("id");
+			Event event = eventExternalService.getEventById(eventId).get();
 			Gson gson = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == User.class);
+							return (clazz == Category.class) || (clazz == User.class)||
+									(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
 						}
 
 						/**
@@ -616,10 +621,10 @@ public class TicketingController {
 					 */
 					.serializeNulls()
 					.create();	
-			List<Feedback> list = feedbackRepository.findAll();
+			Set<Feedback> feedbacks = event.getFeedbacks();
 
 
-			return new ResponseEntity<String>(gson.toJson(list),HttpStatus.OK);
+			return new ResponseEntity<String>(gson.toJson(feedbacks),HttpStatus.OK);
 		}
 		//catch ( EventNotFoundException e){
 		//	return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);

@@ -7,16 +7,6 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		$scope.data = {};
 		//var tempObj= {id:1};
 		//console.log(tempObj)
-		$http.get("//localhost:8443/tixGetFeedback").then(function(response){
-			$scope.feedbacks = response.data;
-			console.log("DISPLAY ALL EVENT");
-			console.log($scope.feedbacks);
-
-		},function(response){
-			alert("did not view all events");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)
 
 		$http.get("//localhost:8443/event/viewAllEvents").then(function(response){
 			$scope.order_item = "id";
@@ -1631,3 +1621,40 @@ app.controller('ticketSaleExController', ['$scope', '$http','$state','$routePara
 	});
 
 }]);
+
+app.controller('feedbackController', ['$scope','$rootScope','$http','$state','shareData','ModalService', function ($scope, $rootScope, $http,$state, shareData,ModalService) {
+	angular.element(document).ready(function () {
+		$scope.event = shareData.getData();
+		var dataObj={id: $scope.event.id};
+        console.log(dataObj);
+        console.log("!!!");
+		$http.post("//localhost:8443/tixGetFeedback", JSON.stringify(dataObj)).then(function(response){
+					$scope.feedbacks = response.data;
+		
+		},function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: response.data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllEventsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+		});
+	})
+}])
+
+
+
