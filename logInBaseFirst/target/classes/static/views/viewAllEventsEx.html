@@ -56,10 +56,10 @@
 										class="glyphicon glyphicon-trash"></i></a> <a
 										ui-sref="dashboard.viewBookingEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="View Bookings"><i
-										class="glyphicon glyphicon-eye-open"></i></a> <a
-										ng-hide="!IsTicketingSub() || x.hasTicket" ng-click="requestForTicketSales(x)"
+										class="glyphicon glyphicon-eye-open"></i></a><div ng-show = "IsTicketingSub()"></div> <a
+										ng-hide="x.hasTicket" ng-click="requestForTicketSales(x)"
 										tooltip-placement="top" tooltip="Request Ticket Sales"><i
-										class="glyphicon glyphicon-shopping-cart"></i></a> <a
+										class="glyphicon glyphicon-shopping-cart"></i></a></div> <a
 										ui-sref="dashboard.configureDiscountsEx"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Discounts"><i

@@ -32,6 +32,7 @@ import application.entity.User;
 import application.exception.EventNotFoundException;
 import application.repository.AuditLogRepository;
 import application.repository.CategoryRepository;
+import application.repository.ClientOrganisationRepository;
 import application.repository.DiscountRepository;
 import application.repository.EventRepository;
 import application.repository.FeedbackRepository;
@@ -55,7 +56,10 @@ public class EngagementServiceImpl implements EngagementService{
 	private ServletContext servletContext;
 
 	@Autowired
-	public EngagementServiceImpl(EmailService emailService, DiscountRepository discountRepository, FeedbackRepository feedbackRepository, TicketRepository ticketRepository, CategoryRepository categoryRepository, EventRepository eventRepository, EventService eventService,AuditLogRepository auditLogRepository, UserRepository userRepository) {
+	public EngagementServiceImpl(EmailService emailService, DiscountRepository discountRepository, 
+			FeedbackRepository feedbackRepository, TicketRepository ticketRepository, CategoryRepository categoryRepository,
+			EventRepository eventRepository, EventService eventService,AuditLogRepository auditLogRepository, 
+			UserRepository userRepository) {
 		super();
 		this.auditLogRepository = auditLogRepository;
 		this.emailService = emailService;
@@ -172,15 +176,31 @@ public class EngagementServiceImpl implements EngagementService{
 	}
 
 	@Override
-	public boolean deleteDiscount(Long discountId) {
+	public boolean deleteDiscount(User user,Long discountId) {
 		try{
-			discountRepository.delete(discountRepository.findOne(discountId));
-			return true;
+			System.err.println("START TO DELETE");
+			Discount discount = discountRepository.findOne(discountId);
+			Set<Event> events = user.getEvents();
+			for(Event ev : events){
+				Set<Discount> dis = ev.getDiscounts();
+				for(Discount d : dis){
+					if(d.getId() == discountId){
+						dis.remove(d);
+						break;
+					}
+				}
+				ev.setDiscounts(dis);
+				eventRepository.flush();
+			}
+			System.err.println(discount.getDiscountMessage());
+			discountRepository.delete(discount);		
 		}
 		catch ( Exception ex){
+			System.err.println("FAIL TO DELETE");
 			System.err.println("Error at deleting discount in service class" + ex.getMessage());
-		}
-		return false;
+			return false;
+		}		
+		return true;
 	}
 	
 	@Override
