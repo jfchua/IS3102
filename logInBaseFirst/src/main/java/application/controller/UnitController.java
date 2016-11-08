@@ -169,7 +169,7 @@ public class UnitController {
 			//long levelId = Long.parseLong(level);
 			Set<Unit> units = unitService.getUnitsByLevelId(levelId);
 			for(Unit unit:units){	
-				System.out.println("********** unit: " + unit.getUnitNumber());
+				//System.out.println("********** unit: " + unit.getUnitNumber());
 				Set<UnitAttributeValue> values = unit.getUnitAttributeValues();
 				for(UnitAttributeValue value:values){
 					value.setUnits(null);

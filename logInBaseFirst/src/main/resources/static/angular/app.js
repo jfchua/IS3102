@@ -440,23 +440,40 @@ var app = angular.module('app', [ 'ui.router',
                                 			  .state('dashboard.viewBuildingEx',{
                                 				  url:'/viewBuildingEx',
                                 				  templateUrl: '/views/viewBuildingEx.html',
-                                				  controller: 'buildingController',
+                                				  controller: 'viewBuildingExController',
                                 				  data:{
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewLevelsEx',{
+                                			   .state('dashboard.viewLevelsEx',{
                                 				  url:'/viewLevelsEx',
                                 				  templateUrl: '/views/viewLevelsEx.html',
-                                				  controller: 'buildingController',
+                                				  controller: 'viewviewLevelsExController',
                                 				  data:{
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewFloorPlanEx',{
+                                			  
+                                			  .state('dashboard.viewBuildingEx.viewFloorPlanEx',{
                                 				  url:'/viewFloorPlanEx',
+                                                   params: {
+                                                   param1: null
+                                                    },
                                 				  templateUrl: '/views/viewFloorPlanEx.html',
-                                				  controller: 'floorPlanController',
+                                				  controller: 'viewFloorPlanExController',
+                                                  
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                              
+                                			   .state('dashboard.viewBuildingEx.viewFloorPlanEx.viewUnitPlanDefaultEx',{
+                                				  url:'/viewUnitPlanDefaultEx',
+                                				  params: {
+                                                      param2: null
+                                                       },
+                                				  templateUrl: '/views/viewUnitPlanDefaultEx.html',
+                                				  controller: 'viewDefaultUnitPlanExController',
                                 				  data:{
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
