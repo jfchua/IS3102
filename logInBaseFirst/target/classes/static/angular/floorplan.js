@@ -132,7 +132,7 @@ $scope.twoOptions=[
                 	  // console.log($itemScope.unit);
                 	   $scope.showModal($itemScope.unit,$parent);
                    }],
-                   ['<p ng-show="$itemScope.unit.square.type==\'./svg/rect.svg\'">View Unit Plan</p>', function ($itemScope, $event, modelValue, text, $li) {
+                   ['View Unit Plan', function ($itemScope, $event, modelValue, text, $li) {
                 	
                        $scope.viewUnitPlanDefault($itemScope.unit);
                       

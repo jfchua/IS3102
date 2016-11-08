@@ -33,6 +33,8 @@ import application.entity.AuditLog;
 import application.entity.Building;
 import application.entity.ClientOrganisation;
 import application.entity.Level;
+import application.entity.Unit;
+import application.entity.UnitAttributeValue;
 import application.entity.User;
 import application.exception.BuildingNotFoundException;
 import application.exception.InvalidFileUploadException;
@@ -380,6 +382,77 @@ public class BuildingController {
 		System.err.println(String.format("received %s", file.getOriginalFilename()));
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
+	
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY', 'ROLE_EXTEVE')")
+	@RequestMapping(value = "/viewBuildingsWithUnits", method = RequestMethod.GET)
+	@ResponseBody
+	public String viewBuildingsWithUnits(HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();
+			Set<Building> buildings = client.getBuildings();
+			//Gson gson = new Gson();
+			//String json = gson.toJson(buildings);
+			//System.out.println("Returning buildings with json of : " + json);
+			//return json;	
+			System.out.println(buildings);
+			for(Building building:buildings){
+				Set<Level> levels=building.getLevels();
+				for(Level level:levels){
+					level.setBuilding(null);
+					Set<Unit> units=level.getUnits();
+					for(Unit unit :units){
+						unit.setBookings(null);
+						unit.setLevel(null);
+						unit.setMaintenanceSchedule(null);
+						Set<UnitAttributeValue> values = unit.getUnitAttributeValues();
+						for(UnitAttributeValue value:values){
+							value.setUnits(null);
+							value.getUnitAttributeType().setUnitAttributeValues(null);
+						}
+					}
+				}
+				
+			}
+			Gson gson2 = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return false;
+						}
 
+						/**
+						 * Custom field exclusion goes here
+						 */
+
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+						}
+
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();
+
+
+
+			String json = gson2.toJson(buildings);
+			System.out.println("BUILDING IS " + json);
+
+			return json;
+		}
+		catch (Exception e){
+			return "cannot fetch";
+		}
+	}	
 
 }

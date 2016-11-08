@@ -440,23 +440,40 @@ var app = angular.module('app', [ 'ui.router',
                                 			  .state('dashboard.viewBuildingEx',{
                                 				  url:'/viewBuildingEx',
                                 				  templateUrl: '/views/viewBuildingEx.html',
-                                				  controller: 'buildingController',
+                                				  controller: 'viewBuildingExController',
                                 				  data:{
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewLevelsEx',{
+                                			   .state('dashboard.viewLevelsEx',{
                                 				  url:'/viewLevelsEx',
                                 				  templateUrl: '/views/viewLevelsEx.html',
-                                				  controller: 'buildingController',
+                                				  controller: 'viewviewLevelsExController',
                                 				  data:{
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewFloorPlanEx',{
+                                			  
+                                			  .state('dashboard.viewBuildingEx.viewFloorPlanEx',{
                                 				  url:'/viewFloorPlanEx',
+                                                   params: {
+                                                   param1: null
+                                                    },
                                 				  templateUrl: '/views/viewFloorPlanEx.html',
-                                				  controller: 'floorPlanController',
+                                				  controller: 'viewFloorPlanExController',
+                                                  
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                              
+                                			   .state('dashboard.viewBuildingEx.viewFloorPlanEx.viewUnitPlanDefaultEx',{
+                                				  url:'/viewUnitPlanDefaultEx',
+                                				  params: {
+                                                      param2: null
+                                                       },
+                                				  templateUrl: '/views/viewUnitPlanDefaultEx.html',
+                                				  controller: 'viewDefaultUnitPlanExController',
                                 				  data:{
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
@@ -1519,7 +1536,16 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 
 //USER PROFILE CONTROLLER
 app.controller('userProfileController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
-
+	
+	$scope.question = [
+	                   {question: "What is your Mother\'s Maiden name"},
+	                   {question: "What is your favourite number"},
+	                   {question: "What is your favourite food"},
+	                   {question: "What is your favourite animal"},
+	                   {question: "What is your favourite colour"}
+	                   ];
+	                   
+	
 	$scope.submit = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -1684,8 +1710,9 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 		}
 		else{
 			var dataObj = {
-					password: $scope.userProfile.security1,
-					oldpassword: $scope.userProfile.security0,
+					security: $scope.userProfile.security1,
+					oldsecurity: $scope.userProfile.security0,
+					question: $scope.selectedQuestion,
 			};
 			
 
@@ -1701,7 +1728,7 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 					templateUrl: "views/popupMessageTemplate.html",
 					controller: "errorMessageModalController",
 					inputs: {
-						message: 'Security Answer successfully updated',
+						message: 'Security Question and Answer successfully updated',
 					}
 				}).then(function(modal) {
 					modal.element.modal();
