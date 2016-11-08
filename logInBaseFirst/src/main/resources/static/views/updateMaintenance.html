@@ -111,11 +111,13 @@
 
 					<div class="form-group">
 						<label for="exampleInput">Start Date</label> <input
+						ng-change='checkDateErr(maintenance.start,maintenance.end)'
 							type="datetime-local" ng-model="maintenance.start"
 							class="form-control" placeholder="Enter start date">
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">End Date</label> <input
+						ng-change='checkDateErr(maintenance.start,maintenance.end)'
 							type="datetime-local" ng-model="maintenance.end"
 							class="form-control" placeholder="Enter end date">
 					</div>

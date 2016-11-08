@@ -1333,7 +1333,59 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 	};	
 
 
+	$scope.checkDateErr = function(startDate,endDate) {
+		$scope.errMessage = '';
+		var curDate = new Date();
 
+		if(new Date(startDate) > new Date(endDate)){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "End Date should be greater than start date",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.maintenance.end = '';
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+
+			return false;
+		}
+		if(new Date(startDate) < curDate){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Maintenance start date should not be before today",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.maintenance.start = '';
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+			return false;
+		}
+	};
 }]);
 
 
@@ -1354,7 +1406,7 @@ app.filter('orderObjectBy', function() {
 
 
 
-app.controller('maintenanceController',['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('maintenanceController',['$scope', '$http','$state','$routeParams','shareData', 'ModalService',function ($scope, $http,$state, $routeParams, shareData,ModalService) {
 	angular.element(document).ready(function () {
 
 		$scope.data = {};	
@@ -1389,18 +1441,49 @@ app.controller('maintenanceController',['$scope', '$http','$state','$routeParams
 			var file = new Blob([data], {type: 'application/pdf'});
 			var fileURL = URL.createObjectURL(file);
 			window.open(fileURL);
-			alert('DOWNLOADED!');
+			
+			//SHOW SUCCESS MESSAGE IN MODAL
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Report is downloaded.'
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+			};
 		});
 		send.error(function(data){
-			alert('DOWNLOAD GOT ERROR!');
+			console.log('DOWNLOAD GOT ERROR!');
 		});
 	};
 	
 	$scope.runTimer = function(){
 		$http.get("//localhost:8443/maintenance/runTimer").then(function(response){
-			alert("timer is running");
+			console.log("timer is running");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Timer is running'
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+			};
 		},function(response){
-			alert("fail to activate timer");
+			console.log("fail to activate timer");
 		}	
 		)	
 	}

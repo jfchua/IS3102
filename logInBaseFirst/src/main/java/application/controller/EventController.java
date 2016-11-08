@@ -340,7 +340,7 @@ public class EventController {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return new ResponseEntity<String>(geeson.toJson("Server error in getting event"),HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting user"),HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
 		try{
@@ -431,7 +431,7 @@ public class EventController {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return new ResponseEntity<String>(geeson.toJson("Server error in getting event"),HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting user"),HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
 		try{

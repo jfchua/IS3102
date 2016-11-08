@@ -43,7 +43,8 @@ public class UnitController {
 	private final LevelService levelService;
 	private final UserService userService;
 	private JSONParser parser = new JSONParser();
-
+	private Gson geeson = new Gson();
+	
 	@Autowired
 	public UnitController(UnitService unitService,LevelService levelService,UserService userService) {
 		this.unitService = unitService;
@@ -354,7 +355,7 @@ public class UnitController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/deleteUnit", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> deleteUnit(@RequestBody String idObj,HttpServletRequest rq) {
+	public ResponseEntity<String> deleteUnit(@RequestBody String idObj,HttpServletRequest rq) {
 
 
 		try{
@@ -368,19 +369,19 @@ public class UnitController {
 			long levelId = (Long)jsonObject.get("levelId");
 			System.out.println("unitcontroller 369"+ unitService.checkBookings(unitId));
 			if(!unitService.checkBookings(unitId)){
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+				return new ResponseEntity<String>(geeson.toJson("Unit has prior bookings, cannot be deleted."),HttpStatus.CONFLICT);
 			}
 			else{
 				if(unitService.deleteUnit(unitId,levelId)){
 					System.out.println("DELETED");
-					return new ResponseEntity<Void>(HttpStatus.OK);
+					return new ResponseEntity<String>(HttpStatus.OK);
 				}else{
-					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+					return new ResponseEntity<String>(geeson.toJson("Error in deleting unit"),HttpStatus.CONFLICT);
 				}
 			}
 		}
 		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(geeson.toJson("Server error"),HttpStatus.CONFLICT);
 		}
 
 	}
