@@ -61,13 +61,13 @@
 									</div>
 								</div>-->
 								<div ng-show="profile.editable">							
-										<input type="checkbox" ng-model="common" value="COMMONINFRA" ng-checked = "true">COMMONINFRA<br>
-										<input type="checkbox" ng-model="property" value="PROPERTY" ng-checked = "true">PROPERTY<br>
-										<input type="checkbox" ng-model="event" value="EVENT" ng-checked = "true">EVENT<br>
+										<input type="checkbox" ng-model="profile.common" value="COMMONINFRA" ng-disabled="true" ng-checked = "true">COMMON INFRASTRUCTURE<br>
+										<input type="checkbox" ng-model="profile.property" value="PROPERTY" ng-disabled="true" ng-checked = "true">PROPERTY<br>
+										<input type="checkbox" ng-model="profile.event" value="EVENT" ng-disabled="true" ng-checked = "true">EVENT<br>
 										<input type="checkbox" ng-model="profile.finance" value="FINANCE" >FINANCE<br>
 										<input type="checkbox" ng-model="profile.ticketing" value="TICKETING"
 											ng-disabled="!profile.finance" ng-checked="profile.finance&& 0">TICKETING<br>
-										<input type="checkbox" ng-model="profile.bi" value="BI">BI<br>							
+										<input type="checkbox" ng-model="profile.bi" value="BI">BUSINESS INTELLIGENCE<br>							
 								</div>
 							</td>
 							<td><a ng-click="edit($index)" ng-hide="profile.editable"
