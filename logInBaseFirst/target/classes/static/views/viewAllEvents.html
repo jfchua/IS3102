@@ -17,8 +17,52 @@
 <div class="col-lg-9">
 
   <uib-tabset active="activeJustified" justified="true" class="panel">
-    
-     <uib-tab index="0" heading="To-be-Approved Events" class="panel panel-primary panel-title">
+         <uib-tab index="0" heading="All" class="panel panel-primary panel-title">
+     		<div ng-cloak ng-controller="eventController as eventCtrl">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">All Events 
+						<div class="panel-control pull-right">
+						
+							<a class="panelButton"><i class="fa fa-refresh"></i></a>
+							<a class="panelButton"><i class="fa fa-minus"></i></a>
+							<a class="panelButton"><i class="fa fa-remove"></i></a>
+							
+						</div>
+					</h3>
+				</div>
+				<div class="panel-body" >
+                    <table class="table table-hover">
+                        <thead>
+                           <tr>
+                           <th><i></i> ID </th>
+                           <th><i></i> Event Title </th>
+                           <th><i></i> Status </th>
+                           <th>Details</th>
+                           </tr>
+                        </thead>
+                          <tbody>
+                         <tr ng-repeat="x in events| orderObjectBy:order_item:order_reverse">
+                         <td>{{ x.id }}</td>
+                         <td>{{ x.event_title }}</td>
+                         <td>{{ x.approvalStatus }}</td>
+                          <td>
+                          <a ng-show="x.approvalStatus=='PROCESSING'" ui-sref="dashboard.viewEventDetails" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                          <a ng-show="x.approvalStatus=='APPROVED'||x.approvalStatus=='SUCCESSFUL'||x.approvalStatus=='CANCELLED'" ui-sref="dashboard.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                          <a ng-show="x.approvalStatus=='APPROVED'" ng-click="showAModal(x)" tooltip-placement="top" tooltip="Update Status"><i class="glyphicon glyphicon-pencil"></i></a>                            		
+                   		  <a  ng-show="x.approvalStatus=='CANCELLED'" ui-sref="dashboard.deleteEvent" ng-click="passEvent(x)" tooltip-placement="top" tooltip="Delete Event"><i class="glyphicon glyphicon-trash"></i></a>
+                            
+                           </td>
+                             
+                             <!--  <td><a ng-model="myValue" href="/#/deleteEvent" ng-click="getEvent(x.id)">Delete</a></td>-->
+                         </tr>
+                         </tbody>
+                        </table>
+                </div>
+			</div>
+		</div>
+     </uib-tab>
+     <uib-tab index="1" heading="To-be-Approved" class="panel panel-primary panel-title">
      		<div ng-cloak ng-controller="viewToBeApprovedEventController as viewToBeApprovedEventCtrl">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
@@ -57,7 +101,7 @@
 			</div>
 		</div>
      </uib-tab>
-    <uib-tab index="1" heading="Approved Events" class="panel panel-primary panel-title">
+    <uib-tab index="2" heading="Approved" class="panel panel-primary panel-title">
     	<div ng-cloak ng-controller="viewApprovedEventController as viewApprovedEventCtrl" >
 			<div class="panel panel-primary">
 				<div class="panel-heading">
@@ -99,7 +143,7 @@
 			</div>
 		</div>
     </uib-tab>
-    <uib-tab index="2" heading="Successful Events" class="panel panel-primary panel-title">
+    <uib-tab index="3" heading="Successful" class="panel panel-primary panel-title">
     <div ng-cloak ng-controller="successfulEventController as successfulEventCtrl" >
      	<div class="panel panel-primary">
 				<div class="panel-heading">
@@ -142,7 +186,7 @@
 
     
     </uib-tab>
-    <uib-tab index="3" heading="Canceled Events" class="panel panel-primary panel-title">
+    <uib-tab index="4" heading="Canceled" class="panel panel-primary panel-title">
 <div ng-cloak ng-controller="canceledEventController as canceledEventCtrl" >
     	<div class="panel panel-primary">
 				<div class="panel-heading">

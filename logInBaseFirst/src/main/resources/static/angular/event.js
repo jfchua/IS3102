@@ -1,4 +1,4 @@
-app.controller('eventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('eventController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService) {
 	$scope.eventFilter={
 			event:{
 				approvalStatus:"SUCCESSFUL"
@@ -181,7 +181,59 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 	}
 	
 	
-	
+	$scope.complexResult = null;
+	 $scope.showAModal = function(event) {
+		 console.log(event);
+		    // Just provide a template url, a controller and call 'showModal'.
+		    ModalService.showModal({
+		    	
+		    	      templateUrl: "views/updateEventStatusTemplate.html",
+		    	      controller: "updateEventStatusController",
+		    	      inputs: {
+		    	        title: "Update Event Status",
+		    	        event:event
+		    	      }
+		    	    }).then(function(modal) {
+		    	      modal.element.modal();
+		    	      modal.close.then(function(result) {
+		    	       $scope.event  = result.event;
+		    	       $scope.updateEventStatus();
+		    	      });
+		    	    });
+
+		  };
+		  
+		  $scope.dismissModal = function(result) {
+			    close(result, 200); // close, but give 200ms for bootstrap to animate
+			 };
+			 
+		$scope.updateEventStatus = function(){
+					console.log("Start updating");
+					$scope.data = {};
+					//$scope.event = JSON.parse(shareData.getData());
+					console.log($scope.event.id);
+					var dataObj = {				
+							id: $scope.event.id,
+							event_approval_status: $scope.event.approvalStatus,
+					};		
+					console.log(dataObj.event_approval_status);
+					console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+
+					var send = $http({
+						method  : 'POST',
+						url     : 'https://localhost:8443/eventManager/updateEventStatus',
+						data    : dataObj //forms user object
+					});
+
+					console.log("UPDATING THE EVENT");
+					send.success(function(){
+						alert('Successfully saved event status, going back to viewing all approved events');
+						$state.go("dashboard.viewAllEvents");
+					});
+					send.error(function(data){
+						alert(data);
+					});
+				};
 
 }]);
 
