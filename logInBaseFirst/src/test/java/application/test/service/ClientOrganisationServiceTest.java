@@ -3,7 +3,9 @@ package application.test.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -33,7 +35,7 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 		List<String> subs = new ArrayList<String>();
 		subs.add("TESTSUB");
 		try{
-			List<Subscription> subsz = new ArrayList<>();
+			Set<Subscription> subsz = new HashSet<>();
 			subsz.add(Subscription.COMMONINFRA);
 			clientOrganisationService.createNewClientOrganisation("deletetestname123", "testemail@testemail.edu", subsz, "testadminname",1.1,new Date(), new Date(),"addess","555555","99999392");
 		}
@@ -73,7 +75,7 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	public void testCreateNewClientOrganisation() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException {
 	
 		System.err.println("before createnewclientorg");
-		List<Subscription> subsz = new ArrayList<Subscription>();
+		Set<Subscription> subsz = new HashSet<>();
 		subsz.add(Subscription.COMMONINFRA);
 		boolean result = clientOrganisationService.createNewClientOrganisation("testname123", "testemail@test.org", subsz, "testadminname",1.1,new Date(), new Date(),"address2","566655","99966692");
 		System.err.println("after  createnewclientorg");
@@ -84,7 +86,7 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	public void testCreateNewClientOrganisationUserAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException {
 		List<String> subs = new ArrayList<String>();
 		System.err.println("before createnewclientorg");
-		List<Subscription> subsz = new ArrayList<>();
+		Set<Subscription> subsz = new HashSet<>();
 		subsz.add(Subscription.COMMONINFRA);
 		boolean result = clientOrganisationService.createNewClientOrganisation("testname123", "tkgs.zhao.mingsha@gmail.com",subsz, "testadminname",1.1,new Date(), new Date(),"addess","555555","99999392");
 		System.err.println("after  createnewclientorg");
@@ -95,7 +97,7 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	public void testCreateNewClientOrganisationOrgNameAlreadyExists() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException {
 		List<String> subs = new ArrayList<String>();
 		System.err.println("before createnewclientorg");
-		List<Subscription> subsz = new ArrayList<>();
+		Set<Subscription> subsz = new HashSet<>();
 		subsz.add(Subscription.COMMONINFRA);
 		boolean result = clientOrganisationService.createNewClientOrganisation("Expo", "testy@localhost.com", subsz, "testname",1.1,new Date(), new Date(),"addess","555555","99999392");
 		System.err.println("after  createnewclientorg");
@@ -106,7 +108,7 @@ public class ClientOrganisationServiceTest extends AbstractTest {
 	public void testCreateNewClientOrganisationInvalidEmail() throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException {
 		List<String> subs = new ArrayList<String>();
 		System.err.println("before createnewclientorg");
-		List<Subscription> subsz = new ArrayList<>();
+		Set<Subscription> subsz = new HashSet<>();
 		subsz.add(Subscription.COMMONINFRA);
 		boolean result = clientOrganisationService.createNewClientOrganisation("Expo2", "invalidemail", subsz, "testname",1.1,new Date(), new Date(),"addess","555555","99999392");
 		System.err.println("after  createnewclientorg");
