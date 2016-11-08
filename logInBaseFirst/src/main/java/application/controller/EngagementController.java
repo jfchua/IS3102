@@ -175,11 +175,11 @@ public class EngagementController {
 	@ResponseBody
 	public ResponseEntity<String> deleteDiscount(@RequestBody String discount, HttpServletRequest rq) throws UserNotFoundException {
 
-		/*		Principal principal = rq.getUserPrincipal();
+		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}*/
+		}
 		try{
 
 			Object obj1 = parser.parse(discount);
@@ -187,7 +187,7 @@ public class EngagementController {
 			JSONObject jsonObject = (JSONObject) obj1;
 			Long eventId = (Long)jsonObject.get("eventId");
 
-			boolean discounts = engagementService.deleteDiscount(Long.valueOf(eventId));
+			boolean discounts = engagementService.deleteDiscount(usr.get(), Long.valueOf(eventId));
 			if ( !discounts){
 				return new ResponseEntity<String>(gson.toJson("Server error in getting discount"),HttpStatus.INTERNAL_SERVER_ERROR);
 			}
