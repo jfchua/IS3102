@@ -53,7 +53,7 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 	}
 
 
-	public boolean createNewClientOrganisation(String orgName, String adminEmail, List<Subscription> subs,String nameAdmin, Double fee, Date start, Date end, String address, String postal, String phone)
+	public boolean createNewClientOrganisation(String orgName, String adminEmail, Set<Subscription> subs,String nameAdmin, Double fee, Date start, Date end, String address, String postal, String phone)
 			throws EmailAlreadyExistsException,OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException{
 		Pattern pat = Pattern.compile("^.+@.+\\..+$");
 		Matcher get = pat.matcher(adminEmail);		
@@ -171,6 +171,7 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 		return	clientOrg;
 
 	}
+
 
 
 

@@ -15,7 +15,7 @@ import application.exception.UserNotFoundException;
 
 public interface ClientOrganisationService {
 
-	 public boolean createNewClientOrganisation(String orgName, String adminEmail, List<Subscription> subs,String nameAdmin, Double fee, Date start, Date end, String address, String postal, String phone) 
+	 public boolean createNewClientOrganisation(String orgName, String adminEmail, Set<Subscription> subs,String nameAdmin, Double fee, Date start, Date end, String address, String postal, String phone) 
 			 throws EmailAlreadyExistsException, OrganisationNameAlreadyExistsException, ClientOrganisationNotFoundException, UserNotFoundException, InvalidEmailException;
 	 
 	 public Collection<ClientOrganisation>  getAllClientOrganisations();

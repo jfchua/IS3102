@@ -37,6 +37,11 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		    //console.log(new Date(dateString) < daysAgo);
 		    return (new Date(dateString) < daysAgo);
 		}
+
+		$scope.IsTicketingSub = function(){
+			var subz = sessionStorage.getItem('subscriptions');
+			return (subz.indexOf("TICKETING") > -1);
+		}
 		$scope.checkStatus = function (event) {
 			var isTrue = true;
 		    //console.log("****");

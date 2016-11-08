@@ -18,6 +18,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import application.enumeration.Subscription;
@@ -46,10 +50,11 @@ public class ClientOrganisation {
 	private Set<User> users = new HashSet<User>();	
 	//@Column(name = "systemSubscriptions",nullable = true)
 	//private String[] systemSubscriptions;
+	//@JsonFormat(shape= JsonFormat.Shape.OBJECT)
 	@Column(name = "systemSubscriptions",nullable = true)
 	@ElementCollection //
-	@JsonIgnore
-	private List<Subscription> systemSubscriptions;
+	@Fetch(FetchMode.JOIN)
+	private Set<Subscription> systemSubscriptions;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "start_date", nullable = false)
@@ -223,13 +228,13 @@ public class ClientOrganisation {
 
 
 
-	public List<Subscription> getSystemSubscriptions() {
+	public Set<Subscription> getSystemSubscriptions() {
 		return systemSubscriptions;
 	}
 
 
 
-	public void setSystemSubscriptions(List<Subscription> systemSubscriptions) {
+	public void setSystemSubscriptions(Set<Subscription> systemSubscriptions) {
 		this.systemSubscriptions = systemSubscriptions;
 	}
 

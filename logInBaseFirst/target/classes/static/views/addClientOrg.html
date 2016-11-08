@@ -80,14 +80,19 @@
 						{{system}}
 						</div>
 					</div>
-					<div ng-repeat="gender in genders">
+					  <div >
+                         <input type="checkbox" ng-model="finance" value = "FINANCE ">FINANCE<br>
+                         <input type="checkbox" ng-model="ticketing" value = "TICKETING"  ng-disabled="!finance" ng-checked="finance&& 0">TICKETING<br>
+                         <input type="checkbox" ng-model="bi" value = "BI" >BI<br>
+                    </div>
+					<!--<div ng-repeat="gender in genders">
 						<div class="action-checkbox">
 							<input id="{{gender}}" type="checkbox" value="{{gender}}"
-								ng-checked="selection.indexOf(gender) > -1" ng-disabled = "gender == 'TICKETING' && checkSub()"
+								ng-checked="selection.indexOf(gender) > -1 || (gender == 'TICKETING' && !checkSub() && 0)" ng-disabled = "gender == 'TICKETING' && checkSub()"
 								ng-click="toggleSelection(gender)" /> <label for="{{gender}}"></label>
 							{{gender}}
 						</div>
-					</div>
+					</div>-->
 					<br>
 					<!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
 					
