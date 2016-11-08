@@ -90,6 +90,10 @@ public class Event {
 		@Column(nullable = true)
 		private Set<Discount> discounts = new HashSet<Discount>();
 		
+		@OneToMany(fetch = FetchType.EAGER,cascade={CascadeType.ALL})
+		@Column(nullable = true)
+		private Set<Beacon> beacons = new HashSet<Beacon>();
+		
 		public Set<Discount> getDiscounts() {
 			return discounts;
 		}
@@ -102,6 +106,20 @@ public class Event {
 		}
 		public void removeDiscount(Discount d){
 			discounts.remove(d);
+		}
+		
+		public Set<Beacon> getBeacon() {
+			return beacons;
+		}
+
+		public void setBeacons(Set<Beacon> beacons) {
+			this.beacons = beacons;
+		}
+		public void addBeacon(Beacon d){
+			beacons.add(d);
+		}
+		public void removeBeacon(Beacon d){
+			beacons.remove(d);
 		}
 
 

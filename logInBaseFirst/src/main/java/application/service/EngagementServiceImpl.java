@@ -25,12 +25,14 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import application.entity.Beacon;
 import application.entity.Discount;
 import application.entity.Event;
 import application.entity.Feedback;
 import application.entity.User;
 import application.exception.EventNotFoundException;
 import application.repository.AuditLogRepository;
+import application.repository.BeaconRepository;
 import application.repository.CategoryRepository;
 import application.repository.ClientOrganisationRepository;
 import application.repository.DiscountRepository;
@@ -48,6 +50,7 @@ public class EngagementServiceImpl implements EngagementService{
 	private final AuditLogRepository auditLogRepository;
 	private final EventRepository eventRepository;
 	private final CategoryRepository categoryRepository;
+	private final BeaconRepository beaconRepository;
 	private final TicketRepository ticketRepository;
 	private final DiscountRepository discountRepository;
 	private final EmailService emailService;
@@ -56,11 +59,12 @@ public class EngagementServiceImpl implements EngagementService{
 	private ServletContext servletContext;
 
 	@Autowired
-	public EngagementServiceImpl(EmailService emailService, DiscountRepository discountRepository, 
+	public EngagementServiceImpl(BeaconRepository beaconRepository,EmailService emailService, DiscountRepository discountRepository, 
 			FeedbackRepository feedbackRepository, TicketRepository ticketRepository, CategoryRepository categoryRepository,
 			EventRepository eventRepository, EventService eventService,AuditLogRepository auditLogRepository, 
 			UserRepository userRepository) {
 		super();
+		this.beaconRepository = beaconRepository;
 		this.auditLogRepository = auditLogRepository;
 		this.emailService = emailService;
 		this.userRepository = userRepository;
@@ -140,7 +144,7 @@ public class EngagementServiceImpl implements EngagementService{
 					}
 				}
 				ImageIO.write(image, fileType, myFile);
-				
+
 				emailService.sendEmailWithAttachment(email, "Discount QR Code for " + retailerName, "Hello, attached is an image of the QR code for the discount you have just entered into the system. You may print this image out for further use.", filePath);
 
 
@@ -202,7 +206,7 @@ public class EngagementServiceImpl implements EngagementService{
 		}		
 		return true;
 	}
-	
+
 	@Override
 	public boolean updateDiscount(Long discountId,String name, String msg) {
 		try{
@@ -214,6 +218,53 @@ public class EngagementServiceImpl implements EngagementService{
 		}
 		catch ( Exception ex){
 			System.err.println("Error at updating discount in service class" + ex.getMessage());
+		}
+		return false;
+	}
+
+	@Override
+	public boolean addBeacon(Long eventId, String uuid, String msg) throws EventNotFoundException {
+
+		try{
+			Event e = eventService.getEventById(eventId).get();
+			Beacon b = new Beacon();
+			b.setBeaconUUID(uuid);
+			b.setMesssage(msg);
+			e.addBeacon(b);
+			eventRepository.save(e);
+			return true;
+		}
+		catch ( Exception e){
+			System.err.println("add beacon service" + e.getMessage());
+			return false;
+		}
+
+	}
+
+	@Override
+	public boolean updateBeacon(Long beaconId, String msg) {
+		try{
+			Beacon b = beaconRepository.findOne(beaconId);
+			b.setMesssage(msg);
+		}
+		catch ( Exception e){
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+
+
+	@Override
+	public boolean deleteBeacon(Long eventId, Long beaconId) throws EventNotFoundException {
+		try{
+			Event e = eventService.getEventById(eventId).get();
+			Beacon b = beaconRepository.findOne(beaconId);
+			e.removeBeacon(b);
+			eventRepository.save(e);
+		}
+		catch ( Exception e){
+			e.printStackTrace();
 		}
 		return false;
 	}

@@ -20,4 +20,11 @@ public interface EngagementService {
 	boolean addDiscount(String email, Long eventId, String retailerName, String message) throws EventNotFoundException;
 
 	boolean updateDiscount(Long discountId, String name, String msg);
+	
+	boolean addBeacon(Long eventId, String uuid, String msg) throws EventNotFoundException;
+	
+	boolean updateBeacon(Long beaconId, String msg);
+	
+	boolean deleteBeacon(Long eventId, Long beaconId) throws EventNotFoundException;
+
 }
