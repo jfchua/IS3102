@@ -122,7 +122,16 @@ public class Event {
 			beacons.remove(d);
 		}
 
-
+		@OneToMany(fetch = FetchType.EAGER,cascade={CascadeType.ALL})
+		@Column(nullable = true)
+		private Set<Feedback> feedbacks = new HashSet<Feedback>();
+		
+		public void addFeedback(Feedback d){
+			feedbacks.add(d);
+		}
+		public void removeFeedback(Feedback d){
+			feedbacks.remove(d);
+		}
 		/*
 		@ManyToMany(fetch = FetchType.EAGER)
 		@JoinTable( 
