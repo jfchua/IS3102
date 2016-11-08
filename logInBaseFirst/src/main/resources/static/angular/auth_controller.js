@@ -3,7 +3,7 @@
 app.factory('Auth', function($window, $sessionStorage){
 			var user;
 			var storageUser; 
-			var authenticated;
+			var authenticated = false;
 			var userRoles = new Array();
 			var authService = {};
 			//Variable for 'for' loop
@@ -17,6 +17,7 @@ app.factory('Auth', function($window, $sessionStorage){
 				  sessionStorage.setItem('user', JSON.stringify(user));
 				  sessionStorage.setItem('clientOrg', (user.principal.user.clientOrganisation.organisationName));
 				  console.log("token is set");
+				  authenticated = true;
 				  for (i = 0; i<user.authorities.length;i++) {
 						userRoles [i] = user.authorities[i].authority;
 						console.log("Authority present is " + userRoles[i]);
@@ -32,8 +33,10 @@ app.factory('Auth', function($window, $sessionStorage){
 				  
 				}
 			authService.remove= function() {
-			    $window.sessionStorage.clear();
+				console.log("cookies removed");
+				sessionStorage.clear();
 			    this.user = null;
+			    authenticated = false;
 			},
 			authService.isAuthenticated = function(){
 
@@ -50,11 +53,6 @@ app.factory('Auth', function($window, $sessionStorage){
 				return(authenticated);
 			},
 			authService.isAuthorized = function (authorizedRoles) {
-				//console.log("In isAuthorized " + authorizedRoles);
-				if (user == null || user == undefined){
-					console.log("User is not logged in!");
-					return false;
-				}
 				
 				if ( authService.hasRoles(authorizedRoles)){
 					return true;

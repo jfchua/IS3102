@@ -55,6 +55,7 @@ import application.entity.Ticket;
 import application.entity.ToDoTask;
 import application.entity.Unit;
 import application.entity.User;
+import application.enumeration.Subscription;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
 import application.service.EventOrganizerService;
@@ -392,18 +393,22 @@ public class EventController {
 			long eventId = (Long)jsonObject.get("eventId");
 			System.out.println(eventId);
 			boolean bl=eventService.approveEvent(client, eventId);
-			System.out.println(bl);										
+			System.out.println(bl);	
+			if(client.getSystemSubscriptions().contains(Subscription.valueOf("FINANCE"))){
 			String subject = "Approval of Event";
 			String msg = "Event ID " +eventId +" is approved.";
 			Set<User> finance = userService.getFinanceManagers(client);						
 			for(User u: finance){
 				messageService.sendMessage(eventManager, u, subject, msg);
 			}
-			subject = "Approval of Event";
-			msg = "Event ID " +eventId +" with ticket to be issued is approved.";
+			}
+			if(client.getSystemSubscriptions().contains(Subscription.valueOf("TICKETING"))){
+			String subject1 = "Approval of Event";
+			String msg1 = "Event ID " +eventId +" with ticket to be issued is approved.";
 			Set<User> ticket = userService.getTicketManagers(client);
 			for(User u: ticket){
-				messageService.sendMessage(eventManager, u, subject, msg);
+				messageService.sendMessage(eventManager, u, subject1, msg1);
+			}
 			}
 		}
 		catch ( EventNotFoundException e){

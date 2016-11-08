@@ -35,6 +35,7 @@ import com.google.gson.GsonBuilder;
 import application.entity.AuditLog;
 import application.entity.Building;
 import application.entity.ClientOrganisation;
+import application.entity.Event;
 import application.entity.Icon;
 import application.entity.Message;
 import application.entity.PaymentPolicy;
@@ -427,7 +428,8 @@ public class UserController {
 				roles.add((String)rolesArr.get(i));
 			}
 			for (String r : roles ){
-				Role tempR = roleRepository.getRoleByName(r);
+				System.out.println(r);
+				Role tempR = roleRepository.getRoleByName(r.toUpperCase());
 				userRolesToAddIn.add(tempR);		
 				System.err.println(r);
 			}
@@ -482,7 +484,7 @@ public class UserController {
 					.setExclusionStrategies(new ExclusionStrategy() {
 
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == Ticket.class) || (clazz == Message.class || clazz == ClientOrganisation.class || clazz == ToDoTask.class);
+							return (clazz == Ticket.class) || (clazz == Message.class || clazz == ClientOrganisation.class || clazz == ToDoTask.class || clazz == Event.class);
 						}
 
 						/**
@@ -667,6 +669,8 @@ public class UserController {
 			String oldpass = (String)jsonObject.get("oldpassword");
 			Principal principal = rq.getUserPrincipal();
 			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
+			if (currUser.getSecurity() == null || currUser.getSecurityQuestion()  == null)
+				return new ResponseEntity<String>(gson.toJson("Please set a security question and answer before resetting password"),HttpStatus.INTERNAL_SERVER_ERROR);
 			userService.checkOldPassword(currUser.getId(),oldpass);
 			if ( !userService.changePassword(currUser.getId(), pass) ){
 				return new ResponseEntity<String>(gson.toJson("Server error in changing password"),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -707,12 +711,13 @@ public class UserController {
 		try{
 			Object obj = parser.parse(userJSON);
 			JSONObject jsonObject = (JSONObject) obj;
-			String security = (String)jsonObject.get("password");
-			String oldSecurity = (String)jsonObject.get("oldpassword");
+			String security = (String)jsonObject.get("security");
+			String oldSecurity = (String)jsonObject.get("oldsecurity");
+			String question = (String)jsonObject.get("question");
 			Principal principal = rq.getUserPrincipal();
 			User currUser = (User)userService.getUserByEmail(principal.getName()).get();
 			userService.checkOldSecurity(currUser.getId(),oldSecurity);
-			if ( !userService.changeSecurity(currUser.getId(), security) ){
+			if ( !userService.changeSecurity(currUser.getId(), security, question) ){
 				return new ResponseEntity<String>(gson.toJson("Server error in changing security answer"),HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			//BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

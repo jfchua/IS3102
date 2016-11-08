@@ -1,80 +1,90 @@
 <div class="clearfix">
-                        <ol class="breadcrumb no-bg no-m-t">
-                            <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                            <li><a href="#/dashboard">Workspace</a></li>
-                            <li><a>View Clients</a></li>
-                        </ol>
+	<ol class="breadcrumb no-bg no-m-t">
+		<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+		<li><a href="#/dashboard">Workspace</a></li>
+		<li><a>View Clients</a></li>
+	</ol>
 </div>
 <div ng-controller="viewClientOrgs as ctrl">
 
 
-<div class="col-md-12">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">Client Organisations	  
-						<div class="panel-control pull-right">
-						
-							<a class="panelButton"><i class="fa fa-refresh"></i></a>
-							<a class="panelButton"><i class="fa fa-minus"></i></a>
-							<a class="panelButton"><i class="fa fa-remove"></i></a>
-							
-						</div>
-					</h3>
-				</div>
-				<div class="panel-body" >    
-            <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <td>Name</td>
-                            <td>Subscriptions</td>
-                            <td>Edit Subscriptions</td>
-                            <td>Actions</td>
-                        </tr>
-                    </thead>
-                <tbody>
-		              <tr ng-repeat="profile in Profiles | orderBy:'$index'">
-			             <td>
-			             <!--  <div ng-show="profile.editable">Current Name: </div>
+	<div class="col-md-12">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Client Organisations
+					<div class="panel-control pull-right">
+
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<td>Name</td>
+							<td>Subscriptions</td>
+							<td>Edit Subscriptions</td>
+							<td>Actions</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="profile in Profiles | orderBy:'$index'">
+							<td>
+								<!--  <div ng-show="profile.editable">Current Name: </div>
                              <div>{{profile.organisationName }}</div>
                              <div ng-show="profile.editable">New Name: </div>
                              <div ng-show="profile.editable"><input type="text" ng-model="ctrl.profile.name" placeholder="{{profile.organisationName}}"
 			                     ng-change="updateValue(ctrl.profile.name)"
                                                                     ng-show="profile.editable" required> </div>-->
-                          <div>{{profile.organisationName }}</div>
-                          </td>
-			             <td>
-                                 <div ng-repeat="role in genders">
-                                <input type="checkbox"  ng-checked="checkRole(role,profile)"  ng-disabled="true"> {{role}}
-                                    </div>
-                                    
-                            </td>
-					           <td>
-			                 <div ng-repeat="gender in genders" ng-show="profile.editable">
-				                <div class="action-checkbox">
-                                        <input id="{{gender}}" type="checkbox" value="{{gender}}"
-						ng-checked="selection.indexOf(gender) > -1"
-						ng-click="toggleSelection(gender)" /> <label for="{{gender}}"></label>
-					               {{gender}}
-				                </div>
-			                 </div>
-			             </td>
-                            <td>
-                                <a  ng-click="edit($index)" ng-hide="profile.editable" tooltip-placement="top" tooltip="Update client subscription"><i class="glyphicon glyphicon-pencil"></i></a>
-                                <a   ng-click="delete($index)" ng-hide="profile.editable" tooltip-placement="top" tooltip="Delete client"><i class="glyphicon glyphicon-trash"></i></a>
-                                <a  ng-click="save($index)" ng-show="profile.editable" tooltip-placement="top" tooltip="Save client"><i class="glyphicon glyphicon-floppy-disk"></i></a>
-                                <a  ng-click="showModal(profile,$parent)" tooltip-placement="top" tooltip="Edit client details"><i class="glyphicon glyphicon-eye-open"></i></a>
-                            </td> 
-		</tr>
-                    </tbody>
-	</table>			
-				</div>
+								<div>{{profile.organisationName }}</div>
+							</td>
+							<td>
+								<div ng-repeat="role in genders">
+									<input type="checkbox" ng-checked="checkRole(role,profile)"
+										ng-disabled="true"> {{role}}
+								</div>
+
+							</td>
+							<td>
+								<div ng-repeat="gender in genders" ng-show="profile.editable">
+									<div class="action-checkbox">
+										<input id="{{gender}}" type="checkbox" value="{{gender}}"
+											ng-checked="selection.indexOf(gender) > -1 || check(gender)"
+											ng-disabled="check(gender)"
+											ng-click="toggleSelection(gender)" /> <label
+											for="{{gender}}"></label> {{gender}}
+									</div>
+								</div>
+							</td>
+							<td><a ng-click="edit($index)" ng-hide="profile.editable"
+								tooltip-placement="top" tooltip="Update client subscription"><i
+									class="glyphicon glyphicon-pencil"></i></a> <a
+								ng-click="delete($index)" ng-hide="profile.editable"
+								tooltip-placement="top" tooltip="Delete client"><i
+									class="glyphicon glyphicon-trash"></i></a> <a
+								ng-click="save($index)" ng-show="profile.editable"
+								tooltip-placement="top" tooltip="Save client"><i
+									class="glyphicon glyphicon-floppy-disk"></i></a> <a
+								ng-click="showModal(profile,$parent)" tooltip-placement="top"
+								tooltip="Edit client details"><i
+									class="glyphicon glyphicon-eye-open"></i></a></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
-		 <div class="col-md-3">
-		<br>
-		<br>
-		<br>
-		 <a ui-sref="dashboard.addClientOrg" tooltip-placement="right" tooltip="Add a client"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
-		</div>
+	</div>
+	<div class="col-md-3">
+		<br> <br> <br> <a ui-sref="dashboard.addClientOrg"
+			tooltip-placement="right" tooltip="Add a client"><button
+				type="button" class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-plus"></i>
+			</button></a>
+	</div>
 
 </div>

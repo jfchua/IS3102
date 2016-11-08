@@ -675,7 +675,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 		var dataObj = {
 				units: $scope.selectedUnits,
 				start: ($scope.maintenance.start).toString(),
-				end: ($scope.maintenance.start).toString(),
+				end: ($scope.maintenance.end).toString(),
 		};
 		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
 		var send = $http({
@@ -1070,7 +1070,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 		console.log("finish selecting level");		
 	}
 
-	//$scope.selectedUnits=[];
+	$scope.selectedSchedulesUnits = {};
 	$scope.getUnit = function(levelId){
 		//$scope.url = "https://localhost:8443/property/viewUnits/";
 
@@ -1098,7 +1098,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 			//$scope.haha.length=0;
 			var duplicate = false;
 			var index = 0;
-			angular.forEach($scope.selectedBookingsUnits, function() {
+			angular.forEach($scope.selectedSchedulesUnits, function() {
 				if(duplicate==false&&$scope.currentlySelectedUnit.id == $scope.selectedSchedulesUnits[index].id)
 					duplicate = true;
 				else
@@ -1114,9 +1114,10 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 			var index = $scope.selectedSchedulesUnits.indexOf(unit);
 			$scope.selectedSchedulesUnits.splice(index, 1);  
 		}
-		console.log("finish selecting units");		
+		console.log("finish --");
+		console.log($scope.selectedSchedulesUnits);
 	}
-
+/*
 	$scope.getUnitsId = function(){
 		var dataObj ={id: $scope.selectedUnits};
 		console.log("units to be get are "+JSON.stringify(dataObj));
@@ -1135,12 +1136,13 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 			$state.go("dashboard.viewAllEventsEx");
 			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
 		});
-	}	
+	}	*/
 
 	$scope.checkAvail = function(){
 		console.log("start checking availability");
 		$scope.data = {};
-
+        console.log($scope.selectedSchedulesUnits);
+        console.log("*-*");
 		if ( !$scope.maintenance|| !$scope.maintenance.start|| !$scope.maintenance.start){
 			ModalService.showModal({
 
@@ -1160,9 +1162,10 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 			return;
 		}
 		var dataObj = {
+				id: $scope.maintenance.id,	
 				units: $scope.selectedSchedulesUnits,
 				start: ($scope.maintenance.start).toString(),
-				end: ($scope.maintenance.start).toString(),
+				end: ($scope.maintenance.end).toString(),
 		};
 		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
 		var send = $http({
@@ -1206,6 +1209,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 		$scope.data = {};
 		//$scope.event = JSON.parse(shareData.getData());
 		console.log($scope.maintenance.id);
+		console.log("*-*");
 		console.log($scope.selectedSchedulesUnits);
 		var dataObj = {				
 				id: $scope.maintenance.id,			
@@ -1314,6 +1318,38 @@ app.controller('maintenanceController',['$scope', '$http','$state','$routeParams
         return (new Date(dateString) > daysAgo);
 	}
 	});
+	
+	$scope.generateReport = function(){
+		$scope.data = {};
+
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/maintenance/downloadReport',
+			responseType: 'arraybuffer'
+		});
+
+		console.log("DOWNLOADING");
+		send.success(function(data){
+			console.log(JSON.stringify(data));
+			var file = new Blob([data], {type: 'application/pdf'});
+			var fileURL = URL.createObjectURL(file);
+			window.open(fileURL);
+			alert('DOWNLOADED!');
+		});
+		send.error(function(data){
+			alert('DOWNLOAD GOT ERROR!');
+		});
+	};
+	
+	$scope.runTimer = function(){
+		$http.get("//localhost:8443/maintenance/runTimer").then(function(response){
+			alert("timer is running");
+		},function(response){
+			alert("fail to activate timer");
+		}	
+		)	
+	}
+	
 	$scope.getMaintenance = function(id){		
 		$scope.dataToShare = [];	  
 		$scope.shareMyData = function (myValue) {

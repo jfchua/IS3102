@@ -1143,6 +1143,8 @@ public class PaymentPlanController {
 		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/payment.jasper");
 		response.setContentType("application/pdf");
 		Principal principal = request.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		ClientOrganisation client = usr.get().getClientOrganisation();
 		response.setHeader("Content-disposition", "attachment; filename=payment.pdf");
 		ServletOutputStream outputStream = response.getOutputStream();
 		HashMap<String,Object> parameters = new HashMap<String,Object>();
@@ -1165,7 +1167,9 @@ public class PaymentPlanController {
 		sb.append(arr1[0] + " 00:00:00 ' AND PAID <= '");
 
 		//sb.append(arr1[0] +" AND PAID <= " + arr2[0]);
-		sb.append(arr2[0] +  " 23:59:59 ')");
+		//sb.append(arr2[0] +  " 23:59:59 ')");
+		sb.append(arr2[0] +  " 23:59:59 ' AND CLIENT = ");
+		sb.append(client.getId() + ")");
 		System.err.println("Query parameter is : " + sb.toString());
 		parameters.put("criteria", sb.toString());
 		Connection conn = null;
@@ -1186,5 +1190,25 @@ public class PaymentPlanController {
 	}
 
 
+	@RequestMapping(value = "/runTimer", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Void> runTimer(HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();	   				
+			paymentPlanService.alertForOverduePayment();
+			System.out.println("finish sending alerts");
+			return new ResponseEntity<Void>(HttpStatus.OK);	
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+	}
+	
+	
 }
 

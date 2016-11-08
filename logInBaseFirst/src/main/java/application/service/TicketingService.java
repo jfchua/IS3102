@@ -1,5 +1,6 @@
 package application.service;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import application.entity.Category;
@@ -19,13 +20,15 @@ public interface TicketingService {
 
 	public String getEventDataAsJson(Long eventId) throws EventNotFoundException;
 
-	public boolean generateTicket(User user, String paymentId, int numTickets, Long categoryId);
+	public String generateTicket(User user, String paymentId, int numTickets, Long categoryId);
 
 	public int checkTickets(int numTickets, Long categoryId);
 
 	boolean updateCategory(Long catId, String catName, double price, int numTix) throws EventNotFoundException;
 	
 	boolean redeemTicket(String qrCode);
+	
+	public ArrayList<String> viewTransactionHistory(Long userId) throws UserNotFoundException;
 
 	boolean registerNewUser(String name, String email, String pass) throws EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException;
 

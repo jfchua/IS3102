@@ -74,6 +74,12 @@
 							class="form-control underline" id="phone"
 							placeholder="Enter contact number">
 					</div>
+					<div ng-repeat="system in systems">
+						<div class="action-checkbox">
+						<input id="{{system}}" type="checkbox" ng-disabled="true" value="{{system}}" ng-checked = "true">
+						{{system}}
+						</div>
+					</div>
 					<div ng-repeat="gender in genders">
 						<div class="action-checkbox">
 							<input id="{{gender}}" type="checkbox" value="{{gender}}"

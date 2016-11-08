@@ -30,6 +30,8 @@ public class Maintenance {
 	 @Column(name = "fullday", nullable = false)
 	    private Boolean fullday;
 	 */
+	 @Column(name = "client", nullable = false)
+	 private Long client;
 	 
 	 @ManyToMany
 	 @Column(name = "vendors", nullable = false)
@@ -112,6 +114,11 @@ public class Maintenance {
 		this.units = units;
 	}*/
 
+	public Long getClient() {
+		return client;
+	}
 
-	
+	public void setClient(Long client) {
+		this.client = client;
+	}
 }

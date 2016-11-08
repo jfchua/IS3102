@@ -1,16 +1,25 @@
 package application.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,6 +27,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,10 +62,14 @@ import application.service.MaintenanceService;
 import application.service.UnitService;
 import application.service.UserService;
 import application.service.VendorService;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperRunManager;
 
 @Controller
 @RequestMapping("/maintenance")
 public class MaintenanceController {
+	@Autowired
+	private ApplicationContext context;
 	private static final Logger LOGGER = LoggerFactory.getLogger(EventController.class);
 	private final UnitService unitService;
 	private final MaintenanceService maintenanceService;
@@ -272,30 +286,36 @@ public class MaintenanceController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/checkAvailabilityForUpdate", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> checkAvailabilityForUpdate( String eventJSON,
+	public ResponseEntity<Void> checkAvailabilityForUpdate(@RequestBody String eventJSON,
 			HttpServletRequest rq) throws UserNotFoundException {
 		System.out.println("start check availability for events");
 		DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
 		Principal principal = rq.getUserPrincipal();
 		System.out.println(principal.getName());
 		Optional<User> user1 = userService.getUserByEmail(principal.getName());
+		System.err.println("111");
 		if ( !user1.isPresent() ){
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 		try{
+			System.err.println("112");
+			System.err.println(eventJSON);
 			User user = user1.get();
 			ClientOrganisation client = user.getClientOrganisation();
 			System.out.println(user.getName());
 			Object obj = parser.parse(eventJSON);
+			System.err.println("113");
 			JSONObject jsonObject = (JSONObject) obj;
+			System.err.println("114");
 			long maintId = (Long)jsonObject.get("id");
+			System.err.println(maintId);
 			JSONArray units = (JSONArray)jsonObject.get("units");
 			String unitsId = "";
 			for(int i = 0; i < units.size(); i++){
 				JSONObject unitObj = (JSONObject)units.get(i);		
-				System.out.println(unitObj.toString());
+				System.err.println("HAHAHA");
 				long unitId = (Long)unitObj.get("id");
-				System.out.println(unitId);
+				//System.out.println(unitId);
 				unitsId = unitsId+unitId + " ";
 				System.out.println(unitsId);
 			}
@@ -602,4 +622,77 @@ public class MaintenanceController {
 	}
 
 
+	@RequestMapping(value = "/downloadReport", method = RequestMethod.POST, produces = "application/pdf")
+	@ResponseBody
+	public void downloadReport(HttpServletRequest request,HttpServletResponse response) throws JRException, IOException, UserNotFoundException {
+		System.out.println("Enter");
+		InputStream jasperStream = request.getSession().getServletContext().getResourceAsStream("/jasper/maintenanceReport.jasper");
+		response.setContentType("application/pdf");
+		Principal principal = request.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		ClientOrganisation client = usr.get().getClientOrganisation();
+		response.setHeader("Content-disposition", "attachment; filename=maintenanceReport.pdf");
+		ServletOutputStream outputStream = response.getOutputStream();
+		HashMap<String,Object> parameters = new HashMap<String,Object>();
+		StringBuilder sb = new StringBuilder();
+		sb.append(" ");
+		Object obj;
+		Calendar cal = Calendar.getInstance();
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.");
+		//DateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+		Date d1 = cal.getTime();
+		String[] arr1 = String.valueOf(sdf.format(d1)).split(" ");
+		//System.out.println("FIRST DAY IS "+ str1);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		Date d2 = cal.getTime();
+		String[] arr2 = String.valueOf(sdf.format(d2)).split(" ");
+		//System.out.println("LAST DAY IS "+ str2);
+
+		sb.append("WHERE (CLIENT = ");
+		
+		sb.append(client.getId() + "  AND START >= '");
+		sb.append(arr1[0] + " 00:00:00 ' AND START <= '");
+
+		
+		sb.append(arr2[0] +  " 23:59:59 ')");
+		
+		System.err.println("Query parameter is : " + sb.toString());
+		parameters.put("criteria", sb.toString());
+		Connection conn = null;
+		try {
+			DataSource ds = (DataSource)context.getBean("dataSource");
+			conn = ds.getConnection();
+			System.out.println("ERROR: ");
+			System.out.println(conn.toString());
+		} catch (SQLException e) {
+			System.out.println("************* ERROR: " + e.getMessage());
+			e.printStackTrace();
+		}
+		JasperRunManager.runReportToPdfStream(jasperStream, outputStream, parameters,conn);
+		outputStream.flush();
+		outputStream.close();
+		System.out.println("FLUSHED OUT THE LOG");
+
+	}
+	
+	@RequestMapping(value = "/runTimer", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Void> runTimer(HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		try{
+			ClientOrganisation client = usr.get().getClientOrganisation();	   				
+			maintenanceService.alertForUpcomingMaintenance();
+			System.out.println("finish sending alerts");
+			return new ResponseEntity<Void>(HttpStatus.OK);	
+		}
+		catch (Exception e){
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+	}
+	
 }
