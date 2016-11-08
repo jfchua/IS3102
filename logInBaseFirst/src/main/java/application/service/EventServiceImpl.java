@@ -33,6 +33,7 @@ import application.entity.Unit;
 import application.entity.User;
 import application.enumeration.ApprovalStatus;
 import application.enumeration.PaymentStatus;
+import application.enumeration.Subscription;
 import application.exception.EventNotFoundException;
 import application.repository.AreaRepository;
 import application.repository.BookingApplRepository;
@@ -196,7 +197,8 @@ public class EventServiceImpl implements EventService {
 				Event event = event1.get();
 				if(checkEvent(client, id)){
 					event.setApprovalStatus(ApprovalStatus.valueOf("APPROVED"));
-					event.setPaymentStatus(PaymentStatus.valueOf("UNPAID"));
+					if(client.getSystemSubscriptions().contains(Subscription.valueOf("FINANCE")))
+					      event.setPaymentStatus(PaymentStatus.valueOf("UNPAID"));
 					eventRepository.save(event);
 				}
 				else
