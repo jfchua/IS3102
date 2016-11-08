@@ -228,10 +228,14 @@ public class EngagementServiceImpl implements EngagementService{
 	public boolean addBeacon(Long eventId, String uuid, String msg) throws EventNotFoundException {
 
 		try{
+			System.err.println("add beacon service");
 			Event e = eventService.getEventById(eventId).get();
 			Beacon b = new Beacon();
 			b.setBeaconUUID(uuid);
-			b.setMesssage(msg);
+			System.err.println("add beacon service" + uuid);
+			b.setMessage(msg);	
+			System.err.println("add beacon service" + msg);
+			beaconRepository.save(b);
 			e.addBeacon(b);
 			eventRepository.save(e);
 			return true;
@@ -246,29 +250,62 @@ public class EngagementServiceImpl implements EngagementService{
 	@Override
 	public boolean updateBeacon(Long beaconId, String msg) {
 		try{
+			System.err.println("inside update111" + beaconId);
 			Beacon b = beaconRepository.findOne(beaconId);
-			b.setMesssage(msg);
+			b.setMessage(msg);
+			beaconRepository.flush();
+			System.err.println("inside update222" + msg);
 		}
 		catch ( Exception e){
 			e.printStackTrace();
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 
 
 	@Override
-	public boolean deleteBeacon(Long eventId, Long beaconId) throws EventNotFoundException {
+	public boolean deleteBeacon(User user, Long beaconId) throws EventNotFoundException {
+		
 		try{
+			System.err.println("START TO DELETE");
+			Beacon beacon = beaconRepository.findOne(beaconId);
+			Set<Event> events = user.getEvents();
+			for(Event ev : events){
+				Set<Beacon> bs = ev.getBeacon();
+				for(Beacon b : bs){
+					if(b.getId() == beaconId){
+						bs.remove(b);
+						break;
+					}
+				}
+				ev.setBeacons(bs);;
+				eventRepository.flush();
+			}
+			//System.err.println(discount.getDiscountMessage());
+			beaconRepository.delete(beacon);		
+		}
+		catch ( Exception ex){
+			System.err.println("FAIL TO DELETE");
+			System.err.println("Error at deleting discount in service class" + ex.getMessage());
+			return false;
+		}		
+		return true;
+	}
+
+	@Override
+	public Set<Beacon> getBeacons(Long eventId) throws EventNotFoundException {
+			// TODO Auto-generated method stub
 			Event e = eventService.getEventById(eventId).get();
-			Beacon b = beaconRepository.findOne(beaconId);
-			e.removeBeacon(b);
-			eventRepository.save(e);
-		}
-		catch ( Exception e){
-			e.printStackTrace();
-		}
-		return false;
+			try{
+				return e.getBeacon();
+			}
+			catch ( Exception ex){
+				System.err.println("Exception at getDiscounts in service class" + ex.getMessage());
+
+			}
+			return null;
 	}
 
 }

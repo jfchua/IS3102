@@ -18,7 +18,7 @@ public class Beacon  {
 	
 	private String beaconUUID;
 	
-	private String messsage;
+	private String message;
 
 	public String getBeaconUUID() {
 		return beaconUUID;
@@ -28,12 +28,16 @@ public class Beacon  {
 		this.beaconUUID = beaconUUID;
 	}
 
-	public String getMesssage() {
-		return messsage;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setMesssage(String messsage) {
-		this.messsage = messsage;
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	

@@ -543,6 +543,30 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
+                                			   .state('dashboard.configureBeaconsEx',{
+                                				  url:'/configureBeaconsEx',
+                                				  templateUrl: '/views/configureBeaconsEx.html',
+                                				  controller: 'configureTicketsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.updateBeaconEx',{
+                                				  url:'/updateBeaconEx',
+                                				  templateUrl: '/views/updateBeaconEx.html',
+                                				  controller: 'updateBeaconController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
+                                			  .state('dashboard.addBeaconEx',{
+                                				  url:'/addBeaconEx',
+                                				  templateUrl: '/views/addBeaconEx.html',
+                                				  controller: 'configureTicketsController',
+                                				  data:{
+                                					  authorizedRoles:[USER_ROLES.organiser]
+                                				  }
+                                			  })
                                 			  .state('dashboard.feedbackEx',{
                                 				  url:'/viewFeedbackEx',
                                 				  templateUrl: '/views/viewFeedback.html',
@@ -1185,7 +1209,7 @@ app.controller("userCtrl",['$scope','ModalService',
 
 //Create new user
 
-app.controller('createNewUserController', ['$scope','$http','ModalService',function($scope, $http,ModalService){
+app.controller('createNewUserController', ['$scope','$http','$state','ModalService',function($scope, $http, $state, ModalService){
 
 
 	var arr = ['ROLE_USER','ROLE_EVENT','ROLE_ADMIN','ROLE_PROPERTY','ROLE_EXTEVE'];

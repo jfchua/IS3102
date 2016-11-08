@@ -2,6 +2,7 @@ package application.service;
 
 import java.util.Set;
 
+import application.entity.Beacon;
 import application.entity.Discount;
 import application.entity.User;
 import application.exception.EventNotFoundException;
@@ -25,6 +26,8 @@ public interface EngagementService {
 	
 	boolean updateBeacon(Long beaconId, String msg);
 	
-	boolean deleteBeacon(Long eventId, Long beaconId) throws EventNotFoundException;
+	boolean deleteBeacon(User user, Long beaconId) throws EventNotFoundException;
 
+	public Set<Beacon> getBeacons(Long eventId) throws EventNotFoundException;
 }
+

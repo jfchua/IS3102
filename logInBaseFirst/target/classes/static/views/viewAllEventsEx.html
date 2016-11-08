@@ -70,7 +70,15 @@
 										ui-sref="dashboard.viewTicketSalesEx" ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToViewTix(x.id)" tooltip-placement="top"
 										tooltip="View Ticket Sales"><i
-										class="glyphicon glyphicon-list"></i></a>
+										class="glyphicon glyphicon-list"></i></a><a
+										ui-sref="dashboard.configureBeaconsEx"
+										ng-click="passEventToTix(x)" tooltip-placement="top"
+										tooltip="Configure Beacons"><i
+										class="glyphicon glyphicon-tags"></i></a><a
+										ui-sref="dashboard.feedbackEx"
+										ng-click="passEventToTix(x)" tooltip-placement="top"
+										tooltip="View Feedback"><i
+										class="glyphicon glyphicon-user"></i></a>									
 								</td>
 						</tr>
 					</tbody>
