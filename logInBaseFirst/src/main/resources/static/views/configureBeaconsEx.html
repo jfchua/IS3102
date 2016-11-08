@@ -1,0 +1,68 @@
+<script src="../angular/ConfigureTicketsController.js"></script>
+
+<div ng-cloak ng-controller="configureTicketsController as tixCtrl">
+
+	<div class="clearfix">
+		<ol class="breadcrumb no-bg no-m-t">
+			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
+			<li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
+			<li><a>Configure Beacons</a></li>
+		</ol>
+	</div>
+	<div class="col-md-9">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Beacons
+					<div class="panel-control pull-right">
+
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
+
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th><i></i> ID</th>
+							<th><i></i> BeaconUUID</th>
+							<th><i></i> Message</th>
+
+							<th>Action</th>
+
+						</tr>
+					</thead>
+					<tbody>
+
+						<tr ng-repeat="x in beacons track by $index">
+							<td>{{ x.id }}</td>
+							<td>{{ x.beaconUUID }}</td>
+							<td>{{ x.message }}</td>
+
+							<td><a ui-sref="dashboard.updateBeaconEx"
+								ng-click="passBeacon(x)" tooltip-placement="top"
+								tooltip="Update Beacon"><i
+									class="glyphicon glyphicon-pencil"></i></a> <a
+								ng-click="deleteBeacon(x)" tooltip-placement="top"
+								tooltip="Delete Beacon"><i
+									class="glyphicon glyphicon-trash"></i></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<br> <br> <br> <a ui-sref="dashboard.addBeaconEx"
+			tooltip-placement="right" tooltip="Add a new beacon"><button
+				type="button" class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-plus"></i>
+			</button></a>
+		<br> <br> <br>
+
+	</div>
+</div>
