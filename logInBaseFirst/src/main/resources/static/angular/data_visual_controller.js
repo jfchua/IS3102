@@ -18,7 +18,7 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http','ModalService','$state
 			$scope.eventTypeCount=response.data;
 			console.log($scope.eventTypeCount);
 		},function(response){
-			alert("DID NOT VIEW EVENT COUNT BY TYPES");
+			console.log("DID NOT VIEW EVENT COUNT BY TYPES");
 		})
 		
 		
@@ -30,7 +30,7 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http','ModalService','$state
 			console.log($scope.eventCountTime);
 			$scope.changeFormatForEventTime($scope.eventCountTime);
 		},function(response){
-			alert("DID NOT VIEW EVENT COUNT BY TIME");
+			console.log("DID NOT VIEW EVENT COUNT BY TIME");
 		})
 
 	});
@@ -167,7 +167,7 @@ app.controller('ChartCtrl', ['$scope', '$timeout','$http','ModalService','$state
 				$scope.changeFormatForEventTimeCust($scope.eventCountTimeCust);
 			});
 			send.error(function(response){
-				alert("get customised event count failure");
+				console.log("ERROR: GET EVENT COUNT AGAINST SELECTED PERIOD");
 			});
 
 			
