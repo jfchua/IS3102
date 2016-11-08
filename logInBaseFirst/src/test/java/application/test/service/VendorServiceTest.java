@@ -74,28 +74,28 @@ public class VendorServiceTest extends AbstractTest {
 	@Test
 	public void testCreateVendor() throws ClientOrganisationNotFoundException, InvalidEmailException{
 		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
-		boolean result =  vendorService.createVendor(org, "vendor@vendor.com", "vendorname", "vendordescription", "95959595");
+		boolean result =  vendorService.createVendor(org, "vendor@vendor.com", "vendorname","registration", "vendordescription", "95959595");
 		Assert.assertTrue(result);
 	}
 	
 	@Test(expected=InvalidEmailException.class)
 	public void testCreateVendorInvalidEmail() throws ClientOrganisationNotFoundException, InvalidEmailException{
 		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
-		boolean result =  vendorService.createVendor(org, "invalidemail", "vendorname", "vendordescription", "95959595");
+		boolean result =  vendorService.createVendor(org, "invalidemail", "vendorname","registration", "vendordescription", "95959595");
 		Assert.assertTrue(result);
 	}
 		
 	@Test
 	public void testEditVendor() throws ClientOrganisationNotFoundException, InvalidEmailException, VendorNotFoundException{
 		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
-		boolean result = vendorService.editVendor((long)2, "email@email.com", "newname", "newdesc", "12345678");	
+		boolean result = vendorService.editVendor((long)2, "email@email.com", "newname","registration", "newdesc", "12345678");	
 		Assert.assertTrue(result);
 	}
 	
 	@Test(expected=InvalidEmailException.class)
 	public void testEditVendorInvalidEmail() throws ClientOrganisationNotFoundException, InvalidEmailException, VendorNotFoundException{
 		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
-		boolean result = vendorService.editVendor((long)2, "invalidemail", "newname", "newdesc", "12345678");	
+		boolean result = vendorService.editVendor((long)2, "invalidemail", "newname","registration", "newdesc", "12345678");	
 		Assert.assertTrue(result);
 	}
 

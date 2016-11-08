@@ -102,7 +102,7 @@ public class TicketingServiceImpl implements TicketingService {
 		Ticket t = this.getTicketByCode(code);
 		return (!(t.isRedeemed()));
 	}
-	
+
 	@Override
 	public boolean addCategory(Long eventId, String catName, double price, int numTix) throws EventNotFoundException {
 		Optional<Event> e = eventService.getEventById(eventId);
@@ -309,6 +309,7 @@ public class TicketingServiceImpl implements TicketingService {
 			for ( int i = 0; i < this.categories.size() ; i++){
 				x += this.getNumTix().get(i) + " " + this.getCategories().get(i) + "\n";
 			}
+			x+= "\n";
 			return x;
 		}
 
@@ -328,7 +329,7 @@ public class TicketingServiceImpl implements TicketingService {
 				String paymentId = tix.getPaymentId();
 				if ( temp.size() == 0){
 					tempStorage p = new tempStorage();
-					p.addCat(tix.getPaymentId());
+					p.addCat(tix.getCategory().getCategoryName());
 					p.addTix(0);
 					p.setPaymentId(paymentId);
 					p.setPurDate(tix.getPurchase_date());
@@ -398,7 +399,7 @@ public class TicketingServiceImpl implements TicketingService {
 
 	}
 
-	public String generateTicket(User user, String paymentId, int numTickets, Long categoryId){
+	public ArrayList<String> generateTicket(User user, String paymentId, int numTickets, Long categoryId){
 		String uuid = "";
 		Category c = categoryRepository.findOne(categoryId);
 		try{
@@ -415,7 +416,7 @@ public class TicketingServiceImpl implements TicketingService {
 				Set<Ticket> tickets = new HashSet<Ticket>();
 			}
 			Set<Ticket> tickets = c.getTickets();*/
-
+			ArrayList<String> thingToReturn = new ArrayList<>();
 			for ( int i = 0; i < numTickets;i++){
 				Ticket t = new Ticket();
 				t.setCategory(c);
@@ -445,7 +446,91 @@ public class TicketingServiceImpl implements TicketingService {
 
 				//categoryRepository.save(c);
 				//userRepository.save(user);
+				//QR CODE ANDEMAIL THING
+				String myCodeText = uuid;
+				String filePath = servletContext.getRealPath("/") + "QRCODETOOVERWRITE.png";
+				System.err.println("FILE PATH IS " + filePath);
+				int size = 250;
+				String fileType = "png";
+				File myFile = new File(filePath);
+				try {
+
+					Map<EncodeHintType, Object> hintMap = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
+					hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+
+					// Now with zxing version 3.2.1 you could change border size (white border size to just 1)
+					hintMap.put(EncodeHintType.MARGIN, 1); /* default = 4 */
+					hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+
+					QRCodeWriter qrCodeWriter = new QRCodeWriter();
+					BitMatrix byteMatrix = qrCodeWriter.encode(myCodeText, BarcodeFormat.QR_CODE, size,
+							size, hintMap);
+					int CrunchifyWidth = byteMatrix.getWidth();
+					BufferedImage image = new BufferedImage(CrunchifyWidth, CrunchifyWidth,
+							BufferedImage.TYPE_INT_RGB);
+					image.createGraphics();
+
+					Graphics2D graphics = (Graphics2D) image.getGraphics();
+					graphics.setColor(Color.WHITE);
+					graphics.fillRect(0, 0, CrunchifyWidth, CrunchifyWidth);
+					graphics.setColor(Color.BLACK);
+
+					for (int ix = 0; i < CrunchifyWidth; ix++) {
+						for (int j = 0; j < CrunchifyWidth; j++) {
+							if (byteMatrix.get(ix, j)) {
+								graphics.fillRect(ix, j, 1, 1);
+							}
+						}
+					}
+					ImageIO.write(image, fileType, myFile);
+					//
+
+
+					System.err.println("Enter");
+					InputStream jasperStream = servletContext.getResourceAsStream("/jasper/TicketQR.jasper");
+
+
+
+					HashMap<String,Object> parameters = new HashMap<String,Object>();
+					String toPut = "Event name: " + c.getEvent().getEvent_title() +"\n"+ " 1 "+  c.getCategoryName() +" ticket" +  "\n" + "Payment ID: " + paymentId;
+					System.out.println(toPut);
+					parameters.put("ticketInformation",toPut );
+					parameters.put("qrcode",filePath );
+
+					Connection conn = null;
+					try {
+						DataSource ds = (DataSource)context.getBean("dataSource");
+
+						conn = ds.getConnection();
+						System.out.println(conn.toString());
+					} catch (SQLException e) {
+						System.out.println("************* ERROR: " + e.getMessage());
+						e.printStackTrace();
+					}
+					try{
+						String path = servletContext.getRealPath("/");
+						path += (c.getCategoryName() + "_" + uuid + ".pdf");	
+						System.err.println("path is " + path);
+
+						FileOutputStream fileOutputStream = new FileOutputStream(path);
+						JasperRunManager.runReportToPdfStream(jasperStream, fileOutputStream, parameters,new JREmptyDataSource());
+						fileOutputStream.flush();
+						fileOutputStream.close();
+						System.out.println("FLUSHED OUT THE LOG");
+						thingToReturn.add(path);
+
+						//emailService.sendEmailWithAttachment("kenneth1399@hotmail.com", "Invoice for payment plan id ", "bodymessage" , path);
+
+					}
+					catch(Exception exp){
+						exp.printStackTrace();
+					}
+				} catch (Exception e1) {
+					System.out.println("at /download invoice there was an error parsing the json string received");
+					e1.printStackTrace();
+				}
 			}
+			return thingToReturn;
 		}
 		catch ( Exception e){
 			System.err.println("Error at tix generation");
@@ -455,88 +540,6 @@ public class TicketingServiceImpl implements TicketingService {
 		//return true;
 
 		//Gen qr code image
-		String myCodeText = uuid;
-		String filePath = servletContext.getRealPath("/") + "QRCODETOOVERWRITE.png";
-		System.err.println("FILE PATH IS " + filePath);
-		int size = 250;
-		String fileType = "png";
-		File myFile = new File(filePath);
-		try {
-
-			Map<EncodeHintType, Object> hintMap = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
-			hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-
-			// Now with zxing version 3.2.1 you could change border size (white border size to just 1)
-			hintMap.put(EncodeHintType.MARGIN, 1); /* default = 4 */
-			hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-
-			QRCodeWriter qrCodeWriter = new QRCodeWriter();
-			BitMatrix byteMatrix = qrCodeWriter.encode(myCodeText, BarcodeFormat.QR_CODE, size,
-					size, hintMap);
-			int CrunchifyWidth = byteMatrix.getWidth();
-			BufferedImage image = new BufferedImage(CrunchifyWidth, CrunchifyWidth,
-					BufferedImage.TYPE_INT_RGB);
-			image.createGraphics();
-
-			Graphics2D graphics = (Graphics2D) image.getGraphics();
-			graphics.setColor(Color.WHITE);
-			graphics.fillRect(0, 0, CrunchifyWidth, CrunchifyWidth);
-			graphics.setColor(Color.BLACK);
-
-			for (int i = 0; i < CrunchifyWidth; i++) {
-				for (int j = 0; j < CrunchifyWidth; j++) {
-					if (byteMatrix.get(i, j)) {
-						graphics.fillRect(i, j, 1, 1);
-					}
-				}
-			}
-			ImageIO.write(image, fileType, myFile);
-			//
-
-
-			System.err.println("Enter");
-			InputStream jasperStream = servletContext.getResourceAsStream("/jasper/TicketQR.jasper");
-
-
-
-			HashMap<String,Object> parameters = new HashMap<String,Object>();
-			String toPut = "Event name: " + c.getEvent().getEvent_title() +"\n"+ " 1 "+  c.getCategoryName() +" ticket" +  "\n" + "Payment ID: " + paymentId;
-			System.out.println(toPut);
-			parameters.put("ticketInformation",toPut );
-			parameters.put("qrcode",filePath );
-
-			Connection conn = null;
-			try {
-				DataSource ds = (DataSource)context.getBean("dataSource");
-
-				conn = ds.getConnection();
-				System.out.println(conn.toString());
-			} catch (SQLException e) {
-				System.out.println("************* ERROR: " + e.getMessage());
-				e.printStackTrace();
-			}
-			try{
-				String path = servletContext.getRealPath("/");
-				path += (c.getCategoryName() + "_" + uuid + ".pdf");	
-				System.err.println("path is " + path);
-
-				FileOutputStream fileOutputStream = new FileOutputStream(path);
-				JasperRunManager.runReportToPdfStream(jasperStream, fileOutputStream, parameters,new JREmptyDataSource());
-				fileOutputStream.flush();
-				fileOutputStream.close();
-				System.out.println("FLUSHED OUT THE LOG");
-				return path;
-				//emailService.sendEmailWithAttachment("kenneth1399@hotmail.com", "Invoice for payment plan id ", "bodymessage" , path);
-
-			}
-			catch(Exception exp){
-				exp.printStackTrace();
-			}
-		} catch (Exception e1) {
-			System.out.println("at /download invoice there was an error parsing the json string received");
-			e1.printStackTrace();
-		}
-		return null;
 	}
 
 
@@ -611,9 +614,9 @@ public class TicketingServiceImpl implements TicketingService {
 		return false;
 
 	}
-	
+
 	public Ticket getTicketByCode(String code){
 		return ticketRepository.getTicketByCode(code);
 	}
-	
+
 }

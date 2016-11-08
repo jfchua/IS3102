@@ -53,7 +53,7 @@ public class EventServiceTest extends AbstractTest {
 	public void setUp() throws UserNotFoundException, ClientOrganisationNotFoundException{
 		org = orgService.getClientOrganisationByName("Expo");
 		User user = uService.getUserByEmail("exteve@localhost").get();
-		boolean level = lService.create(org, 1, 1, 100, 100, "FILEPATH");
+		Level level = lService.create(org, 1, 1, 100, 100, "FILEPATH");
 		Set<Level> levels = lService.getAllLevels(org, 1);
 		for ( Level l : levels){
 			levelId = l.getId();

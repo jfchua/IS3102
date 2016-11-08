@@ -23,7 +23,7 @@ public interface TicketingService {
 
 	public String getEventDataAsJson(Long eventId) throws EventNotFoundException;
 
-	public String generateTicket(User user, String paymentId, int numTickets, Long categoryId);
+	public ArrayList<String> generateTicket(User user, String paymentId, int numTickets, Long categoryId);
 
 	public int checkTickets(int numTickets, Long categoryId);
 

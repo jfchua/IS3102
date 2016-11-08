@@ -450,8 +450,9 @@ public class TicketingController {
 				Long categoryId = (Long)ticketInfo.get("categoryId");
 				String paymentId = (String) ticketInfo.get("paymentId");
 				System.err.println("CALLED TICKETING SERVICE ONCE");
-				String tt = ticketingService.generateTicket(usr.get(), paymentId, numTickets.intValue(), categoryId);
-				toEmail.add(tt);
+				ArrayList<String> tt = ticketingService.generateTicket(usr.get(), paymentId, numTickets.intValue(), categoryId);
+				toEmail.addAll(tt);
+				System.err.println("FILEPATH TO ADD IS " + tt);
 			}
 			emailService.sendEmailWithAttachment(usr.get().getEmail(), "Thank you for your purchase ", "Dear Customer, thank you for purchasing tickets. You may find pdf copies of the tickets attached which you may print and bring to the event. Alternatively, you can also use your ticket wallet in the mobile application." , toEmail.toArray(new String[0]));
 
