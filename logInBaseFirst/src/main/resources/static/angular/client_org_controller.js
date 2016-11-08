@@ -14,6 +14,7 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 			// is newly selected
 			$scope.selection.push(gender);
 		}
+		
 	};
 
 	$scope.checkDateErr = function(startDate,endDate) {
@@ -70,6 +71,17 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 		}
 	};
 
+	$scope.checkSub = function (){
+		var hasFinance = false;
+		//var hasTick
+		angular.forEach($scope.selection, function(item){             
+			if(item == "FINANCE")
+				hasFinance = true;
+		});
+		//console.log("EEE");
+		//console.log(!hasFinance);
+		return  !hasFinance;
+	}
 	
 	$scope.submit = function(){
 		//alert("SUCCESS");
@@ -324,6 +336,18 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 		var index = ($scope.genders).indexOf(gender);
 		return (index<3);
 	}
+	$scope.checkSub = function (){
+		var hasFinance = false;
+		//var hasTick
+		angular.forEach($scope.selection, function(item){             
+			if(item == "FINANCE")
+				hasFinance = true;
+		});
+		//console.log("EEE");
+		//console.log(!hasFinance);
+		return  !hasFinance;
+	}
+	
 	$scope.save = function(index){
 		$scope.Profiles[index].editable = true;
 		//$scope.entity = $scope.Profiles[index];

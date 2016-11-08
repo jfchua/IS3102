@@ -83,7 +83,7 @@
 					<div ng-repeat="gender in genders">
 						<div class="action-checkbox">
 							<input id="{{gender}}" type="checkbox" value="{{gender}}"
-								ng-checked="selection.indexOf(gender) > -1"
+								ng-checked="selection.indexOf(gender) > -1" ng-disabled = "gender == 'TICKETING' && checkSub()"
 								ng-click="toggleSelection(gender)" /> <label for="{{gender}}"></label>
 							{{gender}}
 						</div>
@@ -91,7 +91,7 @@
 					<br>
 					<!-- <a class="btn btn-primary" href=".html"><div data-original-title="submit" data-placement="bottom"></div></a>  -->
 					
-				<button class="progress-button primary-progress" data-style="shrink" data-horizontal ng-click = "submit()">Submit</button> &nbsp;
+				<button class="progress-button primary-progress"  data-style="shrink" data-horizontal ng-click = "submit()">Submit</button> &nbsp;
                  
                     </form>
                     
