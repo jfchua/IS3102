@@ -129,7 +129,7 @@ public class TicketingController {
 			long numTicketst = (long)jsonObject.get("numTickets");
 			int numTickets = (int)numTicketst;
 			System.err.println("gotten info of " + name + " " + price + " " + numTickets + " event id: " + eventId);
-			
+
 			boolean bl = ticketingService.addCategory(eventId, name, price, numTickets);
 			if ( bl ){
 				return new ResponseEntity<String>(HttpStatus.OK);
@@ -782,18 +782,30 @@ public class TicketingController {
 			Object obj1 = parser.parse(qrCode);
 			JSONObject jsonObject = (JSONObject) obj1;
 			String code = (String)jsonObject.get("code");
-			System.out.println("code is " + code);
-
-
-
-
-			boolean bl = ticketingService.redeemTicket(code);
-			if ( bl ){
-				return new ResponseEntity<String>(HttpStatus.OK);
+			Long eventId = (Long)jsonObject.get("eventId");
+			Optional<Event> e = eventService.getEventById(eventId);
+			boolean found = false;
+			for ( Category cat : e.get().getCategories()){
+				for ( Ticket tx : cat.getTickets() ){
+					if ( tx.getTicketUUID().equals(code)){
+						found = true;
+					}
+				}
+			}
+			if ( found ){
+				boolean bl = ticketingService.redeemTicket(code);
+				if ( bl ){
+					return new ResponseEntity<String>(HttpStatus.OK);
+				}
+				else{
+					return new ResponseEntity<String>(geeson.toJson("Server error in redeeming the ticket!"),HttpStatus.INTERNAL_SERVER_ERROR);
+				}
 			}
 			else{
 				return new ResponseEntity<String>(geeson.toJson("Server error in redeeming the ticket!"),HttpStatus.INTERNAL_SERVER_ERROR);
+
 			}
+
 		}
 		catch (Exception e){
 			System.err.println("Controller redeeming ticket error " + e.getMessage());
@@ -801,8 +813,8 @@ public class TicketingController {
 		}
 
 	}	
-	
-	
+
+
 	@RequestMapping(value = "/tixGetTransactionHistory",  method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> getTHistory(HttpServletRequest rq) throws UserNotFoundException {

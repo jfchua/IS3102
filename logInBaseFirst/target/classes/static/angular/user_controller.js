@@ -13,7 +13,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 	self.users=[];
 	self.changePasswordInfo={id:parseInt($stateParams.id),token:$stateParams.token,password:''};
 	$scope.securityPlaceholder = 'Security Question';
-$scope.verified = false;
+	$scope.verified = false;
 
 	self.submitChangePass = submitChangePass;
 	self.submitResetPass = submitResetPass;
@@ -46,7 +46,7 @@ $scope.verified = false;
 				Auth.setUser(response);
 				console.log(response);
 				console.log(response.principal.user.clientOrganisation.organisationName);
-				$state.go('dashboard', {param :response.principal.user.clientOrganisation.organisationName});
+				$state.go('dashboard.workspace', {param :response.principal.user.clientOrganisation.organisationName});
 				//return true;
 			} else {
 				console.log("NO VERIFIED");
@@ -123,7 +123,7 @@ $scope.verified = false;
 					var question = response;
 					$scope.verified = true;
 					//console.log(question);
-					$scope.securityPlaceholder = "What is your " + question;
+					$scope.securityPlaceholder = question;
 				})
 				console.log("Email is verified");
 			}
