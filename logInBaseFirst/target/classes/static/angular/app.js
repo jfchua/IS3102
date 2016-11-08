@@ -1536,7 +1536,16 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 
 //USER PROFILE CONTROLLER
 app.controller('userProfileController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
-
+	
+	$scope.question = [
+	                   {question: "What is your Mother\'s Maiden name"},
+	                   {question: "What is your favourite number"},
+	                   {question: "What is your favourite food"},
+	                   {question: "What is your favourite animal"},
+	                   {question: "What is your favourite colour"}
+	                   ];
+	                   
+	
 	$scope.submit = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -1701,8 +1710,9 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 		}
 		else{
 			var dataObj = {
-					password: $scope.userProfile.security1,
-					oldpassword: $scope.userProfile.security0,
+					security: $scope.userProfile.security1,
+					oldsecurity: $scope.userProfile.security0,
+					question: $scope.selectedQuestion,
 			};
 			
 
@@ -1718,7 +1728,7 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 					templateUrl: "views/popupMessageTemplate.html",
 					controller: "errorMessageModalController",
 					inputs: {
-						message: 'Security Answer successfully updated',
+						message: 'Security Question and Answer successfully updated',
 					}
 				}).then(function(modal) {
 					modal.element.modal();
