@@ -54,7 +54,8 @@ public interface UnitService {
 		 
 		 boolean checkBookings(long unitId);
 		 
-		 
+		 Unit uploadUnitOnLevel(long levelId, int left, int top, int height, int width, String color, String type,
+					String unitNumber, int col, int row,int  sizex,int sizey,Boolean rentable, String description) ;
 		
 			
 }
