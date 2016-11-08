@@ -51,7 +51,7 @@
 
 							</td>
 							<td>
-								<div ng-repeat="gender in genders" ng-show="profile.editable">
+								<!-- <div ng-repeat="gender in genders" ng-show="profile.editable">
 									<div class="action-checkbox">
 										<input id="{{gender}}" type="checkbox" value="{{gender}}"
 											ng-checked="selection.indexOf(gender) > -1 || check(gender) "
@@ -59,6 +59,15 @@
 											ng-click="toggleSelection(gender)" /> <label
 											for="{{gender}}"></label> {{gender}}
 									</div>
+								</div>-->
+								<div ng-show="profile.editable">							
+										<input type="checkbox" ng-model="profile.common" value="COMMONINFRA" ng-checked = "true">COMMONINFRA<br>
+										<input type="checkbox" ng-model="profile.property" value="PROPERTY" ng-checked = "true">PROPERTY<br>
+										<input type="checkbox" ng-model="profile.event" value="EVENT" ng-checked = "true">EVENT<br>
+										<input type="checkbox" ng-model="profile.finance" value="FINANCE" >FINANCE<br>
+										<input type="checkbox" ng-model="profile.ticketing" value="TICKETING"
+											ng-disabled="!profile.finance" ng-checked="profile.finance&& 0">TICKETING<br>
+										<input type="checkbox" ng-model="profile.bi" value="BI">BI<br>							
 								</div>
 							</td>
 							<td><a ng-click="edit($index)" ng-hide="profile.editable"
