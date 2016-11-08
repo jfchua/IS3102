@@ -378,7 +378,7 @@ public class TicketingServiceImpl implements TicketingService {
 				if ( !found ){
 					System.err.println("inside not found!");
 					tempStorage p = new tempStorage();
-					p.addCat(tix.getPaymentId());
+					p.addCat(tix.getCategory().getCategoryName());
 					p.addTix(0);
 					p.setPaymentId(paymentId);
 					p.setPurDate(tix.getPurchase_date());
