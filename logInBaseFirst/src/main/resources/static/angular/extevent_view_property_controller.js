@@ -16,12 +16,7 @@ angular.element(document).ready(function () {
 	  		obj=shareData.getData();
 	  		level=obj.level
 	  		//building=obj.building;
-	  		console.log("GET Level");
-	  		console.log(level);
-	  		console.log("GET BUILDING");
-	  		//console.log(building);
-		    	console.log("GET LEVEL: ");
-		      console.log(level);
+	  		
 		      $scope.levelLength;
 		      $scope.levelWidth;
 		    //IN CASE OF GETTING AN ARRAY FROM SHAREDATA 
@@ -47,7 +42,7 @@ angular.element(document).ready(function () {
 		      $scope.levelLengthGrid=meter*(level.length);
 			    $scope.levelWidthGrid=meter*(level.width);	
 			    $scope.background=level.filePath;
-			    console.log( $scope.levelLengthGrid+" "+$scope.levelWidthGrid);
+			  //  console.log( $scope.levelLengthGrid+" "+$scope.levelWidthGrid);
 			    
 		    //GET UNITS FROM levelIdObj
 		  
@@ -61,10 +56,10 @@ angular.element(document).ready(function () {
 		      				if((isDuplicate==false)&&(unit.description == legend.description)){	
 		      				
 		      					isDuplicate=true;
-		      					console.log(isDuplicate);
+		      				//	console.log(isDuplicate);
 		      				}else{
 		      				
-		      				console.log(isDuplicate);
+		      				//console.log(isDuplicate);
 		      				}
 		      			
 		      			
@@ -75,15 +70,15 @@ angular.element(document).ready(function () {
 		      	}else{
 		      		$scope.legends.push(unit);
 		      	}
-		      		console.log($scope.legends);
+		      		//console.log($scope.legends);
 		      		
 		      		}
 		      angular.forEach($scope.units, function(unit){   
 					$scope.addToLegend(unit);
 					
 				})
-				console.log("test units");
-		      console.log($scope.units);
+				//console.log("test units");
+		     // console.log($scope.units);
 		   
 		   
 });
@@ -108,41 +103,41 @@ $scope.twoOptions=[
 
 
 $scope.viewUnitPlanDefault=function (unit){
-	  console.log(unit);
-	  $scope.showUnitPlan=true;
+	  //console.log(unit);
+	 
 	  if(unit.square.type=='./svg/rect.svg'){
-		  
+		  $scope.showUnitPlan=true;
 	  var obj={building:building,
 				level:level,
 				unit:unit,
 				}
-	  console.log(unit);
+	  //console.log(unit);
 		shareData.addData(obj);
 	  $state.go('dashboard.viewBuildingEx.viewFloorPlanEx.viewUnitPlanDefaultEx',{param2: unit.id});
 	  }
 }
  $scope.showDetails= function (thisUnit) {   
-   console.log(thisUnit);
+  // console.log(thisUnit);
   // console.log(event);
   // console.log(event.target.classList);
    $scope.showDetail="unitNumber: "+thisUnit.unitNumber  +  " Unit Width: " + parseInt((thisUnit.square.height)*(level.length)/800) + "meter, Unit Length: " + parseInt((thisUnit.square.width)*(level.length)/800) +"meter";
-   console.log($scope.showDetail);
+  // console.log($scope.showDetail);
     } 
 $scope.viewLevelsByBuildingId = function(){
   var buildingId;
   $scope.dataToShare = [];
   //get building id from levelId
   $http.post('/level/getBuilding', JSON.stringify(levelIdObj)).then(function(response){
-    console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
+    //console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
     var building=response.data;
-    console.log(building);
+    //console.log(building);
     //var temp=JSON.stringify(buildingJson)
     shareData.addData(building);
 
-    console.log("Building ID IS " + building.id);
+   // console.log("Building ID IS " + building.id);
 
   },function(response){
-    console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
+    console.log('GET BUILDING ID FAILED! ' );
   });
   
  
@@ -153,8 +148,8 @@ $scope.viewLevelsByBuildingId = function(){
 
 
 $scope.downloadPlan = function () {
-	  console.log("her0");
-	  console.log(html2canvas);
+	 // console.log("her0");
+	 // console.log(html2canvas);
 	
 	
 	  var canvasdiv = document.getElementById("glassboxGrid");
@@ -176,7 +171,7 @@ $scope.downloadPlan = function () {
 //MODAL FOR VIEWING ONE UNIT
 $scope.complexResult = null;
 	 $scope.showModal = function(unit) {
-		 console.log(unit);
+		// console.log(unit);
 		    // Just provide a template url, a controller and call 'showModal'.
 		    ModalService.showModal({
 		    	
@@ -198,13 +193,13 @@ $scope.complexResult = null;
 		  $scope.dismissModal = function(result) {
 			    close(result, 200); // close, but give 200ms for bootstrap to animate
 		
-			    console.log("in dissmiss");
+			   // console.log("in dissmiss");
 			 };
 			 
 			 
 			 //GRIDSTER CONFIG
-			 console.log("gridster test view");
-			 console.log(meter);
+			// console.log("gridster test view");
+			// console.log(meter);
 			 $scope.gridsterOpts = {
 					 
 					 	
@@ -247,10 +242,10 @@ $scope.complexResult = null;
 					
 					};
 		
-			 console.log("test opts view");
-			 console.log($scope.gridsterOpts.colWidth);
-			 console.log($scope.gridsterOpts.maxRows);
-			 console.log($scope.gridsterOpts.columns);
+//			 console.log("test opts view");
+//			 console.log($scope.gridsterOpts.colWidth);
+//			 console.log($scope.gridsterOpts.maxRows);
+//			 console.log($scope.gridsterOpts.columns);
 })
 
 
@@ -270,19 +265,19 @@ app.controller('viewDefaultUnitPlanExController', function ($scope, $http,shareD
 		$scope.building=obj.building;
 		$scope.level=obj.level;
 		$scope.unit=obj.unit;
-		console.log($scope.building);
-		console.log($scope.level);
-		console.log($scope.unit);
+//		console.log($scope.building);
+//		console.log($scope.level);
+//		console.log($scope.unit);
 		unitIdObj={id:$scope.unit.id};
 	 //SET GLASSBOX SIZE ACCORDING TO LEVEL ATTRIBUTES LENGHTH AND WIDTH
 	      widthForFloorPlan= document.getElementById('panelheadGrid').clientWidth;    
-	      console.log(widthForFloorPlan);
+	      //console.log(widthForFloorPlan);
 	     // meter=parseInt((widthForFloorPlan-20)/($scope.unit.sizeX));
 	      meter=(widthForFloorPlan-20)/($scope.unit.sizeX);
 	      $scope.unitLengthGrid=meter*($scope.unit.sizeX);
 		  $scope.unitWidthGrid=meter*($scope.unit.sizeY);	
 		  scale=meter/2;//one grid represent 0.5m
-		  console.log( $scope.unitLengthGrid+" "+$scope.unitWidthGrid);
+		 // console.log( $scope.unitLengthGrid+" "+$scope.unitWidthGrid);
 		//get event id from previous page
 		  			var getAreas= $http({
 		  				method  : 'POST',
@@ -291,7 +286,7 @@ app.controller('viewDefaultUnitPlanExController', function ($scope, $http,shareD
 		  		});
 		  			console.log("REACHED HERE FOR VIEWING AREAS " + JSON.stringify(unitIdObj));
 		  			getAreas.success(function(response){
-		  				console.log(response);
+		  			//	console.log(response);
 		  				$scope.areas = response;
 
 		  				angular.forEach($scope.areas, function(area){   
@@ -302,6 +297,7 @@ app.controller('viewDefaultUnitPlanExController', function ($scope, $http,shareD
 		  			});
 		  			getAreas.error(function(){
 		  				//$scope.areas =[];
+		  				console.log("ERROR GETING AREAS FOR DEFAULT UNIT PLAN");
 		  			});	
 		  			
 		  			
@@ -310,17 +306,17 @@ app.controller('viewDefaultUnitPlanExController', function ($scope, $http,shareD
 		  		
 		  			//console.log(areas[0]);
 		  			//$scope.legends.push(areas[index]);
-		  			console.log("test legend");
-		  			console.log($scope.legends);
+//		  			console.log("test legend");
+//		  			console.log($scope.legends);
 	  				var isDuplicate=false;
 		  			angular.forEach($scope.legends, function(legend){    
 			  				if((isDuplicate==false)&&(area.description == legend.description)){	
 			  				
 			  					isDuplicate=true;
-			  					console.log(isDuplicate);
+			  					//console.log(isDuplicate);
 			  				}else{
 			  				
-			  				console.log(isDuplicate);
+			  				//console.log(isDuplicate);
 			  				}
 			  			
 		  				
@@ -331,7 +327,7 @@ app.controller('viewDefaultUnitPlanExController', function ($scope, $http,shareD
 	  				}else{
 	  					$scope.legends.push(area);
 	  				}
-		  			console.log($scope.legends);
+		  			//console.log($scope.legends);
 		  			
 		  			}
 		  		
@@ -366,8 +362,8 @@ app.controller('viewDefaultUnitPlanExController', function ($scope, $http,shareD
 	
 	
 	
-	 console.log("gridster test ");
-	 console.log(meter);
+	 //console.log("gridster test ");
+	// console.log(meter);
 	 $scope.gridsterOpts = {
 			 
 			 	
@@ -418,36 +414,26 @@ app.controller('viewDefaultUnitPlanExController', function ($scope, $http,shareD
 			    }
 			};
 
-	 console.log("test opts");
-	 console.log($scope.gridsterOpts.colWidth);
-	 console.log($scope.gridsterOpts.maxRows);
-	 console.log($scope.gridsterOpts.columns);
+	
 	 
 	 
 	 //MODAL FOR ONE AREA
 	  $scope.complexResult = null;
 		 $scope.showModal = function(area,$parent) {
-			 console.log(area);
+			// console.log(area);
 			    // Just provide a template url, a controller and call 'showModal'.
 			    ModalService.showModal({
 			    	
 			    	      templateUrl: "views/viewAreaTemplate.html",
 			    	      controller: "viewAreaController",
 			    	      inputs: {
-			    	        title: "Update Area",
+			    	        title: "View area",
 			    	        area:area
 			    	      }
 			    	    }).then(function(modal) {
 			    	      modal.element.modal();
 			    	      modal.close.then(function(result) {
-			    	      var area  = result.area;
-			    	      // console.log("in then");
-			    	      // console.log("scope test1");
-			    	  	// console.log(   angular.element(document.getElementById('1')).scope());
-			    	     //  $parent.updateArea(area);
-			    	      // console.log("scope test2");
-			    	  	// console.log(   angular.element(document.getElementById('1')).scope());
-			    	       //$state.reload();
+			    	   
 			    	      });
 			    	    });
 
@@ -455,7 +441,7 @@ app.controller('viewDefaultUnitPlanExController', function ($scope, $http,shareD
 			  
 			  $scope.dismissModal = function(result) {
 				    close(result, 200); // close, but give 200ms for bootstrap to animate
-				    console.log("in dissmiss");
+				 //   console.log("in dissmiss");
 				 };
 })
 
@@ -471,9 +457,7 @@ app.controller('viewBuildingExController', ['$scope', '$http','$state','$routePa
 		//var buildings ={name: $scope.name, address: $scope.address};
 		$http.get("//localhost:8443/building/viewBuildingsWithUnits").then(function(response){
 			$scope.buildings = response.data;
-			console.log("DISPLAY ALL BUILDINGS");
-			console.log("test view buildings");
-			console.log( $scope.buildings);
+			
 			
 			//GET PAGINATION FOR VIEWING GBUILDINGS
 			// $scope.totalItems = $scope.buildings;

@@ -18,3 +18,10 @@ div.gridster li.gridster-item {
     position:relative;
     width:960px;
 }
+.svgtest{
+    width:100%; 
+    height:100%;
+   object-fit: scale-down;
+   max-width: 40px;
+   max-height: 40px;
+}
