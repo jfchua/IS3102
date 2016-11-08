@@ -75,7 +75,7 @@ public class UnitAttributeController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/saveDatas", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> saveData(@RequestBody String data,HttpServletRequest rq) throws UserNotFoundException,InvalidPostalCodeException {
+	public ResponseEntity<String> saveDatas(@RequestBody String data,HttpServletRequest rq) throws UserNotFoundException,InvalidPostalCodeException {
 		System.out.println("start saving CSV");
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
@@ -139,7 +139,7 @@ public class UnitAttributeController {
 					}
 					if(buildingId==0){
 						System.out.println("Building Name was not found");
-						return new ResponseEntity<String>(geeson.toJson("Building Name was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
+						return new ResponseEntity<String>(geeson.toJson("Building Name "+buildingName+" was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
 						
 					}else{
 						levels=levelService.getAllLevels(client, buildingId);
@@ -161,10 +161,18 @@ public class UnitAttributeController {
 					Unit unit;
 					if(levelId==0||levelLength==0||levelWidth==0){
 						System.out.println("level number was not found");
-						return new ResponseEntity<String>(geeson.toJson("Level Number was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
+						return new ResponseEntity<String>(geeson.toJson("Level Number "+levelNum+" was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
+						
+					}else if((left+dimensionLength)>levelLength||(top+dimensionWidth)>levelWidth){
+						System.out.println("level number was not found");
+						return new ResponseEntity<String>(geeson.toJson("Unit at position: top:"+top+"m, left:"+left+"m, with dimension: length:"+dimensionLength+"m, width:"+dimensionWidth+"m is out of boundary of level "+levelNum+": length:"+levelLength+"m, width:"+levelWidth+"m"),HttpStatus.INTERNAL_SERVER_ERROR);
 						
 					}else{//width of square== (800/levelLength)*dimensionLength of unit; height of square ==(800/levelLength)*dimensionWidth of unit
-						unit=unitService.createUnitOnLevel(levelId, left, top, (int)(800*dimensionWidth/levelLength), (int)(800*dimensionLength/levelLength), "coral", "./svg/rect.svg", unitNumber,  left,  top,  dimensionWidth, dimensionLength, true, description);
+						unit=unitService.uploadUnitOnLevel(levelId, left, top, (int)(800*dimensionWidth/levelLength), (int)(800*dimensionLength/levelLength), "coral", "./svg/rect.svg", unitNumber,  left,  top,  dimensionWidth, dimensionLength, true, description);
+						if(unit==null){
+							return new ResponseEntity<String>(geeson.toJson("Unit at position: top: "+top+"m, left: "+left+"m is clashing with existing units on level "+levelNum),HttpStatus.INTERNAL_SERVER_ERROR);
+							
+						}
 						//ADD OVERLAPPING CHECK IN UNIT SERVICE
 					}
 					//READ VALUE OF CUSTOMISED TYPES

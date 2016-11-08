@@ -453,8 +453,9 @@ public class TicketingController {
 				Long categoryId = (Long)ticketInfo.get("categoryId");
 				String paymentId = (String) ticketInfo.get("paymentId");
 				System.err.println("CALLED TICKETING SERVICE ONCE");
-				String tt = ticketingService.generateTicket(usr.get(), paymentId, numTickets.intValue(), categoryId);
-				toEmail.add(tt);
+				ArrayList<String> tt = ticketingService.generateTicket(usr.get(), paymentId, numTickets.intValue(), categoryId);
+				toEmail.addAll(tt);
+				System.err.println("FILEPATH TO ADD IS " + tt);
 			}
 			emailService.sendEmailWithAttachment(usr.get().getEmail(), "Thank you for your purchase ", "Dear Customer, thank you for purchasing tickets. You may find pdf copies of the tickets attached which you may print and bring to the event. Alternatively, you can also use your ticket wallet in the mobile application." , toEmail.toArray(new String[0]));
 
@@ -815,6 +816,38 @@ public class TicketingController {
 		catch (Exception e){
 			System.err.println("Controller redeeming ticket error " + e.getMessage());
 			return new ResponseEntity<String>(geeson.toJson("Server error in redeeming ticket"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	@RequestMapping(value = "/checkValidity", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Boolean> checkValidity(@RequestBody String qrCode,HttpServletRequest rq) throws UserNotFoundException {
+		System.err.println("vaidify ticket");
+
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR); 
+		}
+		try{
+			System.err.println("before try");
+			Object obj1 = parser.parse(qrCode);
+			JSONObject jsonObject = (JSONObject) obj1;
+			String code = (String)jsonObject.get("code");
+			boolean bl = ticketingService.checkValidity(code);
+
+			if ( bl ){
+				return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+			}
+			else{
+				return new ResponseEntity<Boolean>(false,HttpStatus.OK);
+			}
+
+		}
+		catch (Exception e){
+			System.err.println("Controller validating ticket error " + e.getMessage());
+			return new ResponseEntity<Boolean>(true,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}	

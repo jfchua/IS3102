@@ -28,8 +28,8 @@ public class IconServiceTest extends AbstractTest {
 	@Before
 	public void setUp() throws ClientOrganisationNotFoundException, InvalidIconException{
 		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
-		boolean created = iconService.createIconOnClientOrganisation(org, "CUST", "images/Logo.png");
-		iconService.createIconOnClientOrganisation(org, "CUST", "images/Logo2.png");
+		boolean created = iconService.createIconOnClientOrganisation(org, "CUST", "images/the-merlion.svg");
+		iconService.createIconOnClientOrganisation(org, "CUST", "images/st-peters-square.svg");
 		if ( created ){
 			System.out.println("setup created" );		
 			for (Icon i :iconService.getAllIconFromClientOrganisation(org)){
@@ -57,7 +57,7 @@ public class IconServiceTest extends AbstractTest {
 	@Test
 	public void testCreateIconOnClientOrganisation() throws InvalidIconException, ClientOrganisationNotFoundException{
 		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
-		boolean result = iconService.createIconOnClientOrganisation(org, "CUST", "images/algattasLogo.png");
+		boolean result = iconService.createIconOnClientOrganisation(org, "CUST", "images/the-merlion.svg");
 		Assert.assertTrue(result);
 
 	}
@@ -72,7 +72,7 @@ public class IconServiceTest extends AbstractTest {
 	@Test
 	public void testEditIcon() throws ClientOrganisationNotFoundException, IconNotFoundException, InvalidIconException{
 		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
-		boolean result = iconService.editIcon(org, id1, "images/logo.png");
+		boolean result = iconService.editIcon(org, id1, "images/st-peters-square.svg");
 		Assert.assertTrue(result);
 
 
@@ -81,7 +81,7 @@ public class IconServiceTest extends AbstractTest {
 	@Test(expected=IconNotFoundException.class)
 	public void testEditIconNotFound() throws ClientOrganisationNotFoundException, IconNotFoundException, InvalidIconException{
 		ClientOrganisation org = orgService.getClientOrganisationByName("Expo");
-		boolean result = iconService.editIcon(org, Long.MAX_VALUE, "images/logo.png");
+		boolean result = iconService.editIcon(org, Long.MAX_VALUE, "images/logo11.svg");
 		Assert.assertFalse(result);
 
 	}

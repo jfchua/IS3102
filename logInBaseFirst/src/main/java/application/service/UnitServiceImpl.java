@@ -93,6 +93,56 @@ public class UnitServiceImpl implements UnitService {
 		System.out.println("UnitService"+9);
 		return unit;
 	}
+	@Override
+	public Unit uploadUnitOnLevel(long levelId, int left, int top, int height, int width, String color, String type,
+			String unitNumber, int col, int row,int  sizex,int sizey,Boolean rentable, String description) {
+		
+		Unit unit=new Unit();
+		
+			unit.setSizex(sizex);
+			unit.setSizey(sizey);
+			unit.setCol(col);
+			unit.setRow(row);
+			if(!passOverlapCheckWithExistingUnits(levelId,unit)){
+				return null;
+			}
+		
+		
+		Square square=createSquare(left,top,height,width,color,type);
+		
+		System.out.println("UnitService"+1);
+		unit.setUnitNumber(unitNumber);
+		unit.setCol(col);
+		unit.setRow(row);
+		unit.setSizex(sizex);
+		unit.setSizey(sizey);
+		unit.setRentable(rentable);
+		System.out.println("rentable"+rentable);
+		unit.setDescription(description);
+		unit.setRent(100.00);//hard coded rent =100, need to chagne later
+		System.out.println("UnitService"+2);
+		unitRepository.saveAndFlush(unit);
+		unit.setSquare(square);
+		unitRepository.saveAndFlush(unit);
+		System.out.println("UnitService"+3);
+		//unit.setSquare(square);
+		//unitRepository.save(unit);
+		Level level=levelRepository.findOne(levelId); 
+		//System.out.println("Test:Get level:"+level);
+		System.out.println("UnitService"+4);
+		Set<Unit> units=level.getUnits();
+		System.out.println("UnitService"+5);
+		units.add(unit);
+		level.setUnits(units);
+		System.out.println("UnitService"+6);
+		levelRepository.saveAndFlush(level);
+		System.out.println("UnitService"+7);
+		unit.setLevel(level);
+		System.out.println("UnitService"+8);
+		unitRepository.saveAndFlush(unit);
+		System.out.println("UnitService"+9);
+		return unit;
+	}
 	
 	@Override
 	public boolean addUnitOnLevel(long levelId) {

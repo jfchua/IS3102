@@ -301,7 +301,7 @@ app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','
 
 
 //UPLOAD CSV
-app.controller('csvController', function ($scope, $http,shareData) {
+app.controller('csvController', function ($scope, $http,shareData,ModalService) {
 
 	angular.element(document).ready(function () {
 
@@ -377,6 +377,10 @@ app.controller('csvController', function ($scope, $http,shareData) {
 
 				console.log("in dissmiss");
 			};
+			$scope.datas=[];
+			$scope.attributeTypes=[];
+			$scope.updatedView=false;
+			
 		},function(response){
 			console.log(response);
 			ModalService.showModal({
@@ -384,7 +388,7 @@ app.controller('csvController', function ($scope, $http,shareData) {
 				templateUrl: "views/errorMessageTemplate.html",
 				controller: "errorMessageModalController",
 				inputs: {
-					message: "Did not manage to save the CSV file"
+					message: response.data
 				}
 			}).then(function(modal) {
 				modal.element.modal();
@@ -398,6 +402,9 @@ app.controller('csvController', function ($scope, $http,shareData) {
 
 				console.log("in dissmiss");
 			};
+			$scope.datas=[];
+			$scope.attributeTypes=[];
+			$scope.updatedView=false;
 		})
 	}
 	$scope.csv = {
