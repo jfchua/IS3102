@@ -76,13 +76,15 @@ public class EngagementServiceImpl implements EngagementService{
 		this.discountRepository = discountRepository;
 	}
 
-	public void setFeedback(User usr, String cat, String msg){
+	public void setFeedback(User usr, Long eventId,String cat, String msg){
 		Feedback f = new Feedback();
 		f.setCategory(cat);
 		f.setFeedbackDate(new Date());
 		f.setMessage(msg);
 		f.setUser(usr);
-		feedbackRepository.save(f);
+		Event e = eventRepository.findOne(eventId);
+		e.addFeedback(f);
+		eventRepository.save(e);
 	}
 
 	public Discount getDiscount(String code){

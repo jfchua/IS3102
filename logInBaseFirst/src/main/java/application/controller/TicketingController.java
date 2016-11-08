@@ -3,6 +3,7 @@ package application.controller;
 import java.io.File;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -301,6 +302,82 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/tixViewAllEventsFeedback",  method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<String> tixViewAllEventsFeedback(HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(geeson.toJson("Server error, user was not found"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		try{
+			System.out.println("start view");
+			Set<Event> events = eventService.getAllEvents();
+			System.err.println("There are " + events.size() + " events");
+
+			//Gson gson = new Gson();
+			//String json = gson.toJson(levels);
+			//System.out.println("Returning levels with json of : " + json);
+			//return json;
+
+			Gson gson2 = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == Category.class)||(clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+						}
+
+						/**
+						 * Custom field exclusion goes here
+						 */
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+							//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+						}
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();			    
+
+			Date todayDate = new Date();
+			Set<Event> toDelete = new HashSet<>();
+
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(todayDate);
+			cal.add(Calendar.DATE, -10);
+			Date todayDateBefore = cal.getTime();
+			
+			Calendar cal2 = Calendar.getInstance();
+			cal.setTime(todayDate);
+			cal.add(Calendar.DATE, +10);
+			Date todayDateAfter = cal.getTime();
+			
+			
+			for ( Event t : events){
+				if ( t.getEvent_end_date().before(todayDateBefore) ){
+					toDelete.add(t);
+				}
+				if ( t.getEvent_start_date().after(todayDateAfter)){
+					toDelete.add(t);
+				}
+			}
+			events.removeAll(toDelete);
+
+			String json = gson2.toJson(events);
+			String json2 = gson2.toJson("Server error in getting all the events");
+			System.out.println(json);
+			return new ResponseEntity<String>(json,HttpStatus.OK);
+		}
+		catch (Exception e){
+			return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 
 	@RequestMapping(value = "/tixViewEvent",  method = RequestMethod.POST)
 	@ResponseBody
@@ -487,9 +564,10 @@ public class TicketingController {
 
 			Object obj1 = parser.parse(ticketsJSON);
 			JSONObject jsonObject = (JSONObject) obj1;
+			Long eventId = (Long)jsonObject.get("eventId");
 			String feedbackCategory = (String)jsonObject.get("category");
 			String feedbackMessage = (String)jsonObject.get("feedback");
-			engagementService.setFeedback(usr.get(), feedbackCategory, feedbackMessage);
+			engagementService.setFeedback(usr.get(),eventId, feedbackCategory, feedbackMessage);
 
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}

@@ -9,7 +9,7 @@ import application.exception.EventNotFoundException;
 public interface EngagementService {
 
 	
-	public void setFeedback(User usr, String cat, String msg);
+	public void setFeedback(User usr,Long eventId, String cat, String msg);
 	
 	public Discount getDiscount(String code);
 	
