@@ -49,6 +49,7 @@ import application.entity.ClientOrganisation;
 import application.entity.GraphAdapterBuilder;
 import application.entity.Message;
 import application.entity.PasswordResetToken;
+import application.entity.Role;
 import application.entity.SendMessageForm;
 import application.entity.SendMessageFormValidator;
 import application.entity.User;
@@ -286,8 +287,18 @@ public class MessageController {
 			Set<User> setOfUsers = c.getUsers();
 			ArrayList<String> emailsToReturn = new ArrayList<String>();
 			for ( User us : setOfUsers){
-				if ( !us.getEmail().equals(currUser.getEmail()))
+				if ( !us.getEmail().equals(currUser.getEmail())){
+					boolean isEgoer=false;
+				
+					Set<Role> rolesOfUser=us.getRoles();
+						for (Role role:rolesOfUser){
+							if(role.getName().equals("ROLE_EVEGOER")){
+								isEgoer=true;
+							}
+						}
+					if(!isEgoer)
 					emailsToReturn.add(us.getEmail());
+			}
 			}
 			Collections.sort(emailsToReturn);			
 			Gson gson = new Gson();
