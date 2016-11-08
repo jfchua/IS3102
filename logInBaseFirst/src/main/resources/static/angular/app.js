@@ -1185,7 +1185,7 @@ app.controller("userCtrl",['$scope','ModalService',
 
 //Create new user
 
-app.controller('createNewUserController', ['$scope','$http','ModalService',function($scope, $http,ModalService){
+app.controller('createNewUserController', ['$scope','$http','$state','ModalService',function($scope, $http, $state, ModalService){
 
 
 	var arr = ['ROLE_USER','ROLE_EVENT','ROLE_ADMIN','ROLE_PROPERTY','ROLE_EXTEVE'];
@@ -1208,7 +1208,7 @@ app.controller('createNewUserController', ['$scope','$http','ModalService',funct
 
 	$scope.toggleSelection = function toggleSelection(gender) {
 		var idx = $scope.selection.indexOf(gender);
-		alert("index selected gender: " + idx);
+		//alert("index selected gender: " + idx);
 		if (idx > -1) {
 			// is currently selected
 			$scope.selection.splice(idx, 1);
@@ -1219,7 +1219,7 @@ app.controller('createNewUserController', ['$scope','$http','ModalService',funct
 			$scope.selection.push(gender);
 			//$scope.selection.push(gender);
 		}
-		alert(JSON.stringify($scope.selection));
+		//alert(JSON.stringify($scope.selection));
 	};
 
 
@@ -1232,7 +1232,7 @@ app.controller('createNewUserController', ['$scope','$http','ModalService',funct
 				name: $scope.ctrl.name,
 				roles: $scope.selection			
 		};
-alert(JSON.stringify(dataObj));
+//alert(JSON.stringify(dataObj));
 		var create = $http({
 			method  : 'POST',
 			url     : 'https://localhost:8443/user/addNewUser',
@@ -1250,6 +1250,7 @@ alert(JSON.stringify(dataObj));
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
+					$state.go("dashboard.viewUserList");
 				});
 			});
 			$scope.dismissModal = function(result) {

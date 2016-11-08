@@ -102,7 +102,7 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String hashedPassword = encoder.encode(password);
 			user.setPasswordHash(hashedPassword); //add salt?
-
+			user.setSecurity(hashedPassword);
 			//CREATE USER END
 
 			//CREATE CLIENT ORG START
@@ -128,7 +128,7 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 			clientOrganisationRepository.save(clientOrg);
 			userRepository.save(user);
 			//Send created password to the new user's email
-			emailService.sendEmail(adminEmail, "New IFMS account created", "Please log in using your email and this generated password: " + password);
+			emailService.sendEmail(adminEmail, "New IFMS account created", "Please log in using your email and this generated password: " + password + ". The answer to the security question when you first login is your password.");
 
 		}
 		catch ( Exception e){

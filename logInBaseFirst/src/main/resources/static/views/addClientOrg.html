@@ -73,17 +73,14 @@
 							type="text" ng-model="clientOrg.phone"
 							class="form-control underline" id="phone"
 							placeholder="Enter contact number">
-					</div>
-					<div ng-repeat="system in systems">
-						<div class="action-checkbox">
-						<input id="{{system}}" type="checkbox" ng-disabled="true" value="{{system}}" ng-checked = "true">
-						{{system}}
-						</div>
-					</div>
+					</div>					
 					  <div >
+					     <input type="checkbox" ng-model="common" value="COMMONINFRA" ng-disabled="true" ng-checked = "true">COMMON INFRASTRUCTURE<br>
+						 <input type="checkbox" ng-model="property" value="PROPERTY" ng-disabled="true" ng-checked = "true">PROPERTY<br>
+						 <input type="checkbox" ng-model="event" value="EVENT" ng-disabled="true" ng-checked = "true">EVENT<br>
                          <input type="checkbox" ng-model="finance" value = "FINANCE ">FINANCE<br>
                          <input type="checkbox" ng-model="ticketing" value = "TICKETING"  ng-disabled="!finance" ng-checked="finance&& 0">TICKETING<br>
-                         <input type="checkbox" ng-model="bi" value = "BI" >BI<br>
+                         <input type="checkbox" ng-model="bi" value = "BI" >BUSINESS INTELLIGENCE<br>
                     </div>
 					<!--<div ng-repeat="gender in genders">
 						<div class="action-checkbox">
