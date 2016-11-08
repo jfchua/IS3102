@@ -35,6 +35,8 @@
 					<li><a  ui-sref="dashboard.viewBuilding">{{ 'Building' | translate }}</a></li>
 					<li><a  ui-sref="dashboard.uploadCSV">{{ 'CSV' | translate }}</a></li>
 					<li><a  ui-sref="dashboard.viewIcon">{{ 'Icon' | translate }}</a></li>
+					<li><a ng-show="IsFinanceSub()"  ui-sref="dashboard.updateRent">{{ 'Rent' | translate }}</a></li>
+					<li><a ng-show="IsFinanceSub()"  ui-sref="dashboard.viewAllRates">{{ 'Special Rate' | translate }}</a></li>
 				</ul>
 			</li>
 			
@@ -69,6 +71,7 @@
 					<li class="sidemenu-header">{{ 'Manage Event' | translate }}</li>
 					<li><a  ui-sref="dashboard.viewAllEvents">{{ 'Event' | translate }}</a></li>
 					<li><a  ui-sref="dashboard.viewEventOrganizers">{{ 'Event Organisers' | translate }}</a></li>
+					<li><a ng-show="IsTicketingSub()" ui-sref="dashboard.viewTicketSales">{{ 'Ticket Sales' | translate }}</a></li>
 					</ul>
 			</li>
 			
@@ -83,6 +86,7 @@
 					<li><a  ui-sref="dashboard.viewAllEventsEx">{{ 'View Events' | translate }}</a></li>
 					<li><a  ui-sref="dashboard.addEventEx">{{ 'Add a Event' | translate }}</a></li>
 					<li><a  ui-sref="dashboard.feedbackEx">{{ 'View Event Feedback' | translate }}</a></li>
+					<li><a ng-show="IsFinanceSub()" ui-sref="dashboard.viewPaymentPlansEx">{{ 'View Payment Plans' | translate }}</a></li>
 				</ul>
             </li>
             
@@ -151,12 +155,14 @@
 					<li><a  ui-sref="dashboard.viewAllPaymentPlans">{{ 'View Payment Plans' | translate }}</a></li>
 					<li><a  ui-sref="dashboard.viewPaymentPolicy">{{ 'View Payment Policy' | translate }}</a></li>
 					<li><a ui-sref="dashboard.viewAllOutstandingBalance">{{ 'View Outstanding Balance' | translate }}</a></li>
+					<li><a ngshow="IsTicketingSub()"  ui-sref="dashboard.viewEventsWithTicketSales">{{ 'View Events With Ticket Sales' | translate }}</a></li>
 					<li><a  ui-sref="dashboard.generateInvoice">{{ 'Generate Invoice (Ad Hoc)' | translate }}</a></li>
 				</ul>
             </li>
 			
 			
 				
+		<li  ng-show="IsManager(); IsBISub()" ng-controller="AccountController" class="active">
 			<a ui-sref="dashboard.viewDataVisual">
 					<span class="fa fa-bar-chart-o"></span>
 				</a>
