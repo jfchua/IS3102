@@ -44,6 +44,10 @@ public class Discount {
 	public void setDiscountMessage(String discountMessage) {
 		this.discountMessage = discountMessage;
 	}
+
+	public Long getId() {
+		return id;
+	}
 	
 	
 }

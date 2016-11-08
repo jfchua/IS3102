@@ -883,6 +883,73 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/tixVerifyAllEvents",  method = RequestMethod.GET)
+	@ResponseBody
+	public String verifyAllEvents(HttpServletRequest rq) throws UserNotFoundException {
+	    System.out.println("start view");
+	    Principal principal = rq.getUserPrincipal();
+	    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+		if ( !eventOrg1.isPresent() ){
+			return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
+		}
+		try{
+		//EventOrganizer eventOrg = eventOrg1.get();	
+		User eventOrg = eventOrg1.get();
+		ClientOrganisation client = eventOrg.getClientOrganisation();
+		System.out.println(eventOrg.getId());
+		Set<Event> events = eventExternalService.getAllEventsByOrg(client, eventOrg);
+		System.out.println("There are " + events.size() + " events under this organizer");
+		
+		//Gson gson = new Gson();
+		//String json = gson.toJson(levels);
+	    //System.out.println("Returning levels with json of : " + json);
+		//return json;
+		
+		Gson gson2 = new GsonBuilder()
+			    .setExclusionStrategies(new ExclusionStrategy() {
+			        public boolean shouldSkipClass(Class<?> clazz) {
+			            return  (clazz == Category.class)|| (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+			        }
+
+			        /**
+			          * Custom field exclusion goes here
+			          */
+
+					@Override
+					public boolean shouldSkipField(FieldAttributes f) {
+						//TODO Auto-generated method stub
+						return false;
+								//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+					}
+
+			     })
+			    /**
+			      * Use serializeNulls method if you want To serialize null values 
+			      * By default, Gson does not serialize null values
+			      */
+			    .serializeNulls()
+			    .create();			    
+		
+		Date todayDate = new Date();
+		Set<Event> toDelete = new HashSet<>();
+
+		for ( Event t : events){
+			if ( t.getEvent_end_date().before(todayDate) ){
+				toDelete.add(t);
+			}
+		}
+		events.removeAll(toDelete);
+
+	    String json = gson2.toJson(events);
+	    System.out.println(json);
+	    return json;
+		}
+		catch (Exception e){
+			return "cannot fetch";
+		}
+		//return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 
 
 
