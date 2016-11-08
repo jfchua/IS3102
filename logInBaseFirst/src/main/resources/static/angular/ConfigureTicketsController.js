@@ -22,7 +22,7 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 			console.log($scope.tickets);
 
 		},function(response){
-			alert("did not view all ticket categories");
+			alert("did not view discounts");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
@@ -484,7 +484,7 @@ app.controller('updateCategoryController', ['$scope', '$http','$state','$rootSco
 		var dataObj = {			
 				categoryId: $scope.categoryId,
 				name: $scope.categoryName,
-				price: $scope.categoryPrice,
+				price: ($scope.categoryPrice).toString(),
 				numTickets: $scope.numTickets,						
 		};
 		$http.post("//localhost:8443/updateCategory", JSON.stringify(dataObj)).then(function(response){
@@ -516,7 +516,7 @@ app.controller('updateCategoryController', ['$scope', '$http','$state','$rootSco
 				templateUrl: "views/errorMessageTemplate.html",
 				controller: "errorMessageModalController",
 				inputs: {
-					message: 'Server error in updating category',
+					message: response.data,
 				}
 			}).then(function(modal) {
 				modal.element.modal();
@@ -534,6 +534,20 @@ app.controller('updateCategoryController', ['$scope', '$http','$state','$rootSco
 		});
 	}
 }]);
+
+app.filter('orderObjectBy', function() {
+	  return function(items, field, reverse) {
+	    var filtered = [];
+	    angular.forEach(items, function(item) {
+	      filtered.push(item);
+	    });
+	    filtered.sort(function (a, b) {
+	      return (a[field] > b[field] ? 1 : -1);
+	    });
+	    if(reverse) filtered.reverse();
+	    return filtered;
+	  };
+	});
 
 app.controller('updateDiscountController', ['$scope','$rootScope','$http','$state','shareData','ModalService', function ($scope, $rootScope, $http,$state, shareData,ModalService) {
 	angular.element(document).ready(function () {

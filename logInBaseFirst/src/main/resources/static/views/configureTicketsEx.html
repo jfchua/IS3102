@@ -39,13 +39,13 @@
 					</thead>
 					<tbody>
 
-						<tr ng-repeat="x in tickets track by $index">
+						<tr ng-repeat="x in tickets track by $index|orderObjectBy:order_item:order_reverse">
 							<td>{{ x.id }}</td>
 							<td>{{ x.categoryName }}</td>
 							<td>{{ x.price }}</td>
 							<td>{{ x.numOfTickets }}</td>
 
-							<td><a ui-sref="dashboard.updateCategory"
+							<td><a ui-sref="dashboard.updateCategoryEx"
 								ng-click="passCategory(x)" tooltip-placement="top"
 								tooltip="Update Category"><i
 									class="glyphicon glyphicon-pencil"></i></a> <a
