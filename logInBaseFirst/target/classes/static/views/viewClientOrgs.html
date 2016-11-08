@@ -54,8 +54,8 @@
 								<div ng-repeat="gender in genders" ng-show="profile.editable">
 									<div class="action-checkbox">
 										<input id="{{gender}}" type="checkbox" value="{{gender}}"
-											ng-checked="selection.indexOf(gender) > -1 || check(gender)"
-											ng-disabled="check(gender)"
+											ng-checked="selection.indexOf(gender) > -1 || check(gender) "
+											ng-disabled="check(gender) || (gender == 'TICKETING' && checkSub()) "
 											ng-click="toggleSelection(gender)" /> <label
 											for="{{gender}}"></label> {{gender}}
 									</div>
