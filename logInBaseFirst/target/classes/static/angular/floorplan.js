@@ -172,26 +172,26 @@ $scope.twoOptions=[
      $scope.showDetail="unitNumber: "+thisUnit.unitNumber  +  " Unit Width: " + parseInt((thisUnit.square.height)*(level.length)/800) + "meter, Unit Length: " + parseInt((thisUnit.square.width)*(level.length)/800) +"meter";
      console.log($scope.showDetail);
       } 
-  $scope.viewLevelsByBuildingId = function(){
-    var buildingId;
-    $scope.dataToShare = [];
-    //get building id from levelId
-    $http.post('/level/getBuilding', JSON.stringify(levelIdObj)).then(function(response){
-      console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
-      var building=response.data;
-      console.log(building);
-      //var temp=JSON.stringify(buildingJson)
-      shareData.addData(building);
-
-      console.log("Building ID IS " + building.id);
-
-    },function(response){
-      console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
-    });
-    
-   
-
-    }
+//  $scope.viewLevelsByBuildingId = function(){
+//    var buildingId;
+//    $scope.dataToShare = [];
+//    //get building id from levelId
+//    $http.post('/level/getBuilding', JSON.stringify(levelIdObj)).then(function(response){
+//      console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
+//      var building=response.data;
+//      console.log(building);
+//      //var temp=JSON.stringify(buildingJson)
+//      shareData.addData(building);
+//
+//      console.log("Building ID IS " + building.id);
+//
+//    },function(response){
+//      console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
+//    });
+//    
+//   
+//
+//    }
 
   
 
@@ -334,7 +334,7 @@ app.controller('viewUnitController', ['$scope', '$element', 'title', 'close', 'u
 	
 }])
 
-
+/*
 //FLOORPLAN
 app.directive('draggable', function() {
   console.log("test draggable directive");
@@ -346,11 +346,7 @@ app.directive('draggable', function() {
     restrict:'A',
     controller: 'floorPlanController',
 
-    /*
-          scope: {
-                callback: '&onDrag'
-            },
-     */
+  
     //The link function is responsible for registering DOM listeners as well as updating the DOM.
     //link: function postLink(scope, element, attrs) {
     link: function (scope, element, attrs) {
@@ -412,7 +408,7 @@ app.directive('resizable', function () {
 })
 
 
-
+*/
 
 //UPDATE FLOOR PLAN
 app.controller('floorPlanController', function ($scope, $http,shareData,$state,ModalService) {
@@ -470,21 +466,18 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	        
 	      },function(response){
 	        console.log("DID NOT view");
-	        console.log("response is "+angular.fromJson(response.data).error);
+	        //console.log("response is "+angular.fromJson(response.data).error);
 	      })
 	      
 	     // $scope.icons=[];
 	       //RETRIEVE ICON WHEN LOADED
 			$http.get("//localhost:8443/property/viewIcons").then(function(response){			
-				//console.log(response.data);
+				
 				$scope.icons = response.data;
-				//console.log($scope.icons);
-				//console.log($scope.icons[0]);
-				//console.log($scope.icons[0].iconType);
-				//console.log($scope.icons[0].iconPath);
+				
 				$scope.icon=$scope.icons[0];
 			},function(response){
-				alert("DID NOT VIEW ICONS");
+				console.log("DID NOT VIEW ICONS");
 				
 			})
 			
@@ -510,38 +503,14 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					     index++;
 					     console.log(iconMenuRow);
 					  }); 
-				 console.log("test icon menu");
-				 console.log($scope.iconMenu);
-				//console.log($scope.icons);
-				//console.log($scope.icons[0]);
-				//console.log($scope.icons[0].iconType);
-				//console.log($scope.icons[0].iconPath);
+				// console.log("test icon menu");
+				// console.log($scope.iconMenu);
+				
 			},function(response){
-				alert("DID NOT VIEW ICON MENU");
+				console.log("DID NOT VIEW ICON MENU");
 				
 			})
-			/*
-			$scope.defaultTypes=[
-			                  {'name':'Entry','type':'./svg/entry.svg'},
-			                  {'name':'Escalator','type':'./svg/escalator.svg'},
-			                  {'name':'Exit','type':'./svg/exit.svg'},
-			                  {'name':'Lift','type':'./svg/lift.svg'},
-			                  {'name':'Service Lift','type':'./svg/servicelift.svg'},
-			                  {'name':'Staircase','type':'./svg/staircase.svg'},
-			                  {'name':'Toilet','type':'./svg/toilet.svg'},
-			                  {'name':'Unit','type':'./svg/rect.svg'}];
-			$scope.selectedDefaultType=$scope.defaultTypes[0];
-			*/
-			/*  $scope.iconMenu = [
-			                        
-			                        // null,        // Dividier
-			                         ['<img  class="svgtest" src="lights.svg" alt="" width="50px" height="50px">', function ($itemScope, $event, modelValue, text, $li) {
-			                             var icon=$scope.icon[0];
-			                        	 $scope.addSpecialUnitByIcon(icon);
-			                         }],
-			                  
-			                        
-			                     ];*/
+		
     });
   
   
@@ -583,46 +552,46 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
   
 
 			  $scope.addUnit = function () {  
-				  var dataObj = {
-						  id: levelId,
-						  Units:{
-							  Unit:$scope.units
-						  }
-				  };						
-				  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){			
-				  },function(response){			
-				  } ).then(function(){			
+				//  var dataObj = {
+				//		  id: levelId,
+				//		  Units:{
+				//			  Unit:$scope.units
+				//		  }
+				 // };						
+				//  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){			
+				//  },function(response){			
+				//  } ).then(function(){			
 					  var dataObj={levelId:levelId};
 					  $http.post('/property/addUnit', JSON.stringify(dataObj)).then(function(response){
-						  $scope.units=[];
+						 // $scope.units=[];
 						  console.log("empty");
-						  console.log($scope.units);
+						 // console.log($scope.units);
 						  $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){			
-							  console.log(angular.fromJson(response.data));
+							//  console.log(angular.fromJson(response.data));
 							  $scope.units=angular.fromJson(response.data);
 			
 						  },function(response){
 							  console.log("DID NOT view");
-							  console.log("response is "+angular.fromJson(response.data).error);
+							 // console.log("response is "+angular.fromJson(response.data).error);
 						  })
 					  },function(response){//else is not saved successfully
 						  console.log("UNIT CANNOT BE ADDED");
-						  alert("UNIT CANNOT BE ADDED");
+						  //alert("UNIT CANNOT BE ADDED");
 					  })
-				  } )
+				 // } )
 			  }//END ADD UNIT
 
 			  $scope.specialType='./svg/entry.svg';
 			  $scope.addSpecialUnit = function (type) {   //note: passed in type is not used
-				  var dataObj = {
-						  id: levelId,
-						  Units:{
-							  Unit:$scope.units
-						  }
-				  };      
-				  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
-				  },function(response){
-				  } ).then(function(){
+//				  var dataObj = {
+//						  id: levelId,
+//						  Units:{
+//							  Unit:$scope.units
+//						  }
+//				  };      
+//				  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
+//				  },function(response){
+//				  } ).then(function(){
 					  var dataObj={levelId:levelId,type: $scope.specialType};
 					  $http.post('/property/addDefaultIcon', JSON.stringify(dataObj)).then(function(response){
 						  $scope.units=[];
@@ -640,7 +609,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 						  console.log("UNIT CANNOT BE ADDED");
 						  alert("UNIT CANNOT BE ADDED");
 					  })
-				  } )
+				 // } )
 			  } //END ADD DEFAULT ICON
 			  
 			  $scope.addCustIcon = function(iconId){
@@ -654,41 +623,24 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					  }else
 						  index = index + 1;
 				  }); 
-				  console.log(iconId);
-				  console.log(icon);
+//				  console.log(iconId);
+//				  console.log(icon);
 				 
-				  /*$scope.units.push({"levelId":levelId,"id": 0,"unitNumber": "","length": 100,"width": 100,"description": "#","square": {"left": 0,"top": 0,"height": 50,"width": 50, "color": "transparent","type": "","icon": {"id":icon.id,"iconType":icon.iconType,"iconPath":icon.iconPath}}});
-				  var dataObj = {
-						  id: levelId,
-						  Units:{
-							  Unit:$scope.units
-						  }
-				  };
-				  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
-					  $scope.units=[];
-					  $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-						  console.log("pure response is "+response.data);
-						  console.log("test anglar.fromJon"+angular.fromJson(response.data));
-						  $scope.units=angular.fromJson(response.data);
-					  },function(response){
-						  console.log("DID NOT CREATE");
-					  })
-				  } )*/
 				  
-				  var dataObj = {
-						  id: levelId,
-						  Units:{
-							  Unit:$scope.units
-						  }
-				  };      
-				  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
-				  },function(response){
-				  } ).then(function(){
+//				  var dataObj = {
+//						  id: levelId,
+//						  Units:{
+//							  Unit:$scope.units
+//						  }
+//				  };      
+//				  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
+//				  },function(response){
+//				  } ).then(function(){
 					  var dataObj={levelId:levelId,iconId:icon.id};
 					  $http.post('/property/addCustIcon', JSON.stringify(dataObj)).then(function(response){
-						  $scope.units=[];
-						  console.log("empty");
-						  console.log($scope.units);
+//						  $scope.units=[];
+//						  console.log("empty");
+//						  console.log($scope.units);
 						  $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
 							  console.log(angular.fromJson(response.data));
 							  $scope.units=angular.fromJson(response.data);
@@ -699,16 +651,16 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 						  })
 					  },function(response){//else is not saved successfully
 						  console.log("UNIT CANNOT BE ADDED");
-						  alert("UNIT CANNOT BE ADDED");
+						  //alert("UNIT CANNOT BE ADDED");
 					  })
-				  } )
+				 // } )
 
 			  }//END ADD CUSTOMISED ICON
   $scope.saveUnits = function () {   
-    console.log("Test: start saving units");
+    //console.log("Test: start saving units");
     var saveUnits=$scope.units;
     var unitsString=angular.toJson(saveUnits);
-    console.log(unitsString);
+    //console.log(unitsString);
     var dataObj = {
         id: levelId,
         Units:{
@@ -716,11 +668,11 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
         }
     };
 
-    console.log(dataObj);
+    //console.log(dataObj);
 
     $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
       console.log("pure response is "+JSON.stringify(response.data));
-      alert("FLOOR PLAN IS SAVED. GOING BACK TO VIEW FLOOR PLAN...");
+      console.log("FLOOR PLAN IS SAVED. GOING BACK TO VIEW FLOOR PLAN...");
       shareData.addData(obj);
       $state.go("dashboard.viewFloorPlan");
     },function(response){//else is not saved successfully
@@ -730,6 +682,8 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 
 
   } 
+  
+  
   //FOR GO BACK TO VIEW FLOOR PLAN
   $scope.viewFloorPlan= function(){
     //shareData.addData(level);
@@ -745,50 +699,50 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 	 // $state.go("dashboard.viewLevels");
   }
   
-  $scope.viewLevelsByBuildingId = function(){
-    var buildingId;
-    $scope.dataToShare = [];
-    //get building id from levelId
-    $http.post('/level/getBuildingId', JSON.stringify(levelIdObj)).then(function(response){
-      console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
-      var buildingJson=response.data;
-      console.log(buildingJson);
-      //var temp=JSON.stringify(buildingJson)
-      buildingId=buildingJson.buildingId;
-
-      console.log("Building ID IS " + buildingId);
-
-    },function(response){
-      console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
-    }).then(function() {
-
-      //get levels of building id and then save to share data
-      $scope.url = "https://localhost:8443/level/viewLevels/"+buildingId;
-      //$scope.dataToShare = [];
-      console.log("GETTING THE LEVELS")
-      var getLevels = $http({
-        method  : 'GET',
-        url     : 'https://localhost:8443/level/viewLevels/' + buildingId
-
-      });
-
-      console.log("Getting the levels using the url: " + $scope.url);
-      getLevels.success(function(response){
-        //$scope.dataToShare.push(id);
-        //$location.path("/viewLevels/"+id);
-        console.log('GET LEVELS SUCCESS! ' + JSON.stringify(response));
-        console.log("ID IS " + buildingId);
-        shareData.addData(JSON.stringify(response));
-        //shareData.addDataId(JSON.stringify(id));
-        //$location.path("/viewLevels");
-      });
-      getLevels.error(function(response){
-        $state.go("dashboard.viewBuilding");//not sure
-        console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
-      });
-
-    })
-  }
+//  $scope.viewLevelsByBuildingId = function(){
+//    var buildingId;
+//    $scope.dataToShare = [];
+//    //get building id from levelId
+//    $http.post('/level/getBuildingId', JSON.stringify(levelIdObj)).then(function(response){
+//      console.log('GET BUILDING SUCCESS! ' + JSON.stringify(response));
+//      var buildingJson=response.data;
+//      //console.log(buildingJson);
+//      //var temp=JSON.stringify(buildingJson)
+//      buildingId=buildingJson.buildingId;
+//
+//      console.log("Building ID IS " + buildingId);
+//
+//    },function(response){
+//      console.log('GET BUILDING ID FAILED! ' + JSON.stringify(response));
+//    }).then(function() {
+//
+//      //get levels of building id and then save to share data
+//      $scope.url = "https://localhost:8443/level/viewLevels/"+buildingId;
+//      //$scope.dataToShare = [];
+//      console.log("GETTING THE LEVELS")
+//      var getLevels = $http({
+//        method  : 'GET',
+//        url     : 'https://localhost:8443/level/viewLevels/' + buildingId
+//
+//      });
+//
+//      console.log("Getting the levels using the url: " + $scope.url);
+//      getLevels.success(function(response){
+//        //$scope.dataToShare.push(id);
+//        //$location.path("/viewLevels/"+id);
+//        console.log('GET LEVELS SUCCESS! ' + JSON.stringify(response));
+//        console.log("ID IS " + buildingId);
+//        shareData.addData(JSON.stringify(response));
+//        //shareData.addDataId(JSON.stringify(id));
+//        //$location.path("/viewLevels");
+//      });
+//      getLevels.error(function(response){
+//        $state.go("dashboard.viewBuilding");//not sure
+//        console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
+//      });
+//
+//    })
+//  }
   //$scope.showDetail="test";
    $scope.showDetails= function (thisUnit) {   
      console.log(thisUnit);
@@ -849,34 +803,78 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
   */
 	$scope.remove = function(unit) { 
 		
-		  var dataObj = {
-			        id: levelId,
-			        Units:{
-			          Unit:$scope.units
-			        }
-			    };
-	
-		    	  if (confirm('CONFIRM TO DELETE THIS UNIT'+unit.unitNumber+'?')) {
-		  			
-		  			var dataObj={id:unit.id,levelId:levelId};
-		  			$http.post('/property/deleteUnit', JSON.stringify(dataObj)).then(function(response){
-		  				$scope.units=[];
+        ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: "Do you wish to delete " +unit.unitNumber+'?',
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					var dataObj={id:unit.id,levelId:levelId};
+
+					$http.post('/property/deleteUnit', JSON.stringify(dataObj)).then(function(response){
+						console.log("Deleted the unit");
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Unit successfully deleted',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+						};
+						//END SHOWMODAL
+						//$scope.units=[];
 		  				 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-		  				        console.log("pure response is "+response.data);
+		  				       // console.log("pure response is "+response.data);
 		  				
-		  				        console.log("test anglar.fromJon"+angular.fromJson(response.data));
+		  				       // console.log("test anglar.fromJon"+angular.fromJson(response.data));
 		  				        $scope.units=angular.fromJson(response.data);
 		  				
 		  				      },function(response){
 		  				        console.log("DID NOT view");
-		  				        console.log("response is "+angular.fromJson(response.data).error);
+		  				       // console.log("response is "+angular.fromJson(response.data).error);
 		  				      })
-		  		},function(response){//else is not saved successfully
-		  			console.log("UNIT CANNOT BE DELETED");
-		  			alert("THERE ARE ADVANCE BOOKINGS ON THIS UNIT. UNIT CANNOT BE DELETED");
-		  		})
-		  		
-		  		}
+
+
+					},function(response){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: response.data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+						
+						};
+					}	
+					)
+				}
+			});
+		});
+
+		$scope.dismissModal = function(result) {
+		};
+
+		//END SHOWMODAL
 		      
 		
 		   
@@ -888,43 +886,41 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 		
 		// console.log("scope test3");
 	//	 console.log(   angular.element(document.getElementById('1')).scope());
-		  var dataObj = {
-			        id: levelId,
-			        Units:{
-			          Unit:$scope.units
-			        }
-			    };
-		  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
+		//  var dataObj = {
+		//	        id: levelId,
+		//	        Units:{
+		//	          Unit:$scope.units
+		//	        }
+		//	    };
+		//  $http.post('/property/saveUnits', JSON.stringify(dataObj)).then(function(response){
 		    	
-		  },function(response){
+		 // },function(response){
 		        
-		      } ).then(function(){
+		    //  } ).then(function(){
 		  			
 		  			var dataObj={unit:unit,levelId:levelId};
 		  			$http.post('/property/updateUnit', JSON.stringify(dataObj)).then(function(response){
-		  				$scope.units=[];
-		  				console.log("empty");
-		  				console.log($scope.units);
+		  				//$scope.units=[];//MIGHT NEED TO MOVE BACK, ATTENTION
+		  				//console.log("empty");
+		  				//console.log($scope.units);
 		  				 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
-		  				        console.log(response.data);
+		  				        //console.log(response.data);
 		  				
-		  				        console.log(angular.fromJson(response.data));
+		  				       // console.log(angular.fromJson(response.data));
 		  				      $scope.units=angular.fromJson(response.data);
-		  				  //  console.log("scope test4");
-		  					// console.log(   angular.element(document.getElementById('1')).scope());
 		  				       // $state.reload();//Can use
 		  				     
 		  				      },function(response){
 		  				        console.log("DID NOT view");
-		  				        console.log("response is "+angular.fromJson(response.data).error);
+		  				       // console.log("response is "+angular.fromJson(response.data).error);
 		  				      })
 		  		},function(response){//else is not saved successfully
 		  				console.log("UNIT CANNOT BE EDITED");
-		  			alert("UNIT CANNOT BE EDITED");
+		  			
 		  		})
 		  		
 		  		
-		      } )
+		    //  } )
 	 };//END UPDATE UNIT
 //  for external event organisers
   var unitIds="";
@@ -957,14 +953,10 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 		    	    }).then(function(modal) {
 		    	      modal.element.modal();
 		    	      modal.close.then(function(result) {
-		    	      var unit  = result.unit;
-		    	      // console.log("in then");
-		    	      // console.log("scope test1");
-		    	  	// console.log(   angular.element(document.getElementById('1')).scope());
-		    	       $parent.updateUnit(unit);
-		    	      // console.log("scope test2");
-		    	  	// console.log(   angular.element(document.getElementById('1')).scope());
-		    	       //$state.reload();
+		    	    	  if(result){  
+		    	    		  var unit  = result.unit;
+		    	    		  $parent.updateUnit(unit);
+		    	    		  }
 		    	      });
 		    	    });
 
@@ -972,8 +964,8 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 		  
 		  $scope.dismissModal = function(result) {
 			    close(result, 200); // close, but give 200ms for bootstrap to animate
-			    $parent.updateUnit();
-			    console.log("in dissmiss");
+			    //$parent.updateUnit();
+			   // console.log("in dissmiss");
 			 };
 	//GRIDSTER
 			 /*$scope.standardItems = [
@@ -1065,14 +1057,10 @@ app.controller('updateUnitController', ['$scope', '$element', 'title', 'close', 
 		  //  This cancel function must use the bootstrap, 'modal' function because
 		  //  the doesn't have the 'data-dismiss' attribute.
 		  $scope.cancel = function() {
-
 		    //  Manually hide the modal.
-		    $element.modal('hide');
-		    
+		    $element.modal('hide');		    
 		    //  Now call close, returning control to the caller.
-		    close({
-		    	unit:$scope.unit
-		    }, 500); // close, but give 500ms for bootstrap to animate
+		    close(result, 500); // close, but give 500ms for bootstrap to animate
 		  };
 
 		
