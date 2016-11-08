@@ -530,6 +530,10 @@ public class TicketingServiceImpl implements TicketingService {
 					e1.printStackTrace();
 				}
 			}
+			for ( String s : thingToReturn){
+				System.out.println("thing to return + " + s);
+			}
+
 			return thingToReturn;
 		}
 		catch ( Exception e){
