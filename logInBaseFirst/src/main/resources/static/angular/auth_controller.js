@@ -16,6 +16,7 @@ app.factory('Auth', function($window, $sessionStorage){
 				//console.log("User " + user.name +" is set");
 				  sessionStorage.setItem('user', JSON.stringify(user));
 				  sessionStorage.setItem('clientOrg', (user.principal.user.clientOrganisation.organisationName));
+				  sessionStorage.setItem('subscriptions', (user.principal.user.clientOrganisation.systemSubscriptions));
 				  console.log("token is set");
 				  authenticated = true;
 				  for (i = 0; i<user.authorities.length;i++) {

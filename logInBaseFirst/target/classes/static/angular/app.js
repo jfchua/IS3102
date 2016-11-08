@@ -81,7 +81,7 @@ var app = angular.module('app', [ 'ui.router',
                                 				  data: {
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
-                                				
+
                                 			  })
                                 			  .state('dashboard.workspace',{
                                 				  url:'/workspace',
@@ -316,7 +316,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			   .state('dashboard.createUnitPlanDefault',{
+                                			  .state('dashboard.createUnitPlanDefault',{
                                 				  url:'/createUnitPlanDefault',
                                 				  templateUrl: '/views/createUnitPlanDefault.html',
                                 				  controller: 'defaultUnitPlanController',
@@ -445,7 +445,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			   .state('dashboard.viewLevelsEx',{
+                                			  .state('dashboard.viewLevelsEx',{
                                 				  url:'/viewLevelsEx',
                                 				  templateUrl: '/views/viewLevelsEx.html',
                                 				  controller: 'viewviewLevelsExController',
@@ -453,25 +453,25 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  
+
                                 			  .state('dashboard.viewBuildingEx.viewFloorPlanEx',{
                                 				  url:'/viewFloorPlanEx',
-                                                   params: {
-                                                   param1: null
-                                                    },
+                                				  params: {
+                                					  param1: null
+                                				  },
                                 				  templateUrl: '/views/viewFloorPlanEx.html',
                                 				  controller: 'viewFloorPlanExController',
-                                                  
+
                                 				  data:{
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                              
-                                			   .state('dashboard.viewBuildingEx.viewFloorPlanEx.viewUnitPlanDefaultEx',{
+
+                                			  .state('dashboard.viewBuildingEx.viewFloorPlanEx.viewUnitPlanDefaultEx',{
                                 				  url:'/viewUnitPlanDefaultEx',
                                 				  params: {
-                                                      param2: null
-                                                       },
+                                					  param2: null
+                                				  },
                                 				  templateUrl: '/views/viewUnitPlanDefaultEx.html',
                                 				  controller: 'viewDefaultUnitPlanExController',
                                 				  data:{
@@ -511,9 +511,9 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateCategory',{
+                                			  .state('dashboard.updateCategoryEx',{
                                 				  url:'/updateCategoryEx',
-                                				  templateUrl: '/views/updateCategory.html',
+                                				  templateUrl: '/views/updateCategoryEx.html',
                                 				  controller: 'configureTicketsController',
                                 				  data:{
                                 					  authorizedRoles:[USER_ROLES.organiser]
@@ -872,13 +872,13 @@ var app = angular.module('app', [ 'ui.router',
                                 				  }
                                 			  })
                                 			  .state('dashboard.dataVisual',{
-													url:'/dataVisual',
-													templateUrl: 'views/datavisual.html',
-													controller: 'dataVisualController',
-													data: {
-														authorizedRoles: [USER_ROLES.user]
-													}
-			})
+                                				  url:'/dataVisual',
+                                				  templateUrl: 'views/datavisual.html',
+                                				  controller: 'dataVisualController',
+                                				  data: {
+                                					  authorizedRoles: [USER_ROLES.user]
+                                				  }
+                                			  })
 
 
                                 			  $urlRouterProvider.otherwise('/login');
@@ -1187,7 +1187,22 @@ app.controller("userCtrl",['$scope','ModalService',
 
 app.controller('createNewUserController', ['$scope','$http','ModalService',function($scope, $http,ModalService){
 
-	$scope.genders=['ROLE_USER','ROLE_EVENT','ROlE_ADMIN','ROLE_PROPERTY','ROLE_FINANCE','ROLE_TICKETING','ROLE_EXTEVE'];
+
+	var arr = ['ROLE_USER','ROLE_EVENT','ROLE_ADMIN','ROLE_PROPERTY','ROLE_EXTEVE'];
+
+	var subz = sessionStorage.getItem('subscriptions');
+	if (subz.indexOf("TICKETING") > -1) {
+		arr.push('ROLE_TICKETING');
+	} 
+	if (subz.indexOf("FINANCE") > -1) {
+		arr.push('ROLE_FINANCE');
+	} 
+	if (subz.indexOf("BI") > -1) {
+		arr.push('ROLE_HIGHER');
+	} 
+
+
+	$scope.genders= arr;
 	$scope.selection=[];
 
 	$scope.toggleSelection = function toggleSelection(gender) {
@@ -1536,7 +1551,7 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 
 //USER PROFILE CONTROLLER
 app.controller('userProfileController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
-	
+
 	$scope.question = [
 	                   {question: "What is your Mother\'s Maiden name"},
 	                   {question: "What is your favourite number"},
@@ -1544,8 +1559,8 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 	                   {question: "What is your favourite animal"},
 	                   {question: "What is your favourite colour"}
 	                   ];
-	                   
-	
+
+
 	$scope.submit = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
@@ -1684,7 +1699,7 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 			});
 		};
 	}
-	
+
 	$scope.submitChangeSecurity = function(){
 		//alert("SUCCESS");
 		if ( $scope.userProfile.security1 != $scope.userProfile.security2 ){
@@ -1714,14 +1729,14 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 					oldsecurity: $scope.userProfile.security0,
 					question: $scope.selectedQuestion,
 			};
-			
+
 
 			var send = $http({
 				method  : 'POST',
 				url     : 'https://localhost:8443/user/changeSecurity',
 				data    : dataObj //forms user object
 			});
-			
+
 			send.success(function(){
 				ModalService.showModal({
 
@@ -1764,7 +1779,7 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 			});
 		};
 	}
-	
+
 	$scope.getUserProfileRoles = function(){
 		//alert("SUCCESS");
 
@@ -1986,36 +2001,36 @@ app.controller('AlertDemoCtrl',[ '$scope','datfactory','$http','ModalService', f
 		$scope.numberOfNotification=$scope.alerts.length;
 
 	});
-	
-	 //MODAL FOR VIEWING ONE MESSAGE
-	  $scope.complexResult = null;
-		 $scope.showModal = function(message) {
-			 console.log(message);
-			    // Just provide a template url, a controller and call 'showModal'.
-			    ModalService.showModal({
-			    	
-			    	      templateUrl: "views/viewMessageTemplate.html",
-			    	      controller: "viewMessageController",
-			    	      inputs: {
-			    	        title: "View Message",
-			    	        message:message
-			    	      }
-			    	    }).then(function(modal) {
-			    	      modal.element.modal();
-			    	      modal.close.then(function(result) {
-			    	     console.log("FINISHED VIEWING UNIT");
-			    	      });
-			    	    });
 
-			  };//END SHOWMODAL
-			  
-			  $scope.dismissModal = function(result) {
-				    close(result, 200); // close, but give 200ms for bootstrap to animate
-			
-				    console.log("in dissmiss");
-				 };
-				 
-	
+	//MODAL FOR VIEWING ONE MESSAGE
+	$scope.complexResult = null;
+	$scope.showModal = function(message) {
+		console.log(message);
+		// Just provide a template url, a controller and call 'showModal'.
+		ModalService.showModal({
+
+			templateUrl: "views/viewMessageTemplate.html",
+			controller: "viewMessageController",
+			inputs: {
+				title: "View Message",
+				message:message
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				console.log("FINISHED VIEWING UNIT");
+			});
+		});
+
+	};//END SHOWMODAL
+
+	$scope.dismissModal = function(result) {
+		close(result, 200); // close, but give 200ms for bootstrap to animate
+
+		console.log("in dissmiss");
+	};
+
+
 	$scope.closeAlert = function(index) {
 
 		console.log("ID: " + $scope.getId[index]);
@@ -2071,38 +2086,38 @@ app.controller('AlertDemoCtrl',[ '$scope','datfactory','$http','ModalService', f
 
 //VIEW MESSAGE MODAL
 app.controller('viewMessageController', ['$scope', '$element', 'title', 'close', 'message',
-                                                function($scope, $element, title, close,message) {
-	
+                                         function($scope, $element, title, close,message) {
 
-		  $scope.title = title;
-		  $scope.message=message;
-		  console.log(title);
-		  console.log(close);
-		  console.log($element);
-		  //  This close function doesn't need to use jQuery or bootstrap, because
-		  //  the button has the 'data-dismiss' attribute.
-		  $scope.close = function() {
-		 	  close({
-		     
-		    }, 500); // close, but give 500ms for bootstrap to animate
-		  };
 
-		  //  This cancel function must use the bootstrap, 'modal' function because
-		  //  the doesn't have the 'data-dismiss' attribute.
-		  $scope.cancel = function() {
+	$scope.title = title;
+	$scope.message=message;
+	console.log(title);
+	console.log(close);
+	console.log($element);
+	//  This close function doesn't need to use jQuery or bootstrap, because
+	//  the button has the 'data-dismiss' attribute.
+	$scope.close = function() {
+		close({
 
-		    //  Manually hide the modal.
-		    $element.modal('hide');
-		    
-		    //  Now call close, returning control to the caller.
-		    close({
-		    	
-		    }, 500); // close, but give 500ms for bootstrap to animate
-		  };
+		}, 500); // close, but give 500ms for bootstrap to animate
+	};
 
-		  
+	//  This cancel function must use the bootstrap, 'modal' function because
+	//  the doesn't have the 'data-dismiss' attribute.
+	$scope.cancel = function() {
 
-	
+		//  Manually hide the modal.
+		$element.modal('hide');
+
+		//  Now call close, returning control to the caller.
+		close({
+
+		}, 500); // close, but give 500ms for bootstrap to animate
+	};
+
+
+
+
 }])
 
 app.controller('DropdownCtrl', function ($scope, $log) {
@@ -3334,7 +3349,7 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 		});
 	};*/
 
-	/*$scope.view = function(){
+/*$scope.view = function(){
 			var dataObj = {
 					name: $scope.building.name,
 					numFloor: $scope.building.numFloor,

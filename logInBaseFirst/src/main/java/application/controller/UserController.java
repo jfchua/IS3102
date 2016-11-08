@@ -116,7 +116,7 @@ public class UserController {
 			String address = (String)jsonObject.get("address");
 			String postal = (String)jsonObject.get("postal");
 			String phone = (String)jsonObject.get("phone");
-			List<Subscription> subsToAdd = new ArrayList<Subscription>();
+			Set<Subscription> subsToAdd = new HashSet<Subscription>();
 			for(int i = 0; i < rolesArr.size(); i++){
 				subsToAdd.add(Subscription.valueOf((String)rolesArr.get(i)));
 			}
@@ -313,7 +313,8 @@ public class UserController {
 			JSONArray subsysArr = (JSONArray)jsonObject.get("subsys");
 			//System.err.println("Name is " + name + "NEW NAME IS " + newname + "subsys is: " + subsysArr.toString());
 
-			List<Subscription> sysToAdd = new ArrayList<Subscription>();
+			//List<Subscription> sysToAdd = new ArrayList<Subscription>();
+			Set<Subscription> sysToAdd = new HashSet<Subscription>();
 			for(int i = 0; i < subsysArr.size(); i++){
 				sysToAdd.add(Subscription.valueOf((String)subsysArr.get(i)));
 			}
