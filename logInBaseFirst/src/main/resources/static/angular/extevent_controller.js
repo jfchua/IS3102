@@ -259,12 +259,13 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 	}
 }]);
 //VIEW ALL APPROVED EVENTS
-app.controller('viewApprovedEventsController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('viewApprovedEventsExController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 
 	angular.element(document).ready(function () {
 		$scope.data = {};
 		//var tempObj= {id:1};
 		//console.log(tempObj)
+		console.log("before view approved events");
 		$http.get("//localhost:8443/event/viewApprovedEvents").then(function(response){
 			$scope.events = response.data;
 			console.log("DISPLAY ALL EVENT");
@@ -361,7 +362,7 @@ app.controller('viewApprovedEventsController', ['$scope', '$http','$state','$rou
 
 
 //VIEW ALL APPROVED EVENTS
-app.controller('viewToBeApprovedEventsController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('viewToBeApprovedEventsExController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
 
 	angular.element(document).ready(function () {
 		$scope.data = {};

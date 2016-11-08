@@ -331,7 +331,7 @@ public class AreaServiceImpl implements AreaService {
 		
 		Square square=createSquare(100,100,100,100,"coral","./svg/rect.svg");
 		areaTemp.setAreaName("#Name");
-		areaTemp.setDescription("# There is no description yet");
+		areaTemp.setDescription("#description");
 		areaRepository.saveAndFlush(areaTemp);
 		areaTemp.setSquare(square);
 		areaRepository.saveAndFlush(areaTemp);
@@ -371,7 +371,7 @@ public class AreaServiceImpl implements AreaService {
 		}while(keepChecking);
 		Square square=createSquare(100,100,100,100,"transparent",type);
 		areaTemp.setAreaName("");	
-		areaTemp.setDescription("# There is no description yet");
+		areaTemp.setDescription("#description");
 		areaRepository.saveAndFlush(areaTemp);
 		areaTemp.setSquare(square);
 		areaRepository.saveAndFlush(areaTemp);
@@ -413,7 +413,7 @@ public class AreaServiceImpl implements AreaService {
 		Square square=createSquareWithIcon(iconId,100,100,100,100,"transparent","");
 		areaTemp.setAreaName("");
 		//hahahaha
-		areaTemp.setDescription("# There is no description yet");
+		areaTemp.setDescription("#description");
 		areaRepository.saveAndFlush(areaTemp);
 		areaTemp.setSquare(square);
 		areaRepository.saveAndFlush(areaTemp);
@@ -539,7 +539,7 @@ public class AreaServiceImpl implements AreaService {
 		
 		Square square=createSquare(100,100,100,100,"coral","./svg/rect.svg");
 		areaTemp.setAreaName("#Name");
-		areaTemp.setDescription("# There is no description yet");
+		areaTemp.setDescription("#description");
 		System.out.println("AreaServiceImpl: addAreaDefault493");
 		areaRepository.saveAndFlush(areaTemp);
 		areaTemp.setSquare(square);
@@ -588,7 +588,7 @@ public class AreaServiceImpl implements AreaService {
 		Square square=createSquare(100,100,100,100,"transparent",type);
 		System.out.println("AreaServiceImpl: addAreaDefault539");
 		areaTemp.setAreaName("");	
-		areaTemp.setDescription("# There is no description yet");
+		areaTemp.setDescription("#description");
 		areaRepository.saveAndFlush(areaTemp);
 		System.out.println("AreaServiceImpl: addAreaDefault543");
 		areaTemp.setSquare(square);
@@ -633,7 +633,7 @@ public class AreaServiceImpl implements AreaService {
 		Square square=createSquareWithIcon(iconId,100,100,100,100,"transparent","");
 		areaTemp.setAreaName("");
 		//hahahaha
-		areaTemp.setDescription("# There is no description yet");
+		areaTemp.setDescription("#description");
 		areaRepository.saveAndFlush(areaTemp);
 		areaTemp.setSquare(square);
 		areaRepository.saveAndFlush(areaTemp);

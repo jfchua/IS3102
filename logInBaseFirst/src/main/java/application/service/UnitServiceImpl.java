@@ -181,7 +181,7 @@ public class UnitServiceImpl implements UnitService {
 		unitTemp.setUnitNumber("#unit");
 		unitTemp.setRentable(true);
 		System.out.println("test124");
-		unitTemp.setDescription("# There is no description yet");
+		unitTemp.setDescription("#description");
 		unitTemp.setRent(100.00);//hard coded rent =100, need to change later
 		System.out.println("127");
 		unitRepository.saveAndFlush(unitTemp);
@@ -234,7 +234,7 @@ public class UnitServiceImpl implements UnitService {
 		Square square=createSquare(100,100,100,100,"transparent",type);
 		unitTemp.setUnitNumber("");
 		unitTemp.setRentable(false);
-		unitTemp.setDescription("# There is no description yet");
+		unitTemp.setDescription("#description");
 		unitRepository.saveAndFlush(unitTemp);
 		unitTemp.setSquare(square);
 		unitRepository.saveAndFlush(unitTemp);
@@ -277,7 +277,7 @@ public class UnitServiceImpl implements UnitService {
 		unitTemp.setUnitNumber("");
 		unitTemp.setRentable(false);
 		//hahahaha
-		unitTemp.setDescription("# There is no description yet");
+		unitTemp.setDescription("#description");
 		unitRepository.saveAndFlush(unitTemp);
 		unitTemp.setSquare(square);
 		unitRepository.saveAndFlush(unitTemp);
