@@ -795,7 +795,7 @@ public class TicketingController {
 			if ( found ){
 				boolean bl = ticketingService.redeemTicket(code);
 				if ( bl ){
-					return new ResponseEntity<String>(HttpStatus.OK);
+					return new ResponseEntity<String>(geeson.toJson(ticketingService.getTicketByCode(code).getCategory().getCategoryName()),HttpStatus.OK);
 				}
 				else{
 					return new ResponseEntity<String>(geeson.toJson("Server error in redeeming the ticket!"),HttpStatus.INTERNAL_SERVER_ERROR);

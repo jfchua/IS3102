@@ -605,4 +605,9 @@ public class TicketingServiceImpl implements TicketingService {
 		return false;
 
 	}
+	
+	public Ticket getTicketByCode(String code){
+		return ticketRepository.getTicketByCode(code);
+	}
+	
 }
