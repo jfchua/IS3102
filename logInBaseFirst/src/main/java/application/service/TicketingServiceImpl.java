@@ -475,7 +475,7 @@ public class TicketingServiceImpl implements TicketingService {
 					graphics.fillRect(0, 0, CrunchifyWidth, CrunchifyWidth);
 					graphics.setColor(Color.BLACK);
 
-					for (int ix = 0; i < CrunchifyWidth; ix++) {
+					for (int ix = 0; ix < CrunchifyWidth; ix++) {
 						for (int j = 0; j < CrunchifyWidth; j++) {
 							if (byteMatrix.get(ix, j)) {
 								graphics.fillRect(ix, j, 1, 1);
