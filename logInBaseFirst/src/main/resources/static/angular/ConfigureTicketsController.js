@@ -19,14 +19,24 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 		$http.post("//localhost:8443/getDiscounts",JSON.stringify(tempObj)).then(function(response){
 			$scope.discounts = response.data;
 			console.log("DISPLAY ALL discounts");
-			console.log($scope.tickets);
+			console.log($scope.discounts);
 
 		},function(response){
-			alert("did not view discounts");
+			//alert("did not view discounts");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
 
+		$http.post("//localhost:8443/getBeacons",JSON.stringify(tempObj)).then(function(response){
+			$scope.beacons = response.data;
+			console.log("DISPLAY ALL BEACONS");
+			console.log($scope.beacons);
+
+		},function(response){
+			//alert("did not view discounts");
+			//console.log("response is : ")+JSON.stringify(response);
+		}	
+		)	
 	});
 
 	$scope.passCategory = function(category){	
@@ -41,6 +51,11 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 	$scope.passDiscount = function(dis){	
 		console.log("PASSINGATEGORY1" + JSON.stringify(dis));
 		shareData.addData(dis);
+	}
+	
+	$scope.passBeacon = function(beacon){	
+		console.log("PASSINGATEGORY1" + JSON.stringify(beacon));
+		shareData.addData(beacon);
 	}
 
 	$scope.submitAddDiscount = function(){
@@ -123,6 +138,85 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 
 	}
 
+	
+	$scope.submitAddBeacon = function(){
+
+		if ( !$scope.b.beaconUUID || !$scope.b.message ){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Please ensure you have entered all fields correctly',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		var dataObj = {
+				eventId: $rootScope.event.id,
+				beaconId: $scope.b.beaconUUID,
+				message: $scope.b.message,			
+		};
+        console.log("***");
+        console.log(dataObj);
+        console.log(JSON.stringify(dataObj));
+		$http.post("//localhost:8443/addBeacon", JSON.stringify(dataObj)).then(function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Beacon added successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureBeaconsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+		},function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Server error in adding discount',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureBeaconsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+		});
+	}
+
 
 	$scope.deleteDiscount = function(dis){
 		var dataObj = {			
@@ -135,6 +229,57 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 				controller: "errorMessageModalController",
 				inputs: {
 					message: 'Discount deleted successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go($state.current, {}, {reload: true}); 
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+			//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
+
+		},function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: response.data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+		});
+	}
+	
+	$scope.deleteBeacon = function(bc){
+		var dataObj = {			
+				beaconId: bc.id						
+		};
+		$http.post("//localhost:8443/deleteBeacon", JSON.stringify(dataObj)).then(function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Beacon deleted successfully',
 				}
 			}).then(function(modal) {
 				modal.element.modal();
@@ -561,7 +706,7 @@ app.controller('updateDiscountController', ['$scope','$rootScope','$http','$stat
 	$scope.updateDiscount = function(){	
 
 		if ( !$scope.retailerName || !$scope.discountMessage ){
-			alert($scope.retailerName + " " +$scope.discountMessage );
+			//alert($scope.retailerName + " " +$scope.discountMessage );
 			ModalService.showModal({
 
 				templateUrl: "views/errorMessageTemplate.html",
@@ -625,6 +770,97 @@ app.controller('updateDiscountController', ['$scope','$rootScope','$http','$stat
 				modal.close.then(function(result) {
 					console.log("OK");
 					$state.go("dashboard.configureDiscountsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+		});
+	}
+
+
+}])
+
+app.controller('updateBeaconController', ['$scope','$rootScope','$http','$state','shareData','ModalService', function ($scope, $rootScope, $http,$state, shareData,ModalService) {
+	angular.element(document).ready(function () {
+		$scope.b = angular.copy(shareData.getData());
+		//$scope.id = $scope.b.id;
+		//$scope.retailerName = $scope.dis.retailerName;
+		//$scope.discountMessage = $scope.dis.discountMessage;
+
+	})
+
+	$scope.updateBeacon = function(){	
+
+		if (!$scope.b.message ){
+			//alert($scope.retailerName + " " +$scope.discountMessage );
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Please ensure you have entered all fields correctly',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+
+		var dataObj = {			
+				beaconId: $scope.b.id,
+				message: $scope.b.message,					
+		};
+		console.log("****");
+        console.log(dataObj);
+		$http.post("//localhost:8443/updateBeacon", JSON.stringify(dataObj)).then(function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Beacon updated successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureBeaconsEx");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			//END SHOWMODAL
+
+		},function(response){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: response.data,
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.configureBeaconsEx");
 				});
 			});
 
