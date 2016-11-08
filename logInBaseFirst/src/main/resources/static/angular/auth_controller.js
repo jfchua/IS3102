@@ -78,12 +78,12 @@ app.factory('Auth', function($window, $sessionStorage){
 app.controller('AccountController', function($scope, Auth) {
 	var subz = sessionStorage.getItem('subscriptions');
 	$scope.IsTicketingSub = function(){
-		console.log("ISTICKETING: " + (subz.indexOf("TICKETING") > -1));
+		//console.log("ISTICKETING: " + (subz.indexOf("TICKETING") > -1));
 		return (subz.indexOf("TICKETING") > -1);
 	}
 
 	$scope.IsFinanceSub = function(){
-		console.log("ISFINANCE: " + (subz.indexOf("FINANCE") > -1));
+		//console.log("ISFINANCE: " + (subz.indexOf("FINANCE") > -1));
 		return (subz.indexOf("FINANCE") > -1);
 	}
 
