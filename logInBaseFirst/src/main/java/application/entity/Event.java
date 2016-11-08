@@ -309,6 +309,14 @@ public class Event {
 		public void setHasTicket(boolean hasTicket) {
 			this.hasTicket = hasTicket;
 		}
+
+		public Set<Feedback> getFeedbacks() {
+			return feedbacks;
+		}
+
+		public void setFeedbacks(Set<Feedback> feedbacks) {
+			this.feedbacks = feedbacks;
+		}
 		
 		
 }

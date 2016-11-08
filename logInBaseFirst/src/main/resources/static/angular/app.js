@@ -570,7 +570,7 @@ var app = angular.module('app', [ 'ui.router',
                                 			  .state('dashboard.feedbackEx',{
                                 				  url:'/viewFeedbackEx',
                                 				  templateUrl: '/views/viewFeedback.html',
-                                				  controller: 'eventExternalController',
+                                				  controller: 'feedbackController',
                                 				  data:{
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
