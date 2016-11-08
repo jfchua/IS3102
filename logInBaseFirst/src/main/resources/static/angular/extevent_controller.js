@@ -887,7 +887,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 				event_end_date: $scope.event1.event_end_date,
 				filePath: $scope.event1.filePath,
 		};
-
+		
 		$scope.event = angular.copy($scope.event1);
 		//$scope.event.eventType = $scope.event1.eventType
 		var url = "https://localhost:8443/event/updateEvent";
@@ -944,6 +944,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 	});
 	//RESET SELECTED BOOKINGS UNITS TO LAST SAVED EVENT
 	$scope.resetBookings = function(){
+		$scope.event = angular.copy($scope.event1);
 		$scope.selectedBookingsUnits=angular.copy($scope.selectedBookingsUnits1);
 	}
 	//DELETE BOOKING UNIT FROM SELECTED BOOKING  UNIT

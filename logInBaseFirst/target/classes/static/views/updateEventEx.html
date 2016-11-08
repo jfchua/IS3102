@@ -32,7 +32,7 @@
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">Units Selected Previously</label>
-						<button ng-click="resetBookings()">Reset to last booking</button>
+						
 						<br>
 						<div class="form-group">
 							<ul class="list-group" name="units">
@@ -140,8 +140,12 @@
       </div> -->
 
 					<button class="progress-button primary-progress"
-						data-style="shrink" data-horizontal ng-click="updateEvent()">Submit</button>
+						data-style="shrink" data-horizontal ng-click="updateEvent()" progress-button="authenticate()">Submit</button>
 					&nbsp;
+					
+					<button class="progress-button primary-progress"
+						data-style="shrink" data-horizontal
+						ng-click="resetBookings()"  progress-button="authenticate()" >Reset</button>
 					<!--   <button ng-click = "updateBuilding()"><input type="submit" value="Submit"></button>-->
 				</form>
 			</div>
