@@ -86,7 +86,9 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 			User user = new User();
 			Set<Role> temp = new HashSet<Role>();
 			Role r = roleRepository.getRoleByName("ROLE_ADMIN");
+			Role r2 = roleRepository.getRoleByName("ROLE_USER");
 			temp.add(r);
+			temp.add(r2);
 			user.setRoles(temp);
 			user.setEmail(adminEmail);
 			user.setName(nameAdmin);
