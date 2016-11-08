@@ -4,18 +4,19 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 	$scope.selection=[];
     $scope.systems = ['COMMONINFRA','PROPERTY','EVENT'];
     console.log($scope.systems);
+    /*
 	$scope.toggleSelection = function toggleSelection(gender) {
 		var idx = $scope.selection.indexOf(gender);
 		if (idx > -1) {
-			// is currently selected
-			$scope.selection.splice(idx, 1);
+			
+			$scope.selection.splice(idx, 1);// is currently selected
 		}
 		else {
-			// is newly selected
-			$scope.selection.push(gender);
+			
+			$scope.selection.push(gender);// is newly selected
 		}
 		
-	};
+	};*/
 
 	$scope.checkDateErr = function(startDate,endDate) {
 		$scope.errMessage = '';
@@ -71,17 +72,15 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 		}
 	};
 
-	$scope.checkSub = function (){
+	
+	/*$scope.checkSub = function (){
 		var hasFinance = false;
-		//var hasTick
 		angular.forEach($scope.selection, function(item){             
 			if(item == "FINANCE")
 				hasFinance = true;
 		});
-		//console.log("EEE");
-		//console.log(!hasFinance);
 		return  !hasFinance;
-	}
+	}*/
 	
 	$scope.submit = function(){
 		//alert("SUCCESS");
@@ -92,6 +91,15 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 		angular.forEach($scope.systems, function(item){             
 			$scope.selection.push(item);
 		});      
+		if($scope.finance)
+			$scope.selection.push("FINANCE");
+		if($scope.ticketing)
+			$scope.selection.push("TICKETING");
+		if($scope.bi)
+			$scope.selection.push("BI");
+		
+		console.log($scope.selection);
+		console.log("HAHA");
 		
 		if (!$scope.clientOrg|| !$scope.clientOrg.name || !$scope.clientOrg.address || !$scope.clientOrg.postal || !$scope.clientOrg.phone || !$scope.clientOrg.fee
 				||!$scope.clientOrg.start || !$scope.clientOrg.end || !$scope.clientOrg.nameAdmin || !$scope.clientOrg.email){
@@ -277,8 +285,8 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 
 //////////VIEW CLIENT ORGS//////////
 
-app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalService',
-                                  function($scope, $http, $location,$state,ModalService) {
+app.controller('viewClientOrgs', ['$scope','$http', '$location','$state', 'ModalService',
+                                  function($scope, $http, $location,$state, ModalService) {
 
 	$scope.genders=['COMMONINFRA','PROPERTY','EVENT', 'FINANCE', 'TICKETING', 'BI'];
 	$scope.selection=[];
@@ -332,21 +340,20 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 
 	};*/
 	//console.log("SENDING THE NAME: " + $scope.name);
-	$scope.check = function(gender){
+	/*$scope.check = function(gender){
 		var index = ($scope.genders).indexOf(gender);
 		return (index<3);
 	}
 	$scope.checkSub = function (){
 		var hasFinance = false;
-		//var hasTick
+		
 		angular.forEach($scope.selection, function(item){             
 			if(item == "FINANCE")
 				hasFinance = true;
 		});
-		//console.log("EEE");
-		//console.log(!hasFinance);
 		return  !hasFinance;
-	}
+	}*/
+	
 	
 	$scope.save = function(index){
 		$scope.Profiles[index].editable = true;
@@ -364,6 +371,16 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state','ModalS
 		angular.forEach($scope.systems, function(item){             
 			$scope.selection.push(item);
 		});     
+		
+		if($scope.entity.finance)
+			$scope.selection.push("FINANCE");
+		if($scope.entity.ticketing)
+			$scope.selection.push("TICKETING");
+		if($scope.entity.bi)
+			$scope.selection.push("BI");
+		
+		console.log("~~");
+		console.log($scope.selection);
 		var Edit = {
 				//newname: $scope.name,
 				name: $scope.entity.organisationName,
