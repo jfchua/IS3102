@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import application.entity.Category;
+import application.entity.Ticket;
 import application.entity.User;
 import application.exception.EmailAlreadyExistsException;
 import application.exception.EventNotFoundException;
@@ -17,6 +18,8 @@ public interface TicketingService {
 	Set<Category> getCategories(Long eventId) throws EventNotFoundException;
 
 	public boolean deleteCat(Long id);
+	
+	public Ticket getTicketByCode(String code);
 
 	public String getEventDataAsJson(Long eventId) throws EventNotFoundException;
 
