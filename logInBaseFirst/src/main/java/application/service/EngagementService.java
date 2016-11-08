@@ -15,7 +15,7 @@ public interface EngagementService {
 	
 	public Set<Discount> getDiscounts(Long eventId) throws EventNotFoundException;
 
-	public boolean deleteDiscount(Long valueOf);
+	public boolean deleteDiscount(User user, Long valueOf);
 
 	boolean addDiscount(String email, Long eventId, String retailerName, String message) throws EventNotFoundException;
 

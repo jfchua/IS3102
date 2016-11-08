@@ -39,7 +39,7 @@
 					</thead>
 					<tbody>
 
-						<tr ng-repeat="x in tickets track by $index|orderObjectBy:order_item:order_reverse">
+						<tr ng-repeat="x in tickets |orderObjectBy:order_item:order_reverse">
 							<td>{{ x.id }}</td>
 							<td>{{ x.categoryName }}</td>
 							<td>{{ x.price }}</td>

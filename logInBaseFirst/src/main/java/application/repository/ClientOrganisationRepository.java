@@ -1,5 +1,7 @@
 package application.repository;
 
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,5 +16,12 @@ public interface ClientOrganisationRepository extends JpaRepository<ClientOrgani
 		        nativeQuery=true
 		   )
 	 public ClientOrganisation getClientOrgByName(@Param("name") String name);
+	 
+
+	 @Query(
+		        value = "SELECT * FROM client_organisation", 
+		        nativeQuery=true
+		   )
+	 public Set<ClientOrganisation> getAllClientOrgs();
 	 
 }
