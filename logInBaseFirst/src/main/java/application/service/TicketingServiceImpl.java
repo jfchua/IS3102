@@ -98,6 +98,12 @@ public class TicketingServiceImpl implements TicketingService {
 	}
 
 	@Override
+	public boolean checkValidity(String code){
+		Ticket t = this.getTicketByCode(code);
+		return (!(t.isRedeemed()));
+	}
+	
+	@Override
 	public boolean addCategory(Long eventId, String catName, double price, int numTix) throws EventNotFoundException {
 		Optional<Event> e = eventService.getEventById(eventId);
 		try{

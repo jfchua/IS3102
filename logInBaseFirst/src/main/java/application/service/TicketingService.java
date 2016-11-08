@@ -35,4 +35,6 @@ public interface TicketingService {
 
 	boolean registerNewUser(String name, String email, String pass) throws EmailAlreadyExistsException, UserNotFoundException, InvalidEmailException;
 
+	boolean checkValidity(String code);
+
 }

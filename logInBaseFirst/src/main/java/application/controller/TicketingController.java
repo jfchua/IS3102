@@ -812,6 +812,38 @@ public class TicketingController {
 			return new ResponseEntity<String>(geeson.toJson("Server error in redeeming ticket"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+	}
+
+	@RequestMapping(value = "/checkValidity", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Boolean> checkValidity(@RequestBody String qrCode,HttpServletRequest rq) throws UserNotFoundException {
+		System.err.println("vaidify ticket");
+
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR); 
+		}
+		try{
+			System.err.println("before try");
+			Object obj1 = parser.parse(qrCode);
+			JSONObject jsonObject = (JSONObject) obj1;
+			String code = (String)jsonObject.get("code");
+			boolean bl = ticketingService.checkValidity(code);
+
+			if ( bl ){
+				return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+			}
+			else{
+				return new ResponseEntity<Boolean>(false,HttpStatus.OK);
+			}
+
+		}
+		catch (Exception e){
+			System.err.println("Controller validating ticket error " + e.getMessage());
+			return new ResponseEntity<Boolean>(true,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}	
 
 
