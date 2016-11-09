@@ -2,6 +2,7 @@ package application.service;
 
 import java.util.Set;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
@@ -557,6 +558,15 @@ public class UnitServiceImpl implements UnitService {
 			Optional<Unit> unitOpt = getUnitById(unitId);
 			if (unitOpt.isPresent()){
 				Unit unit=unitOpt.get();
+				Set<BookingAppl> bookings = unit.getBookings();
+				Calendar cal = Calendar.getInstance();
+				for(BookingAppl b : bookings){
+					if(b.getEvent_start_date_time().after(cal.getTime())){
+						Event event = b.getEvent();
+						if(event.getPaymentPlan() == null)
+							return false;
+					}
+				}
 				unit.setRent(rent);
 				unitRepository.saveAndFlush(unit);
 		

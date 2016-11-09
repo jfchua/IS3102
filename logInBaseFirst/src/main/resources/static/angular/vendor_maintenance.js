@@ -69,7 +69,7 @@ app.controller('vendorController', ['$scope', '$http','$state','$routeParams','s
 		}
 		
 
-		if ( $scope.vendor.registration.length != 10 ){
+		if ( $scope.vendor.registration.length != 10 ||!(/^[0-9]{9}[A-Z]{1}$/.test($scope.vendor.registration))){
 			ModalService.showModal({
 
 				templateUrl: "views/errorMessageTemplate.html",
@@ -234,7 +234,7 @@ app.controller('updateVendorController', ['$scope', '$http','$state','$routePara
 			return;
 		}
 		
-		if ( $scope.vendor.registration.length != 10 ){
+		if ( $scope.vendor.registration.length != 10 ||!(/^[0-9]{9}[A-Z]{1}$/.test($scope.vendor.registration)) ){
 			ModalService.showModal({
 
 				templateUrl: "views/errorMessageTemplate.html",
