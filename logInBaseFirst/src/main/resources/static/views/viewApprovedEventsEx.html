@@ -4,8 +4,8 @@
             <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-                                <li><a ui-sref="dashboard.viewAllEventsEx">View All Events</a></li>
+                                <li><a ui-sref="IFMS.workspace">Workspace</a></li>
+                                <li><a ui-sref="IFMS.viewAllEventsEx">View All Events</a></li>
                                 <li><a>View Approved Events</a></li>
                             </ol>
             </div>
@@ -43,8 +43,8 @@
                                  <td>{{ x.event_start_date }}</td>
                                  <td>{{ x.event_end_date }}</td>
                                  <td>{{ x.approvalStatus }}</td>
-                                 <td><a  ui-sref="dashboard.updateEventEx" ng-click="passEvent(x)">Update</a></td>
-                                 <td><a ui-sref="dashboard.cancelEventEx" ng-click="passEvent(x)">Delete</a></td>
+                                 <td><a  ui-sref="IFMS.updateEventEx" ng-click="passEvent(x)">Update</a></td>
+                                 <td><a ui-sref="IFMS.cancelEventEx" ng-click="passEvent(x)">Delete</a></td>
                                  </tr>
                                  </tbody>
                               </table>

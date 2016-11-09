@@ -2,7 +2,7 @@
 	 <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="IFMS.workspace">Workspace</a></li>
                                 <li><a>View Outstanding Balance For All Organisers</a></li>
                             </ol>
         </div>
@@ -41,9 +41,9 @@
                             <td>{{ x.outstanding }}</td>
                             <td>{{ x.paid }}</td>
                             <td>
-                            <a ui-sref="dashboard.updateReceivedPayment" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="Update Received Payment"><i class="glyphicon glyphicon-arrow-left"></i></a>
-                            <a ui-sref="dashboard.viewListOfEvents" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View List Of Events"><i class="glyphicon glyphicon-list"></i></a>
-                            <a ui-sref="dashboard.viewPaymentHistory" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View Payment History"><i class="glyphicon glyphicon-eye-open"></i></a>
+                            <a ui-sref="IFMS.updateReceivedPayment" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="Update Received Payment"><i class="glyphicon glyphicon-arrow-left"></i></a>
+                            <a ui-sref="IFMS.viewListOfEvents" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View List Of Events"><i class="glyphicon glyphicon-list"></i></a>
+                            <a ui-sref="IFMS.viewPaymentHistory" ng-click="passOrganiser(x.id)" tooltip-placement="top" tooltip="View Payment History"><i class="glyphicon glyphicon-eye-open"></i></a>
                            </td>
                         </tr>
                          </tbody>

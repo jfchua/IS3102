@@ -3,7 +3,7 @@
 	 <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="IFMS.workspace">Workspace</a></li>
                                 <li><a>View Payment Plans</a></li>
                             </ol>
         </div>
@@ -40,7 +40,7 @@
                             <td>{{ x.deposit }}</td>
                             <td>{{ x.subsequentNumber }}</td>
                             <td>
-                            <a ng-show="checkFinish(x) && !x.invoice_due" ui-sref="dashboard.updatePaymentPlan" ng-click="passPaymentPlan(x)" tooltip-placement="top" tooltip="Update Payment Plan"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a ng-show="checkFinish(x) && !x.invoice_due" ui-sref="IFMS.updatePaymentPlan" ng-click="passPaymentPlan(x)" tooltip-placement="top" tooltip="Update Payment Plan"><i class="glyphicon glyphicon-pencil"></i></a>
                             <a ng-show="x.invoice_due" ng-click="generateInvoice(x.id)" tooltip-placement="top" tooltip="Generate Invoice For Subsequent Payment"><i class="glyphicon glyphicon-list"></i></a> 
                            </td>
                         </tr>
@@ -54,7 +54,7 @@
 		<br>
 		<br>
 		<br>
-		 <a ui-sref="dashboard.addPaymentPlan" tooltip-placement="right" tooltip="Add a payment plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
+		 <a ui-sref="IFMS.addPaymentPlan" tooltip-placement="right" tooltip="Add a payment plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
          <a ng-click="generateReport()" tooltip-placement="right" tooltip="Generate Monthly Report"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-th-list"></i></button></a>  
          <a ng-click="runTimer()" tooltip-placement="right" tooltip="Activate Timer"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-time"></i></button></a>  						
 			</div>

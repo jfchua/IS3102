@@ -3,7 +3,7 @@
         <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="IFMS.workspace">Workspace</a></li>
                                 <li><a>View Rates</a></li>
                             </ol>
         </div>
@@ -38,8 +38,8 @@
                          <td>{{ x.rate }}</td>
                          <td>{{ x.description }}</td>
                          <td>{{ x.period }}</td>
-                         <td><a ng-model="myValue" ui-sref="dashboard.updateSpecialRate" ng-click="updateSpecialRate(x)">Update</a></td>
-                          <td><a ng-model="myValue" ui-sref="dashboard.deleteSpecialRate"  ng-click="deleteSpecialRate(x)">Delete</a></td>
+                         <td><a ng-model="myValue" ui-sref="IFMS.updateSpecialRate" ng-click="updateSpecialRate(x)">Update</a></td>
+                          <td><a ng-model="myValue" ui-sref="IFMS.deleteSpecialRate"  ng-click="deleteSpecialRate(x)">Delete</a></td>
                          </tr>
                          </tbody>
                     </table>			
@@ -50,6 +50,6 @@
 		<br>
 		<br>
 		<br>
-		 <a ui-sref="dashboard.addSpecialRate" tooltip-placement="right" tooltip="Add a new special rate"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
+		 <a ui-sref="IFMS.addSpecialRate" tooltip-placement="right" tooltip="Add a new special rate"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
 			</div>
 	</div>
