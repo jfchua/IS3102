@@ -105,7 +105,7 @@ $scope.twoOptions=[
   //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
   $scope.passBuilding = function(){
 	  shareData.addData(building);
-	  $state.go("dashboard.viewLevels");
+	  $state.go("IFMS.viewLevels");
   }
   
   $scope.editFloorPlan= function(){
@@ -126,7 +126,7 @@ $scope.twoOptions=[
 				}
 	  console.log(unit);
 		shareData.addData(obj);
-	  $state.go("dashboard.viewUnitPlanDefault");
+	  $state.go("IFMS.viewUnitPlanDefault");
 	  }
   }
    $scope.showDetails= function (thisUnit) {   
@@ -539,7 +539,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
       console.log("pure response is "+JSON.stringify(response.data));
       console.log("FLOOR PLAN IS SAVED. GOING BACK TO VIEW FLOOR PLAN...");
       shareData.addData(obj);
-      $state.go("dashboard.viewFloorPlan");
+      $state.go("IFMS.viewFloorPlan");
     },function(response){//else is not saved successfully
       console.log("DID NOT SAVE");
       console.log("response is "+JSON.stringify(response.data));
@@ -561,7 +561,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
   //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
   $scope.passBuilding = function(){
 	  shareData.addData(building);
-	 // $state.go("dashboard.viewLevels");
+	 // $state.go("IFMS.viewLevels");
   }
   
 

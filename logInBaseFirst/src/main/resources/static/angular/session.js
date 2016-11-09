@@ -5,7 +5,7 @@ app.run(['$rootScope', 'AUTH_EVENTS', 'Auth' ,'$location','$window', '$sessionSt
 				var authorizedRoles = toState.data.authorizedRoles;
 				console.log("Next authorized roles are " + authorizedRoles);
 				if (fromState.name !== '/login' && toState.name !== '/login' 
-					&& toState.name !== 'dashboard' && fromState.name !== 'dashboard') {
+					&& toState.name !== 'IFMS' && fromState.name !== 'IFMS') {
 					
 					if (sessionStorage.getItem('user') && $stateParams.param === undefined) {
 						console.log('statechange sessionStorage get item is not null');					
@@ -25,7 +25,7 @@ app.run(['$rootScope', 'AUTH_EVENTS', 'Auth' ,'$location','$window', '$sessionSt
 							console.log("notauthorised");
 							$window.location.reload();
 							alert('You are not authorised to view this page!');
-							$state.go('dashboard.workspace', {param :sessionStorage.getItem('clientOrg')});
+							$state.go('IFMS.workspace', {param :sessionStorage.getItem('clientOrg')});
 
 						} else {
 							// user is not logged in

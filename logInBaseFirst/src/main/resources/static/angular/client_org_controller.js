@@ -234,7 +234,7 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");	
-					$state.go("dashboard.viewClientOrgs");
+					$state.go("IFMS.viewClientOrgs");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -242,7 +242,7 @@ app.controller('clientOrgController', ['$scope', '$http','$state','$location','M
 
 				console.log("in dissmiss");
 			};
-			//$state.go("dashboard.worksapce");
+			//$state.go("IFMS.worksapce");
 		});
 		send.error(function(data){
 			ModalService.showModal({
@@ -565,7 +565,7 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state', 'Modal
 						modal.element.modal();
 						modal.close.then(function(result) {
 							console.log("OK");
-							$state.go("dashboard.viewClientOrgs");
+							$state.go("IFMS.viewClientOrgs");
 						});
 					});
 

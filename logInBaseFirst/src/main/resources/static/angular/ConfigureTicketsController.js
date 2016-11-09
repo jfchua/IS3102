@@ -100,7 +100,7 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureDiscountsEx");
+					$state.go("IFMS.configureDiscountsEx");
 				});
 			});
 
@@ -122,7 +122,7 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureDiscountsEx");
+					$state.go("IFMS.configureDiscountsEx");
 				});
 			});
 
@@ -183,7 +183,7 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureBeaconsEx");
+					$state.go("IFMS.configureBeaconsEx");
 				});
 			});
 
@@ -205,7 +205,7 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureBeaconsEx");
+					$state.go("IFMS.configureBeaconsEx");
 				});
 			});
 
@@ -483,7 +483,7 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureTicketsEx");
+					$state.go("IFMS.configureTicketsEx");
 				});
 			});
 
@@ -505,7 +505,7 @@ app.controller('configureTicketsController', ['$scope','$rootScope','$http','$st
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureTicketsEx");
+					$state.go("IFMS.configureTicketsEx");
 				});
 			});
 
@@ -644,7 +644,7 @@ app.controller('updateCategoryController', ['$scope', '$http','$state','$rootSco
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureTicketsEx");
+					$state.go("IFMS.configureTicketsEx");
 				});
 			});
 
@@ -667,7 +667,7 @@ app.controller('updateCategoryController', ['$scope', '$http','$state','$rootSco
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureTicketsEx");
+					$state.go("IFMS.configureTicketsEx");
 				});
 			});
 
@@ -746,7 +746,7 @@ app.controller('updateDiscountController', ['$scope','$rootScope','$http','$stat
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureDiscountsEx");
+					$state.go("IFMS.configureDiscountsEx");
 				});
 			});
 
@@ -769,7 +769,7 @@ app.controller('updateDiscountController', ['$scope','$rootScope','$http','$stat
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureDiscountsEx");
+					$state.go("IFMS.configureDiscountsEx");
 				});
 			});
 
@@ -837,7 +837,7 @@ app.controller('updateBeaconController', ['$scope','$rootScope','$http','$state'
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureBeaconsEx");
+					$state.go("IFMS.configureBeaconsEx");
 				});
 			});
 
@@ -860,7 +860,7 @@ app.controller('updateBeaconController', ['$scope','$rootScope','$http','$state'
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.configureBeaconsEx");
+					$state.go("IFMS.configureBeaconsEx");
 				});
 			});
 

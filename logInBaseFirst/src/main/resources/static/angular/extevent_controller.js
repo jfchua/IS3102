@@ -21,11 +21,6 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		}	
 		)
 
-		$scope.IsFinanceSub = function(){
-			var subz = sessionStorage.getItem('subscriptions');
-			return (subz.indexOf("FINANCE") > -1);
-		}
-
 		$scope.checkDateBefore = function (dateString) {
 		    var daysAgo = new Date();
 		    //console.log("***");
@@ -99,7 +94,7 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 	$scope.passEventToTix = function(event){
 		$rootScope.event = event;
 		console.log("PASSING" + $rootScope.event);
-		$state.go("dashboard.configureTicketsEx");
+		$state.go("IFMS.configureTicketsEx");
 	}
 	$scope.passEventToViewTix = function(id){
 		shareData.addData(id);
@@ -272,11 +267,7 @@ app.controller('viewApprovedEventsExController', ['$scope', '$http','$state','$r
 
 	});
 
-	$scope.IsFinanceSub = function(){
-		var subz = sessionStorage.getItem('subscriptions');
-		return (subz.indexOf("FINANCE") > -1);
-	}
-	
+
 	$scope.getEvent = function(event){	
 
 		shareData.addData(event);
@@ -346,7 +337,7 @@ app.controller('viewApprovedEventsExController', ['$scope', '$http','$state','$r
 			//$location.path("/viewLevels");
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			$state.go("IFMS.viewAllEventsEx");
 			console.log('GET Booking FAILED! ' + JSON.stringify(response));
 		});
 
@@ -378,10 +369,7 @@ app.controller('viewToBeApprovedEventsExController', ['$scope', '$http','$state'
 
 	});
 
-	$scope.IsFinanceSub = function(){
-		var subz = sessionStorage.getItem('subscriptions');
-		return (subz.indexOf("FINANCE") > -1);
-	}
+
 	$scope.getEvent = function(event){	
 
 		shareData.addData(event);
@@ -451,7 +439,7 @@ app.controller('viewToBeApprovedEventsExController', ['$scope', '$http','$state'
 			//$location.path("/viewLevels");
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			$state.go("IFMS.viewAllEventsEx");
 			console.log('GET Booking FAILED! ' + JSON.stringify(response));
 		});
 
@@ -481,7 +469,7 @@ app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareD
 				console.log("Cancel the EVENT");
 				alert('EVENT IS DELETED! GOING BACK TO VIEW EVENTS...');
 				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$state.go("dashboard.viewAllEventsEx");
+				$state.go("IFMS.viewAllEventsEx");
 			},function(response){
 				alert("DID NOT CANCEL EVENT");
 				//console.log("response is : ")+JSON.stringify(response);
@@ -822,7 +810,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewAllEventsEx");
+								$state.go("IFMS.viewAllEventsEx");
 							});
 						});
 
@@ -879,7 +867,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllEventsEx");
+					$state.go("IFMS.viewAllEventsEx");
 				});
 			});
 
@@ -1022,7 +1010,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			$state.go("IFMS.viewAllEventsEx");
 			console.log('GET Selected Units FAILED! ' + JSON.stringify(response));
 		});	
 
@@ -1282,7 +1270,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllEventsEx");
+					$state.go("IFMS.viewAllEventsEx");
 				});
 			});
 
@@ -1414,7 +1402,7 @@ app.controller('bookingController', ['$scope','$http','$state','$routeParams','s
 			//$location.path("/viewLevels");
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			$state.go("IFMS.viewAllEventsEx");
 			console.log('GET Booking FAILED! ' + JSON.stringify(response));
 		});
 
@@ -1445,11 +1433,11 @@ app.controller('bookingController', ['$scope','$http','$state','$routeParams','s
 			deleteBooking.success(function(response){
 				alert('DELETE BOOKING SUCCESS! ');
 				console.log("ID IS " + id);
-				$state.go("dashboard.viewAllEventsEx");
+				$state.go("IFMS.viewAllEventsEx");
 			});
 			deleteBooking.error(function(response){
 				alert('DELETE BOOKING FAIL! ');
-				$state.go("dashboard.viewAllEventsEx");
+				$state.go("IFMS.viewAllEventsEx");
 				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
 			});
 		} else {
@@ -1505,7 +1493,8 @@ app.controller('paymentHistoryExController', ['$scope', '$http','$state','$route
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		//$scope.org = shareData.getData();
-		
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
 		$scope.url = "https://localhost:8443/event/getPaymentHistory/";
 		console.log("GETTING THE PAYMENT HISTORY");
 		var getPayments = $http({
@@ -1519,11 +1508,9 @@ app.controller('paymentHistoryExController', ['$scope', '$http','$state','$route
 			console.log(JSON.stringify(response));
 			console.log(response);
 			$scope.payments = response;
-			$scope.order_item = "id";
-			$scope.order_reverse = false;
 		});
 		getPayments.error(function(response){
-			//$state.go("dashboard.viewPaymentPlansEx");
+			$state.go("IFMS.viewPaymentPlansEx");
 			console.log('GET PAYMENTS FAILED! ');
 		});
 	});
@@ -1584,7 +1571,7 @@ app.controller('paymentDetailsExController', ['$scope', '$http','$state','$route
 			$scope.paymentPlan = response;
 		});
 		getPayments.error(function(response){
-			$state.go("dashboard.viewPaymentPlansEx");
+			$state.go("IFMS.viewPaymentPlansEx");
 			console.log('GET PAYMENTS FAILED! ');
 		});	
 	});
@@ -1614,7 +1601,7 @@ app.controller('ticketSaleExController', ['$scope', '$http','$state','$routePara
 			$scope.event = response;
 		});
 		getEvent.error(function(response){
-			$state.go("dashboard.viewTicketSales");
+			$state.go("IFMS.viewTicketSales");
 			console.log('GET PAYMENT FAILED! ');
 		});
 
@@ -1637,7 +1624,7 @@ app.controller('ticketSaleExController', ['$scope', '$http','$state','$routePara
 			$scope.sales = response;
 		});
 		getSales.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			$state.go("IFMS.viewAllEventsEx");
 			console.log('GET EVENTS FAILED! ');
 		});
 
@@ -1667,7 +1654,7 @@ app.controller('feedbackController', ['$scope','$rootScope','$http','$state','sh
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllEventsEx");
+					$state.go("IFMS.viewAllEventsEx");
 				});
 			});
 
