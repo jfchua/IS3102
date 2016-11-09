@@ -38,7 +38,7 @@
 							<ul class="list-group" name="units">
 								<li ng-repeat="selectedBookingsUnit in selectedBookingsUnits"
 									class="list-group-item" style="display: inline;">{{selectedBookingsUnit.unitNumber}}
-									<button ng-click="deleteBookingUnit(selectedBookingsUnit); checkRent()">
+									<button ng-click="deleteBookingUnit(selectedBookingsUnit); checkRent(); checkAvail()">
 										<i class="glyphicon glyphicon-trash"></i>
 									</button>
 								</li>
@@ -114,12 +114,14 @@
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">Event Start Date</label> <input
-							type="datetime-local" ng-model="event.event_start_date"
+							type="datetime-local" step="3600" ng-model="event.event_start_date"
+							ng-change='checkDateErr(event.event_start_date,event.event_end_date); checkRent(); checkAvail()'
 							class="form-control" placeholder="Enter start date">
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">Event End Date</label> <input
-							type="datetime-local" ng-model="event.event_end_date"
+							type="datetime-local" step="3600" ng-model="event.event_end_date"
+							ng-change='checkDateErr(event.event_start_date,event.event_end_date); checkRent(); checkAvail()'
 							class="form-control" placeholder="Enter end date">
 					</div>
 					<div>
@@ -180,5 +182,15 @@
 					</carousel>
 			</div>
 		</div>
+	</div>
+	<div class="col-md-3">
+		<growl-notifications> <growl-notification
+			ng-if="avail == 'AVAILABLE!'"
+			class="growl-success alert-success fading"> <a
+			href="#" ng-click="$growlNotification.remove()" class="close"><i
+			class="fa fa-times"></i></a> Selected units are available</growl-notification> <growl-notification
+			ng-if="avail == 'NOT AVAILABLE!'" class="growl-error">
+		<a href="#" ng-click="$growlNotification.remove()" class="close"><i
+			class="fa fa-times"></i></a> Selected units are not available </growl-notification> </growl-notifications>
 	</div>
 </div>

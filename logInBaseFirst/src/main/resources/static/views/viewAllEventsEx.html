@@ -57,10 +57,10 @@
 										ui-sref="dashboard.viewBookingEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="View Bookings"><i
 										class="glyphicon glyphicon-eye-open"></i></a> <a
-										ng-show = "IsTicketingSub()&&(!x.hasTicket)"  ng-click="requestForTicketSales(x)"
+										ng-show = "IsTicketingSub()&&(!x.hasTicket)&&(x.approvalStatus == 'APPROVED')"  ng-click="requestForTicketSales(x)"
 										tooltip-placement="top" tooltip="Request Ticket Sales"><i
 										class="glyphicon glyphicon-shopping-cart"></i></a> <a
-										ui-sref="dashboard.configureDiscountsEx"
+										ui-sref="dashboard.configureDiscountsEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Discounts"><i
 										class="glyphicon glyphicon-usd"></i></a> <a ng-show="x.hasTicket && IsTicketingSub()"
@@ -71,11 +71,11 @@
 										ng-click="passEventToViewTix(x.id)" tooltip-placement="top"
 										tooltip="View Ticket Sales"><i
 										class="glyphicon glyphicon-list"></i></a><a
-										ui-sref="dashboard.configureBeaconsEx"
+										ui-sref="dashboard.configureBeaconsEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Beacons"><i
 										class="glyphicon glyphicon-tags"></i></a><a
-										ui-sref="dashboard.feedbackEx"
+										ui-sref="dashboard.feedbackEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEvent(x)" tooltip-placement="top"
 										tooltip="View Feedback"><i
 										class="glyphicon glyphicon-user"></i></a>									
@@ -144,21 +144,29 @@
 										ui-sref="dashboard.viewBookingEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="View Bookings"><i
 										class="glyphicon glyphicon-eye-open"></i></a> <a
-										ng-hide=x.hasTicket ng-click="requestForTicketSales(x)"
+										ng-show = "IsTicketingSub()&&(!x.hasTicket)&&(x.approvalStatus == 'APPROVED')"  ng-click="requestForTicketSales(x)"
 										tooltip-placement="top" tooltip="Request Ticket Sales"><i
 										class="glyphicon glyphicon-shopping-cart"></i></a> <a
-										ui-sref="dashboard.configureDiscountsEx"
+										ui-sref="dashboard.configureDiscountsEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Discounts"><i
-										class="glyphicon glyphicon-usd"></i></a> <a ng-show=x.hasTicket
+										class="glyphicon glyphicon-usd"></i></a> <a ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Tickets"><i
-										class="glyphicon glyphicon-shopping-cart"></i></a><a
-										ui-sref="dashboard.viewTicketSalesEx" ng-show=x.hasTicket
+										class="glyphicon glyphicon-qrcode"></i></a><a
+										ui-sref="dashboard.viewTicketSalesEx" ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToViewTix(x.id)" tooltip-placement="top"
 										tooltip="View Ticket Sales"><i
-										class="glyphicon glyphicon-list"></i></a>
-								</div></td>
+										class="glyphicon glyphicon-list"></i></a><a
+										ui-sref="dashboard.configureBeaconsEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ng-click="passEventToTix(x)" tooltip-placement="top"
+										tooltip="Configure Beacons"><i
+										class="glyphicon glyphicon-tags"></i></a><a
+										ui-sref="dashboard.feedbackEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ng-click="passEvent(x)" tooltip-placement="top"
+										tooltip="View Feedback"><i
+										class="glyphicon glyphicon-user"></i></a>									
+								</td>
 						</tr>
 					</tbody>
 				</table>
@@ -216,21 +224,29 @@
 										ui-sref="dashboard.viewBookingEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="View Bookings"><i
 										class="glyphicon glyphicon-eye-open"></i></a> <a
-										ng-hide=x.hasTicket ng-click="requestForTicketSales(x)"
+										ng-show = "IsTicketingSub()&&(!x.hasTicket)&&(x.approvalStatus == 'APPROVED')"  ng-click="requestForTicketSales(x)"
 										tooltip-placement="top" tooltip="Request Ticket Sales"><i
 										class="glyphicon glyphicon-shopping-cart"></i></a> <a
-										ui-sref="dashboard.configureDiscountsEx"
+										ui-sref="dashboard.configureDiscountsEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Discounts"><i
-										class="glyphicon glyphicon-usd"></i></a> <a ng-show=x.hasTicket
+										class="glyphicon glyphicon-usd"></i></a> <a ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Tickets"><i
-										class="glyphicon glyphicon-shopping-cart"></i></a><a
-										ui-sref="dashboard.viewTicketSalesEx" ng-show=x.hasTicket
+										class="glyphicon glyphicon-qrcode"></i></a><a
+										ui-sref="dashboard.viewTicketSalesEx" ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToViewTix(x.id)" tooltip-placement="top"
 										tooltip="View Ticket Sales"><i
-										class="glyphicon glyphicon-list"></i></a>
-								</div></td>
+										class="glyphicon glyphicon-list"></i></a><a
+										ui-sref="dashboard.configureBeaconsEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ng-click="passEventToTix(x)" tooltip-placement="top"
+										tooltip="Configure Beacons"><i
+										class="glyphicon glyphicon-tags"></i></a><a
+										ui-sref="dashboard.feedbackEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ng-click="passEvent(x)" tooltip-placement="top"
+										tooltip="View Feedback"><i
+										class="glyphicon glyphicon-user"></i></a>									
+								</td>
 						</tr>
 					</tbody>
 				</table>

@@ -653,7 +653,8 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 	$scope.checkAvail = function(){
 		console.log("start checking availability");
 		$scope.data = {};
-
+		$scope.avail = "";
+		/*
 		if ( !$scope.maintenance|| !$scope.maintenance.start|| !$scope.maintenance.start){
 			ModalService.showModal({
 
@@ -671,7 +672,11 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 				});
 			});
 			return;
-		}
+		}*/
+		if ( !$scope.maintenance || !$scope.maintenance.start || !$scope.maintenance.end || $scope.selectedUnits.length == 0 ){
+            $scope.avail = "";
+	}
+      else{
 		var dataObj = {
 				units: $scope.selectedUnits,
 				start: ($scope.maintenance.start).toString(),
@@ -683,7 +688,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 			url     : 'https://localhost:8443/maintenance/checkAvailability',
 			data    : dataObj //forms user object
 		});
-		$scope.avail = "";
+		
 		send.success(function(){
 			$scope.avail = "AVAILABLE!";
 			console.log($scope.avail);
@@ -692,6 +697,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 			$scope.avail = "NOT AVAILABLE!";
 			console.log($scope.avail);
 		});
+	}
 	}
 	/*
 	$scope.getUnitsId = function(){
@@ -935,6 +941,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 
 		var url = "https://localhost:8443/maintenance/updateMaintenance";
 
+		
 		//GET SELECTED UNITS
 		var id=$scope.maintenance.id;
 
@@ -1123,6 +1130,59 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 		console.log($scope.selectedSchedulesUnits);
 	}
 	
+	$scope.checkAvail = function(){
+		console.log("start checking availability");
+		$scope.data = {};
+		 $scope.avail = "";
+        console.log($scope.selectedSchedulesUnits);
+        console.log("*-*");/*
+		if ( !$scope.maintenance|| !$scope.maintenance.start|| !$scope.maintenance.start){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Please make sure you have entered the starting and ending dates to check for availability and rent calculation",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$scope.selectedUnits = [];
+					$scope.currentlySelectedUnit = '';
+				});
+			});
+			return;
+		}*/
+        if (!$scope.maintenance|| !$scope.maintenance.start || !$scope.maintenance.end || $scope.selectedSchedulesUnits.length == 0 ){
+            $scope.avail = "";
+	}
+      else{
+
+		var dataObj = {
+				id: $scope.maintenance.id,	
+				units: $scope.selectedSchedulesUnits,
+				start: ($scope.maintenance.start).toString(),
+				end: ($scope.maintenance.end).toString(),
+		};
+		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/maintenance/checkAvailabilityForUpdate',
+			data    : dataObj //forms user object
+		});
+		
+		send.success(function(){
+			$scope.avail = "AVAILABLE!";
+			console.log($scope.avail);
+		});
+		send.error(function(){
+			$scope.avail = "NOT AVAILABLE!";
+			console.log($scope.avail);
+		});
+	}
+	}
+	
 	
 	  $scope.haha=[];
 		//RETRIEVE EVENTS
@@ -1193,52 +1253,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 		});
 	}	*/
 
-	$scope.checkAvail = function(){
-		console.log("start checking availability");
-		$scope.data = {};
-        console.log($scope.selectedSchedulesUnits);
-        console.log("*-*");
-		if ( !$scope.maintenance|| !$scope.maintenance.start|| !$scope.maintenance.start){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: "Please make sure you have entered the starting and ending dates to check for availability and rent calculation",
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-					$scope.selectedUnits = [];
-					$scope.currentlySelectedUnit = '';
-				});
-			});
-			return;
-		}
-		var dataObj = {
-				id: $scope.maintenance.id,	
-				units: $scope.selectedSchedulesUnits,
-				start: ($scope.maintenance.start).toString(),
-				end: ($scope.maintenance.end).toString(),
-		};
-		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/maintenance/checkAvailabilityForUpdate',
-			data    : dataObj //forms user object
-		});
-		$scope.avail = "";
-		send.success(function(){
-			$scope.avail = "AVAILABLE!";
-			console.log($scope.avail);
-		});
-		send.error(function(){
-			$scope.avail = "NOT AVAILABLE!";
-			console.log($scope.avail);
-		});
-	}
-
+	
 	$scope.updateMaintenance = function(){
 		console.log("Start updating");
 		/*

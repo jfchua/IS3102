@@ -190,10 +190,10 @@ public class EventExternalController {
 	    @PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
 		@RequestMapping(value = "/checkAvailabilityForUpdate", method = RequestMethod.POST)
 		@ResponseBody
-		public ResponseEntity<Void> checkAvailabilityForUpdate( String eventJSON,
+		public ResponseEntity<Void> checkAvailabilityForUpdate(@RequestBody String eventJSON,
 				HttpServletRequest rq) throws UserNotFoundException {
 			System.out.println("start check availability for events");
-			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
+			
 			Principal principal = rq.getUserPrincipal();
 			System.out.println(principal.getName());
 			Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
@@ -202,12 +202,15 @@ public class EventExternalController {
 			}
 			try{
 				User eventOrg = eventOrg1.get();
+				DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
 				ClientOrganisation client = eventOrg.getClientOrganisation();
 				System.out.println(eventOrg.getName());
 				Object obj = parser.parse(eventJSON);
 				JSONObject jsonObject = (JSONObject) obj;
-				long eventId = (Long)jsonObject.get("id");
+			    long eventId = (Long)jsonObject.get("eventId");
+				System.err.println("id");
 				JSONArray units = (JSONArray)jsonObject.get("units");
+				System.err.println("units");
 	            String unitsId = "";
 	            for(int i = 0; i < units.size(); i++){
 	            	JSONObject unitObj = (JSONObject)units.get(i);		
