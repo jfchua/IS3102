@@ -5,8 +5,8 @@
 	<div class="clearfix">
 		<ol class="breadcrumb no-bg no-m-t">
 			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
-			<li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
+			<li><a ui-sref="IFMS.workspace">Workspace</a></li>
+			<li><a ui-sref="IFMS.viewAllEventsEx">View Events</a></li>
 			<li><a>Configure Tickets</a></li>
 		</ol>
 	</div>
@@ -45,7 +45,7 @@
 							<td>{{ x.price }}</td>
 							<td>{{ x.numOfTickets }}</td>
 
-							<td><a ui-sref="dashboard.updateCategoryEx"
+							<td><a ui-sref="IFMS.updateCategoryEx"
 								ng-click="passCategory(x)" tooltip-placement="top"
 								tooltip="Update Category"><i
 									class="glyphicon glyphicon-pencil"></i></a> <a
@@ -59,12 +59,12 @@
 		</div>
 	</div>
 	<div class="col-md-3">
-		<br> <br> <br> <a ui-sref="dashboard.addCategoryEx"
+		<br> <br> <br> <a ui-sref="IFMS.addCategoryEx"
 			tooltip-placement="right" tooltip="Add a new category"><button
 				type="button" class="btn btn-primary btn-circle btn-lg">
 				<i class="glyphicon glyphicon-plus"></i>
 			</button></a>
-		<!--  	<a ui-sref="dashboard.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
+		<!--  	<a ui-sref="IFMS.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
 		<br> <br> <br>
 
 	</div>

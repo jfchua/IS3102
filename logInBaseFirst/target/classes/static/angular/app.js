@@ -74,8 +74,8 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.all]
                                 				  }
                                 			  })
-                                			  .state('dashboard',{
-                                				  url:'/dashboard/:param',
+                                			  .state('IFMS',{
+                                				  url:'/IFMS/:param',
                                 				  templateUrl: 'views/index.html',
                                 				  controller: 'dashboardStateController',
                                 				  data: {
@@ -83,7 +83,7 @@ var app = angular.module('app', [ 'ui.router',
                                 				  }
 
                                 			  })
-                                			  .state('dashboard.workspace',{
+                                			  .state('IFMS.workspace',{
                                 				  url:'/workspace',
                                 				  templateUrl: 'views/workspace.html',
                                 				  controller: 'workspaceController',
@@ -91,7 +91,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewIcon',{
+                                			  .state('IFMS.viewIcon',{
                                 				  url: '/viewIcon',
                                 				  templateUrl: '/views/viewIcon.html',
                                 				  controller: 'iconController',
@@ -99,7 +99,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addIcon',{
+                                			  .state('IFMS.addIcon',{
                                 				  url: '/addIcon',
                                 				  templateUrl: '/views/addIcon.html',
                                 				  controller: 'addIconController',
@@ -107,7 +107,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateIcon',{
+                                			  .state('IFMS.updateIcon',{
                                 				  url: '/updateIcon',
                                 				  templateUrl: '/views/updateIcon.html',
                                 				  controller: 'updateIconController',
@@ -115,7 +115,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.uploadCSV',{
+                                			  .state('IFMS.uploadCSV',{
                                 				  url: '/uploadCSV',
                                 				  templateUrl: '/views/uploadCSV.html',
                                 				  controller: 'csvController',
@@ -123,7 +123,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateRent',{
+                                			  .state('IFMS.updateRent',{
                                 				  url: '/updateRent',
                                 				  templateUrl: '/views/updateRent.html',
                                 				  controller: 'rentController',
@@ -131,7 +131,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addBuilding',{
+                                			  .state('IFMS.addBuilding',{
                                 				  url: '/addBuilding',
                                 				  templateUrl: '/views/addBuilding.html',
                                 				  controller: 'buildingController',
@@ -139,7 +139,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewBuilding',{
+                                			  .state('IFMS.viewBuilding',{
                                 				  url: '/viewBuilding',
                                 				  templateUrl: '/views/viewBuilding.html',
                                 				  controller: 'buildingController',
@@ -147,7 +147,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateBuilding',{
+                                			  .state('IFMS.updateBuilding',{
                                 				  url: '/updateBuilding',		
                                 				  templateUrl: '/views/updateBuilding.html',
                                 				  controller: 'updateBuildingController',
@@ -155,7 +155,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.deleteBuilding',{
+                                			  .state('IFMS.deleteBuilding',{
                                 				  url: '/deleteBuilding',
                                 				  templateUrl: '/views/deleteBuilding.html',
                                 				  controller: 'deleteBuildingController',
@@ -163,7 +163,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewLevels',{
+                                			  .state('IFMS.viewLevels',{
                                 				  url: '/viewLevels',
                                 				  templateUrl: '/views/viewLevels.html',
                                 				  controller: 'viewLevelController',
@@ -171,7 +171,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addLevel',{
+                                			  .state('IFMS.addLevel',{
                                 				  url: '/addLevel',
                                 				  templateUrl: '/views/addLevel.html',
                                 				  controller: 'addLevelController',
@@ -179,7 +179,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateLevel',{
+                                			  .state('IFMS.updateLevel',{
                                 				  url: '/updateLevel',
                                 				  templateUrl: '/views/updateLevel.html',
                                 				  controller: 'levelController',
@@ -187,7 +187,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.deleteLevel',{
+                                			  .state('IFMS.deleteLevel',{
                                 				  url: '/deleteLevel',
                                 				  templateUrl: '/views/deleteLevel.html',
                                 				  controller: 'levelController',
@@ -195,7 +195,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addSpecialRate',{
+                                			  .state('IFMS.addSpecialRate',{
                                 				  url: '/addSpecialRate',
                                 				  templateUrl: '/views/addSpecialRate.html',
                                 				  controller: 'rateController',
@@ -203,7 +203,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewAllRates',{
+                                			  .state('IFMS.viewAllRates',{
                                 				  url: '/viewAllRates',
                                 				  templateUrl: '/views/viewAllRates.html',
                                 				  controller: 'rateController',
@@ -211,7 +211,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateSpecialRate',{
+                                			  .state('IFMS.updateSpecialRate',{
                                 				  url: '/updateSpecialRate',		
                                 				  templateUrl: '/views/updateSpecialRate.html',
                                 				  controller: 'updateRateController',
@@ -219,7 +219,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.deleteSpecialRate',{
+                                			  .state('IFMS.deleteSpecialRate',{
                                 				  url: '/deleteSpecialRate',
                                 				  templateUrl: '/views/deleteSpecialRate.html',
                                 				  controller: 'deleteRateController',
@@ -227,7 +227,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addEvent',{
+                                			  .state('IFMS.addEvent',{
                                 				  url:'/addEvent',
                                 				  templateUrl: '/views/addEvent.html',
                                 				  controller: 'eventController',
@@ -235,7 +235,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.uploadCompanyLogo',{
+                                			  .state('IFMS.uploadCompanyLogo',{
                                 				  url:'/uploadCompanyLogo',
                                 				  templateUrl: '/views/uploadCompanyLogo.html',
                                 				  controller: 'logoController',
@@ -244,7 +244,7 @@ var app = angular.module('app', [ 'ui.router',
                                 				  }
                                 			  })
 
-                                			  .state('dashboard.messageList',{
+                                			  .state('IFMS.messageList',{
                                 				  url:'/messageList',
                                 				  templateUrl: '/message/message.html',
                                 				  controller: 'ListController',
@@ -252,7 +252,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
-                                			  .state('dashboard.view/:id',{
+                                			  .state('IFMS.view/:id',{
                                 				  url:'/view/:id',
                                 				  templateUrl: '/message/detail.html',
                                 				  controller: 'DetailController',
@@ -260,7 +260,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
-                                			  .state('dashboard.new',{
+                                			  .state('IFMS.new',{
                                 				  url:'/new',
                                 				  templateUrl: '/message/new.html',
                                 				  controller: 'NewMailController',
@@ -268,7 +268,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addClientOrg',{
+                                			  .state('IFMS.addClientOrg',{
                                 				  url:'/addClientOrg',
                                 				  templateUrl: '/views/addClientOrg.html',
                                 				  controller: 'clientOrgController',
@@ -276,7 +276,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.superadmin]
                                 				  }
                                 			  })	
-                                			  .state('dashboard.viewClientOrgs',{
+                                			  .state('IFMS.viewClientOrgs',{
                                 				  url:'/viewClientOrgs',
                                 				  templateUrl: '/views/viewClientOrgs.html',
                                 				  controller: 'viewClientOrgs',
@@ -284,7 +284,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.superadmin]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewDataVisual',{
+                                			  .state('IFMS.viewDataVisual',{
                                 				  url:'/viewDataVisual',
                                 				  templateUrl: '/views/viewDataVisual.html',
                                 				  controller: 'ChartCtrl',
@@ -292,7 +292,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewTestData',{
+                                			  .state('IFMS.viewTestData',{
                                 				  url:'/viewTestData',
                                 				  templateUrl: '/views/viewTestData.html',
                                 				  controller: 'LineChartCtrl',
@@ -300,7 +300,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
-                                			  .state('dashboard.createFloorPlan',{
+                                			  .state('IFMS.createFloorPlan',{
                                 				  url:'/createFloorPlan',
                                 				  templateUrl: '/views/floorPlanAngular.html',
                                 				  controller: 'floorPlanController',
@@ -308,7 +308,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })	
-                                			  .state('dashboard.viewFloorPlan',{
+                                			  .state('IFMS.viewFloorPlan',{
                                 				  url:'/viewFloorPlan',
                                 				  templateUrl: '/views/viewFloorPlan.html',
                                 				  controller: 'viewFloorPlanController',
@@ -316,7 +316,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.createUnitPlanDefault',{
+                                			  .state('IFMS.createUnitPlanDefault',{
                                 				  url:'/createUnitPlanDefault',
                                 				  templateUrl: '/views/createUnitPlanDefault.html',
                                 				  controller: 'defaultUnitPlanController',
@@ -324,7 +324,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })	
-                                			  .state('dashboard.viewUnitPlanDefault',{
+                                			  .state('IFMS.viewUnitPlanDefault',{
                                 				  url:'/viewUnitPlanDefault',
                                 				  templateUrl: '/views/viewUnitPlanDefault.html',
                                 				  controller: 'viewDefaultUnitPlanController',
@@ -332,7 +332,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewMaintenance',{
+                                			  .state('IFMS.viewMaintenance',{
                                 				  url:'/viewMaintenance',	
                                 				  templateUrl: '/views/viewMaintenance.html',
                                 				  controller: 'maintenanceController',
@@ -340,7 +340,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewMaintenanceSchedule',{
+                                			  .state('IFMS.viewMaintenanceSchedule',{
                                 				  url:'/viewMaintenanceSchedule',	
                                 				  templateUrl: '/views/viewMaintenanceSchedule.html',
                                 				  controller: 'scheduleController',
@@ -348,7 +348,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewBuildingMtn',{
+                                			  .state('IFMS.viewBuildingMtn',{
                                 				  url:'/viewBuildingMtn',
                                 				  templateUrl: '/views/viewBuildingMtn.html',
                                 				  controller: 'buildingController',
@@ -356,7 +356,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewLevelsMtn',{
+                                			  .state('IFMS.viewLevelsMtn',{
                                 				  url:'/viewLevelsMtn',
                                 				  templateUrl: '/views/viewLevelsMtn.html',
                                 				  controller: 'buildingController',
@@ -364,7 +364,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewFloorPlanMtn',{
+                                			  .state('IFMS.viewFloorPlanMtn',{
                                 				  url:'/viewFloorPlanMtn',
                                 				  templateUrl: '/views/viewFloorPlanMtn.html',
                                 				  controller: 'floorPlanController',//hailing test hahahahha
@@ -372,7 +372,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addMaintenance',{
+                                			  .state('IFMS.addMaintenance',{
                                 				  url:'/addMaintenance',	
                                 				  templateUrl: '/views/addMaintenance.html',
                                 				  controller: 'addMaintenanceController',
@@ -380,7 +380,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateMaintenance',{
+                                			  .state('IFMS.updateMaintenance',{
                                 				  url:'/updateMaintenance',
                                 				  templateUrl: '/views/updateMaintenance.html',
                                 				  controller: 'updateMaintenanceController',
@@ -388,7 +388,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.deleteMaintenance',{
+                                			  .state('IFMS.deleteMaintenance',{
                                 				  url:'/deleteMaintenance',
                                 				  templateUrl: '/views/deleteMaintenance.html',
                                 				  controller: 'deleteMaintenanceController',
@@ -396,7 +396,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewAllVendors',{
+                                			  .state('IFMS.viewAllVendors',{
                                 				  url:'/viewAllVendors',
                                 				  templateUrl: '/views/viewAllVendors.html',
                                 				  controller: 'vendorController',
@@ -404,7 +404,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addVendor',{
+                                			  .state('IFMS.addVendor',{
                                 				  url:'/addVendor',	
                                 				  templateUrl: '/views/addVendor.html',
                                 				  controller: 'vendorController',
@@ -412,7 +412,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateVendor',{
+                                			  .state('IFMS.updateVendor',{
                                 				  url:'/updateVendor',
                                 				  templateUrl: '/views/updateVendor.html',
                                 				  controller: 'updateVendorController',
@@ -420,7 +420,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.deleteVendor',{
+                                			  .state('IFMS.deleteVendor',{
                                 				  url:'/deleteVendor',
                                 				  templateUrl: '/views/deleteVendor.html',
                                 				  controller: 'updateVendorController',
@@ -428,7 +428,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.property]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addEventEx',{
+                                			  .state('IFMS.addEventEx',{
                                 				  url:'/addEventEx',
                                 				  templateUrl: '/views/addEventEx.html',
                                 				  //controller: 'eventExternalController',
@@ -437,7 +437,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewBuildingEx',{
+                                			  .state('IFMS.viewBuildingEx',{
                                 				  url:'/viewBuildingEx',
                                 				  templateUrl: '/views/viewBuildingEx.html',
                                 				  controller: 'viewBuildingExController',
@@ -445,7 +445,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewLevelsEx',{
+                                			  .state('IFMS.viewLevelsEx',{
                                 				  url:'/viewLevelsEx',
                                 				  templateUrl: '/views/viewLevelsEx.html',
                                 				  controller: 'viewviewLevelsExController',
@@ -454,7 +454,7 @@ var app = angular.module('app', [ 'ui.router',
                                 				  }
                                 			  })
 
-                                			  .state('dashboard.viewBuildingEx.viewFloorPlanEx',{
+                                			  .state('IFMS.viewBuildingEx.viewFloorPlanEx',{
                                 				  url:'/viewFloorPlanEx',
                                 				  params: {
                                 					  param1: null
@@ -467,7 +467,7 @@ var app = angular.module('app', [ 'ui.router',
                                 				  }
                                 			  })
 
-                                			  .state('dashboard.viewBuildingEx.viewFloorPlanEx.viewUnitPlanDefaultEx',{
+                                			  .state('IFMS.viewBuildingEx.viewFloorPlanEx.viewUnitPlanDefaultEx',{
                                 				  url:'/viewUnitPlanDefaultEx',
                                 				  params: {
                                 					  param2: null
@@ -478,7 +478,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.createUnitPlanEx',{
+                                			  .state('IFMS.createUnitPlanEx',{
                                 				  url:'/createUnitPlanEx',
                                 				  templateUrl: '/views/createUnitPlanEx.html',
                                 				  controller: 'areaPlanController',
@@ -486,7 +486,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewUnitPlanEx',{
+                                			  .state('IFMS.viewUnitPlanEx',{
                                 				  url:'/viewUnitPlanEx',
                                 				  templateUrl: '/views/viewUnitPlanEx.html',
                                 				  controller: 'viewAreaPlanController',
@@ -494,7 +494,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateEventEx',{
+                                			  .state('IFMS.updateEventEx',{
                                 				  url:'/updateEventEx',
                                 				  templateUrl: '/views/updateEventEx.html',
                                 				  //controller: 'eventExternalController',
@@ -503,7 +503,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.cancelEventEx',{
+                                			  .state('IFMS.cancelEventEx',{
                                 				  url:'/cancelEventEx',
                                 				  templateUrl: '/views/cancelEventEx.html',
                                 				  controller: 'deleteEventExController',
@@ -511,7 +511,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateCategoryEx',{
+                                			  .state('IFMS.updateCategoryEx',{
                                 				  url:'/updateCategoryEx',
                                 				  templateUrl: '/views/updateCategoryEx.html',
                                 				  controller: 'configureTicketsController',
@@ -519,7 +519,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.configureDiscountsEx',{
+                                			  .state('IFMS.configureDiscountsEx',{
                                 				  url:'/configureDiscountsEx',
                                 				  templateUrl: '/views/configureDiscountsEx.html',
                                 				  controller: 'configureTicketsController',
@@ -527,7 +527,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateDiscount',{
+                                			  .state('IFMS.updateDiscount',{
                                 				  url:'/updateDiscount',
                                 				  templateUrl: '/views/updateDiscount.html',
                                 				  controller: 'configureTicketsController',
@@ -535,7 +535,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addDiscount',{
+                                			  .state('IFMS.addDiscount',{
                                 				  url:'/addDiscount',
                                 				  templateUrl: '/views/addDiscount.html',
                                 				  controller: 'configureTicketsController',
@@ -543,7 +543,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			   .state('dashboard.configureBeaconsEx',{
+                                			   .state('IFMS.configureBeaconsEx',{
                                 				  url:'/configureBeaconsEx',
                                 				  templateUrl: '/views/configureBeaconsEx.html',
                                 				  controller: 'configureTicketsController',
@@ -551,7 +551,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateBeaconEx',{
+                                			  .state('IFMS.updateBeaconEx',{
                                 				  url:'/updateBeaconEx',
                                 				  templateUrl: '/views/updateBeaconEx.html',
                                 				  controller: 'updateBeaconController',
@@ -559,7 +559,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addBeaconEx',{
+                                			  .state('IFMS.addBeaconEx',{
                                 				  url:'/addBeaconEx',
                                 				  templateUrl: '/views/addBeaconEx.html',
                                 				  controller: 'configureTicketsController',
@@ -567,7 +567,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.feedbackEx',{
+                                			  .state('IFMS.feedbackEx',{
                                 				  url:'/viewFeedbackEx',
                                 				  templateUrl: '/views/viewFeedback.html',
                                 				  controller: 'feedbackController',
@@ -575,7 +575,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addCategoryEx',{
+                                			  .state('IFMS.addCategoryEx',{
                                 				  url:'/addCategoryEx',
                                 				  templateUrl: '/views/addCategoryEx.html',
                                 				  controller: 'configureTicketsController',
@@ -583,7 +583,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.configureTicketsEx',{
+                                			  .state('IFMS.configureTicketsEx',{
                                 				  url:'/configureTicketsEx',
                                 				  templateUrl: '/views/configureTicketsEx.html',
                                 				  controller: 'configureTicketsController',
@@ -591,7 +591,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewAllEventsEx',{
+                                			  .state('IFMS.viewAllEventsEx',{
                                 				  url:'/viewAllEventsEx',
                                 				  templateUrl: '/views/viewAllEventsEx.html',
                                 				  controller: 'eventExternalController',
@@ -599,7 +599,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewApprovedEventsEx',{
+                                			  .state('IFMS.viewApprovedEventsEx',{
                                 				  url:'/viewApprovedEventsEx',
                                 				  templateUrl: '/views/viewApprovedEventsEx.html',
                                 				  controller: 'viewApprovedEventsController',
@@ -607,7 +607,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewToBeApprovedEvents',{
+                                			  .state('IFMS.viewToBeApprovedEvents',{
                                 				  url:'/viewToBeApprovedEvents',
                                 				  templateUrl: '/views/viewToBeApprovedEvents.html',
                                 				  controller: 'viewToBeApprovedEventController',
@@ -615,7 +615,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewBookingEx',{
+                                			  .state('IFMS.viewBookingEx',{
                                 				  url:'/viewBookingEx',
                                 				  templateUrl: '/views/viewBookingEx.html',
                                 				  controller: 'bookingController',
@@ -623,7 +623,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewPaymentPlansEx',{
+                                			  .state('IFMS.viewPaymentPlansEx',{
                                 				  url:'/viewPaymentPlansEx',
                                 				  templateUrl: '/views/viewPaymentPlansEx.html',
                                 				  controller: 'paymentExController',
@@ -631,7 +631,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewPaymentHistoryEx',{
+                                			  .state('IFMS.viewPaymentHistoryEx',{
                                 				  url:'/viewPaymentHistoryEx',
                                 				  templateUrl: '/views/viewPaymentHistoryEx.html',
                                 				  controller: 'paymentHistoryExController',
@@ -639,7 +639,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewPaymentDetailsEx',{
+                                			  .state('IFMS.viewPaymentDetailsEx',{
                                 				  url:'/viewPaymentDetailsEx',
                                 				  templateUrl: '/views/viewPaymentDetailsEx.html',
                                 				  controller: 'paymentDetailsExController',
@@ -647,7 +647,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewTicketSalesEx',{
+                                			  .state('IFMS.viewTicketSalesEx',{
                                 				  url:'/viewTicketSalesEx',
                                 				  templateUrl: '/views/viewTicketSalesEx.html',
                                 				  controller: 'ticketSaleExController',
@@ -655,7 +655,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.organiser]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewNotifications',{
+                                			  .state('IFMS.viewNotifications',{
                                 				  url:'/viewNotifications',
                                 				  templateUrl: '/views/viewNotifications.html',
                                 				  controller: 'notificationController',
@@ -663,7 +663,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateEventStatus',{
+                                			  .state('IFMS.updateEventStatus',{
                                 				  url:'/updateEventStatus',
                                 				  templateUrl: '/views/updateEventStatus.html',
                                 				  controller: 'viewEventDetailsController',
@@ -671,7 +671,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.deleteEvent',{
+                                			  .state('IFMS.deleteEvent',{
                                 				  url:'/deleteEvent',
                                 				  templateUrl: '/views/deleteEvent.html',
                                 				  controller: 'deleteEventController',
@@ -679,7 +679,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewAllEvents',{
+                                			  .state('IFMS.viewAllEvents',{
                                 				  url:'/viewAllEvents',
                                 				  templateUrl: '/views/viewAllEvents.html',
                                 				  controller: 'eventController',
@@ -687,7 +687,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewApprovedEvents',{
+                                			  .state('IFMS.viewApprovedEvents',{
                                 				  url:'/viewApprovedEvents',
                                 				  templateUrl: '/views/viewApprovedEvents.html',
                                 				  controller: 'viewApprovedEventController',
@@ -695,7 +695,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewEventDetails',{
+                                			  .state('IFMS.viewEventDetails',{
                                 				  url:'/viewEventDetails',
                                 				  templateUrl: '/views/viewEventDetails.html',
                                 				  controller: 'viewEventDetailsController',
@@ -703,7 +703,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewEventDetailsApproved',{
+                                			  .state('IFMS.viewEventDetailsApproved',{
                                 				  url:'/viewEventDetailsApproved',
                                 				  templateUrl: '/views/viewEventDetailsApproved.html',
                                 				  controller: 'viewEventDetailsController',
@@ -711,7 +711,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewEventOrganizers',{
+                                			  .state('IFMS.viewEventOrganizers',{
                                 				  url:'/viewEventOrganizers',
                                 				  templateUrl: '/views/viewEventOrganizers.html',
                                 				  controller: 'viewEventOrganiserController',
@@ -719,7 +719,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewTicketSales',{
+                                			  .state('IFMS.viewTicketSales',{
                                 				  url:'/viewTicketSales',
                                 				  templateUrl: '/views/viewTicketSales.html',
                                 				  controller: 'ticketSalesController',
@@ -727,7 +727,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewTicketSaleDetailsEvent',{
+                                			  .state('IFMS.viewTicketSaleDetailsEvent',{
                                 				  url:'/viewTicketSaleDetailsEvent',
                                 				  templateUrl: '/views/viewTicketSaleDetailsEvent.html',
                                 				  controller: 'ticketSaleDetailsController',
@@ -735,7 +735,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.event]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewAllPaymentPlans',{
+                                			  .state('IFMS.viewAllPaymentPlans',{
                                 				  url:'/viewAllPaymentPlans',
                                 				  templateUrl: '/views/viewAllPaymentPlans.html',
                                 				  controller: 'paymentController',
@@ -743,7 +743,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addPaymentPlan',{
+                                			  .state('IFMS.addPaymentPlan',{
                                 				  url:'/addPaymentPlan',
                                 				  templateUrl: '/views/addPaymentPlan.html',
                                 				  controller: 'addPaymentController',
@@ -751,7 +751,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updatePaymentPlan',{
+                                			  .state('IFMS.updatePaymentPlan',{
                                 				  url:'/updatePaymentPlan',
                                 				  templateUrl: '/views/updatePaymentPlan.html',
                                 				  controller: 'updatePaymentController',
@@ -759,7 +759,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewPaymentPolicy',{
+                                			  .state('IFMS.viewPaymentPolicy',{
                                 				  url:'/viewPaymentPolicy',
                                 				  templateUrl: '/views/viewPaymentPolicy.html',
                                 				  controller: 'policyController',
@@ -767,7 +767,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.addPaymentPolicy',{
+                                			  .state('IFMS.addPaymentPolicy',{
                                 				  url:'/addPaymentPolicy',
                                 				  templateUrl: '/views/addPaymentPolicy.html',
                                 				  controller: 'policyController',
@@ -775,7 +775,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updatePaymentPolicy',{
+                                			  .state('IFMS.updatePaymentPolicy',{
                                 				  url:'/updatePaymentPolicy',
                                 				  templateUrl: '/views/updatePaymentPolicy.html',
                                 				  controller: 'updatePolicyController',
@@ -783,7 +783,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewAllOutstandingBalance',{
+                                			  .state('IFMS.viewAllOutstandingBalance',{
                                 				  url:'/viewAllOutstandingBalance',
                                 				  templateUrl: '/views/viewAllOutstandingBalance.html',
                                 				  controller: 'balanceController',
@@ -791,7 +791,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewListOfEvents',{
+                                			  .state('IFMS.viewListOfEvents',{
                                 				  url:'/viewListOfEvents',
                                 				  templateUrl: '/views/viewListOfEvents.html',
                                 				  controller: 'eventListController',
@@ -799,7 +799,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateReceivedPayment',{
+                                			  .state('IFMS.updateReceivedPayment',{
                                 				  url:'/updateReceivedPayment',
                                 				  templateUrl: '/views/updateReceivedPayment.html',
                                 				  controller: 'receivedPController',
@@ -807,7 +807,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewEventsWithTicketSales',{
+                                			  .state('IFMS.viewEventsWithTicketSales',{
                                 				  url:'/viewEventsWithTicketSales',
                                 				  templateUrl: '/views/viewEventsWithTicketSales.html',
                                 				  controller: 'eventWithTicketController',
@@ -815,7 +815,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateTicketRevenue',{
+                                			  .state('IFMS.updateTicketRevenue',{
                                 				  url:'/updateTicketRevenue',
                                 				  templateUrl: '/views/updateTicketRevenue.html',
                                 				  controller: 'ticketRController',
@@ -823,7 +823,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.updateOutgoingPayment',{
+                                			  .state('IFMS.updateOutgoingPayment',{
                                 				  url:'/updateOutgoingPayment',
                                 				  templateUrl: '/views/updateOutgoingPayment.html',
                                 				  controller: 'outgoingController',
@@ -831,7 +831,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewPaymentHistory',{
+                                			  .state('IFMS.viewPaymentHistory',{
                                 				  url:'/viewPaymentHistory',
                                 				  templateUrl: '/views/viewPaymentHistory.html',
                                 				  controller: 'paymentHistoryController',
@@ -839,7 +839,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.generateInvoice',{
+                                			  .state('IFMS.generateInvoice',{
                                 				  url:'/generateInvoice',
                                 				  templateUrl: '/views/generateInvoice.html',
                                 				  controller: 'invoiceController',
@@ -847,7 +847,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('dashboard.createNewUser',{
+                                			  .state('IFMS.createNewUser',{
                                 				  url:'/createNewUser',
                                 				  templateUrl: '/views/createUser.html',
                                 				  controller: 'createNewUserController',
@@ -855,7 +855,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })	
-                                			  .state('dashboard.viewUserList',{
+                                			  .state('IFMS.viewUserList',{
                                 				  url:'/viewUserList',
                                 				  templateUrl: '/views/viewUserList.html',
                                 				  controller: 'viewUserList',
@@ -863,7 +863,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.admin]
                                 				  }
                                 			  })	
-                                			  .state('dashboard.viewAuditLog',{
+                                			  .state('IFMS.viewAuditLog',{
                                 				  url:'/viewAuditLog',
                                 				  templateUrl: '/views/viewAuditLog.html',
                                 				  controller: 'auditLogController',
@@ -871,7 +871,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.admin]
                                 				  }
                                 			  })
-                                			  .state('dashboard.viewUserProfile',{
+                                			  .state('IFMS.viewUserProfile',{
                                 				  url:'/viewUserProfile',
                                 				  templateUrl: '/views/viewUserProfile.html',
                                 				  controller: 'userProfileController',
@@ -879,7 +879,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
-                                			  .state('dashboard.editUserProfile',{
+                                			  .state('IFMS.editUserProfile',{
                                 				  url:'/editUserProfile',
                                 				  templateUrl: '/views/editUserProfile.html',
                                 				  controller: 'userProfileController',
@@ -887,7 +887,7 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
-                                			  .state('dashboard.dataVisual',{
+                                			  .state('IFMS.dataVisual',{
                                 				  url:'/dataVisual',
                                 				  templateUrl: 'views/datavisual.html',
                                 				  controller: 'dataVisualController',
@@ -895,57 +895,41 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
-							.state('404',{
-								url:'/404.html',
-								templateUrl: 'views/404.html',
-								controller: 'usersController',
-								data: {
-									authorizedRoles: [USER_ROLES.all]
-								}
+                                			  .state('404',{
+                                				  url:'/404.html',
+                                				  templateUrl: 'views/404.html',
+					                              controller: 'usersController',
+					                              data: {
+													authorizedRoles: [USER_ROLES.all]
+					                              }
                                 			  })
 
                                 			  $urlRouterProvider.otherwise('404.html');
 
-
-                                			  /*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
                                 		  })
                                 		  app.factory('httpAuthInterceptor', function ($q, $location, $injector) {
                                 			  return {
                                 				  'response': function(response) {
-                                					  //console.log($location.path());
                                 					  return response;
                                 				  },
                                 				  'responseError': function (response) {
                                 					  event.preventDefault();
-                                					  console.log(response.status);
-                                					  alert("Your session has timeout! Please log in again!");
-                                					  $injector.get('$state').transitionTo('/login');
+                                					  if (response.status === 500 && $location.path() === '//Expo/workspace'){
+                                    					  event.preventDefault();
+                                						  console.log(response); 
+                                						  console.log(response.status);
+                                						  alert("Your session has timeout! Please log in again!");
+                                						  $injector.get('$state').transitionTo('/login');
+                                					  }
                                 					  return $q.reject(response);
-                                					  
                                 				  }
                                 			  };
-
-                                			  /*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
                                 		  })
 
 app.config(function ($httpProvider) {
 	$httpProvider.interceptors.push('httpAuthInterceptor');
  });
 
-
-app.service('Session',  function () {
-	this.create = function (sessionId, userId, userRole) {
-		this.id = sessionId;
-		this.userId = userId;
-		this.userRole = userRole;
-	};
-	this.destroy = function () {
-		this.id = null;
-		this.userId = null;
-		this.userRole = null;
-	};
-
-})
 
 
 
@@ -969,39 +953,9 @@ app.controller('ApplicationController', function ($scope,
 	};
 })
 
-/*    authorised: function(role){
-	    for (i = 0; i<user.authorities.length;i++){
-	    	console.log("Authority present is " + user.authorities[i].authority);
-	    	if (role == user.authorities[i].authority){
-	    		return true;	    	
-	    	}
-	    }
-	    return false;
-	    }
-	}*/
 
 
 
-
-
-/*		app.controller('eventController', ["$scope",'$http', function ($scope, $http){
-			$scope.viewEvents = function(event){
-				console.log("start ALL events");
-				$http.get('//localhost:8443/event/user/view').then(function(response){
-					console.log("DISPLAY ALL events");
-					return response.data;
-				},function(response){
-					alert("did not view");
-					//console.log("response is : ")+JSON.stringify(response);
-				}
-				)
-			}
-		}])
- */
-
-
-
-/*dashboard*/
 app.controller('MyController',['$scope','$http','ModalService', function ($scope, $http,ModalService) {
 	var urlBase = "https://localhost:8443/user";
 	function findAllNotifications() {
@@ -1011,71 +965,14 @@ app.controller('MyController',['$scope','$http','ModalService', function ($scope
 			$scope.notifications = res.data;
 		});
 	}
-	/*       success(function (data) {
-	                if (data._embedded != undefined) {
-	                    $scope.notifications = data._embedded.notifications;
-	                } else {
-	                    $scope.notifications = [];
-	                }
-	                for (var i = 0; i < $scope.notifications.length; i++) {
-	                }
-	                $scope.taskName="";
-	                $scope.taskDesc="";
-	                $scope.taskPriority="";
-	                $scope.taskStatus="";
-	                $scope.toggle='!toggle';
-	            }).then(function(res){
-	            	$scope.notification = res.data;
-	            });*/
+	
 
 	findAllNotifications();
 
-	/*	$scope.notifications = [{
-		Id: 1,
-		Name: 'Kenneth',
-		Selected: false
-	}, {
-		Id: 2,
-		Name: 'Kok Hwee',
-		Selected: true
-	}, {
-		Id: 3,
-		Name: 'IS3102',
-		Selected: false
-	}];*/
+	
 }]);
 
-/* Precontent
- * CREATE NEW USER
- * VIEW ALL USERS
- * EDIT USER PROFILE
- * 
- * 
- * CONTENT
- * 1. TO DO LIST
- * 2. NOTIFICATIONS
- * - MESSAGE
- * 3. CALENDAR (WHEN IT IS DONE)
- * 4. PROPERTY
- * - BUILDING
- * - LEVELS
- * - FLOORPLAN
- * 5. EVENT
- * - EVENT MANAGER
- * 
- * 
- * 6. CLIENT ORG
- * 
- * 7. Audit Log
- */
-//CREATING USER VERSION 2
-
-app.controller("userCtrl",['$scope','ModalService',
-
-                           function userCtrl($scope,ModalService) {
-
-
-
+app.controller("userCtrl",['$scope','ModalService', function userCtrl($scope,ModalService) {
 	$scope.model = {
 			contacts: [{
 				id: 1,
@@ -1096,27 +993,24 @@ app.controller("userCtrl",['$scope','ModalService',
 			}],
 			selected: {}
 	};
-	//$scope.model = {};
+	
 	$scope.send = function(){
 		console.log("REACHED HERE FOR FETCHING ALL USERS");
 
 		var fetch = $http({
 			method  : 'GET',
 			url     : 'https://localhost:8443/user/viewAllUsers',
-			//forms user object
 		});
 
 		console.log("fetching the user list.......");
 		fetch.success(function(response){
 
 			$scope.model = response;
-			//alert('FETCHED ALL USERS SUCCESS!!! ' + JSON.stringify(response));
 		});
 		fetch.error(function(response){
-			alert('FETCH ALL USERS FAILED!!!');
+			console.log('Failure to fetch all users!');
 		});
 
-		//alert('done with viewing users');
 	};
 
 	// gets the template to ng-include for a table row / item
@@ -1139,9 +1033,6 @@ app.controller("userCtrl",['$scope','ModalService',
 		$scope.model.selected = {};
 	};
 }]);
-
-
-//END OF CREATE NEW USER VER 2
 
 
 
@@ -1212,7 +1103,7 @@ app.controller('createNewUserController', ['$scope','$http','$state','ModalServi
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewUserList");
+					$state.go("IFMS.viewUserList");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -1330,30 +1221,13 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 
 			$scope.Profiles = response;
 			console.log($scope.Profiles);
-			//	alert('FETCHED ALL USERS SUCCESS!!! ' + JSON.stringify(response));
 		});
 		fetch.error(function(response){
 			//alert('FETCH ALL USERS FAILED!!!');
 		});
 
-		//alert('done with viewing users');
-		//$location.path('/viewUserList');
 	}
 	$scope.send();
-
-
-	/*	$scope.Profiles = [
-	                   {
-	                	   name : "gede",
-	                	   country : "indonesia",
-	                	   editable : false
-	                   },
-	                   {
-	                	   name : "made",
-	                	   country : "thailand",
-	                	   editable : false
-	                   }
-	                   ];*/
 
 	$scope.entity = {}
 	$scope.name = "";
@@ -1804,42 +1678,6 @@ app.controller('userProfileController', ['$scope', '$http','ModalService','$stat
 //END OF EDIT USER PROFILE
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*1. TO DO LIST*/
-app.controller('taskController',['$scope','$http','$route','$state','ModalService', function($scope, $http, $route,$state,ModalService) {
-
-
-}]);
-/*
-app.controller('DemoCtrl', function ($scope, $http) {
-	$scope.selectedNotifications = null;
-	$scope.testNotifications = [];
-	$http({
-		method: 'GET',
-		url: 'https://localhost:8443/todo/getToDoList'
-	}).success(function (result) {
-		$scope.var = result;
-		$scope.selected = result;
-		console.log(JSON.stringify(result));
-	}).error(function(result){
-		//do something
-		console.log("ERROR");
-		alert(result);
-	})
-});
- */
 //2. ALERT NOTIFICATIONS
 
 app.factory('datfactory', function ($http, $q){
@@ -1858,8 +1696,6 @@ app.factory('datfactory', function ($http, $q){
 	}
 	return this;
 });
-
-//DIRECTIVE AND CONTROLLER FOR UI
 app.directive('topnav',function(){
 	return {
 		templateUrl:'views/topnav.html?v='+window.app_version,
@@ -1901,6 +1737,8 @@ app.directive('topnav',function(){
 		}
 	}
 });
+
+
 
 app.directive('sidebar',function(){
 	return {
@@ -2122,25 +1960,7 @@ app.controller('DropdownCtrl', function ($scope, $log) {
 		$scope.status.isopen = !$scope.status.isopen;
 	};
 });
-app.controller('sidenavCtrl', function($scope, $location){
-	$scope.selectedMenu = 'dashboard';
-	$scope.collapseVar = 0;
 
-	$scope.check = function(x){
-
-		if(x==$scope.collapseVar)
-			$scope.collapseVar = 0;
-		else
-			$scope.collapseVar = x;
-	};
-	$scope.multiCheck = function(y){
-
-		if(y==$scope.multiCollapseVar)
-			$scope.multiCollapseVar = 0;
-		else
-			$scope.multiCollapseVar = y;
-	};
-});
 
 app.controller('ButtonsCtrl', function ($scope) {
 	$scope.singleModel = 1;
@@ -2433,7 +2253,7 @@ app.controller('NewMailController',['$scope','$state','$http','ModalService', fu
 		});
 
 		//alert('message sent');
-		$state.go('dashboard.workspace');
+		$state.go('IFMS.workspace');
 	};
 }]);
 
@@ -2478,10 +2298,6 @@ contacts = [
 
 
 
-
-
-
-
 /*3. CALENDAR HERE */
 
 
@@ -2519,386 +2335,6 @@ app.service('shareData', function($window) {
 		getData: getData
 	};
 });
-
-//===========================================================================
-//5. Events.
-//===========================================================================
-
-
-
-//========Test================
-
-//========Event================
-/*app.controller('addEController', ['$scope', '$http','$location','$routeParams','shareData','ModalService', function ($scope, $http,$location, $routeParams, shareData,ModalService){
-	console.log("start selecting venue");
-	var getBuild = $http({
-		method  : 'GET',
-		url     : 'https://localhost:8443/building/viewBuildings',
-	});
-	console.log("GETTING THE BUILDINGS");
-	getBuild.success(function(response){
-		$scope.buildings = response;
-		$scope.selectedBuilding;
-		console.log("RESPONSE IS" + JSON.stringify(response));
-
-		console.log('Buildings Gotten');
-	});
-	getBuild.error(function(){
-		ModalService.showModal({
-
-			templateUrl: "views/errorMessageTemplate.html",
-			controller: "errorMessageModalController",
-			inputs: {
-				message: 'Error in getting building!',
-			}
-		}).then(function(modal) {
-			modal.element.modal();
-			modal.close.then(function(result) {
-				console.log("OK");
-			});
-		});
-		$scope.dismissModal = function(result) {
-			close(result, 200); // close, but give 200ms for bootstrap to animate
-
-			console.log("in dissmiss");
-		};
-	});
-	$scope.currentlySelectedBuilding;
-	$scope.selectBuild = function(){
-		$scope.selectedBuilding=$scope.currentlySelectedBuilding;
-	}
-	console.log("finish selecting building");
-
-	$scope.getLevel = function(id){
-		$scope.dataToShare = [];
-		//var id = $scope.currentlySelected;
-		$scope.url = "https://localhost:8443/level/viewLevels/"+id;
-		//$scope.dataToShare = [];
-		console.log("GETTING THE ALL LEVELS INFO")
-		var getLevels = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/level/viewLevels/'+id,
-		});
-		console.log("Getting the levels using the url: " + $scope.url);
-		getLevels.success(function(response){
-			$scope.levels = response;
-			$scope.selectedLevel;
-			console.log("RESPONSE IS" + JSON.stringify(response));
-
-			console.log('Levels Gotten');
-		});
-		getLevels.error(function(){
-			alert('Get levels error!!!!!!!!!!');
-		});		
-		$scope.currentlySelectedLevel;
-		$scope.selectLevel = function(){
-			$scope.selectedLevel=$scope.currentlySelectedLevel;
-		}
-		console.log("finish selecting level");		
-	}
-
-	$scope.selectedUnits=[];
-	$scope.getUnit = function(levelId){
-		//$scope.url = "https://localhost:8443/property/viewUnits/";
-
-		$scope.levelID = levelId; 
-		var dataObj = {id: $scope.levelID};
-		console.log("GETTING THE ALL UNITS INFO")
-		var getUnits = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/property/viewUnits/',
-			data    : dataObj,
-		});
-		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
-		getUnits.success(function(response){
-			$scope.units = response;
-			console.log("RESPONSE IS" + JSON.stringify(response));
-
-			console.log('Units Gotten');
-		});
-		getUnits.error(function(){
-			alert('Get units error!!!!!!!!!!');
-		});		
-
-		$scope.currentlySelectedUnit;
-		$scope.selectUnit = function(){
-			$scope.selectedUnits.push($scope.currentlySelectedUnit);
-		}
-
-		$scope.deleteUnit = function(unit){
-			var index = $scope.selectedUnits.indexOf(unit);
-			$scope.selectedUnits.splice(index, 1);  
-		}
-		console.log("finish selecting units");		
-	}
-
-
-	$scope.addEvent = function(){
-		console.log("start adding");
-		$scope.data = {};
-
-		var dataObj = {
-				units: $scope.selectedUnits,
-				event_title: $scope.event.event_title,
-				event_content: $scope.event.event_content,
-				event_description: $scope.event.event_description,
-				event_approval_status: "processing",
-				event_start_date: ($scope.event.event_start_date).toString(),
-				event_end_date: ($scope.event.event_end_date).toString(),
-				filePath: $scope.event.filePath,
-		};
-		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/event/addEvent',
-			data    : dataObj //forms user object
-		});
-
-		console.log("SAVING THE Event");
-		send.success(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Event saved successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-		send.error(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Error in saving event! Check whether the unit is available',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-	};
-
-
-}]);
-
-app.controller('updateEController', ['$scope', '$http','$location','$routeParams','shareData','ModalService', function ($scope, $http,$location, $routeParams, shareData,ModalService){
-	$scope.init= function(){
-		$scope.event1 = JSON.parse(shareData.getData());
-		$scope.event1.event_start_date = new Date($scope.event1.event_start_date);
-		$scope.event1.event_end_date = new Date($scope.event1.event_end_date);
-		var dataObj = {			
-				units:$scope.event1.units,
-				event_title: $scope.event1.event_title,
-				event_content: $scope.event1.event_content,
-				event_description: $scope.event1.event_description,
-				event_approval_status: $scope.event1.event_approval_status,						
-				event_start_date: $scope.event1.event_start_date,						
-				event_end_date: $scope.event1.event_end_date,
-				filePath: $scope.event1.filePath,
-		};
-		$scope.event = angular.copy($scope.event1)
-
-		var url = "https://localhost:8443/event/updateEvent";
-		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event1.event_title);
-	}
-
-	console.log("start selecting venue");
-	var getBuild = $http({
-		method  : 'GET',
-		url     : 'https://localhost:8443/building/viewBuildings',
-	});
-	console.log("GETTING THE BUILDINGS");
-	getBuild.success(function(response){
-		$scope.buildings = response;
-		$scope.selectedBuilding;
-		console.log("RESPONSE IS" + JSON.stringify(response));
-
-		console.log('Buildings Gotten');
-	});
-	getBuild.error(function(){
-		alert('Get building error!!!!!!!!!!');
-	});
-	$scope.currentlySelectedBuilding;
-	$scope.selectBuild = function(){
-		$scope.selectedBuilding=$scope.currentlySelectedBuilding;
-	}
-	console.log("finish selecting building");
-
-	$scope.getLevel = function(id){
-		$scope.dataToShare = [];
-		//var id = $scope.currentlySelected;
-		$scope.url = "https://localhost:8443/level/viewLevels/"+id;
-		//$scope.dataToShare = [];
-		console.log("GETTING THE ALL LEVELS INFO")
-		var getLevels = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/level/viewLevels/'+id,
-		});
-		console.log("Getting the levels using the url: " + $scope.url);
-		getLevels.success(function(response){
-			$scope.levels = response;
-			$scope.selectedLevel;
-			console.log("RESPONSE IS" + JSON.stringify(response));
-
-			console.log('Levels Gotten');
-		});
-		getLevels.error(function(){
-			alert('Get levels error!!!!!!!!!!');
-		});		
-		$scope.currentlySelectedLevel;
-		$scope.selectLevel = function(){
-			$scope.selectedLevel=$scope.currentlySelectedLevel;
-		}
-		console.log("finish selecting level");		
-	}
-
-	$scope.selectedUnits=[];
-	$scope.getUnit = function(levelId){
-		//$scope.url = "https://localhost:8443/property/viewUnits/";
-
-		$scope.levelID = levelId; 
-		var dataObj = {id: $scope.levelID};
-		console.log("GETTING THE ALL UNITS INFO")
-		var getUnits = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/property/viewUnits/',
-			data    : dataObj,
-		});
-		console.log("REACHED HERE FOR SUBMIT LEVEL " + JSON.stringify(dataObj));
-		getUnits.success(function(response){
-			$scope.units = response;
-			console.log("RESPONSE IS" + JSON.stringify(response));
-
-			console.log('Units Gotten');
-		});
-		getUnits.error(function(){
-			alert('Get units error!!!!!!!!!!');
-		});		
-
-		$scope.currentlySelectedUnit;
-		$scope.selectUnit = function(){
-			$scope.selectedUnits.push($scope.currentlySelectedUnit);
-		}
-
-		$scope.deleteUnit = function(unit){
-			var index = $scope.selectedUnits.indexOf(unit);
-			$scope.selectedUnits.splice(index, 1);  
-		}
-		console.log("finish selecting units");		
-	}
-
-	$scope.getUnitsId = function(){
-		var dataObj ={id: $scope.selectedUnits};
-		console.log("units to be get are "+JSON.stringify(dataObj));
-		$scope.shareMyData = function (myValue) {
-		}		
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/property/getUnitsId',
-			data    : dataObj,
-		});
-		send.success(function(response){
-			console.log('GET Unit IDS SUCCESS! ' + JSON.stringify(response));
-			shareData.addData(JSON.stringify(response));
-		});
-		send.error(function(response){
-			$location.path("/viewAllEventsEx");
-			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
-		});
-	}
-
-	$scope.updateEvent = function(){
-		console.log("Start updating");
-		var unitIdsString="";
-		var unitIdsObj = JSON.parse(shareData.getData());
-		unitIdsString+=unitIdsObj;
-		console.log("test hailing");
-		console.log(unitIdsString);
-		$scope.data = {};
-		console.log($scope.event.id);
-		var dataObj = {	
-				id: $scope.event.id,
-				units: $scope.event.units,
-				event_title: $scope.event.event_title,
-				event_content: $scope.event.event_content,
-				event_description: $scope.event.event_description,
-				event_approval_status: "processing",
-				event_start_date: ($scope.event.event_start_date).toString(),
-				event_end_date: ($scope.event.event_end_date).toString(),
-				//event_period: $scope.event.event_period,
-				filePath: $scope.event.filePath,
-		};		
-		console.log(dataObj.units);
-		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/event/updateEvent',
-			data    : dataObj //forms user object
-		});
-
-		console.log("UPDATING THE EVENT");
-		send.success(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Event updated successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-		send.error(function(){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Error in saving the event. Check if the unit is available',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-	};	
-}]);*/
 
 app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 	$scope.toggleLeft = buildDelayedToggler('left');
@@ -2985,7 +2421,7 @@ app.controller('eventExternalController', ['$scope', '$http','$location','$route
 			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
 
 		},function(response){
-			alert("did not view all events");
+			console.log("did not view all events");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
@@ -3001,7 +2437,7 @@ app.controller('eventExternalController', ['$scope', '$http','$location','$route
 			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
 
 		},function(response){
-			alert("did not view approved events");
+			console.log("did not view approved events");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
@@ -3205,377 +2641,10 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
 			});
 		} else {
-			alert("Cancel deleting booking");
+			console.log("Cancel deleting booking");
 		}
-		//document.getElementById("demo").innerHTML = txt;	
-		/*
-	$scope.data = {};
-	console.log("Start deleting event");
-	$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
-	console.log("GETTING THE EVENT INFO")
-	var deleteBooking = $http({
-		method  : 'POST',
-		url     : 'https://localhost:8443/booking/deleteBooking/' + id        
-	});
-	console.log("Deleting the event using the url: " + $scope.url);
-	deleteBooking.success(function(response){
-		console.log('DELETE BOOKING SUCCESS! ' + JSON.stringify(response));
-		console.log("ID IS " + id);
-	});
-	deleteBooking.error(function(response){
-		$location.path("/viewAllEventsEx");
-		console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
-	});*/
-
-		/*
-	$scope.event = JSON.parse(shareData.getData());
-	console.log($scope.event.id);
-	var tempObj ={eventId:$scope.event.id};
-	console.log("fetch id "+ tempObj);
-	$http.post("//localhost:8443/event/deleteEvent", JSON.stringify(tempObj)).then(function(response){
-		console.log("Cancel the EVENT");
-	},function(response){
-		alert("DID NOT Cancel EVENT");
-	}	
-	)*/
 	}
 }])
-
-
-//=======End of test===========
-//FLOORPLAN
-
-
-
-//===========================================================================
-//6. Create client organisation.
-//===========================================================================
-/*app.controller('clientOrgController', ['$scope', '$http','$location','ModalService', function ($scope, $http, $location,ModalService) {
-	$scope.genders=['Property System','Event Management System','Finance System'];
-	$scope.selection=[];
-
-	$scope.toggleSelection = function toggleSelection(gender) {
-		var idx = $scope.selection.indexOf(gender);
-		if (idx > -1) {
-			// is currently selected
-			$scope.selection.splice(idx, 1);
-		}
-		else {
-			// is newly selected
-			$scope.selection.push(gender);
-		}
-	};
-
-
-	$scope.submit = function(){
-		//alert("SUCCESS");
-		$scope.data = {};
-		console.log("** Passing data object of " + dataObj);
-		var dataObj = {
-				name: $scope.clientOrg.name,
-				email: $scope.clientOrg.email,
-				subscription: $scope.selection,
-				nameAdmin: $scope.clientOrg.nameAdmin
-		};
-
-		console.log("REACHED HERE FOR SUBMIT BUILDING " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/user/addClientOrganisation',
-			data    : dataObj //forms user object
-		});
-
-		console.log("SAVING THE CLIENT ORG");
-		send.success(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Client organisation saved successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-			$location.path("/dashboard");
-		});
-		send.error(function(data){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: data,
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-	};*/
-
-/*$scope.view = function(){
-			var dataObj = {
-					name: $scope.building.name,
-					numFloor: $scope.building.numFloor,
-					address: $scope.building.address,
-					city: $scope.building.city,
-					postalCode: $scope.building.postalCode,
-					filePath: $scope.building.filePath
-			}
-		};*/
-
-//}]);
-
-
-
-
-
-//////////VIEW CLIENT ORGS//////////
-/*
-app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
-                                  function($scope, $http,$location,ModalService) {
-
-	$scope.genders=['Property System','Event Management System','Finance System'];
-	$scope.selection=[];
-
-	$scope.toggleSelection = function toggleSelection(gender) {
-		var idx = $scope.selection.indexOf(gender);
-		if (idx > -1) {
-			// is currently selected
-			$scope.selection.splice(idx, 1);
-		}
-		else {
-			// is newly selected
-			$scope.selection.push(gender);
-		}
-	};
-	// END OF SUB SYSTEM ASSIGNMENT
-
-	$scope.Profiles = [];
-
-	$scope.send = function(){
-		console.log("REACHED HERE FOR FETCHING ALL ORGS");
-
-		var fetch = $http({
-			method  : 'GET',
-			url     : 'https://localhost:8443/user/viewClientOrgs',
-			//forms user object
-		});
-
-		console.log("fetching the orgs list.......");
-		fetch.success(function(response){
-
-			$scope.Profiles = response;
-			//	alert('FETCHED ALL orgs SUCCESS!!! ' + JSON.stringify(response));
-		});
-		fetch.error(function(response){
-			alert('FETCH ALL orgs FAILED!!!');
-		});
-
-		//alert('done with viewing users');
-		//$location.path('/viewUserList');
-	}
-	$scope.send();
-
-
-	$scope.entity = {};
-	$scope.name = "";
-
-
-	$scope.updateValue = function(name){
-		$scope.name = name;
-
-	};
-	console.log("SENDING THE NAME: " + $scope.name);
-	$scope.save = function(index){
-		$scope.Profiles[index].editable = true;
-		//$scope.entity = $scope.Profiles[index];
-		$scope.entity = $scope.Profiles[index];
-		//$scope.entity.index = index;
-		$scope.entity.editable = true;
-
-
-		$scope.updateValue = function(name){
-			//alert("addgin " + name + " to " + $scope.name);
-			$scope.name = name;
-		};
-
-
-		var Edit = {
-				newname: $scope.name,
-				name: $scope.entity.organisationName,
-				subsys: $scope.selection		
-		}
-
-
-		var toEdit = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/user/updateClientOrg',
-			data 	: Edit
-			//forms user object
-		});
-
-		console.log("fetching the user list.......");
-		toEdit.success(function(response){
-			$scope.Profiles = response;
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Client organisation updated successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-			$scope.send();
-		});
-		toEdit.error(function(response){
-			alert('Error, ');
-		});
-
-	}
-
-
-	$scope.checkRole =function(role,profile){
-		var roles=profile.systemSubscriptions;
-		console.log(roles);
-		var hasRole=false;
-		var index = 0;
-		angular.forEach(roles, function(item){             
-			if(hasRole==false&&role == roles[index]){	
-				hasRole=true;
-				console.log(hasRole);
-			}else{
-				index = index + 1;
-			}
-		});      
-		return hasRole;
-
-	} ;
-
-
-	$scope.delete = function(index){
-		//$scope.Profiles.splice(index,1);
-		//send to db to delete
-		//var index = $scope.Profiles[index];
-		//console.log("DEX" + index);
-		$scope.entity = $scope.Profiles[index];
-
-
-		console.log(JSON.stringify($scope.entity));
-		var toDel = {
-				id: $scope.entity.id,
-		}
-
-		//var toDel = $scope.Profiles[index];
-		console.log("ITEM ID TO DELETE: " + JSON.stringify(toDel));
-
-		var del = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/user/deleteClientOrg',
-			data 	: toDel
-			//forms user object
-		});
-
-		console.log("fetching the user list.......");
-		del.success(function(response){
-			//$scope.Profiles = response;
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Client organisation deleted successsfully!',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-		del.error(function(response){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Did not managed to delete the client organisation',
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-
-
-		$scope.Profiles.splice(index, 1);
-	}
-
-	$scope.edit = function(index){
-		$scope.Profiles[index].editable = true;
-		//send to db to save
-
-	}
-
-	$scope.add = function(){
-		$scope.Profiles.push({
-			name : "",
-			email : "",
-			editable : true
-		})
-	}
-}
-]);*/
-//////END VIEW CLIENT ORGS/////////////
-
-
-
-
-
-
-
-
-
-
 
 
 //===========================================================================
@@ -3690,7 +2759,7 @@ app.controller('auditLogController', ['$scope', '$http','ModalService', function
 		console.log('Senders Gotten');
 	});
 	getUsers.error(function(){
-		alert('Get sender error!');
+		console.log('Get sender error!');
 	});
 
 }]);
@@ -3722,7 +2791,7 @@ app.controller('UsersIndexController', ['$scope','$http','ModalService', functio
 					}
 					counter++;					
 				}
-				alert("Tasks for this day: " + arrayTasks);
+				//alert("Tasks for this day: " + arrayTasks);
 
 			},
 			dateClick: function(){
@@ -3792,32 +2861,11 @@ app.controller('YesNoController', ['$scope', 'close','message', function($scope,
 
 }])
 
-///////
-
 
 
 
 //UPLOAD LOGO CONTROLLER//
 app.controller('logoController', ['$scope', 'Upload', '$timeout','$http','ModalService' ,function ($scope, Upload, $timeout,$http,ModalService ) {
-	/* $scope.submit = function() {
-	      if ($scope.form.file.$valid && $scope.file) {
-	        $scope.upload($scope.file);
-	      }
-	    };
-	    // upload on file select or drop
-	    $scope.upload = function (file) {
-	        Upload.upload({
-	            url: 'https://localhost:8443/receiveFile',
-	            data: {file: file}
-	        }).then(function (resp) {
-	            console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-	        }, function (resp) {
-	            console.log('Error status: ' + resp.status);
-	        }, function (evt) {
-	            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-	            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-	        });
-	    };*/
 
 	$scope.logo = "";
 	var getLogo = function getLogo(){
@@ -3887,8 +2935,6 @@ app.controller('logoController', ['$scope', 'Upload', '$timeout','$http','ModalS
 		.appendTo('head')
 		.attr({type : 'text/css', rel : 'stylesheet'})
 		.attr('href', 'css/styles/app-'+setTheme+'.css');
-
-		// $.get('/api/change-theme?setTheme='+setTheme);
 
 	}
 

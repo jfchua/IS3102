@@ -7,7 +7,7 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	    </button>
-		<a class="navbar-brand" ui-sref="dashboard.workspace">{{clientName}}</a>
+		<a class="navbar-brand" ui-sref="IFMS.workspace">{{clientName}}</a>
 	</div>
 	<div class="collapse navbar-collapse">
 			
@@ -38,7 +38,7 @@
 				<a href class="dropdown-toggle" dropdown-toggle><img src="{{logo}}" class="topnav-img" alt=""> <span class="hidden-sm">{{userName}}</span></a>
 				<ul class="dropdown-menu pull-right animated fadeIn">
 					<li ng-show="IsUser()" ng-controller="AccountController"
-						class="active"><a ui-sref="dashboard.viewUserProfile"><i
+						class="active"><a ui-sref="IFMS.viewUserProfile"><i
 								class="glyphicon glyphicon-user"></i>{{ 'View
 								User Profile' | translate }}</a></li>
 

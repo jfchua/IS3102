@@ -3,7 +3,7 @@
         <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="IFMS.workspace">Workspace</a></li>
                                 <li><a>View Payment Policy</a></li>
                             </ol>
         </div>
@@ -40,7 +40,7 @@
                         <td ng-bind="policy.numOfDueDays"></td>
                         <td ng-bind="policy.interimPeriod"></td>
                        <td>
-                         <a  ui-sref="dashboard.updatePaymentPolicy" ng-click="passPaymentPolicy(policy)" tooltip-placement="top" tooltip="Update Policy"><i class="glyphicon glyphicon-pencil"></i></a>
+                         <a  ui-sref="IFMS.updatePaymentPolicy" ng-click="passPaymentPolicy(policy)" tooltip-placement="top" tooltip="Update Policy"><i class="glyphicon glyphicon-pencil"></i></a>
                          <a  ng-click="deletePolicy()" tooltip-placement="top" tooltip="Delete Policy"><i class="glyphicon glyphicon-trash"></i></a>
                          </td>
                          <tr>
@@ -56,6 +56,6 @@
 		<br>
 		<br>
 		<br>
-		 <a ui-sref="dashboard.addPaymentPolicy" tooltip-placement="right" tooltip="Add a payment policy"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
+		 <a ui-sref="IFMS.addPaymentPolicy" tooltip-placement="right" tooltip="Add a payment policy"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
 			</div>
 	</div>

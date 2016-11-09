@@ -3,7 +3,7 @@
         <div class="clearfix">
                         <ol class="breadcrumb no-bg no-m-t">
                             <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                            <li><a ui-sref="IFMS.workspace">Workspace</a></li>
                             <li><a>View Events</a></li>
                         </ol>
         </div>
@@ -49,10 +49,10 @@
                          <td>{{ x.approvalStatus }}</td>
                          <td ng-show = "IsFinanceSub()">{{ x.paymentStatus }}</td>
                           <td>
-                          <a ng-show="x.approvalStatus=='PROCESSING'" ui-sref="dashboard.viewEventDetails" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
-                          <a ng-show="x.approvalStatus=='APPROVED'||x.approvalStatus=='SUCCESSFUL'||x.approvalStatus=='CANCELLED'" ui-sref="dashboard.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                          <a ng-show="x.approvalStatus=='PROCESSING'" ui-sref="IFMS.viewEventDetails" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                          <a ng-show="x.approvalStatus=='APPROVED'||x.approvalStatus=='SUCCESSFUL'||x.approvalStatus=='CANCELLED'" ui-sref="IFMS.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
                           <a ng-show="x.approvalStatus=='APPROVED'" ng-click="showAModal(x)" tooltip-placement="top" tooltip="Update Status"><i class="glyphicon glyphicon-pencil"></i></a>                            		
-                   		  <a  ng-show="x.approvalStatus=='CANCELLED'" ui-sref="dashboard.deleteEvent" ng-click="passEvent(x)" tooltip-placement="top" tooltip="Delete Event"><i class="glyphicon glyphicon-trash"></i></a>
+                   		  <a  ng-show="x.approvalStatus=='CANCELLED'" ui-sref="IFMS.deleteEvent" ng-click="passEvent(x)" tooltip-placement="top" tooltip="Delete Event"><i class="glyphicon glyphicon-trash"></i></a>
                             
                            </td>                            
                              <!--  <td><a ng-model="myValue" href="/#/deleteEvent" ng-click="getEvent(x.id)">Delete</a></td>-->
@@ -101,7 +101,7 @@
                          <td>{{ x.event_title }}</td>
                          <td>{{ x.approvalStatus }}</td>
                          <td ng-show = "IsFinanceSub()">{{ x.paymentStatus }}</td>
-                          <td><a  ui-sref="dashboard.viewEventDetails" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a></td>
+                          <td><a  ui-sref="IFMS.viewEventDetails" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a></td>
                              
                              <!--  <td><a ng-model="myValue" href="/#/deleteEvent" ng-click="getEvent(x.id)">Delete</a></td>-->
                          </tr>
@@ -152,7 +152,7 @@
                              <td>{{ x.approvalStatus }}</td>
                              <td ng-show = "IsFinanceSub()">{{ x.paymentStatus }}</td>
                               <td>
-                              <a  ui-sref="dashboard.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                              <a  ui-sref="IFMS.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
                               <a   ng-click="showAModal(x)" tooltip-placement="top" tooltip="Update Status"><i class="glyphicon glyphicon-pencil"></i></a>                            		
                               </td>
                              </tr>
@@ -203,7 +203,7 @@
                              <td>{{ x.approvalStatus }}</td>
                              <td ng-show = "IsFinanceSub()">{{ x.paymentStatus }}</td>
                              <!--<td><a ng-model="myValue" href="/#/viewEventDetails" ng-click="getEvent(x.id)">View Details</a></td>-->
-                               <td> <a  ui-sref="dashboard.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                               <td> <a  ui-sref="IFMS.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
                             </td>
                                </tr>
                              </tbody>
@@ -254,8 +254,8 @@
                              <td>{{ x.approvalStatus }}</td>
                              <td ng-show = "IsFinanceSub()">{{ x.paymentStatus }}</td>
                              <!--<td><a ng-model="myValue" href="/#/viewEventDetails" ng-click="getEvent(x.id)">View Details</a></td>-->
-                             <td><a  ui-sref="dashboard.deleteEvent" ng-click="passEvent(x)" tooltip-placement="top" tooltip="Delete Event"><i class="glyphicon glyphicon-trash"></i></a>
-                            <a  ui-sref="dashboard.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                             <td><a  ui-sref="IFMS.deleteEvent" ng-click="passEvent(x)" tooltip-placement="top" tooltip="Delete Event"><i class="glyphicon glyphicon-trash"></i></a>
+                            <a  ui-sref="IFMS.viewEventDetailsApproved" ng-click="passEvent(x)" tooltip-placement="top" tooltip="View Details of Event {{x.event_title}}"><i class="glyphicon glyphicon-eye-open"></i></a>
                               </td>
                              </tr>
                              </tbody>

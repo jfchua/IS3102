@@ -105,7 +105,7 @@ $scope.twoOptions=[
   //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
   $scope.passBuilding = function(){
 	  shareData.addData(building);
-	  $state.go("dashboard.viewLevels");
+	  $state.go("IFMS.viewLevels");
   }
   
   $scope.editFloorPlan= function(){
@@ -126,7 +126,7 @@ $scope.twoOptions=[
 				}
 	  console.log(unit);
 		shareData.addData(obj);
-	  $state.go("dashboard.viewUnitPlanDefault");
+	  $state.go("IFMS.viewUnitPlanDefault");
 	  }
   }
    $scope.showDetails= function (thisUnit) {   
@@ -459,9 +459,9 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 //				  } ).then(function(){
 					  var dataObj={levelId:levelId,type: $scope.specialType};
 					  $http.post('/property/addDefaultIcon', JSON.stringify(dataObj)).then(function(response){
-						  $scope.units=[];
-						  console.log("empty");
-						  console.log($scope.units);
+						//  $scope.units=[];
+						//  console.log("empty");
+						//  console.log($scope.units);
 						  $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
 							  console.log(angular.fromJson(response.data));
 							  $scope.units=angular.fromJson(response.data);
@@ -539,7 +539,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
       console.log("pure response is "+JSON.stringify(response.data));
       console.log("FLOOR PLAN IS SAVED. GOING BACK TO VIEW FLOOR PLAN...");
       shareData.addData(obj);
-      $state.go("dashboard.viewFloorPlan");
+      $state.go("IFMS.viewFloorPlan");
     },function(response){//else is not saved successfully
       console.log("DID NOT SAVE");
       console.log("response is "+JSON.stringify(response.data));
@@ -561,7 +561,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
   //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
   $scope.passBuilding = function(){
 	  shareData.addData(building);
-	 // $state.go("dashboard.viewLevels");
+	 // $state.go("IFMS.viewLevels");
   }
   
 
@@ -777,6 +777,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					    	   
 					    	   //console.log($element);
 					    	 //  console.log(unit);
+					    	   console.log("X:"+unit.sizeX+"Y:"+unit.sizeY+"row:"+unit.row+"col:"+unit.col);
 					    	   $scope.updateUnit(unit);
 					       } // optional callback fired when item is finished resizing
 					    },
@@ -788,7 +789,9 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					       stop: function(event, $element, unit) {
 					    	   //console.log($element);
 					    	   //console.log(unit);
+					    	   console.log("X:"+unit.sizeX+"Y:"+unit.sizeY+"row:"+unit.row+"col:"+unit.col);
 					    	   $scope.updateUnit(unit);
+					    	   
 					       } // optional callback fired when item is finished dragging
 					    }
 					};

@@ -3,7 +3,7 @@
 	 <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="IFMS.workspace">Workspace</a></li>
                                 <li><a>View Events With Ticket Sales</a></li>
                             </ol>
         </div>
@@ -38,8 +38,8 @@
                             <td>{{ x.ticket }}</td>
                             <td>{{ x.outstanding }}</td>
                             <td>
-                            <a  ui-sref="dashboard.updateTicketRevenue" ng-click="passEvent(x.id)" tooltip-placement="top" tooltip="Update Received Payment"><i class="glyphicon glyphicon-shopping-cart"></i></a>
-                            <a  ui-sref="dashboard.updateOutgoingPayment" ng-click="passEvent(x.id)" tooltip-placement="top" tooltip="Update Outgoing Payment"><i class="glyphicon glyphicon-arrow-right"></i></a>
+                            <a  ui-sref="IFMS.updateTicketRevenue" ng-click="passEvent(x.id)" tooltip-placement="top" tooltip="Update Received Payment"><i class="glyphicon glyphicon-shopping-cart"></i></a>
+                            <a  ui-sref="IFMS.updateOutgoingPayment" ng-click="passEvent(x.id)" tooltip-placement="top" tooltip="Update Outgoing Payment"><i class="glyphicon glyphicon-arrow-right"></i></a>
                             </td>
                         </tr>
                          </tbody>
@@ -52,7 +52,7 @@
 		<br>
 		<br>
 		<br>
-		 <a ui-sref="dashboard.addPaymentPlan" tooltip-placement="right" tooltip="Add a payment plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
+		 <a ui-sref="IFMS.addPaymentPlan" tooltip-placement="right" tooltip="Add a payment plan"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
 			</div>
 	</div>
 	

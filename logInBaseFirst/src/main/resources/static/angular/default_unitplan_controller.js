@@ -188,7 +188,7 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 	  //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
 	  $scope.passBuilding = function(){
 		  shareData.addData($scope.building);
-		  $state.go("dashboard.viewLevels");
+		  $state.go("IFMS.viewLevels");
 	  }
 	  
 	  
@@ -199,7 +199,7 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 					level:$scope.level
 					}
 			shareData.addData(obj);
-		  $state.go("dashboard.viewFloorPlan");
+		  $state.go("IFMS.viewFloorPlan");
 	  }
 	  
 	 
@@ -212,7 +212,7 @@ app.controller('defaultUnitPlanController', function ($scope, $http,shareData,Mo
 				unit:$scope.unit
 				};
 		shareData.addData(obj);
-		 $state.go("dashboard.viewUnitPlanDefault");
+		 $state.go("IFMS.viewUnitPlanDefault");
 	}
 
 	$scope.passEvent=function(){
@@ -555,7 +555,7 @@ app.controller('viewDefaultUnitPlanController', function ($scope, $http,shareDat
 	 //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
 	  $scope.passBuilding = function(){
 		  shareData.addData($scope.building);
-		  $state.go("dashboard.viewLevels");
+		  $state.go("IFMS.viewLevels");
 	  }
 	  
 	  
@@ -566,7 +566,7 @@ app.controller('viewDefaultUnitPlanController', function ($scope, $http,shareDat
 					level:$scope.level
 					}
 			shareData.addData(obj);
-		  $state.go("dashboard.viewFloorPlan");
+		  $state.go("IFMS.viewFloorPlan");
 	  }
 	  
 	 
@@ -579,7 +579,7 @@ app.controller('viewDefaultUnitPlanController', function ($scope, $http,shareDat
 				unit:$scope.unit
 				};
 		shareData.addData(obj);
-		 $state.go("dashboard.createUnitPlanDefault");
+		 $state.go("IFMS.createUnitPlanDefault");
 	}
 
 

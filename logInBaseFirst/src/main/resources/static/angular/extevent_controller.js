@@ -16,21 +16,20 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 			console.log($scope.events);
 
 		},function(response){
-			alert("did not view all feedback");
+			console.log("did not view all events");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
-
 		$scope.IsFinanceSub = function(){
 			var subz = sessionStorage.getItem('subscriptions');
 			return (subz.indexOf("FINANCE") > -1);
 		}
 
 		$scope.checkDateBefore = function (dateString) {
-		    var daysAgo = new Date();
-		    //console.log("***");
-		    //console.log(new Date(dateString) < daysAgo);
-		    return (new Date(dateString) < daysAgo);
+			var daysAgo = new Date();
+			//console.log("***");
+			//console.log(new Date(dateString) < daysAgo);
+			return (new Date(dateString) < daysAgo);
 		}
 
 		$scope.IsTicketingSub = function(){
@@ -39,55 +38,16 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		}
 		$scope.checkStatus = function (event) {
 			var isTrue = true;
-		    //console.log("****");
-		    //console.log(event.approvalStatus == "CANCELLED");
-		    if(event.approvalStatus == "CANCELLED")
+			//console.log("****");
+			//console.log(event.approvalStatus == "CANCELLED");
+			if(event.approvalStatus == "CANCELLED")
 				isTrue = false;
-		    return isTrue;
+			return isTrue;
 		}
 
-		/*
-		$scope.checkTicket= function (id) {
-			var noTicSold = true;
-			$scope.cats = {};
-			var getBookings = $http({
-				method  : 'GET',
-				url     : 'https://localhost:8443/event/viewAllCategories/' + id        
-			});
-			console.log("Getting the bookings using the url: " + $scope.url);
-			getBookings.success(function(response){
-				$scope.cats = response;
-				console.log("DISPLAY ALL Categories");
-				console.log($scope.cats);
-			});
-			getBookings.error(function(response){
-				alert("did not view all categories");
-			});
-			angular.forEach($scope.cats, function() {
-				
-				if(noTicSold==true&&$scope.cats[index].tickets.length>0)
-					noTicSold = false;
-				else
-					index = index + 1;
-			});
-		    return noTicSold;
-		}*/
-		
 
 	});
-/*
-	$scope.viewApprovedEvents = function(){
-		$scope.data = {};
-		$http.get("//localhost:8443/event/viewApprovedEvents").then(function(response){
-			$scope.events = response.data;
-			console.log("DISPLAY ALL EVENT");
-			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
 
-		},function(response){
-			alert("did not view approved events");
-		}	
-		)	
-	}*/
 
 	$scope.getEvent = function(event){	
 		shareData.addData(event);
@@ -99,12 +59,12 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 	$scope.passEventToTix = function(event){
 		$rootScope.event = event;
 		console.log("PASSING" + $rootScope.event);
-		$state.go("dashboard.configureTicketsEx");
+		$state.go("IFMS.configureTicketsEx");
 	}
 	$scope.passEventToViewTix = function(id){
 		shareData.addData(id);
 	}
-	
+
 
 
 	$scope.requestForTicketSales = function(event){
@@ -222,7 +182,7 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event);
 	}
 
-/*
+	/*
 	$scope.getBookings = function(id){	
 		$scope.dataToShare = [];	  
 		$scope.shareMyData = function (myValue) {
@@ -265,18 +225,17 @@ app.controller('viewApprovedEventsExController', ['$scope', '$http','$state','$r
 			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
 
 		},function(response){
-			alert("did not view approved events");
+			console.log("did not view approved events");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
 
 	});
-
 	$scope.IsFinanceSub = function(){
 		var subz = sessionStorage.getItem('subscriptions');
 		return (subz.indexOf("FINANCE") > -1);
 	}
-	
+
 	$scope.getEvent = function(event){	
 
 		shareData.addData(event);
@@ -346,7 +305,7 @@ app.controller('viewApprovedEventsExController', ['$scope', '$http','$state','$r
 			//$location.path("/viewLevels");
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			$state.go("IFMS.viewAllEventsEx");
 			console.log('GET Booking FAILED! ' + JSON.stringify(response));
 		});
 
@@ -371,7 +330,7 @@ app.controller('viewToBeApprovedEventsExController', ['$scope', '$http','$state'
 			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
 
 		},function(response){
-			alert("did not view to be approved events");
+			console.log("did not view to be approved events");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
@@ -382,6 +341,7 @@ app.controller('viewToBeApprovedEventsExController', ['$scope', '$http','$state'
 		var subz = sessionStorage.getItem('subscriptions');
 		return (subz.indexOf("FINANCE") > -1);
 	}
+
 	$scope.getEvent = function(event){	
 
 		shareData.addData(event);
@@ -451,7 +411,7 @@ app.controller('viewToBeApprovedEventsExController', ['$scope', '$http','$state'
 			//$location.path("/viewLevels");
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			$state.go("IFMS.viewAllEventsEx");
 			console.log('GET Booking FAILED! ' + JSON.stringify(response));
 		});
 
@@ -465,7 +425,7 @@ app.controller('viewToBeApprovedEventsExController', ['$scope', '$http','$state'
 
 
 //DELETE EVENT
-app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareData','$state', function ($scope,  $timeout,$http ,shareData,$state) {
+app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareData','$state','ModalService', function ($scope,  $timeout,$http ,shareData,$state,ModalService) {
 	angular.element(document).ready(function () {
 
 		$scope.event = shareData.getData();
@@ -479,12 +439,29 @@ app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareD
 			$http.post("//localhost:8443/event/deleteEvent", JSON.stringify(tempObj)).then(function(response){
 				//$scope.buildings = response.data;
 				console.log("Cancel the EVENT");
-				alert('EVENT IS DELETED! GOING BACK TO VIEW EVENTS...');
-				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$state.go("dashboard.viewAllEventsEx");
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: "Event successfully deleted. Going back to view events",
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						$state.go("IFMS.viewAllEventsEx");
+					});
+				});
+
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
+
+
 			},function(response){
-				alert("DID NOT CANCEL EVENT");
-				//console.log("response is : ")+JSON.stringify(response);
+				console.log("DID NOT CANCEL EVENT");
 			}	
 			)
 		}
@@ -564,7 +541,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		console.log('Buildings Gotten');
 	});
 	getBuild.error(function(){
-		alert('Get building error!!!!!!!!!!');
+		console.log('Get building error!!!!!!!!!!');
 	});
 	$scope.currentlySelectedBuilding;
 	$scope.selectBuild = function(){
@@ -591,7 +568,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			console.log('Levels Gotten');
 		});
 		getLevels.error(function(){
-			alert('Get levels error!!!!!!!!!!');
+			console.log('Get levels error!!!!!!!!!!');
 		});	
 		$scope.currentlySelectedLevel;
 		$scope.selectLevel = function(){
@@ -618,7 +595,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			console.log($scope.units);
 		});
 		getUnits.error(function(){
-			alert('Get units error!!!!!!!!!!');
+			console.log('Get units error!!!!!!!!!!');
 		});		
 
 		$scope.currentlySelectedUnit;
@@ -659,42 +636,42 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		}
 		console.log("finish selecting units");	
 
-		
+
 	}
-	
+
 	$scope.checkAvail = function(){
 		$scope.avail = "";
 		console.log("start checking availability");
 		$scope.data = {};	
-        if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date||$scope.selectedUnits.length == 0 ){
-	               $scope.avail = "";
+		if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date||$scope.selectedUnits.length == 0 ){
+			$scope.avail = "";
 		}
-        else{
-        	var dataObj = {
-    				units: $scope.selectedUnits,
-    				event_start_date: ($scope.event.event_start_date).toString(),
-    				event_end_date: ($scope.event.event_end_date).toString(),
-    		};
-    		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/event/checkAvailability',
-			data    : dataObj //forms user object
-		});
-		
-		send.success(function(){
-			$scope.avail = "AVAILABLE!";
-			console.log($scope.avail);
-		});
-		send.error(function(){
-			$scope.avail = "NOT AVAILABLE!";
-			console.log($scope.avail);
-		});
+		else{
+			var dataObj = {
+					units: $scope.selectedUnits,
+					event_start_date: ($scope.event.event_start_date).toString(),
+					event_end_date: ($scope.event.event_end_date).toString(),
+			};
+			console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+			var send = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/event/checkAvailability',
+				data    : dataObj //forms user object
+			});
+
+			send.success(function(){
+				$scope.avail = "AVAILABLE!";
+				console.log($scope.avail);
+			});
+			send.error(function(){
+				$scope.avail = "NOT AVAILABLE!";
+				console.log($scope.avail);
+			});
+		}
 	}
-	}
-	
-	
-	
+
+
+
 	$scope.checkRent = function(){
 		$scope.components={};
 		$scope.totalRent = 0.00;
@@ -707,48 +684,48 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			$scope.totalRentAfter = 0.00;
 		}
 		else{
-		var dataObj = {
-				units: $scope.selectedUnits,
-				event_start_date: ($scope.event.event_start_date).toString(),
-				event_end_date: ($scope.event.event_end_date).toString(),
-		};
-		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-		
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/event/checkComponents',
-			data    : dataObj //forms user object
-		});
-		send.success(function(response){
-			$scope.components = response;
-			$scope.order_item = "num";
-			$scope.order_reverse = false;
-			console.log($scope.components);
-			console.log("OOOOO");
-		});
-		send.error(function(response){
-			//alert("get component failure");
-		});
+			var dataObj = {
+					units: $scope.selectedUnits,
+					event_start_date: ($scope.event.event_start_date).toString(),
+					event_end_date: ($scope.event.event_end_date).toString(),
+			};
+			console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
 
-		var send1 = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/event/checkRent',
-			data    : dataObj //forms user object
-		});
-		send1.success(function(response){
-			$scope.totalRent = response;
-			//$scope.components = response.data;
-			$scope.totalRentAfter = response*1.07;
-			console.log($scope.totalRent);
-		});
-		send1.error(function(response){
-			$scope.totalRent = response;
-			$scope.totalRentAfter = response*1.07;
-			console.log($scope.totalRent);
-		});	
+			var send = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/event/checkComponents',
+				data    : dataObj //forms user object
+			});
+			send.success(function(response){
+				$scope.components = response;
+				$scope.order_item = "num";
+				$scope.order_reverse = false;
+				console.log($scope.components);
+				console.log("OOOOO");
+			});
+			send.error(function(response){
+				//alert("get component failure");
+			});
+
+			var send1 = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/event/checkRent',
+				data    : dataObj //forms user object
+			});
+			send1.success(function(response){
+				$scope.totalRent = response;
+				//$scope.components = response.data;
+				$scope.totalRentAfter = response*1.07;
+				console.log($scope.totalRent);
+			});
+			send1.error(function(response){
+				$scope.totalRent = response;
+				$scope.totalRentAfter = response*1.07;
+				console.log($scope.totalRent);
+			});	
 		}
 	}
-	
+
 	$scope.eventTypes=[{'name':'Concert','eventType':'CONCERT'},
 	                   {'name':'Conference','eventType':'CONFERENCE'},
 	                   {'name':'Fair','eventType':'FAIR'},
@@ -802,7 +779,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		send.success(function(eventId){
 			console.log("eventId "+eventId);
 			if ($scope.picFile != null && $scope.picFile != "") {
-				
+
 				$scope.picFile.upload = Upload.upload({
 					url: 'https://localhost:8443/event/saveEventImage',
 					data: { file: $scope.picFile,eventId:eventId},
@@ -816,13 +793,13 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 							templateUrl: "views/popupMessageTemplate.html",
 							controller: "errorMessageModalController",
 							inputs: {
-								message: 'event and its associated image has been updated successfully',
+								message: 'Event and its associated image has been updated successfully',
 							}
 						}).then(function(modal) {
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewAllEventsEx");
+								$state.go("IFMS.viewAllEventsEx");
 							});
 						});
 
@@ -867,7 +844,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 				/////////////////////////
 				return;
 			}
-			
+
 			ModalService.showModal({
 
 				templateUrl: "views/popupMessageTemplate.html",
@@ -879,7 +856,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllEventsEx");
+					$state.go("IFMS.viewAllEventsEx");
 				});
 			});
 
@@ -892,7 +869,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 
 		});
 		send.error(function(){
-			alert('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
+			console.log('SAVING Event GOT ERROR BECAUSE UNIT IS NOT AVAILABLE!');
 		});
 	};
 	$scope.uiConfig = {
@@ -965,18 +942,18 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 }]);
 
 app.filter('orderObjectBy', function() {
-	  return function(items, field, reverse) {
-	    var filtered = [];
-	    angular.forEach(items, function(item) {
-	      filtered.push(item);
-	    });
-	    filtered.sort(function (a, b) {
-	      return (a[field] > b[field] ? 1 : -1);
-	    });
-	    if(reverse) filtered.reverse();
-	    return filtered;
-	  };
-	});
+	return function(items, field, reverse) {
+		var filtered = [];
+		angular.forEach(items, function(item) {
+			filtered.push(item);
+		});
+		filtered.sort(function (a, b) {
+			return (a[field] > b[field] ? 1 : -1);
+		});
+		if(reverse) filtered.reverse();
+		return filtered;
+	};
+});
 
 
 app.controller('updateEController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService){
@@ -996,7 +973,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 				event_end_date: $scope.event1.event_end_date,
 				filePath: $scope.event1.filePath,
 		};
-		
+
 		$scope.event = angular.copy($scope.event1);
 		//$scope.event.eventType = $scope.event1.eventType
 		var url = "https://localhost:8443/event/updateEvent";
@@ -1022,7 +999,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			$state.go("IFMS.viewAllEventsEx");
 			console.log('GET Selected Units FAILED! ' + JSON.stringify(response));
 		});	
 
@@ -1042,7 +1019,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			console.log('Buildings Gotten');
 		});
 		getBuild.error(function(){
-			alert('Get building error!!!!!!!!!!');
+			console.log('Get building error!!!!!!!!!!');
 		});
 		$scope.currentlySelectedBuilding;
 		$scope.selectBuild = function(){
@@ -1079,7 +1056,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			console.log('Levels Gotten');
 		});
 		getLevels.error(function(){
-			alert('Get levels error!!!!!!!!!!');
+			console.log('Get levels error!!!!!!!!!!');
 		});	
 		$scope.currentlySelectedLevel;
 		$scope.selectLevel = function(){
@@ -1108,7 +1085,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			console.log('Units Gotten');
 		});
 		getUnits.error(function(){
-			alert('Get units error!!!!!!!!!!');
+			console.log('Get units error!!!!!!!!!!');
 		});	
 
 		$scope.currentlySelectedUnit;
@@ -1148,32 +1125,32 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			$scope.avail = "";
 		}
 		else{
-		var dataObj = {	
-				eventId: $scope.event.id,
-				units: $scope.selectedBookingsUnits,
-				event_start_date: ($scope.event.event_start_date).toString(),
-				event_end_date: ($scope.event.event_end_date).toString(),
-		};
-		//console.log($scope.event.id);
-		//console.log($scope.event.event_start_date);
-		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/event/checkAvailabilityForUpdate',
-			data    : dataObj //forms user object
-		});
-		$scope.avail = "";
-		send.success(function(){
-			$scope.avail = "AVAILABLE!";
-			console.log($scope.avail);
-		});
-		send.error(function(){
-			$scope.avail = "NOT AVAILABLE!";
-			console.log($scope.avail);
-		});
+			var dataObj = {	
+					eventId: $scope.event.id,
+					units: $scope.selectedBookingsUnits,
+					event_start_date: ($scope.event.event_start_date).toString(),
+					event_end_date: ($scope.event.event_end_date).toString(),
+			};
+			//console.log($scope.event.id);
+			//console.log($scope.event.event_start_date);
+			console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+			var send = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/event/checkAvailabilityForUpdate',
+				data    : dataObj //forms user object
+			});
+			$scope.avail = "";
+			send.success(function(){
+				$scope.avail = "AVAILABLE!";
+				console.log($scope.avail);
+			});
+			send.error(function(){
+				$scope.avail = "NOT AVAILABLE!";
+				console.log($scope.avail);
+			});
+		}
 	}
-	}
-	
+
 	$scope.checkRent = function(){
 		$scope.components={};
 		$scope.totalRent = 0.00;
@@ -1186,46 +1163,46 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			$scope.totalRentAfter = 0.00;
 		}
 		else{
-		var dataObj = {
-				units: $scope.selectedBookingsUnits,
-				event_start_date: ($scope.event.event_start_date).toString(),
-				event_end_date: ($scope.event.event_end_date).toString(),
-		};
-		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/event/checkComponents',
-			data    : dataObj //forms user object
-		});
-		//$scope.avail = "";	
-		send.success(function(response){
-			$scope.components = response;
-			$scope.order_item = "num";
-			$scope.order_reverse = false;
-			console.log($scope.components);
-			console.log("get component success");
-		});
-		send.error(function(response){
-			alert("get component failure");
-		});
+			var dataObj = {
+					units: $scope.selectedBookingsUnits,
+					event_start_date: ($scope.event.event_start_date).toString(),
+					event_end_date: ($scope.event.event_end_date).toString(),
+			};
+			console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+			var send = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/event/checkComponents',
+				data    : dataObj //forms user object
+			});
+			//$scope.avail = "";	
+			send.success(function(response){
+				$scope.components = response;
+				$scope.order_item = "num";
+				$scope.order_reverse = false;
+				console.log($scope.components);
+				console.log("get component success");
+			});
+			send.error(function(response){
+				console.log("get component failure");
+			});
 
 
-		var send1 = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/event/checkRent',
-			data    : dataObj //forms user object
-		});
-		send1.success(function(response){
-			$scope.totalRent = response;
-			$scope.totalRentAfter = response*1.07;
-			console.log($scope.totalRent);
-		});
-		send1.error(function(response){
-			$scope.totalRent = response;
-			$scope.totalRentAfter = response*1.07;
-			console.log($scope.totalRent);
-		});	
-	}
+			var send1 = $http({
+				method  : 'POST',
+				url     : 'https://localhost:8443/event/checkRent',
+				data    : dataObj //forms user object
+			});
+			send1.success(function(response){
+				$scope.totalRent = response;
+				$scope.totalRentAfter = response*1.07;
+				console.log($scope.totalRent);
+			});
+			send1.error(function(response){
+				$scope.totalRent = response;
+				$scope.totalRentAfter = response*1.07;
+				console.log($scope.totalRent);
+			});	
+		}
 	}
 
 
@@ -1235,8 +1212,8 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 	                   {'name':'Family Entertainment','eventType':'FAMILY'},
 	                   {'name':'Lifestyle/Leisure','eventType':'LIFESTYLE'},
 	                   {'name':'Seminar/Workshop','eventType':'SEMINAR'}];
-     //$scope.eventType=$scope.eventTypes[0].eventType;
-	
+	//$scope.eventType=$scope.eventTypes[0].eventType;
+
 	$scope.updateEvent = function(){
 		console.log("Start updating");
 		var unitIdsString="";
@@ -1282,7 +1259,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllEventsEx");
+					$state.go("IFMS.viewAllEventsEx");
 				});
 			});
 
@@ -1315,7 +1292,7 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			};
 		});
 	};	
-	
+
 	$scope.uiConfig = {
 			calendar:{
 				width: 300,
@@ -1330,10 +1307,10 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 				eventResize: $scope.alertOnResize
 			}
 	};
-    
-    
-    
-    $scope.haha=[];
+
+
+
+	$scope.haha=[];
 	//RETRIEVE EVENTS
 	//$scope.eventsFormated=[];
 	var getEvents = function(bookings){
@@ -1414,7 +1391,7 @@ app.controller('bookingController', ['$scope','$http','$state','$routeParams','s
 			//$location.path("/viewLevels");
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			$state.go("IFMS.viewAllEventsEx");
 			console.log('GET Booking FAILED! ' + JSON.stringify(response));
 		});
 
@@ -1423,72 +1400,90 @@ app.controller('bookingController', ['$scope','$http','$state','$routeParams','s
 	});
 
 	$scope.checkDateBefore = function (dateString) {
-	    var daysAgo = new Date();
-	    return (new Date(dateString) > daysAgo);
+		var daysAgo = new Date();
+		return (new Date(dateString) > daysAgo);
 	}
 
 	$scope.checkBookings = function () {
 		//console.log("*************");
 		//console.log($scope.bookings.length);
-	    return ($scope.bookings.length >1);
+		return ($scope.bookings.length >1);
 	}
-	
+
 	$scope.deleteBooking = function(id){
-		var r = confirm("Confirm cancel? \nEither OK or Cancel.");
-		if (r == true) {
-			$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
-			var deleteBooking = $http({
-				method  : 'POST',
-				url     : 'https://localhost:8443/booking/deleteBooking/' + id        
+
+		ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: "Confirm deletion?",
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
+					var deleteBooking = $http({
+						method  : 'POST',
+						url     : 'https://localhost:8443/booking/deleteBooking/' + id        
+					});
+					deleteBooking.success(function(response){
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Booking successfully deleted',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								//console.log("OK");
+								$state.go("IFMS.viewAllEventsEx");
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							//console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+
+					});
+					deleteBooking.error(function(response){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Error deleting booking',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								//console.log("OK");
+								$state.go("IFMS.viewAllEventsEx");
+							});
+						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							//console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+					});
+
+				}
 			});
-			console.log("Deleting the event using the url: " + $scope.url);
-			deleteBooking.success(function(response){
-				alert('DELETE BOOKING SUCCESS! ');
-				console.log("ID IS " + id);
-				$state.go("dashboard.viewAllEventsEx");
-			});
-			deleteBooking.error(function(response){
-				alert('DELETE BOOKING FAIL! ');
-				$state.go("dashboard.viewAllEventsEx");
-				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
-			});
-		} else {
-			alert("Cancel deleting booking");
-		}
-		//document.getElementById("demo").innerHTML = txt;	
-		/*
-	$scope.data = {};
-	console.log("Start deleting event");
-	$scope.url = "https://localhost:8443/booking/deleteBooking/"+id;
-	console.log("GETTING THE EVENT INFO")
-	var deleteBooking = $http({
-	method  : 'POST',
-	url     : 'https://localhost:8443/booking/deleteBooking/' + id        
-	});
-	console.log("Deleting the event using the url: " + $scope.url);
-	deleteBooking.success(function(response){
-	console.log('DELETE BOOKING SUCCESS! ' + JSON.stringify(response));
-	console.log("ID IS " + id);
-	});
-	deleteBooking.error(function(response){
-	$location.path("/viewAllEventsEx");
-	console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
-	});*/
+		});
 
-		/*
-	$scope.event = JSON.parse(shareData.getData());
-	console.log($scope.event.id);
-	var tempObj ={eventId:$scope.event.id};
-	console.log("fetch id "+ tempObj);
+		$scope.dismissModal = function(result) {
+			close(result, 200); // close, but give 200ms for bootstrap to animate
 
-	$http.post("//localhost:8443/event/deleteEvent", JSON.stringify(tempObj)).then(function(response){
+			//console.log("in dissmiss");
+		};
 
-	console.log("Cancel the EVENT");
-	},function(response){
-	alert("DID NOT Cancel EVENT");
 
-	}	
-	)*/
 	}
 
 	$scope.passBooking=function(booking){
@@ -1505,7 +1500,8 @@ app.controller('paymentHistoryExController', ['$scope', '$http','$state','$route
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		//$scope.org = shareData.getData();
-		
+		$scope.order_item = "id";
+		$scope.order_reverse = false;
 		$scope.url = "https://localhost:8443/event/getPaymentHistory/";
 		console.log("GETTING THE PAYMENT HISTORY");
 		var getPayments = $http({
@@ -1523,7 +1519,7 @@ app.controller('paymentHistoryExController', ['$scope', '$http','$state','$route
 			$scope.order_reverse = false;
 		});
 		getPayments.error(function(response){
-			//$state.go("dashboard.viewPaymentPlansEx");
+			$state.go("IFMS.viewPaymentPlansEx");
 			console.log('GET PAYMENTS FAILED! ');
 		});
 	});
@@ -1541,7 +1537,7 @@ app.controller('paymentExController', ['$scope', '$http','$state','$routeParams'
 			console.log("DISPLAY ALL PAYMENT PLANS");
 			console.log($scope.plans);
 		},function(response){
-			alert("did not view plans");
+			console.log("did not view plans");
 		}	
 		)
 
@@ -1550,7 +1546,7 @@ app.controller('paymentExController', ['$scope', '$http','$state','$routeParams'
 			console.log("DISPLAY TOTAL BALANCE");
 			console.log($scope.totalAmount);
 		},function(response){
-			alert("did not view plans");
+			console.log("did not view plans");
 		}	
 		)
 	});
@@ -1584,7 +1580,7 @@ app.controller('paymentDetailsExController', ['$scope', '$http','$state','$route
 			$scope.paymentPlan = response;
 		});
 		getPayments.error(function(response){
-			$state.go("dashboard.viewPaymentPlansEx");
+			$state.go("IFMS.viewPaymentPlansEx");
 			console.log('GET PAYMENTS FAILED! ');
 		});	
 	});
@@ -1614,7 +1610,7 @@ app.controller('ticketSaleExController', ['$scope', '$http','$state','$routePara
 			$scope.event = response;
 		});
 		getEvent.error(function(response){
-			$state.go("dashboard.viewTicketSales");
+			$state.go("IFMS.viewTicketSales");
 			console.log('GET PAYMENT FAILED! ');
 		});
 
@@ -1637,7 +1633,7 @@ app.controller('ticketSaleExController', ['$scope', '$http','$state','$routePara
 			$scope.sales = response;
 		});
 		getSales.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			$state.go("IFMS.viewAllEventsEx");
 			console.log('GET EVENTS FAILED! ');
 		});
 
@@ -1650,11 +1646,11 @@ app.controller('feedbackController', ['$scope','$rootScope','$http','$state','sh
 	angular.element(document).ready(function () {
 		$scope.event = shareData.getData();
 		var dataObj={id: $scope.event.id};
-        console.log(dataObj);
-        console.log("!!!");
+		console.log(dataObj);
+		console.log("!!!");
 		$http.post("//localhost:8443/tixGetFeedback", JSON.stringify(dataObj)).then(function(response){
-					$scope.feedbacks = response.data;
-		
+			$scope.feedbacks = response.data;
+
 		},function(response){
 			ModalService.showModal({
 
@@ -1667,7 +1663,7 @@ app.controller('feedbackController', ['$scope','$rootScope','$http','$state','sh
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllEventsEx");
+					$state.go("IFMS.viewAllEventsEx");
 				});
 			});
 

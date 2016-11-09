@@ -171,7 +171,7 @@ public class UnitAttributeController {
 						return new ResponseEntity<String>(geeson.toJson("Unit at position: top:"+top+"m, left:"+left+"m, with dimension: length:"+dimensionLength+"m, width:"+dimensionWidth+"m is out of boundary of level "+levelNum+": length:"+levelLength+"m, width:"+levelWidth+"m"),HttpStatus.INTERNAL_SERVER_ERROR);
 						
 					}else{//width of square== (800/levelLength)*dimensionLength of unit; height of square ==(800/levelLength)*dimensionWidth of unit
-						unit=unitService.uploadUnitOnLevel(levelId, left, top, (int)(800*dimensionWidth/levelLength), (int)(800*dimensionLength/levelLength), "coral", "./svg/rect.svg", unitNumber,  left,  top,  dimensionWidth, dimensionLength, true, description);
+						unit=unitService.uploadUnitOnLevel(levelId, left, top, (int)(800*dimensionWidth/levelLength), (int)(800*dimensionLength/levelLength), "hsl(197, 73%, 81%)", "./svg/rect.svg", unitNumber,  left,  top,  dimensionLength, dimensionWidth, true, description);
 						if(unit==null){
 							return new ResponseEntity<String>(geeson.toJson("Unit at position: top: "+top+"m, left: "+left+"m is clashing with existing units on level "+levelNum),HttpStatus.INTERNAL_SERVER_ERROR);
 							
