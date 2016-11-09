@@ -123,6 +123,10 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 		
 	});
 	
+	$scope.IsFinanceSub = function(){
+		var subz = sessionStorage.getItem('subscriptions');
+		return (subz.indexOf("FINANCE") > -1);
+	}
 
 
 	$scope.viewEvents = function(){
@@ -833,6 +837,8 @@ app.controller('viewEventOrganiserController', ['$scope',  '$timeout','$http','s
 		$scope.data = {};
 		$http.get("//localhost:8443/eventManager/viewEventOrganizers").then(function(response){
 			$scope.eventOrgs = response.data;
+			$scope.order_item = "id";
+			$scope.order_reverse = false;
 			console.log("DISPLAY ALL EVENT ORGANIZERS");
 			console.log("EVENT ORGS DATA ARE OF THE FOLLOWING: " + $scope.eventOrgs);
 

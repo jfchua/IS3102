@@ -128,7 +128,7 @@ INSERT into users_roles values( 11,6);
 INSERT into users_roles values( 11,7);
 INSERT into users_roles values( 11,8);
 INSERT into users_roles values( 12,3);
---INSERT into users_roles values( 12,4);
+INSERT into users_roles values( 12,4);
 INSERT into users_roles values( 12,5);
 INSERT into users_roles values( 12,6);
 INSERT into users_roles values( 12,8);
