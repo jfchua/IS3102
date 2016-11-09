@@ -1,7 +1,7 @@
 	<div class="clearfix">
 		<ol class="breadcrumb no-bg no-m-t">
 			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
+			<li><a ui-sref="IFMS.workspace">Workspace</a></li>
 			<li><a>View Events</a></li>
 		</ol>
 	</div>
@@ -30,8 +30,8 @@
 							<th><i></i> Event Title</th>
 							<th><i></i> Start Date</th>
 							<th><i></i> End Date</th>
-							<th><i></i> Approval Status </th>
-                           <th ng-show = "IsFinanceSub()"><i></i> Payment Status </th>
+							<th><i></i> Status</th>
+
 							<th>Action</th>
 
 						</tr>
@@ -45,39 +45,37 @@
 							<td>{{ x.event_start_date }}</td>
 							<td>{{ x.event_end_date }}</td>
 							<td>{{ x.approvalStatus }}</td>
-					        <td ng-show = "IsFinanceSub()">{{ x.paymentStatus }}</td>
-							
 							<td><div ng-show="checkStatus(x)">
 									<a ng-hide="checkDateBefore(x.event_start_date)||x.hasTicket"
-										ui-sref="dashboard.updateEventEx" ng-click="passEvent(x)"
+										ui-sref="IFMS.updateEventEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="Update Event"><i
 										class="glyphicon glyphicon-pencil"></i></a> <a
 										ng-hide="checkDateBefore(x.event_start_date)||x.hasTicket"
-										ui-sref="dashboard.cancelEventEx" ng-click="passEvent(x)"
+										ui-sref="IFMS.cancelEventEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="Cancel Event"><i
 										class="glyphicon glyphicon-trash"></i></a> <a
-										ui-sref="dashboard.viewBookingEx" ng-click="passEvent(x)"
+										ui-sref="IFMS.viewBookingEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="View Bookings"><i
 										class="glyphicon glyphicon-eye-open"></i></a> <a
 										ng-show = "IsTicketingSub()&&(!x.hasTicket)&&(x.approvalStatus == 'APPROVED')"  ng-click="requestForTicketSales(x)"
 										tooltip-placement="top" tooltip="Request Ticket Sales"><i
 										class="glyphicon glyphicon-shopping-cart"></i></a> <a
-										ui-sref="dashboard.configureDiscountsEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ui-sref="IFMS.configureDiscountsEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Discounts"><i
 										class="glyphicon glyphicon-usd"></i></a> <a ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Tickets"><i
 										class="glyphicon glyphicon-qrcode"></i></a><a
-										ui-sref="dashboard.viewTicketSalesEx" ng-show="x.hasTicket && IsTicketingSub()"
+										ui-sref="IFMS.viewTicketSalesEx" ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToViewTix(x.id)" tooltip-placement="top"
 										tooltip="View Ticket Sales"><i
 										class="glyphicon glyphicon-list"></i></a><a
-										ui-sref="dashboard.configureBeaconsEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ui-sref="IFMS.configureBeaconsEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Beacons"><i
 										class="glyphicon glyphicon-tags"></i></a><a
-										ui-sref="dashboard.feedbackEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ui-sref="IFMS.feedbackEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEvent(x)" tooltip-placement="top"
 										tooltip="View Feedback"><i
 										class="glyphicon glyphicon-user"></i></a>									
@@ -88,7 +86,7 @@
 			</div>
 		</div>
 		<div class="col-md-3">
-		<br> <br> <br> <a ui-sref="dashboard.addEventEx"
+		<br> <br> <br> <a ui-sref="IFMS.addEventEx"
 			tooltip-placement="right" tooltip="Add a new event"><button
 				type="button" class="btn btn-primary btn-circle btn-lg">
 				<i class="glyphicon glyphicon-plus"></i>
@@ -119,8 +117,8 @@
 							<th><i></i> Event Title</th>
 							<th><i></i> Start Date</th>
 							<th><i></i> End Date</th>
-							<th><i></i> Approval Status </th>
-                           <th ng-show = "IsFinanceSub()"><i></i> Payment Status </th>
+							<th><i></i> Status</th>
+
 							<th>Action</th>
 
 						</tr>
@@ -134,39 +132,37 @@
 							<td>{{ x.event_start_date }}</td>
 							<td>{{ x.event_end_date }}</td>
 							<td>{{ x.approvalStatus }}</td>
-							<td ng-show = "IsFinanceSub()">{{ x.paymentStatus }}</td>
-							
 							<td><div ng-show="checkStatus(x)">
 									<a ng-hide="checkDateBefore(x.event_start_date)||x.hasTicket"
-										ui-sref="dashboard.updateEventEx" ng-click="passEvent(x)"
+										ui-sref="IFMS.updateEventEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="Update Event"><i
 										class="glyphicon glyphicon-pencil"></i></a> <a
 										ng-hide="checkDateBefore(x.event_start_date)||x.hasTicket"
-										ui-sref="dashboard.cancelEventEx" ng-click="passEvent(x)"
+										ui-sref="IFMS.cancelEventEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="Cancel Event"><i
 										class="glyphicon glyphicon-trash"></i></a> <a
-										ui-sref="dashboard.viewBookingEx" ng-click="passEvent(x)"
+										ui-sref="IFMS.viewBookingEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="View Bookings"><i
 										class="glyphicon glyphicon-eye-open"></i></a> <a
 										ng-show = "IsTicketingSub()&&(!x.hasTicket)&&(x.approvalStatus == 'APPROVED')"  ng-click="requestForTicketSales(x)"
 										tooltip-placement="top" tooltip="Request Ticket Sales"><i
 										class="glyphicon glyphicon-shopping-cart"></i></a> <a
-										ui-sref="dashboard.configureDiscountsEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ui-sref="IFMS.configureDiscountsEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Discounts"><i
 										class="glyphicon glyphicon-usd"></i></a> <a ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Tickets"><i
 										class="glyphicon glyphicon-qrcode"></i></a><a
-										ui-sref="dashboard.viewTicketSalesEx" ng-show="x.hasTicket && IsTicketingSub()"
+										ui-sref="IFMS.viewTicketSalesEx" ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToViewTix(x.id)" tooltip-placement="top"
 										tooltip="View Ticket Sales"><i
 										class="glyphicon glyphicon-list"></i></a><a
-										ui-sref="dashboard.configureBeaconsEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ui-sref="IFMS.configureBeaconsEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Beacons"><i
 										class="glyphicon glyphicon-tags"></i></a><a
-										ui-sref="dashboard.feedbackEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ui-sref="IFMS.feedbackEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEvent(x)" tooltip-placement="top"
 										tooltip="View Feedback"><i
 										class="glyphicon glyphicon-user"></i></a>									
@@ -201,8 +197,8 @@
 							<th><i></i> Event Title</th>
 							<th><i></i> Start Date</th>
 							<th><i></i> End Date</th>
-							<th><i></i> Approval Status </th>
-                           <th ng-show = "IsFinanceSub()"><i></i> Payment Status </th>
+							<th><i></i> Status</th>
+
 							<th>Action</th>
 
 						</tr>
@@ -216,39 +212,37 @@
 							<td>{{ x.event_start_date }}</td>
 							<td>{{ x.event_end_date }}</td>
 							<td>{{ x.approvalStatus }}</td>
-							<td ng-show = "IsFinanceSub()">{{ x.paymentStatus }}</td>
-							
 							<td><div ng-show="checkStatus(x)">
 									<a ng-hide="checkDateBefore(x.event_start_date)||x.hasTicket"
-										ui-sref="dashboard.updateEventEx" ng-click="passEvent(x)"
+										ui-sref="IFMS.updateEventEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="Update Event"><i
 										class="glyphicon glyphicon-pencil"></i></a> <a
 										ng-hide="checkDateBefore(x.event_start_date)||x.hasTicket"
-										ui-sref="dashboard.cancelEventEx" ng-click="passEvent(x)"
+										ui-sref="IFMS.cancelEventEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="Cancel Event"><i
 										class="glyphicon glyphicon-trash"></i></a> <a
-										ui-sref="dashboard.viewBookingEx" ng-click="passEvent(x)"
+										ui-sref="IFMS.viewBookingEx" ng-click="passEvent(x)"
 										tooltip-placement="top" tooltip="View Bookings"><i
 										class="glyphicon glyphicon-eye-open"></i></a> <a
 										ng-show = "IsTicketingSub()&&(!x.hasTicket)&&(x.approvalStatus == 'APPROVED')"  ng-click="requestForTicketSales(x)"
 										tooltip-placement="top" tooltip="Request Ticket Sales"><i
 										class="glyphicon glyphicon-shopping-cart"></i></a> <a
-										ui-sref="dashboard.configureDiscountsEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ui-sref="IFMS.configureDiscountsEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Discounts"><i
 										class="glyphicon glyphicon-usd"></i></a> <a ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Tickets"><i
 										class="glyphicon glyphicon-qrcode"></i></a><a
-										ui-sref="dashboard.viewTicketSalesEx" ng-show="x.hasTicket && IsTicketingSub()"
+										ui-sref="IFMS.viewTicketSalesEx" ng-show="x.hasTicket && IsTicketingSub()"
 										ng-click="passEventToViewTix(x.id)" tooltip-placement="top"
 										tooltip="View Ticket Sales"><i
 										class="glyphicon glyphicon-list"></i></a><a
-										ui-sref="dashboard.configureBeaconsEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ui-sref="IFMS.configureBeaconsEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEventToTix(x)" tooltip-placement="top"
 										tooltip="Configure Beacons"><i
 										class="glyphicon glyphicon-tags"></i></a><a
-										ui-sref="dashboard.feedbackEx" ng-show = "x.approvalStatus == 'APPROVED'"
+										ui-sref="IFMS.feedbackEx" ng-show = "x.approvalStatus == 'APPROVED'"
 										ng-click="passEvent(x)" tooltip-placement="top"
 										tooltip="View Feedback"><i
 										class="glyphicon glyphicon-user"></i></a>									
