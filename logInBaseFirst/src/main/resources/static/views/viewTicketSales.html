@@ -3,7 +3,7 @@
 	 <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="IFMS.workspace">Workspace</a></li>
                                 <li><a>View Ticket Sales</a></li>
                             </ol>
         </div>
@@ -40,7 +40,7 @@
                             <td>{{ x.ticket }}</td>
                             <td>{{ x.number }}</td>
                             <td>
-                            <a  ui-sref="dashboard.viewTicketSaleDetailsEvent" ng-click="passEvent(x.id)" tooltip-placement="top" tooltip="View Ticket Sale Details"><i class="glyphicon glyphicon-eye-open"></i></a>
+                            <a  ui-sref="IFMS.viewTicketSaleDetailsEvent" ng-click="passEvent(x.id)" tooltip-placement="top" tooltip="View Ticket Sale Details"><i class="glyphicon glyphicon-eye-open"></i></a>
                             </td>
                         </tr>
                          </tbody>
