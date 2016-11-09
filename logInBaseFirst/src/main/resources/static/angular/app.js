@@ -912,7 +912,7 @@ var app = angular.module('app', [ 'ui.router',
                                 		  app.factory('httpAuthInterceptor', function ($q, $location, $injector) {
                                 			  return {
                                 				  'response': function(response) {
-                                					  console.log($location.path());
+                                					  //console.log($location.path());
                                 					  return response;
                                 				  },
                                 				  'responseError': function (response) {

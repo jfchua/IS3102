@@ -45,8 +45,8 @@ var app = angular.module('app', [ 'ui.router',
                                 	  notAuthorized: 'auth-not-authorized'
                                   })
 //                                All UIRouters
-                                  app.config(
-                                		  function($stateProvider, $urlRouterProvider, $httpProvider, USER_ROLES) { 
+ app.config(
+		 function($stateProvider, $urlRouterProvider, $httpProvider, USER_ROLES) { 
 
                                 			  $stateProvider
                                 			  .state('/login',{
@@ -909,90 +909,29 @@ var app = angular.module('app', [ 'ui.router',
 
                                 			  /*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
                                 		  })
-                                		  app.factory('httpAuthInterceptor', function ($q, $location) {
+                                		  app.factory('httpAuthInterceptor', function ($q, $location, $injector) {
                                 			  return {
                                 				  'response': function(response) {
+                                					  //console.log($location.path());
                                 					  return response;
                                 				  },
                                 				  'responseError': function (response) {
-                                					  // NOTE: detect error because of unauthenticated user
-                                					  if ([401, 403].indexOf(response.status) >= 0) {
-                                						  // redirecting to login page
-                                						  event.preventDefault();
-                                						  $location.path("/login");
-                                						  ModalService.showModal({
-
-                                							  templateUrl: "views/errorMessageTemplate.html",
-                                							  controller: "errorMessageModalController",
-                                							  inputs: {
-                                								  message: 'Session timeout!',
-                                							  }
-                                						  }).then(function(modal) {
-                                							  modal.element.modal();
-                                							  modal.close.then(function(result) {
-                                								  console.log("OK");
-                                							  });
-                                						  });
-                                						  $scope.dismissModal = function(result) {
-                                							  close(result, 200); // close, but give 200ms for bootstrap to animate
-
-                                							  console.log("in dissmiss");
-                                						  };
-                                						  $window.location.reload();
-                                						  return response;
-                                					  } else {
-                                						  return $q.reject(response);
-                                					  }
+                                					  event.preventDefault();
+                                					  console.log(response.status);
+                                					  alert("Your session has timeout! Please log in again!");
+                                					  $injector.get('$state').transitionTo('/login');
+                                					  return $q.reject(response);
+                                					  
                                 				  }
                                 			  };
-
-
-                                			  $urlRouterProvider.otherwise('/login');
-
 
                                 			  /*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
                                 		  })
-                                		  app.factory('httpAuthInterceptor', function ($q) {
-                                			  return {
-                                				  'response': function(response) {
-                                					  return response;
-                                				  },
-                                				  'responseError': function (response) {
-                                					  // NOTE: detect error because of unauthenticated user
-                                					  if ([401, 403].indexOf(response.status) >= 0) {
-                                						  // redirecting to login page
-                                						  event.preventDefault();
-                                						  $location.path("/login");
-                                						  ModalService.showModal({
 
-                                							  templateUrl: "views/errorMessageTemplate.html",
-                                							  controller: "errorMessageModalController",
-                                							  inputs: {
-                                								  message: 'Session timeout!',
-                                							  }
-                                						  }).then(function(modal) {
-                                							  modal.element.modal();
-                                							  modal.close.then(function(result) {
-                                								  console.log("OK");
-                                							  });
-                                						  });
-                                						  $scope.dismissModal = function(result) {
-                                							  close(result, 200); // close, but give 200ms for bootstrap to animate
+app.config(function ($httpProvider) {
+	$httpProvider.interceptors.push('httpAuthInterceptor');
+ });
 
-                                							  console.log("in dissmiss");
-                                						  };
-                                						  $window.location.reload();
-                                						  return response;
-                                					  } else {
-                                						  return $q.reject(response);
-                                					  }
-                                				  }
-                                			  };
-                                		  })
-
-                                		  app.config(function ($httpProvider) {
-                                			  $httpProvider.interceptors.push('httpAuthInterceptor');
-                                		  });
 
 app.service('Session',  function () {
 	this.create = function (sessionId, userId, userRole) {
