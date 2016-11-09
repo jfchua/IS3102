@@ -1,7 +1,7 @@
 <div class="clearfix">
                         <ol class="breadcrumb no-bg no-m-t">
                             <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                            <li><a ui-sref="IFMS.workspace">Workspace</a></li>
                             <li><a>View Buildings</a></li>
                         </ol>
 </div>
@@ -46,10 +46,10 @@
                              <td>{{ x.postalCode }}</td>
                              <td><img ng-show="x.picPath" class="svgtest" ng-src="{{x.picPath}}"  width="100px" height="100px"></td> 
                              <td>
-                             		<a  ui-sref="dashboard.updateBuilding" ng-click="updateBuilding(x)" tooltip-placement="top" tooltip="Update Building"><i class="glyphicon glyphicon-pencil"></i></a>
-                             		<a  ui-sref="dashboard.deleteBuilding" ng-click="deleteBuilding(x)" tooltip-placement="top" tooltip="Delete Building"><i class="glyphicon glyphicon-trash"></i></a>
-                             		<a  ui-sref="dashboard.addLevel" ng-hide="x.levels.length==x.numFloor" ng-click="addLevel(x)" tooltip-placement="top" tooltip="Add level"><i class="glyphicon glyphicon-plus-sign"></i></a>
-                             		<a  ui-sref="dashboard.viewLevels" ng-hide="x.levels.length==0" ng-click="passBuilding(x)" tooltip-placement="top" tooltip="View Levels"><i class="glyphicon glyphicon-eye-open"></i></a>
+                             		<a  ui-sref="IFMS.updateBuilding" ng-click="updateBuilding(x)" tooltip-placement="top" tooltip="Update Building"><i class="glyphicon glyphicon-pencil"></i></a>
+                             		<a  ui-sref="IFMS.deleteBuilding" ng-click="deleteBuilding(x)" tooltip-placement="top" tooltip="Delete Building"><i class="glyphicon glyphicon-trash"></i></a>
+                             		<a  ui-sref="IFMS.addLevel" ng-hide="x.levels.length==x.numFloor" ng-click="addLevel(x)" tooltip-placement="top" tooltip="Add level"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                             		<a  ui-sref="IFMS.viewLevels" ng-hide="x.levels.length==0" ng-click="passBuilding(x)" tooltip-placement="top" tooltip="View Levels"><i class="glyphicon glyphicon-eye-open"></i></a>
                              </td>
                              </tr>
 							
@@ -63,7 +63,7 @@
 		<br>
 		<br>
 		<br>
-		 <a ui-sref="dashboard.addBuilding" tooltip-placement="right" tooltip="Add a building"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
-		<!--  	<a ui-sref="dashboard.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
+		 <a ui-sref="IFMS.addBuilding" tooltip-placement="right" tooltip="Add a building"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
+		<!--  	<a ui-sref="IFMS.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
 		</div>
 	</div>
