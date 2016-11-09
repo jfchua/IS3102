@@ -651,6 +651,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 	}
 	
 	$scope.checkAvail = function(){
+		$scope.avail = "";
 		console.log("start checking availability");
 		$scope.data = {};	
         if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date||$scope.selectedUnits.length == 0 ){
@@ -668,7 +669,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			url     : 'https://localhost:8443/event/checkAvailability',
 			data    : dataObj //forms user object
 		});
-		$scope.avail = "";
+		
 		send.success(function(){
 			$scope.avail = "AVAILABLE!";
 			console.log($scope.avail);
@@ -967,6 +968,7 @@ app.filter('orderObjectBy', function() {
 
 
 app.controller('updateEController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService){
+	$scope.selectedBookingsUnits = {};
 	angular.element(document).ready(function () {
 		//VIEW EVENT
 		$scope.event1 = shareData.getData();
@@ -1127,18 +1129,21 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 	}
 
 	$scope.checkAvail = function(){
+		$scope.avail = "";
 		console.log("start checking availability");
 		$scope.data = {};
 		if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date ||$scope.selectedBookingsUnits.length == 0 ){
-			$scope.available = "";
+			$scope.avail = "";
 		}
 		else{
 		var dataObj = {	
-				id: $scope.event.id,
+				eventId: $scope.event.id,
 				units: $scope.selectedBookingsUnits,
 				event_start_date: ($scope.event.event_start_date).toString(),
 				event_end_date: ($scope.event.event_end_date).toString(),
 		};
+		//console.log($scope.event.id);
+		//console.log($scope.event.event_start_date);
 		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
 		var send = $http({
 			method  : 'POST',
