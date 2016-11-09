@@ -884,6 +884,7 @@ public class EventExternalController {
 	          					.serializeNulls()
 	          					.create();
 	          			for(Payment p: payments){
+	          				if(p.getCheque()!=null){
 	          				JSONObject obj1 = new JSONObject();
 	          				obj1.put("id", p.getId());
 	          				System.out.println("payment id is "+p.getId());
@@ -895,6 +896,7 @@ public class EventExternalController {
 	          				obj1.put("cheque",p.getCheque());
 	          				System.out.println("TOTAL3");
 	          				jArray.add(obj1);
+	          			}
 	          			}
 	          			System.out.println("finishing getting list of payments");
 	          			return new ResponseEntity<String>(jArray.toString(),HttpStatus.OK);			

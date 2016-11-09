@@ -898,12 +898,17 @@ public class EventExternalServiceImpl implements EventExternalService {
 			return null;
 		else{
 			Set<Event> events = user.getEvents();
+			System.err.println("HAHAHAHAHA INSIDE GETPAYMENTS");
 			Set<Payment> payments = new HashSet<Payment>();
 			for(Event e : events){
+				if(e.getPaymentPlan()!=null){
 				PaymentPlan p = e.getPaymentPlan();
 				Set<Payment> pays = p.getPayments();
+				if(!pays.isEmpty()){
 				for(Payment p1 : pays)
 					payments.add(p1);
+				}
+				}
 			}
 			return payments;
 		}
