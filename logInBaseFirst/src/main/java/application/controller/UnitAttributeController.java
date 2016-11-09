@@ -34,6 +34,7 @@ import application.entity.UnitAttributeValue;
 import application.entity.User;
 import application.exception.InvalidPostalCodeException;
 import application.exception.UserNotFoundException;
+import application.repository.AuditLogRepository;
 import application.service.BuildingService;
 import application.service.ClientOrganisationService;
 import application.service.LevelService;
@@ -52,17 +53,19 @@ public class UnitAttributeController {
 	private final BuildingService buildingService;
 	private final LevelService levelService;
 	private final UnitService unitService;
+	private AuditLogRepository auditLogRepository;
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 
 
 	@Autowired
-	public UnitAttributeController( ClientOrganisationService clientOrganisationService,UserService userService, UnitAttributeService unitAttributeService
+	public UnitAttributeController( AuditLogRepository auditLogRepository,ClientOrganisationService clientOrganisationService,UserService userService, UnitAttributeService unitAttributeService
 			,BuildingService buildingService,LevelService levelService,UnitService unitService) {
 		super();
 		
 		this.clientOrganisationService = clientOrganisationService;
 		this.userService = userService;
+		this.auditLogRepository = auditLogRepository;
 		this.unitAttributeService = unitAttributeService;
 		this.buildingService=buildingService;
 		this.levelService=levelService;
@@ -214,6 +217,13 @@ public class UnitAttributeController {
 			return new ResponseEntity<String>(geeson.toJson("Server error in adding attributes"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		System.out.println("CSV WAS SAVED");
+		AuditLog al = new AuditLog();
+		al.setTimeToNow();
+		al.setSystem("Property");
+		al.setAction("Save new CSV");
+		al.setUser(usr.get());
+		al.setUserEmail(usr.get().getEmail());
+		auditLogRepository.save(al);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}	
 

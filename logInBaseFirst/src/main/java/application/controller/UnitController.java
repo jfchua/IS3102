@@ -31,6 +31,7 @@ import com.google.gson.GsonBuilder;
 
 import application.entity.*;
 import application.exception.UserNotFoundException;
+import application.repository.AuditLogRepository;
 import application.service.LevelService;
 import application.service.UnitService;
 import application.service.UserService;
@@ -42,13 +43,15 @@ public class UnitController {
 	private final UnitService unitService;
 	private final LevelService levelService;
 	private final UserService userService;
+	private final AuditLogRepository auditLogRepository;
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 	
 	@Autowired
-	public UnitController(UnitService unitService,LevelService levelService,UserService userService) {
+	public UnitController(AuditLogRepository auditLogRepository, UnitService unitService,LevelService levelService,UserService userService) {
 		this.unitService = unitService;
 		this.levelService=levelService;
+		this.auditLogRepository = auditLogRepository;
 		this.userService=userService;
 	}
 	/*
@@ -229,8 +232,13 @@ public class UnitController {
 	@RequestMapping(value = "/saveUnits", method = RequestMethod.POST)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<Void> saveUnits(@RequestBody String json,HttpServletRequest rq)  {
-
+	public ResponseEntity<Void> saveUnits(@RequestBody String json,HttpServletRequest rq) throws UserNotFoundException  {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
 		try{
 			//GET LEVEL ID AND UNITS
 			Object obj = parser.parse(json);			
@@ -342,11 +350,19 @@ public class UnitController {
 					System.out.println("Test 61 successful: units deleted/updated");
 				}*/
 			System.out.println("Test 7");
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Property");
+			al.setAction("Save Units for level ID: " + levelId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch (Exception e){
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
 		System.out.println("End Save");
+
 		ResponseEntity<Void> v = new ResponseEntity<Void>(HttpStatus.OK);
 		return v;
 	}
@@ -355,9 +371,13 @@ public class UnitController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/deleteUnit", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> deleteUnit(@RequestBody String idObj,HttpServletRequest rq) {
+	public ResponseEntity<String> deleteUnit(@RequestBody String idObj,HttpServletRequest rq) throws UserNotFoundException {
 
-
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		try{
 
 
@@ -374,6 +394,13 @@ public class UnitController {
 			else{
 				if(unitService.deleteUnit(unitId,levelId)){
 					System.out.println("DELETED");
+					AuditLog al = new AuditLog();
+					al.setTimeToNow();
+					al.setSystem("Property");
+					al.setAction("Delete Unit with ID: " + unitId);
+					al.setUser(usr.get());
+					al.setUserEmail(usr.get().getEmail());
+					auditLogRepository.save(al);
 					return new ResponseEntity<String>(HttpStatus.OK);
 				}else{
 					return new ResponseEntity<String>(geeson.toJson("Error in deleting unit"),HttpStatus.CONFLICT);
@@ -390,8 +417,12 @@ public class UnitController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/updateUnit", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> updateUnit(@RequestBody String idObj,HttpServletRequest rq) {
-
+	public ResponseEntity<Void> updateUnit(@RequestBody String idObj,HttpServletRequest rq) throws UserNotFoundException {
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
 		try{
 
@@ -420,6 +451,13 @@ public class UnitController {
 
 			if(unitService.editUnitInfo(unitId,left,top, height,  width,  color, type, unitNumber, col,  row,  sizex, sizey,rentable, description)){
 				System.out.println("EDITED");
+				AuditLog al = new AuditLog();
+				al.setTimeToNow();
+				al.setSystem("Property");
+				al.setAction("Update Unit with ID: " + unitId);
+				al.setUser(usr.get());
+				al.setUserEmail(usr.get().getEmail());
+				auditLogRepository.save(al);
 				return new ResponseEntity<Void>(HttpStatus.OK);
 			}else{
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);

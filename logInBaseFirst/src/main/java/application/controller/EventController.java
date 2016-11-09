@@ -41,6 +41,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import application.entity.Area;
+import application.entity.AuditLog;
 import application.entity.BookingAppl;
 import application.entity.Category;
 import application.entity.ClientOrganisation;
@@ -58,6 +59,7 @@ import application.entity.User;
 import application.enumeration.Subscription;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
+import application.repository.AuditLogRepository;
 import application.service.EventOrganizerService;
 import application.service.EventService;
 import application.service.MessageService;
@@ -71,16 +73,18 @@ public class EventController {
 	private final MessageService messageService;
 	private final EventOrganizerService eventOrganizerService;
 	private final UserService userService;
+	private AuditLogRepository auditLogRepository;
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 
 
 	@Autowired
-	public EventController(EventService eventService, EventOrganizerService eventOrganizerService, 
+	public EventController(AuditLogRepository auditLogRepository, EventService eventService, EventOrganizerService eventOrganizerService, 
 			UserService userService, MessageService messageService) {
 		super();
 		this.eventService = eventService;
 		this.userService = userService;
+		this.auditLogRepository = auditLogRepository;
 		this.eventOrganizerService = eventOrganizerService;
 		this.messageService = messageService;
 	}
@@ -359,6 +363,14 @@ public class EventController {
 			if(!bl){
 				return new ResponseEntity<String>(geeson.toJson("Server error in getting all events"),HttpStatus.INTERNAL_SERVER_ERROR);
 			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Event");
+			al.setAction("Delete Event of ID: " + eventId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
+			
 		}
 		catch ( EventNotFoundException e){
 			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -402,6 +414,13 @@ public class EventController {
 				messageService.sendMessage(eventManager, u, subject, msg);
 			}
 			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Event");
+			al.setAction("Approved Event of ID: " + eventId);
+			al.setUser(eventOrg1.get());
+			al.setUserEmail(eventOrg1.get().getEmail());
+			auditLogRepository.save(al);
 			if(client.getSystemSubscriptions().contains(Subscription.valueOf("TICKETING"))){
 			String subject1 = "Approval of Event";
 			String msg1 = "Event ID " +eventId +" with ticket to be issued is approved.";
@@ -446,6 +465,13 @@ public class EventController {
 			System.out.println(eventId);
 			boolean bl=eventService.updateEventStatusForPayment(client, eventId, status);
 			System.out.println(bl);
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Event");
+			al.setAction("Update Event status of ID: " + eventId + " to " + status);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch ( EventNotFoundException e){
 			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);

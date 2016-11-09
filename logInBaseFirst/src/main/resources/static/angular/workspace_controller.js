@@ -137,38 +137,38 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 	   $scope.getEvents = function(){
 			//var buildings ={name: $scope.name, address: $scope.address};
 			$http.get("//localhost:8443/eventManager/viewAllEvents").then(function(response){
-				$scope.events = response.data;
+				$scope.eventsCalendar = response.data;
 				//console.log("DISPLAY ALL EVENT fir event manager");
 				//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
 				//ADD EVENTS INTO EVENTSOURCES OF CALENDAR
 				
-				if($scope.events.length!=0){
+				if($scope.eventsCalendar.length!=0){
 					var index=0;
-				    angular.forEach($scope.events, function() {
-				    	if($scope.events[index].approvalStatus=="APPROVED" ){
-				         var event=[{start: $scope.events[index].event_start_date,
-				        	 		end: $scope.events[index].event_end_date,			         
-				        		 	title:$scope.events[index].event_title+" (Approved)",
+				    angular.forEach($scope.eventsCalendar, function() {
+				    	if($scope.eventsCalendar[index].approvalStatus=="APPROVED" ){
+				         var event=[{start: $scope.eventsCalendar[index].event_start_date,
+				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
+				        		 	title:$scope.eventsCalendar[index].event_title+" (Approved)",
 				        		 	allDay: false,
 				        		 	color: 'SeaGreen'
 				         			}];
 				         
 				        $scope.eventSources.push(event);
 				        	index = index + 1;
-				    	}else if($scope.events[index].approvalStatus=="SUCCESSFUL"){
-					         var event=[{start: $scope.events[index].event_start_date,
-				        	 		end: $scope.events[index].event_end_date,			         
-				        		 	title:$scope.events[index].event_title+" (Successful)",
+				    	}else if($scope.eventsCalendar[index].approvalStatus=="SUCCESSFUL"){
+					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
+				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
+				        		 	title:$scope.eventsCalendar[index].event_title+" (Successful)",
 				        		 	allDay: false,
 				        		 	color: 'Gold'
 				         			}];
 				         
 				        $scope.eventSources.push(event);
 				        	index = index + 1;
-				    	}else if($scope.events[index].approvalStatus=="PROCESSING"){
-					         var event=[{start: $scope.events[index].event_start_date,
-				        	 		end: $scope.events[index].event_end_date,			         
-				        		 	title:$scope.events[index].event_title+" Processing",
+				    	}else if($scope.eventsCalendar[index].approvalStatus=="PROCESSING"){
+					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
+				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
+				        		 	title:$scope.eventsCalendar[index].event_title+" Processing",
 				        		 	allDay: false,
 				        		 	color: 'LightSkyBlue'
 				         			}];
@@ -225,38 +225,38 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 	   $scope.getExEvents = function(){
 			//var buildings ={name: $scope.name, address: $scope.address};
 			$http.get("//localhost:8443/event/viewAllEvents").then(function(response){
-				$scope.events = response.data;
+				$scope.eventsCalendar = response.data;
 				//console.log("DISPLAY ALL EVENT fir event manager");
 				//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
 				//ADD EVENTS INTO EVENTSOURCES OF CALENDAR
 				
-				if($scope.events.length!=0){
+				if($scope.eventsCalendar.length!=0){
 					var index=0;
-				    angular.forEach($scope.events, function() {
-				    	if($scope.events[index].approvalStatus=="APPROVED" ||$scope.events[index].approvalStatus=="SUCCESSFUL"){
-				         var event=[{start: $scope.events[index].event_start_date,
-				        	 		end: $scope.events[index].event_end_date,			         
-				        		 	title:$scope.events[index].event_title,
+				    angular.forEach($scope.eventsCalendar, function() {
+				    	if($scope.eventsCalendar[index].approvalStatus=="APPROVED" ||$scope.eventsCalendar[index].approvalStatus=="SUCCESSFUL"){
+				         var event=[{start: $scope.eventsCalendar[index].event_start_date,
+				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
+				        		 	title:$scope.eventsCalendar[index].event_title,
 				        		 	allDay: false,
 				        		 	color: 'DarkSeaGreen'
 				         			}];
 				         
 				        $scope.eventSources.push(event);
 				        	index = index + 1;
-				    	}else if($scope.events[index].approvalStatus=="SUCCESSFUL"){
-					         var event=[{start: $scope.events[index].event_start_date,
-				        	 		end: $scope.events[index].event_end_date,			         
-				        		 	title:$scope.events[index].event_title+" (Successful)",
+				    	}else if($scope.eventsCalendar[index].approvalStatus=="SUCCESSFUL"){
+					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
+				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
+				        		 	title:$scope.eventsCalendar[index].event_title+" (Successful)",
 				        		 	allDay: false,
 				        		 	color: 'Gold'
 				         			}];
 				         
 				        $scope.eventSources.push(event);
 				        	index = index + 1;
-				    	}else if($scope.events[index].approvalStatus=="PROCESSING"){
-					         var event=[{start: $scope.events[index].event_start_date,
-				        	 		end: $scope.events[index].event_end_date,			         
-				        		 	title:$scope.events[index].event_title+" Processing",
+				    	}else if($scope.eventsCalendar[index].approvalStatus=="PROCESSING"){
+					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
+				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
+				        		 	title:$scope.eventsCalendar[index].event_title+" Processing",
 				        		 	allDay: false,
 				        		 	color: 'LightSkyBlue'
 				         			}];

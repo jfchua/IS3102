@@ -35,6 +35,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import application.entity.AuditLog;
 import application.entity.BookingAppl;
 import application.entity.Building;
 import application.entity.Category;
@@ -47,6 +48,7 @@ import application.entity.Ticket;
 import application.entity.User;
 import application.exception.EventNotFoundException;
 import application.exception.UserNotFoundException;
+import application.repository.AuditLogRepository;
 import application.repository.BuildingRepository;
 import application.repository.CategoryRepository;
 import application.repository.FeedbackRepository;
@@ -73,11 +75,12 @@ public class TicketingController {
 	private final EmailService emailService;
 	private final CategoryRepository categoryRepository;
 	private final BuildingRepository buildingRepository;
+	private final AuditLogRepository auditLogRepository;
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 
 	@Autowired
-	public TicketingController(EmailService emailService, BuildingRepository buildingRepository, CategoryRepository categoryRepository, FeedbackRepository feedbackRepository,EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
+	public TicketingController(AuditLogRepository auditLogRepository,EmailService emailService, BuildingRepository buildingRepository, CategoryRepository categoryRepository, FeedbackRepository feedbackRepository,EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
 			UserService userService) {
 		super();
 		this.emailService = emailService;
@@ -90,6 +93,7 @@ public class TicketingController {
 		this.feedbackRepository = feedbackRepository;
 		this.eventService = eventService;
 		this.engagementService = engagementService;
+		this.auditLogRepository = auditLogRepository;
 	}
 
 	@PreAuthorize("hasAnyAuthority('ROLE_EXTEVE')")
@@ -135,6 +139,13 @@ public class TicketingController {
 			if ( bl ){
 				return new ResponseEntity<String>(HttpStatus.OK);
 			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Ticketing");
+			al.setAction("Add ticket category " + name + "  for Event ID: " + eventId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch ( EventNotFoundException e){
 			return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -222,6 +233,13 @@ public class TicketingController {
 
 			}
 			ticketingService.deleteCat(id);
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Ticketing");
+			al.setAction("Delete ticket category of ID " + id);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		catch ( Exception e){
@@ -302,7 +320,7 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/tixViewAllEventsFeedback",  method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> tixViewAllEventsFeedback(HttpServletRequest rq) throws UserNotFoundException {
@@ -351,13 +369,13 @@ public class TicketingController {
 			cal.setTime(todayDate);
 			cal.add(Calendar.DATE, -10);
 			Date todayDateBefore = cal.getTime();
-			
+
 			Calendar cal2 = Calendar.getInstance();
 			cal.setTime(todayDate);
 			cal.add(Calendar.DATE, +10);
 			Date todayDateAfter = cal.getTime();
-			
-			
+
+
 			for ( Event t : events){
 				if ( t.getEvent_end_date().before(todayDateBefore) ){
 					toDelete.add(t);
@@ -535,6 +553,7 @@ public class TicketingController {
 				System.err.println("FILEPATH TO ADD IS " + tt);
 			}
 			emailService.sendEmailWithAttachment(usr.get().getEmail(), "Thank you for your purchase ", "Dear Customer, thank you for purchasing tickets. You may find pdf copies of the tickets attached which you may print and bring to the event. Alternatively, you can also use your ticket wallet in the mobile application." , toEmail.toArray(new String[0]));
+
 
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
@@ -821,7 +840,7 @@ public class TicketingController {
 			System.err.println("gotten catid " + catId);
 			String name = (String)jsonObject.get("name");
 			Double price = Double.valueOf((String)jsonObject.get("price"));
-			
+
 			/*if ( pricet instanceof Double){
 				price = (double)pricet;
 			}
@@ -842,8 +861,16 @@ public class TicketingController {
 			System.out.println(bl);
 			if(!bl)
 				return new ResponseEntity<String>(geeson.toJson("Category name existed. Please change to another name."),HttpStatus.INTERNAL_SERVER_ERROR);
-			else;
-			return new ResponseEntity<String>(HttpStatus.OK);
+			else{
+				AuditLog al = new AuditLog();
+				al.setTimeToNow();
+				al.setSystem("Ticketing");
+				al.setAction("Update ticket category of ID " + catId);
+				al.setUser(usr.get());
+				al.setUserEmail(usr.get().getEmail());
+				auditLogRepository.save(al);
+				return new ResponseEntity<String>(HttpStatus.OK);
+			}
 		}
 		catch ( EventNotFoundException e){
 			return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -966,67 +993,67 @@ public class TicketingController {
 		}
 		//return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/tixVerifyAllEvents",  method = RequestMethod.GET)
 	@ResponseBody
 	public String verifyAllEvents(HttpServletRequest rq) throws UserNotFoundException {
-	    System.out.println("start view");
-	    Principal principal = rq.getUserPrincipal();
-	    Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
+		System.out.println("start view");
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> eventOrg1 = userService.getUserByEmail(principal.getName());
 		if ( !eventOrg1.isPresent() ){
 			return "ERROR";//NEED ERROR HANDLING BY RETURNING HTTP ERROR
 		}
 		try{
-		//EventOrganizer eventOrg = eventOrg1.get();	
-		User eventOrg = eventOrg1.get();
-		ClientOrganisation client = eventOrg.getClientOrganisation();
-		System.out.println(eventOrg.getId());
-		Set<Event> events = eventExternalService.getAllEventsByOrg(client, eventOrg);
-		System.out.println("There are " + events.size() + " events under this organizer");
-		
-		//Gson gson = new Gson();
-		//String json = gson.toJson(levels);
-	    //System.out.println("Returning levels with json of : " + json);
-		//return json;
-		
-		Gson gson2 = new GsonBuilder()
-			    .setExclusionStrategies(new ExclusionStrategy() {
-			        public boolean shouldSkipClass(Class<?> clazz) {
-			            return  (clazz == Category.class)|| (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
-			        }
+			//EventOrganizer eventOrg = eventOrg1.get();	
+			User eventOrg = eventOrg1.get();
+			ClientOrganisation client = eventOrg.getClientOrganisation();
+			System.out.println(eventOrg.getId());
+			Set<Event> events = eventExternalService.getAllEventsByOrg(client, eventOrg);
+			System.out.println("There are " + events.size() + " events under this organizer");
 
-			        /**
-			          * Custom field exclusion goes here
-			          */
+			//Gson gson = new Gson();
+			//String json = gson.toJson(levels);
+			//System.out.println("Returning levels with json of : " + json);
+			//return json;
 
-					@Override
-					public boolean shouldSkipField(FieldAttributes f) {
-						//TODO Auto-generated method stub
-						return false;
-								//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
-					}
+			Gson gson2 = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return  (clazz == Category.class)|| (clazz == User.class)||(clazz == BookingAppl.class)||(clazz == PaymentPlan.class);
+						}
 
-			     })
-			    /**
-			      * Use serializeNulls method if you want To serialize null values 
-			      * By default, Gson does not serialize null values
-			      */
-			    .serializeNulls()
-			    .create();			    
-		
-		Date todayDate = new Date();
-		Set<Event> toDelete = new HashSet<>();
+						/**
+						 * Custom field exclusion goes here
+						 */
 
-		for ( Event t : events){
-			if ( t.getEvent_end_date().before(todayDate) ){
-				toDelete.add(t);
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+							//(f.getDeclaringClass() == Level.class && f.getUnits().equals("units"));
+						}
+
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();			    
+
+			Date todayDate = new Date();
+			Set<Event> toDelete = new HashSet<>();
+
+			for ( Event t : events){
+				if ( t.getEvent_end_date().before(todayDate) ){
+					toDelete.add(t);
+				}
 			}
-		}
-		events.removeAll(toDelete);
+			events.removeAll(toDelete);
 
-	    String json = gson2.toJson(events);
-	    System.out.println(json);
-	    return json;
+			String json = gson2.toJson(events);
+			System.out.println(json);
+			return json;
 		}
 		catch (Exception e){
 			return "cannot fetch";

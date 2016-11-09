@@ -44,6 +44,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import application.entity.Area;
+import application.entity.AuditLog;
 import application.entity.BookingAppl;
 import application.entity.Category;
 import application.entity.ClientOrganisation;
@@ -58,6 +59,7 @@ import application.entity.UnitAttributeValue;
 import application.entity.User;
 import application.entity.Vendor;
 import application.exception.UserNotFoundException;
+import application.repository.AuditLogRepository;
 import application.service.MaintenanceService;
 import application.service.UnitService;
 import application.service.UserService;
@@ -74,14 +76,16 @@ public class MaintenanceController {
 	private final UnitService unitService;
 	private final MaintenanceService maintenanceService;
 	private final VendorService vendorService;
+	private AuditLogRepository auditLogRepository;
 	private final UserService userService;
 	private JSONParser parser = new JSONParser();
 
 	@Autowired
-	public MaintenanceController(UnitService unitService, MaintenanceService maintenanceService, 
+	public MaintenanceController(AuditLogRepository auditLogRepository, UnitService unitService, MaintenanceService maintenanceService, 
 			VendorService vendorService, UserService userService) {
 		super();
 		this.unitService = unitService;
+		this.auditLogRepository = auditLogRepository;
 		this.maintenanceService = maintenanceService;
 		this.vendorService = vendorService;
 		this.userService = userService;
@@ -176,6 +180,13 @@ public class MaintenanceController {
 				System.err.println("cannot delete schedule");
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Property");
+			al.setAction("Delete Schedule of ID: " + id);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch (Exception e){
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -399,6 +410,13 @@ public class MaintenanceController {
 				System.out.println("cannot delete maintenance");
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
 			}	
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Property");
+			al.setAction("Delete Maintenance of ID: " + id);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch (Exception e){
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -455,7 +473,14 @@ public class MaintenanceController {
 			if(!bl){
 				System.out.println("cannot update maintenance");
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
-			}			
+			}		
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Property");
+			al.setAction("Update Maintenance of ID: " + id);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 			//else
 			//eventExternalService.updateEventOrganizerWithOnlyEventId(eventId);
 		}
@@ -510,7 +535,14 @@ public class MaintenanceController {
 			if(!bl){
 				System.out.println("cannot add maintenance");
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}			
+			}	
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Property");
+			al.setAction("Add Maintenance for units: " + unitsId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch (Exception e){
 			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());

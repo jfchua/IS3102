@@ -912,7 +912,7 @@ var app = angular.module('app', [ 'ui.router',
                                 		  app.factory('httpAuthInterceptor', function ($q, $location, $injector) {
                                 			  return {
                                 				  'response': function(response) {
-                                					  console.log($location.path());
+                                					  //console.log($location.path());
                                 					  return response;
                                 				  },
                                 				  'responseError': function (response) {
@@ -1531,7 +1531,7 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 //EDIT USER PROFILE
 
 //USER PROFILE CONTROLLER
-app.controller('userProfileController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
+app.controller('userProfileController', ['$scope', '$http','ModalService','$state', function ($scope, $http,ModalService,$state) {
 
 	$scope.question = [
 	                   {question: "What is your Mother\'s Maiden name"},
@@ -1570,13 +1570,13 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 			}).then(function(modal) {
 				modal.element.modal();
 				modal.close.then(function(result) {
-					console.log("OK");
+					//console.log("OK");
 				});
 			});
 			$scope.dismissModal = function(result) {
 				close(result, 200); // close, but give 200ms for bootstrap to animate
 
-				console.log("in dissmiss");
+				//console.log("in dissmiss");
 			};
 		});
 		send.error(function(data){
@@ -3582,6 +3582,22 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 //7. Audit Logs
 //===========================================================================
 app.controller('auditLogController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
+	
+	var subz = sessionStorage.getItem('subscriptions');
+	$scope.IsTicketingSub = function(){
+		//console.log("ISTICKETING: " + (subz.indexOf("TICKETING") > -1));
+		return (subz.indexOf("TICKETING") > -1);
+	}
+
+	$scope.IsFinanceSub = function(){
+		//console.log("ISFINANCE: " + (subz.indexOf("FINANCE") > -1));
+		return (subz.indexOf("FINANCE") > -1);
+	}
+
+	$scope.IsBISub = function(){
+		return (subz.indexOf("BI") > -1);
+	}
+	
 	$scope.submit = function(){
 		//alert("SUCCESS");
 		$scope.data = {};

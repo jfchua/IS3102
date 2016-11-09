@@ -1,47 +1,47 @@
-    <div ng-cloak ng-controller="userProfileController as userProfileCtrl">
-    <div class="clearfix">
-                            <ol class="breadcrumb no-bg no-m-t">
-                                <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-                                <li><a>View Profile</a></li>
-                            </ol>
-    </div>
-    <div class="col-md-9">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Profile	  
-                            <div class="panel-control pull-right">
 
-                                <a class="panelButton"><i class="fa fa-refresh"></i></a>
-                                <a class="panelButton"><i class="fa fa-minus"></i></a>
-                                <a class="panelButton"><i class="fa fa-remove"></i></a>
+<div ng-cloak ng-controller="userProfileController as userProfileCtrl">
+	<div class="clearfix">
+		<ol class="breadcrumb no-bg no-m-t">
+			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
+			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
+			<li><a>View Profile</a></li>
+		</ol>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Profile
+					<div class="panel-control pull-right">
 
-                            </div>
-                        </h3>
-                    </div>
-                    <div class="panel-body" >
-        <h1>Hello, {{data.name}}</h1>
-            <div class="container">
-                <div class="content">
-                    <h1>Your roles are:</h1>
-                    <table>
-                        <tr>
-                        </tr>
-                        <tr ng-repeat="profile in dataRoles | orderBy:'$index'">
-                            <td> <span>
-                                    {{profile.name }}</span></td>
-                        </tr>
-                    </table>
+						<a class="panelButton"><i class="fa fa-refresh"></i></a> <a
+							class="panelButton"><i class="fa fa-minus"></i></a> <a
+							class="panelButton"><i class="fa fa-remove"></i></a>
 
-                </div>
-            </div>
-                    </div>
-    </div>
-            </div>
-            <div class="col-md-3">
-            <br>
-            <br>
-            <br>
-             <a ui-sref="dashboard.editUserProfile" tooltip-placement="right" tooltip="Edit Profile"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-pencil"></i></button></a>  
-              </div>
-        </div>
+					</div>
+				</h3>
+			</div>
+			<div class="panel-body text-center">
+			<img src="{{logo}}"  alt="">
+			<div class="well">		
+				<h3 >Hello, {{data.name}}</h3>
+				
+					<div class="content">
+					<h4 >Welcome to IFMS of <strong>{{clientName}}</strong></h4>
+						<h4 >Your have roles in :</h4>
+						<div ng-repeat="userRole in userRoles" >{{userRole.roleName}}</div>
+
+					</div>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<br> <br> <br> <a ui-sref="dashboard.editUserProfile"
+			tooltip-placement="right" tooltip="Edit Profile"><button
+				type="button" class="btn btn-primary btn-circle btn-lg">
+				<i class="glyphicon glyphicon-pencil"></i>
+			</button></a>
+	</div>
+</div>

@@ -43,6 +43,7 @@ import application.entity.*;
 import application.exception.InvalidFileUploadException;
 import application.exception.InvalidIconException;
 import application.exception.UserNotFoundException;
+import application.repository.AuditLogRepository;
 import application.service.EventExternalService;
 import application.service.EventOrganizerService;
 import application.service.FileUploadCheckingService;
@@ -58,17 +59,19 @@ public class EventExternalController {
 	private final PaymentPlanService paymentPlanService;
 	private final UserService userService;
 	private final UnitService unitService;
+	private AuditLogRepository auditLogRepository;
 	private final EventCreateFormValidator eventCreateFormValidator;
 	private JSONParser parser = new JSONParser();
 	private final FileUploadCheckingService fileService;
 	private Gson geeson= new Gson();
 	
 	@Autowired
-	public EventExternalController(EventExternalService eventService, UserService userService, UnitService unitService,
+	public EventExternalController(AuditLogRepository auditLogRepository, EventExternalService eventService, UserService userService, UnitService unitService,
 			EventCreateFormValidator eventCreateFormValidator, PaymentPlanService paymentPlanService,FileUploadCheckingService fileService) {
 		super();
 		this.eventExternalService = eventService;
 		this.userService = userService;
+		this.auditLogRepository = auditLogRepository;
 		this.eventCreateFormValidator = eventCreateFormValidator;
 	    this.paymentPlanService =paymentPlanService;
 	    this.unitService= unitService;
@@ -130,6 +133,13 @@ public class EventExternalController {
 				return new ResponseEntity<String>(HttpStatus.CONFLICT);
 			}	
 			String eventIdToReturn = Long.toString(event.getId());
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Event");
+			al.setAction("Add Event " + event_title);
+			al.setUser(eventOrg);
+			al.setUserEmail(eventOrg.getEmail());
+			auditLogRepository.save(al);
 			return new ResponseEntity<String>(eventIdToReturn,HttpStatus.OK);	
 		}
 		catch (Exception e){
@@ -656,6 +666,13 @@ public class EventExternalController {
 								System.out.println("cannot delete event");
 								return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
 							}			
+							AuditLog al = new AuditLog();
+							al.setTimeToNow();
+							al.setSystem("Event");
+							al.setAction("Delete Event of ID: " + eventId);
+							al.setUser(eventOrg);
+							al.setUserEmail(eventOrg.getEmail());
+							auditLogRepository.save(al);
 						}
 						catch (Exception e){
 							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -778,8 +795,16 @@ public class EventExternalController {
 								System.out.println("cannot update event");
 								return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
 							}			
-							else
+							else{
 							eventExternalService.updateEventOrganizerWithOnlyEventId(eventId);
+							AuditLog al = new AuditLog();
+							al.setTimeToNow();
+							al.setSystem("Event");
+							al.setAction("Update Event ID: " + eventId);
+							al.setUser(eventOrg);
+							al.setUserEmail(eventOrg.getEmail());
+							auditLogRepository.save(al);
+							}
 						}
 						catch (Exception e){
 							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -810,6 +835,13 @@ public class EventExternalController {
 								System.out.println("REQUEST FAILURE");
 								return new ResponseEntity<Void>(HttpStatus.CONFLICT);	
 							}			
+							AuditLog al = new AuditLog();
+							al.setTimeToNow();
+							al.setSystem("Ticketing");
+							al.setAction("Request Tickets for Event ID: " + eventId);
+							al.setUser(eventOrg);
+							al.setUserEmail(eventOrg.getEmail());
+							auditLogRepository.save(al);
 						}
 						catch (Exception e){
 							return new ResponseEntity<Void>(HttpStatus.CONFLICT);

@@ -52,6 +52,7 @@ import application.entity.*;
 import application.exception.EventNotFoundException;
 import application.exception.InvalidAttachmentException;
 import application.exception.UserNotFoundException;
+import application.repository.AuditLogRepository;
 import application.service.BookingService;
 import application.service.EmailService;
 import application.service.EventExternalService;
@@ -72,6 +73,7 @@ public class PaymentPlanController {
 	private final EventExternalService eventExternalService;
 	private final PaymentPlanService paymentPlanService;
 	private final UserService userService;
+	private AuditLogRepository auditLogRepository;
 	private final EventService eventService;
 	private final MessageService messageService;
 	private final EmailService emailService;
@@ -79,12 +81,13 @@ public class PaymentPlanController {
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 	@Autowired
-	public PaymentPlanController(EventExternalService eventExternalService, PaymentPlanService paymentPlanService,
+	public PaymentPlanController(AuditLogRepository auditLogRepository, EventExternalService eventExternalService, PaymentPlanService paymentPlanService,
 			UserService userService, MessageService messageService, EmailService emailService, EventService eventService) {
 		super();
 		this.eventExternalService = eventExternalService;
 		this.paymentPlanService = paymentPlanService;;
 		this.userService = userService;
+		this.auditLogRepository = auditLogRepository;
 		this.messageService = messageService;
 		this.emailService = emailService;
 		this.eventService = eventService;
@@ -177,6 +180,13 @@ public class PaymentPlanController {
 				emailService.sendEmail(org.getEmail(), subject, msg);
 				messageService.sendMessage(user, org, subject, msg);
 			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Finance");
+			al.setAction("Add payment plan for event of ID: " + eventId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 
 		}
 		catch (Exception e){
@@ -254,8 +264,16 @@ public class PaymentPlanController {
 			//Double subsequent = (Double)jsonObject.get("subsequent");
 			boolean bl = paymentPlanService.updatePaymentPlan(client, user, paymentId, depositRate, subseNumber);
 			System.out.println("success or not?" + bl);
-			if(!bl)
+			if(!bl){
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Finance");
+			al.setAction("Update payment plan for ID: " + paymentId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch (Exception e){
 			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
@@ -586,8 +604,16 @@ public class PaymentPlanController {
 			//Double subsequent = (Double)jsonObject.get("subsequent");
 			boolean bl = paymentPlanService.updateAmountPaidByOrg(client, user, paymentId, cheque, amount, nextInvoice);
 			System.out.println("success or not?" + bl);
-			if(!bl)
+			if(!bl){
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Finance");
+			al.setAction("Update received payment for ID: " + paymentId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch (Exception e){
 			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
@@ -778,8 +804,16 @@ public class PaymentPlanController {
 			//Double subsequent = (Double)jsonObject.get("subsequent");
 			boolean bl = paymentPlanService.updateOutgoingPayment(client, user, paymentId, amount, cheque);
 			System.out.println("success or not?" + bl);
-			if(!bl)
+			if(!bl){
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Finance");
+			al.setAction("Update outgoing payment for ID: " + paymentId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch (Exception e){
 			System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
