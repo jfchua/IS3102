@@ -1,10 +1,12 @@
-app.controller('eventController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService) {
+app.controller('eventController', ['$scope', '$http','$state','$routeParams','shareData','ModalService','$filter', function ($scope, $http,$state, $routeParams, shareData,ModalService,$filter) {
 	$scope.eventFilter={
 			event:{
 				approvalStatus:"SUCCESSFUL"
 			}
 	};
 	angular.element(document).ready(function () {
+		console.log("test succes");
+		console.log($scope.events);
 		$scope.data = {};
 
 		//var buildings ={name: $scope.name, address: $scope.address};
@@ -12,16 +14,117 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 			$scope.events = response.data;
 			$scope.order_item = "id";
 			$scope.order_reverse = false;
+			console.log($scope.events);
 			console.log("DISPLAY ALL EVENT fir event manager");
-			//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
-
+			
+			$scope.currentPage = 1;
+			var eventsSorted
+			//SORT EVENTS BY ID
+			var order = function () {
+				eventsSorted = $filter('orderBy')($scope.events, 'id');
+			}
+			order();
+			//SET PAGINATION TO BE 10 PER PAGE
+			$scope.changePage=function(currentPage){
+				var begin = (($scope.currentPage - 1) * 10)
+				var  end = begin + 10;
+				$scope.displayEvents= eventsSorted.slice(begin, end);
+			}
+			$scope.changePage(1);
+			
+			$scope.eventsS=[];
+			$scope.eventsC=[];
+			$scope.eventsA=[];
+			$scope.eventsP=[];
+			//GET SUCCESS EVENTS
+			 angular.forEach($scope.events, function(event){   
+					if(event.approvalStatus==="SUCCESSFUL")
+					 $scope.eventsS.push(event);
+					else if(event.approvalStatus==="CANCELLED")
+						$scope.eventsC.push(event);
+					else if(event.approvalStatus==="APPROVED")
+						$scope.eventsA.push(event);
+					else if(event.approvalStatus==="PROCESSING")
+						$scope.eventsP.push(event);
+					else
+						console.log("EVENT "+event.event_title+" HAS UNKNOWN STATUS" );
+				})
+				
+				
+			//SET PAGE FOR SUCCESS EVENTS
+				$scope.currentPageSuccess = 1;
+				var eventsSortedS
+				//SORT EVENTS BY ID
+				order = function () {
+					eventsSortedS = $filter('orderBy')($scope.eventsS, 'id');
+				}
+				order();
+				//SET PAGINATION TO BE 10 PER PAGE
+				$scope.changePageSuccess=function(currentPageS){
+					var begin = ((currentPageS - 1) * 10)
+					var  end = begin + 10;
+					$scope.eventsSuccess= eventsSortedS.slice(begin, end);
+				}
+				$scope.changePageSuccess(1);
+				
+				
+			//SET PAGE FOR CANCELLED EVENTS
+				$scope.currentPageCancel = 1;
+				var eventsSortedC
+				//SORT EVENTS BY ID
+				order = function () {
+					eventsSortedC = $filter('orderBy')($scope.eventsC, 'id');
+				}
+				order();
+				//SET PAGINATION TO BE 10 PER PAGE
+				$scope.changePageCancel=function(currentPageC){
+					var begin = ((currentPageC - 1) * 10)
+					var  end = begin + 10;
+					$scope.eventsCancelled= eventsSortedC.slice(begin, end);
+				}
+				$scope.changePageCancel(1);
+				
+				
+				
+			//SET PAGE FOR APPROVED EVENTS
+				$scope.currentPageApproved = 1;
+				var eventsSortedA
+				//SORT EVENTS BY ID
+				order = function () {
+					eventsSortedA = $filter('orderBy')($scope.eventsA, 'id');
+				}
+				order();
+				//SET PAGINATION TO BE 10 PER PAGE
+				$scope.changePageApproved=function(currentPageA){
+					var begin = ((currentPageA - 1) * 10)
+					var  end = begin + 10;
+					$scope.eventsApproved= eventsSortedA.slice(begin, end);
+				}
+				$scope.changePageApproved(1);
+				
+				//SET PAGE FOR PROCESSING EVENTS
+				$scope.currentPageProcess = 1;
+				var eventsSortedP
+				//SORT EVENTS BY ID
+				order = function () {
+					eventsSortedP = $filter('orderBy')($scope.eventsP, 'id');
+				}
+				order();
+				//SET PAGINATION TO BE 10 PER PAGE
+				$scope.changePageProcess=function(currentPageP){
+					var begin = ((currentPageP - 1) * 10)
+					var  end = begin + 10;
+					$scope.eventsProcess= eventsSortedP.slice(begin, end);
+				}
+				$scope.changePageProcess(1);
 		},function(response){
 			console.log(response);
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
-
+		
 	});
+	
 
 
 	$scope.viewEvents = function(){
@@ -303,7 +406,7 @@ app.controller('successfulEventController', ['$scope', '$http','$state','$routeP
 			$scope.events = response.data;
 			console.log("DISPLAY ALL EVENT fir event manager");
 			//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
-
+			
 		},function(response){
 			console.log(response);
 			//console.log("response is : ")+JSON.stringify(response);
@@ -426,13 +529,27 @@ app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareDat
 }])
 
 //VIEW APPROVED EVENTS
-app.controller('viewApprovedEventController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService',function ($scope, $http,$state, $routeParams, shareData,ModalService) {
+app.controller('viewApprovedEventController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService','$filter',function ($scope, $http,$state, $routeParams, shareData,ModalService,$filter) {
 	angular.element(document).ready(function () {
 		$scope.data = {};
 		$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
 			$scope.events = response.data;
 			console.log("DISPLAY ALL EVENT");
 			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
+			$scope.currentPage = 1;
+			var eventsSorted
+			//SORT EVENTS BY ID
+			$scope.order = function () {
+				eventsSorted = $filter('orderBy')($scope.events, 'id');
+			}
+			$scope.order();
+			//SET PAGINATION TO BE 10 PER PAGE
+			$scope.changePage=function(currentPage){
+				var begin = (($scope.currentPage - 1) * 10)
+				var  end = begin + 10;
+				$scope.displayEvents= eventsSorted.slice(begin, end);
+			}
+			$scope.changePage(1);
 		},function(response){
 			console.log("did not view approved events");
 			//console.log("response is : ")+JSON.stringify(response);
