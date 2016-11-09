@@ -21,6 +21,11 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		}	
 		)
 
+		$scope.IsFinanceSub = function(){
+			var subz = sessionStorage.getItem('subscriptions');
+			return (subz.indexOf("FINANCE") > -1);
+		}
+
 		$scope.checkDateBefore = function (dateString) {
 		    var daysAgo = new Date();
 		    //console.log("***");
@@ -267,7 +272,11 @@ app.controller('viewApprovedEventsExController', ['$scope', '$http','$state','$r
 
 	});
 
-
+	$scope.IsFinanceSub = function(){
+		var subz = sessionStorage.getItem('subscriptions');
+		return (subz.indexOf("FINANCE") > -1);
+	}
+	
 	$scope.getEvent = function(event){	
 
 		shareData.addData(event);
@@ -369,7 +378,10 @@ app.controller('viewToBeApprovedEventsExController', ['$scope', '$http','$state'
 
 	});
 
-
+	$scope.IsFinanceSub = function(){
+		var subz = sessionStorage.getItem('subscriptions');
+		return (subz.indexOf("FINANCE") > -1);
+	}
 	$scope.getEvent = function(event){	
 
 		shareData.addData(event);
@@ -1493,8 +1505,7 @@ app.controller('paymentHistoryExController', ['$scope', '$http','$state','$route
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		//$scope.org = shareData.getData();
-		$scope.order_item = "id";
-		$scope.order_reverse = false;
+		
 		$scope.url = "https://localhost:8443/event/getPaymentHistory/";
 		console.log("GETTING THE PAYMENT HISTORY");
 		var getPayments = $http({
@@ -1508,9 +1519,11 @@ app.controller('paymentHistoryExController', ['$scope', '$http','$state','$route
 			console.log(JSON.stringify(response));
 			console.log(response);
 			$scope.payments = response;
+			$scope.order_item = "id";
+			$scope.order_reverse = false;
 		});
 		getPayments.error(function(response){
-			$state.go("dashboard.viewPaymentPlansEx");
+			//$state.go("dashboard.viewPaymentPlansEx");
 			console.log('GET PAYMENTS FAILED! ');
 		});
 	});

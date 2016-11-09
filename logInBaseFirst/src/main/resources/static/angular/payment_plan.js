@@ -1,5 +1,5 @@
 //VIEW VENDOR, ADD VENDOR
-app.controller('paymentController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('paymentController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService', function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$scope.order_item = "id";
@@ -217,7 +217,7 @@ app.filter('orderObjectBy', function() {
 	});
 
 
-app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$http.get("//localhost:8443/payment/viewApprovedEvents").then(function(response){
@@ -369,7 +369,7 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 
 
 
-app.controller('updatePaymentController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('updatePaymentController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.plan1 = shareData.getData();	
 		console.log("$scope.policy1");
@@ -509,7 +509,7 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 
 }]);
 
-app.controller('balanceController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('balanceController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$scope.order_item = "id";
@@ -529,7 +529,7 @@ app.controller('balanceController', ['$scope', '$http','$state','$routeParams','
 }]);
 
 
-app.controller('eventListController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('eventListController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$scope.org = shareData.getData();
@@ -557,7 +557,7 @@ app.controller('eventListController', ['$scope', '$http','$state','$routeParams'
 	});
 }]);
 
-app.controller('receivedPController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('receivedPController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService',function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$scope.org = shareData.getData();
@@ -718,7 +718,7 @@ app.controller('receivedPController', ['$scope', '$http','$state','$routeParams'
 	}
 }]);
 
-app.controller('eventWithTicketController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('eventWithTicketController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService', function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$scope.order_item = "id";
@@ -737,7 +737,7 @@ app.controller('eventWithTicketController', ['$scope', '$http','$state','$routeP
 }]);
 
 
-app.controller('ticketRController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('ticketRController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService', function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	$scope.payment={};
 	angular.element(document).ready(function () {
 		$scope.data = {};	
@@ -851,7 +851,7 @@ app.controller('ticketRController', ['$scope', '$http','$state','$routeParams','
 	
 }]);
 
-app.controller('outgoingController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('outgoingController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	$scope.payment={};
 	$scope.amountToBePaid={};
 	angular.element(document).ready(function () {
@@ -968,7 +968,7 @@ app.controller('outgoingController', ['$scope', '$http','$state','$routeParams',
 }]);
 
 
-app.controller('paymentHistoryController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('paymentHistoryController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService', function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$scope.org = shareData.getData();
@@ -996,7 +996,7 @@ app.controller('paymentHistoryController', ['$scope', '$http','$state','$routePa
 }]);
 
 
-app.controller('policyController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('policyController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService', function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$http.get("//localhost:8443/policy/viewPaymentPolicy").then(function(response){
@@ -1229,7 +1229,7 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 
 }]);	
 
-app.controller('updatePolicyController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+app.controller('updatePolicyController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService', function ($scope, $http,$state, $routeParams, shareData, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.policy1 = shareData.getData();	
 		//console.log("$scope.policy1");
@@ -1371,7 +1371,7 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 }]);
 
 
-app.controller('invoiceController', ['$scope', '$http', function ($scope, $http) {
+app.controller('invoiceController', ['$scope', '$http', 'ModalService', function ($scope, $http, ModalService) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$http.get("//localhost:8443/payment/viewAllPaymentPlans").then(function(response){

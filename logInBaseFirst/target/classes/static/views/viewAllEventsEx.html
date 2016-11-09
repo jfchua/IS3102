@@ -30,8 +30,8 @@
 							<th><i></i> Event Title</th>
 							<th><i></i> Start Date</th>
 							<th><i></i> End Date</th>
-							<th><i></i> Status</th>
-
+							<th><i></i> Approval Status </th>
+                           <th ng-show = "IsFinanceSub()"><i></i> Payment Status </th>
 							<th>Action</th>
 
 						</tr>
@@ -45,6 +45,8 @@
 							<td>{{ x.event_start_date }}</td>
 							<td>{{ x.event_end_date }}</td>
 							<td>{{ x.approvalStatus }}</td>
+					        <td ng-show = "IsFinanceSub()">{{ x.paymentStatus }}</td>
+							
 							<td><div ng-show="checkStatus(x)">
 									<a ng-hide="checkDateBefore(x.event_start_date)||x.hasTicket"
 										ui-sref="dashboard.updateEventEx" ng-click="passEvent(x)"
@@ -117,8 +119,8 @@
 							<th><i></i> Event Title</th>
 							<th><i></i> Start Date</th>
 							<th><i></i> End Date</th>
-							<th><i></i> Status</th>
-
+							<th><i></i> Approval Status </th>
+                           <th ng-show = "IsFinanceSub()"><i></i> Payment Status </th>
 							<th>Action</th>
 
 						</tr>
@@ -132,6 +134,8 @@
 							<td>{{ x.event_start_date }}</td>
 							<td>{{ x.event_end_date }}</td>
 							<td>{{ x.approvalStatus }}</td>
+							<td ng-show = "IsFinanceSub()">{{ x.paymentStatus }}</td>
+							
 							<td><div ng-show="checkStatus(x)">
 									<a ng-hide="checkDateBefore(x.event_start_date)||x.hasTicket"
 										ui-sref="dashboard.updateEventEx" ng-click="passEvent(x)"
@@ -197,8 +201,8 @@
 							<th><i></i> Event Title</th>
 							<th><i></i> Start Date</th>
 							<th><i></i> End Date</th>
-							<th><i></i> Status</th>
-
+							<th><i></i> Approval Status </th>
+                           <th ng-show = "IsFinanceSub()"><i></i> Payment Status </th>
 							<th>Action</th>
 
 						</tr>
@@ -212,6 +216,8 @@
 							<td>{{ x.event_start_date }}</td>
 							<td>{{ x.event_end_date }}</td>
 							<td>{{ x.approvalStatus }}</td>
+							<td ng-show = "IsFinanceSub()">{{ x.paymentStatus }}</td>
+							
 							<td><div ng-show="checkStatus(x)">
 									<a ng-hide="checkDateBefore(x.event_start_date)||x.hasTicket"
 										ui-sref="dashboard.updateEventEx" ng-click="passEvent(x)"
