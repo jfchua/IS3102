@@ -317,7 +317,7 @@ app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','
 
 
 //UPLOAD CSV
-app.controller('csvController', function ($scope, $http,shareData,ModalService) {
+app.controller('csvController', function ($scope, $http,shareData,ModalService,$state) {
 
 	angular.element(document).ready(function () {
 
@@ -343,7 +343,7 @@ app.controller('csvController', function ($scope, $http,shareData,ModalService) 
 	$scope.attributeTypes=[];
 	$scope.updatedView=false;
 	$scope.csvCallback = function (result) {
-		console.log($scope.csv.result);
+		//console.log($scope.csv.result);
 		$scope.datas=$scope.csv.result;
 		var contentString=$scope.csv.content;
 		var contentStrings=contentString.split('\n');
@@ -396,6 +396,7 @@ app.controller('csvController', function ($scope, $http,shareData,ModalService) 
 			$scope.datas=[];
 			$scope.attributeTypes=[];
 			$scope.updatedView=false;
+			$state.reload();
 			
 		},function(response){
 			console.log(response);
@@ -421,6 +422,8 @@ app.controller('csvController', function ($scope, $http,shareData,ModalService) 
 			$scope.datas=[];
 			$scope.attributeTypes=[];
 			$scope.updatedView=false;
+			$state.reload();
+			
 		})
 	}
 	$scope.csv = {
