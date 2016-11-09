@@ -4,21 +4,21 @@
 		
 			<li ng-show="IsUser()" ng-controller="AccountController"
 						class="active">
-				<a  ui-sref="dashboard.workspace">
+				<a  ui-sref="IFMS.workspace">
 				<span class="glyphicon glyphicon-dashboard"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
-					<li><a  ui-sref="dashboard.workspace">{{ 'Workspace' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.workspace">{{ 'Workspace' | translate }}</a></li>
 				</ul>
 			</li>
 			
 			<li  ng-show="IsUser()" ng-controller="AccountController" class="active">
-			<a ui-sref="dashboard.new">
+			<a ui-sref="IFMS.new">
 					<span class="glyphicon glyphicon-send"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Notification' | translate }}</li>
-					<li><a  ui-sref="dashboard.new">{{ 'Send a Notification' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.new">{{ 'Send a Notification' | translate }}</a></li>
 				</ul>
             </li>
             
@@ -26,149 +26,149 @@
             
 			<li ng-show="IsProperty()" ng-controller="AccountController"
 						class="active">
-				<a ui-sref="dashboard.viewBuilding">
+				<a ui-sref="IFMS.viewBuilding">
 					<span class="fa fa-building-o"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Property' | translate }}</li>
-					<li><a  ui-sref="dashboard.viewBuilding">{{ 'Building' | translate }}</a></li>
-					<li><a  ui-sref="dashboard.uploadCSV">{{ 'CSV' | translate }}</a></li>
-					<li><a  ui-sref="dashboard.viewIcon">{{ 'Icon' | translate }}</a></li>
-					<li><a ng-show="IsFinanceSub()"  ui-sref="dashboard.updateRent">{{ 'Rent' | translate }}</a></li>
-					<li><a ng-show="IsFinanceSub()"  ui-sref="dashboard.viewAllRates">{{ 'Special Rate' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewBuilding">{{ 'Building' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.uploadCSV">{{ 'CSV' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewIcon">{{ 'Icon' | translate }}</a></li>
+					<li><a ng-show="IsFinanceSub()"  ui-sref="IFMS.updateRent">{{ 'Rent' | translate }}</a></li>
+					<li><a ng-show="IsFinanceSub()"  ui-sref="IFMS.viewAllRates">{{ 'Special Rate' | translate }}</a></li>
 				</ul>
 			</li>
 			
         <li ng-show="IsProperty()" ng-controller="AccountController" class="active">
-			<a ui-sref="dashboard.viewAllVendors">
+			<a ui-sref="IFMS.viewAllVendors">
 					<span class="fa fa-wrench"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Vendor' | translate }}</li>
-					<li><a  ui-sref="dashboard.viewAllVendors">{{ 'View Vendors' | translate }}</a></li>
-					<li><a  ui-sref="dashboard.addVendor">{{ 'Add a Vendor' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewAllVendors">{{ 'View Vendors' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.addVendor">{{ 'Add a Vendor' | translate }}</a></li>
 				</ul>
             </li>
           <li ng-show="IsProperty()" ng-controller="AccountController" class="active">
-			<a ui-sref="dashboard.viewMaintenance">
+			<a ui-sref="IFMS.viewMaintenance">
 					<span class="fa fa-table"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Maintenance' | translate }}</li>
-					<li><a  ui-sref="dashboard.viewMaintenance">{{ 'View Maintenance' | translate }}</a></li>
-					<li><a  ui-sref="dashboard.addMaintenance">{{ 'Add a Maintenance' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewMaintenance">{{ 'View Maintenance' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.addMaintenance">{{ 'Add a Maintenance' | translate }}</a></li>
 				</ul>
             </li>
             
 			
 			<li ng-show="IsEvent()" ng-controller="AccountController"
 						class="active">
-				<a ui-sref="dashboard.viewAllEvents">
+				<a ui-sref="IFMS.viewAllEvents">
 					<span class="glyphicon glyphicon-calendar"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Manage Event' | translate }}</li>
-					<li><a  ui-sref="dashboard.viewAllEvents">{{ 'Event' | translate }}</a></li>
-					<li><a  ui-sref="dashboard.viewEventOrganizers">{{ 'Event Organisers' | translate }}</a></li>
-					<li><a ng-show="IsTicketingSub()" ui-sref="dashboard.viewTicketSales">{{ 'Ticket Sales' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewAllEvents">{{ 'Event' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewEventOrganizers">{{ 'Event Organisers' | translate }}</a></li>
+					<li><a ng-show="IsTicketingSub()" ui-sref="IFMS.viewTicketSales">{{ 'Ticket Sales' | translate }}</a></li>
 					</ul>
 			</li>
 			
 			
 			
 			<li  ng-show="IsExtEve()" ng-controller="AccountController" class="active">
-			<a ui-sref="dashboard.viewAllEventsEx">
+			<a ui-sref="IFMS.viewAllEventsEx">
 					<span class="glyphicon glyphicon-certificate"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Event' | translate }}</li>
-					<li><a  ui-sref="dashboard.viewAllEventsEx">{{ 'View Events' | translate }}</a></li>
-					<li><a  ui-sref="dashboard.addEventEx">{{ 'Add a Event' | translate }}</a></li>
-					<li><a  ui-sref="dashboard.feedbackEx">{{ 'View Event Feedback' | translate }}</a></li>
-					<li><a ng-show="IsFinanceSub()" ui-sref="dashboard.viewPaymentPlansEx">{{ 'View Payment Plans' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewAllEventsEx">{{ 'View Events' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.addEventEx">{{ 'Add a Event' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.feedbackEx">{{ 'View Event Feedback' | translate }}</a></li>
+					<li><a ng-show="IsFinanceSub()" ui-sref="IFMS.viewPaymentPlansEx">{{ 'View Payment Plans' | translate }}</a></li>
 				</ul>
             </li>
             
             <li  ng-show="IsExtEve()" ng-controller="AccountController" class="active">
-			<a ui-sref="dashboard.viewBuildingEx">
+			<a ui-sref="IFMS.viewBuildingEx">
 					<span class="fa fa-building"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Property Details' | translate }}</li>
-					<li><a  ui-sref="dashboard.viewBuildingEx">View Property of {{clientName}}</a></li>
+					<li><a  ui-sref="IFMS.viewBuildingEx">View Property of {{clientName}}</a></li>
 				</ul>
             </li>
 			
 			<li ng-show="IsAdmin()" ng-controller="AccountController" class="active">
-				<a ui-sref="dashboard.createNewUser">
+				<a ui-sref="IFMS.createNewUser">
 					<span class="fa fa-users"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Users' | translate }}</li>
-					<li><a ui-sref="dashboard.createNewUser">{{ 'Add New User' | translate }}</a></li>
-					<li><a ui-sref="dashboard.viewUserList">{{ 'View All Users' | translate }}</a></li>
+					<li><a ui-sref="IFMS.createNewUser">{{ 'Add New User' | translate }}</a></li>
+					<li><a ui-sref="IFMS.viewUserList">{{ 'View All Users' | translate }}</a></li>
 				</ul>
 			</li>
 			
         	<li ng-show="IsAdmin()" ng-controller="AccountController" class="active">
-				<a ui-sref="dashboard.viewAuditLog">
+				<a ui-sref="IFMS.viewAuditLog">
 					<span class="glyphicon glyphicon-save-file"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Audit Log' | translate }}</li>
-					<li><a ui-sref="dashboard.viewAuditLog">{{ 'View Audit Log' | translate }}</a></li>
+					<li><a ui-sref="IFMS.viewAuditLog">{{ 'View Audit Log' | translate }}</a></li>
 				</ul>
 			</li>
 			
 			<li ng-show="IsAdmin()" ng-controller="AccountController" class="active">
-				<a ui-sref="dashboard.uploadCompanyLogo">
+				<a ui-sref="IFMS.uploadCompanyLogo">
 					<span class="glyphicon glyphicon-picture"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Customisation' | translate }}</li>
-					<li><a ui-sref="dashboard.uploadCompanyLogo">{{ 'Upload Logo' | translate }}</a></li>
-					<li><a ui-sref="dashboard.uploadCompanyLogo">{{ 'Change Theme Colour' | translate }}</a></li>
+					<li><a ui-sref="IFMS.uploadCompanyLogo">{{ 'Upload Logo' | translate }}</a></li>
+					<li><a ui-sref="IFMS.uploadCompanyLogo">{{ 'Change Theme Colour' | translate }}</a></li>
 				</ul>
 			</li>
 			
 			
 			
 			 <li ng-show="IsSuperAdmin()" ng-controller="AccountController" class="active">
-				<a ui-sref="dashboard.viewClientOrgs">
+				<a ui-sref="IFMS.viewClientOrgs">
 					<span class="fa fa-institution"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Client Organisation' | translate }}</li>
-					<li><a  ui-sref="dashboard.viewClientOrgs">{{ 'View All Client Organisations' | translate }}</a></li>
-                    <li><a  ui-sref="dashboard.addClientOrg">{{ 'Add a Client Organisation' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewClientOrgs">{{ 'View All Client Organisations' | translate }}</a></li>
+                    <li><a  ui-sref="IFMS.addClientOrg">{{ 'Add a Client Organisation' | translate }}</a></li>
 				</ul>
             </li>
 			
 			
 		<li  ng-show="IsFinance() && IsFinanceSub()" ng-controller="AccountController" class="active">
-			<a ui-sref="dashboard.viewAllPaymentPlans">
+			<a ui-sref="IFMS.viewAllPaymentPlans">
 					<span class="glyphicon glyphicon-piggy-bank"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Payment' | translate }}</li>
-					<li><a  ui-sref="dashboard.viewAllPaymentPlans">{{ 'View Payment Plans' | translate }}</a></li>
-					<li><a  ui-sref="dashboard.viewPaymentPolicy">{{ 'View Payment Policy' | translate }}</a></li>
-					<li><a ui-sref="dashboard.viewAllOutstandingBalance">{{ 'View Outstanding Balance' | translate }}</a></li>
-					<li><a ngshow="IsTicketingSub()"  ui-sref="dashboard.viewEventsWithTicketSales">{{ 'View Events With Ticket Sales' | translate }}</a></li>
-					<li><a  ui-sref="dashboard.generateInvoice">{{ 'Generate Invoice (Ad Hoc)' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewAllPaymentPlans">{{ 'View Payment Plans' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewPaymentPolicy">{{ 'View Payment Policy' | translate }}</a></li>
+					<li><a ui-sref="IFMS.viewAllOutstandingBalance">{{ 'View Outstanding Balance' | translate }}</a></li>
+					<li><a ngshow="IsTicketingSub()"  ui-sref="IFMS.viewEventsWithTicketSales">{{ 'View Events With Ticket Sales' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.generateInvoice">{{ 'Generate Invoice (Ad Hoc)' | translate }}</a></li>
 				</ul>
             </li>
 			
 			
 				
 		<li  ng-show="IsManager() && IsBISub()" ng-controller="AccountController" class="active">
-			<a ui-sref="dashboard.viewDataVisual">
+			<a ui-sref="IFMS.viewDataVisual">
 					<span class="fa fa-bar-chart-o"></span>
 				</a>
 				<ul class="nested-dropdown animated fadeIn">
 					<li class="sidemenu-header">{{ 'Data Visualisation' | translate }}</li>
-					<li><a  ui-sref="dashboard.viewDataVisual">{{ 'View Event Data' | translate }}</a></li>
-					<li><a  ui-sref="dashboard.viewDataVisual">{{ 'View Property Data' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewDataVisual">{{ 'View Event Data' | translate }}</a></li>
+					<li><a  ui-sref="IFMS.viewDataVisual">{{ 'View Property Data' | translate }}</a></li>
 				</ul>
             </li>
 		</ul>
