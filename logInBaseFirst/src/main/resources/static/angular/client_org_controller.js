@@ -600,11 +600,13 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state', 'Modal
 
 	$scope.delete = function(index){
 		$scope.entity = $scope.Profiles[index];
+		//console.log($scope.entity);
+		//console.log("hahaha");
 		ModalService.showModal({
 			templateUrl: "views/yesno.html",
 			controller: "YesNoController",
 			inputs: {
-				message: 'Do you wish to delete client organisation '+$scope.entity.organisation_name+' ?',
+				message: 'Do you wish to delete client organisation '+$scope.entity.organisationName+' ?',
 			}
 		}).then(function(modal) {
 			modal.element.modal();
