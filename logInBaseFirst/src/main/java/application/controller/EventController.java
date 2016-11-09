@@ -486,7 +486,7 @@ public class EventController {
 					.setExclusionStrategies(new ExclusionStrategy() {
 						public boolean shouldSkipClass(Class<?> clazz) {
 							return (clazz==Event.class)||(clazz==Role.class)||(clazz==ToDoTask.class)||(clazz==Message.class)
-									||(clazz==ClientOrganisation.class);
+									||(clazz==ClientOrganisation.class)||(clazz==Ticket.class);
 						}
 
 						/**

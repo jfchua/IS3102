@@ -123,6 +123,10 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 		
 	});
 	
+	$scope.IsFinanceSub = function(){
+		var subz = sessionStorage.getItem('subscriptions');
+		return (subz.indexOf("FINANCE") > -1);
+	}
 
 
 	$scope.viewEvents = function(){
