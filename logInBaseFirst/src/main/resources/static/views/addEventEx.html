@@ -28,13 +28,13 @@
 					<div class="form-group">
 						<label for="exampleInput">Event Start Date</label> <input
 							type="datetime-local" ng-model="event.event_start_date"
-							ng-change='checkDateErr(event.event_start_date,event.event_end_date)'
+							ng-change='checkDateErr(event.event_start_date,event.event_end_date); checkAvail(); checkRent()'
 							class="form-control underline" placeholder="Enter start date">
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">Event End Date</label> <input
 							type="datetime-local" ng-model="event.event_end_date"
-							ng-change='checkDateErr(event.event_start_date,event.event_end_date)'
+							ng-change='checkDateErr(event.event_start_date,event.event_end_date); checkAvail(); checkRent()'
 							class="form-control underline" placeholder="Enter end date">
 					</div>
 					<div class="form-group">

@@ -38,7 +38,7 @@
 							<ul class="list-group" name="units">
 								<li ng-repeat="selectedBookingsUnit in selectedBookingsUnits"
 									class="list-group-item" style="display: inline;">{{selectedBookingsUnit.unitNumber}}
-									<button ng-click="deleteBookingUnit(selectedBookingsUnit); checkRent()">
+									<button ng-click="deleteBookingUnit(selectedBookingsUnit); checkRent(); checkAvail()">
 										<i class="glyphicon glyphicon-trash"></i>
 									</button>
 								</li>
@@ -115,11 +115,13 @@
 					<div class="form-group">
 						<label for="exampleInput">Event Start Date</label> <input
 							type="datetime-local" ng-model="event.event_start_date"
+							ng-change='checkDateErr(event.event_start_date,event.event_end_date); checkAvail(); checkRent()'
 							class="form-control" placeholder="Enter start date">
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">Event End Date</label> <input
 							type="datetime-local" ng-model="event.event_end_date"
+							ng-change='checkDateErr(event.event_start_date,event.event_end_date); checkAvail(); checkRent()'
 							class="form-control" placeholder="Enter end date">
 					</div>
 					<div>

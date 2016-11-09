@@ -976,6 +976,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 		//cal1.setTime(start);
 		Calendar calRef = Calendar.getInstance();
 		calRef.setTime(start);
+		
 		cal1.add(Calendar.DAY_OF_MONTH, 1);
 		while(k < units.length){	
 			System.err.println("**for**");
@@ -995,10 +996,21 @@ public class EventExternalServiceImpl implements EventExternalService {
 				Double base = (unitRepository.getUnitById(Long.valueOf(units[k]))).get().getRent();			
 				String rate = String.valueOf(checkRate(client, calRef.getTime()));
 				if(!setA.isEmpty()){
-					for(String[] s : setA){		
-						//System.err.println("rate "+ rate);
-						//System.err.println("inside s rate"+ s[2]);
-						if (!s[2].equals(rate)){
+					int check = -1;			
+					for(String[] s : setA){
+						if(s[2].equals(rate)&&s[0].equals(units[k])){
+							System.out.println("Duplicates in if");
+							Double orgDuration = Double.valueOf(s[3]);
+							s[3] = String.valueOf(orgDuration+duration1);
+							Double total = Double.valueOf(s[4]);
+							s[4] = String.valueOf(total+duration1 * base * checkRate(client, cal.getTime()));
+							System.err.println("size of setA" + setA.size());
+							check = 0;
+							break;	
+					}							
+					}
+						System.err.println("*****");
+						if (check == -1){
 							System.out.println("NO duplicates in if");
 							str[0] = units[k];
 							str[1] = String.valueOf(base);
@@ -1007,19 +1019,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 							str[4] = String.valueOf(duration1 * base * checkRate(client, cal.getTime()));
 							setA.add(str);
 							System.err.println("size of setA" + setA.size());
-							break;
+							//break;
 						}
-						else if(s[2].equals(rate)&&s[0].equals(units[k])){
-							System.out.println("Duplicates in if");
-							Double orgDuration = Double.valueOf(s[3]);
-							s[3] = String.valueOf(orgDuration+duration1);
-							Double total = Double.valueOf(s[4]);
-							s[4] = String.valueOf(total+duration1 * base * checkRate(client, cal.getTime()));
-							System.err.println("size of setA" + setA.size());
-							break;
-						}
-
-					}
 				}
 				else{
 					str[0] = units[k];
@@ -1054,9 +1055,22 @@ public class EventExternalServiceImpl implements EventExternalService {
 				String[] str = new String[5];
 				String rate = String.valueOf(checkRate(client, calRef.getTime()));
 				if(!setA.isEmpty()){
-					for(String[] s : setA){					
-						if (!s[2].equals(rate)||!units[k].equals(s[0])){
-							System.out.println("NO duplicates in else if");
+					int check = -1;			
+					for(String[] s : setA){
+						if(s[2].equals(rate)&&s[0].equals(units[k])){
+							System.out.println("Duplicates in if");
+							Double orgDuration = Double.valueOf(s[3]);
+							s[3] = String.valueOf(orgDuration+durationX);
+							Double total = Double.valueOf(s[4]);
+							s[4] = String.valueOf(total+durationX * base * checkRate(client, cal.getTime()));
+							System.err.println("size of setA" + setA.size());
+							check = 0;
+							break;	
+					}							
+					}
+						System.err.println("*****");
+						if (check == -1){
+							System.out.println("NO duplicates in if");
 							str[0] = units[k];
 							str[1] = String.valueOf(base);
 							str[2] = rate;
@@ -1064,19 +1078,8 @@ public class EventExternalServiceImpl implements EventExternalService {
 							str[4] = String.valueOf(durationX * base * checkRate(client, cal.getTime()));
 							setA.add(str);
 							System.err.println("size of setA" + setA.size());
-							break;
+							//break;
 						}
-						else if(s[2].equals(rate)&&units[k].equals(s[0])){
-							System.out.println("Duplicates in else if");
-							Double orgDuration = Double.valueOf(s[3]);
-							s[3] = String.valueOf(orgDuration+durationX);
-							Double total = Double.valueOf(s[4]);
-							s[4] = String.valueOf(total+durationX * base * checkRate(client, cal.getTime()));
-							System.err.println("size of setA" + setA.size());
-							break;
-						}
-
-					}
 				}
 				else{
 					str[0] = units[k];
@@ -1105,6 +1108,7 @@ public class EventExternalServiceImpl implements EventExternalService {
 			}
 		}
 		System.err.println("K is " +k);
+		System.err.println("length"+units.length);
 		k = 0;
 		System.err.println("Count is " +count);
 		return setA;
