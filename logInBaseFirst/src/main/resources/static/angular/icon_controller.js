@@ -161,7 +161,7 @@ app.controller('addIconController', ['$scope', 'Upload', '$timeout','$http','$st
 					modal.element.modal();
 					modal.close.then(function(result) {
 						console.log("OK");
-						$state.go("dashboard.viewIcon");
+						$state.go("IFMS.viewIcon");
 					});
 				});
 
@@ -253,7 +253,7 @@ app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','
 					modal.element.modal();
 					modal.close.then(function(result) {
 						console.log("OK");
-						$state.go("dashboard.viewIcon");
+						$state.go("IFMS.viewIcon");
 					});
 				});
 

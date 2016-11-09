@@ -123,7 +123,7 @@ app.controller('vendorController', ['$scope', '$http','$state','$routeParams','s
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllVendors");
+					$state.go("IFMS.viewAllVendors");
 				});
 			});
 
@@ -287,7 +287,7 @@ app.controller('updateVendorController', ['$scope', '$http','$state','$routePara
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllVendors");
+					$state.go("IFMS.viewAllVendors");
 				});
 			});
 
@@ -353,7 +353,7 @@ app.controller('updateVendorController', ['$scope', '$http','$state','$routePara
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewAllVendors");
+								$state.go("IFMS.viewAllVendors");
 							});
 						});
 
@@ -435,7 +435,7 @@ app.controller('deleteMaintenanceController', ['$scope',  '$timeout','$http','sh
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewMaintenance");
+								$state.go("IFMS.viewMaintenance");
 							});
 						});
 
@@ -818,7 +818,7 @@ app.controller('addMaintenanceController', ['$scope', '$http','$state','$routePa
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewMaintenance");
+					$state.go("IFMS.viewMaintenance");
 				});
 			});
 
@@ -962,7 +962,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewMaintenance");
+			$state.go("IFMS.viewMaintenance");
 			alert("FAILED");
 			console.log('GET Selected Units FAILED! ' + JSON.stringify(response));
 		});		
@@ -1232,50 +1232,10 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 
 
 		}
-/*
-	$scope.getUnitsId = function(){
-		var dataObj ={id: $scope.selectedUnits};
-		console.log("units to be get are "+JSON.stringify(dataObj));
-		$scope.shareMyData = function (myValue) {
-		}		
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/property/getUnitsId',
-			data    : dataObj,
-		});
-		send.success(function(response){
-			console.log('GET Unit IDS SUCCESS! ' + JSON.stringify(response));
-			shareData.addData(JSON.stringify(response));
-		});
-		send.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
-			console.log('GET UNITS ID FAILED! ' + JSON.stringify(response));
-		});
-	}	*/
-
 	
 	$scope.updateMaintenance = function(){
 		console.log("Start updating");
-		/*
-		if ( !$scope.maintenance || !$scope.selectedUnits || !$scope.selectedVendors || !$scope.maintenance.start ||
-				!$scope.maintenance.end || !$scope.maintenance.description){
-			ModalService.showModal({
-
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: "Please make sure you have entered all the fields",
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-					$scope.selectedUnits = [];
-					$scope.currentlySelectedUnit = '';
-				});
-			});
-			return;
-		}*/
+		
 		$scope.data = {};
 		//$scope.event = JSON.parse(shareData.getData());
 		console.log($scope.maintenance.id);
@@ -1311,7 +1271,7 @@ app.controller('updateMaintenanceController', ['$scope', '$http','$state','$rout
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewMaintenance");
+					$state.go("IFMS.viewMaintenance");
 				});
 			});
 
@@ -1526,7 +1486,7 @@ app.controller('maintenanceController',['$scope', '$http','$state','$routeParams
 			//$location.path("/viewLevels");
 		});
 		getVendor.error(function(response){
-			$state.go("dashboard.viewMaintenance");
+			$state.go("IFMS.viewMaintenance");
 			console.log('GET MAINTENANCE FAILED! ' + JSON.stringify(response));
 		});			
 	}
@@ -1578,7 +1538,7 @@ app.controller('scheduleController', ['$scope','$http','$state','$routeParams','
 			$scope.schedules = response;
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewMaintenance");
+			$state.go("IFMS.viewMaintenance");
 			console.log('GET MAINTENANCES FAILED! ' + JSON.stringify(response));
 		});
 
@@ -1598,11 +1558,11 @@ app.controller('scheduleController', ['$scope','$http','$state','$routeParams','
 			deleteBooking.success(function(response){
 				alert('DELETE SCHEDULE SUCCESS! ');
 				console.log("ID IS " + id);
-				$state.go("dashboard.viewMaintenance");
+				$state.go("IFMS.viewMaintenance");
 			});
 			deleteBooking.error(function(response){
 				alert('DELETE SCHEDULE FAIL! ');
-				$state.go("dashboard.viewMaintenance");
+				$state.go("IFMS.viewMaintenance");
 				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
 			});
 		} else {

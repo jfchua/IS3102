@@ -98,7 +98,7 @@ $scope.twoOptions=[
 //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
 //$scope.passBuilding = function(){
 	//  shareData.addData(building);
-	//  $state.go("dashboard.viewLevels");
+	//  $state.go("IFMS.viewLevels");
 //}
 
 
@@ -113,7 +113,7 @@ $scope.viewUnitPlanDefault=function (unit){
 				}
 	  //console.log(unit);
 		shareData.addData(obj);
-	  $state.go('dashboard.viewBuildingEx.viewFloorPlanEx.viewUnitPlanDefaultEx',{param2: unit.id});
+	  $state.go('IFMS.viewBuildingEx.viewFloorPlanEx.viewUnitPlanDefaultEx',{param2: unit.id});
 	  }
 }
  $scope.showDetails= function (thisUnit) {   
@@ -335,13 +335,13 @@ app.controller('viewDefaultUnitPlanExController', function ($scope, $http,shareD
 /*
 	$scope.passLevel=function(){
 		shareData.addData($scope.level);
-		$state.go("dashboard.viewFloorPlan");
+		$state.go("IFMS.viewFloorPlan");
 	}
 	*/
 	 //PASS BUILDING TO SHAREDATA FOR GOING BACK TO VIEW LEVELS
 	  $scope.passBuilding = function(){
 		  shareData.addData($scope.building);
-		  $state.go("dashboard.viewLevelsEx");
+		  $state.go("IFMS.viewLevelsEx");
 	  }
 	  
 	  
@@ -352,7 +352,7 @@ app.controller('viewDefaultUnitPlanExController', function ($scope, $http,shareD
 					level:$scope.level
 					}
 			shareData.addData(obj);
-		  $state.go("dashboard.viewFloorPlanEx");
+		  $state.go("IFMS.viewFloorPlanEx");
 	  }
 	  
 	 
@@ -486,7 +486,7 @@ app.controller('viewBuildingExController', ['$scope', '$http','$state','$routePa
 				if($scope.buildings.indexOf(building)==index)
 					shareData.addData(building);
 		});
-		$state.go('dashboard.viewBuildingEx.viewBuildingImageEx',{param3: building.name});
+		$state.go('IFMS.viewBuildingEx.viewBuildingImageEx',{param3: building.name});
 	}
 	$scope.viewFloorPlan=function(level){
 		var obj={level:level
@@ -497,7 +497,7 @@ app.controller('viewBuildingExController', ['$scope', '$http','$state','$routePa
 		shareData.addData(obj);
 		
 		$scope.showFloorPlan=true;
-		$state.go('dashboard.viewBuildingEx.viewFloorPlanEx',{param1: level.levelNum});
+		$state.go('IFMS.viewBuildingEx.viewFloorPlanEx',{param1: level.levelNum});
 		//$scope.showUnitPlan=false;
 	}//END OF VIEW FLOOR PLAN
 	

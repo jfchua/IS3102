@@ -57,7 +57,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewBuilding");
+								$state.go("IFMS.viewBuilding");
 							});
 						});
 
@@ -116,7 +116,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewBuilding");
+					$state.go("IFMS.viewBuilding");
 				});
 			});
 
@@ -214,7 +214,7 @@ app.controller('buildingController', ['$scope', '$http','$state','$routeParams',
 			//$location.path("/viewLevels");
 		});
 		getLevels.error(function(response){
-			$state.go("dashboard.viewBuilding");
+			$state.go("IFMS.viewBuilding");
 			console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
 		});
 	};	
@@ -354,7 +354,7 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewBuilding");
+								$state.go("IFMS.viewBuilding");
 							});
 						});
 
@@ -413,7 +413,7 @@ app.controller('updateBuildingController', ['$scope',  '$timeout','$http','share
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go('dashboard.viewBuilding');
+					$state.go('IFMS.viewBuilding');
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -490,7 +490,7 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewBuilding");
+								$state.go("IFMS.viewBuilding");
 							});
 						});
 						$scope.dismissModal = function(result) {
@@ -515,7 +515,7 @@ app.controller('deleteBuildingController', ['$scope',  '$timeout','$http','share
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewBuilding");
+								$state.go("IFMS.viewBuilding");
 							});
 						});
 						$scope.dismissModal = function(result) {
@@ -576,7 +576,7 @@ app.controller('viewLevelController', ['$scope', 'Upload', '$timeout','$http','$
 			//$location.path("/viewLevels");
 		});
 		getLevels.error(function(response){
-			$state.go("dashboard.viewBuilding");
+			$state.go("IFMS.viewBuilding");
 			console.log('GET LEVELS FAILED! ' + JSON.stringify(response));
 		});
 		var url = "https://localhost:8443/level/viewLevels";
@@ -665,7 +665,7 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state','Mo
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewBuilding");
+								$state.go("IFMS.viewBuilding");
 							});
 						});
 
@@ -722,7 +722,7 @@ app.controller('addLevelController', ['$scope', '$http','shareData','$state','Mo
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewBuilding");
+					$state.go("IFMS.viewBuilding");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -821,7 +821,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$state','Modal
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewLevels");
+								$state.go("IFMS.viewLevels");
 							});
 						});
 
@@ -879,7 +879,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$state','Modal
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewLevels");
+					$state.go("IFMS.viewLevels");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -945,7 +945,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$state','Modal
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								//$state.go("dashboard.viewLevels");
+								//$state.go("IFMS.viewLevels");
 							});
 						});
 						$scope.dismissModal = function(result) {
@@ -971,7 +971,7 @@ app.controller('levelController', ['$scope', '$http','shareData','$state','Modal
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								//$state.go("dashboard.viewLevels");
+								//$state.go("IFMS.viewLevels");
 							});
 						});
 						$scope.dismissModal = function(result) {
@@ -1086,7 +1086,7 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllRates");
+					$state.go("IFMS.viewAllRates");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -1110,7 +1110,7 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					//	$state.go("dashboard.viewLevels");
+					//	$state.go("IFMS.viewLevels");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -1163,7 +1163,7 @@ app.controller('rateController', ['$scope', '$http','$state','$routeParams','sha
 			shareData.addData(JSON.stringify(response));
 		});
 		getRate.error(function(response){
-			$state.go("dashboard.viewAllRates");
+			$state.go("IFMS.viewAllRates");
 			console.log('GET RATE FAILED! ' + JSON.stringify(response));
 		});
 
@@ -1295,7 +1295,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllRates");
+					$state.go("IFMS.viewAllRates");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -1317,7 +1317,7 @@ app.controller('updateRateController', ['$scope',  '$timeout','$http','shareData
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					$state.go("dashboard.viewAllRates");
+					$state.go("IFMS.viewAllRates");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -1370,7 +1370,7 @@ app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewAllRates");
+								$state.go("IFMS.viewAllRates");
 							});
 						});
 						$scope.dismissModal = function(result) {
@@ -1393,7 +1393,7 @@ app.controller('deleteRateController', ['$scope',  '$timeout','$http','shareData
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("dashboard.viewAllRates");
+								$state.go("IFMS.viewAllRates");
 							});
 						});
 						$scope.dismissModal = function(result) {
@@ -1592,7 +1592,7 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 				modal.element.modal();
 				modal.close.then(function(result) {
 					console.log("OK");
-					//	$state.go("dashboard.viewLevels");
+					//	$state.go("IFMS.viewLevels");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -1628,7 +1628,7 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								//$state.go("dashboard.viewLevels");
+								//$state.go("IFMS.viewLevels");
 							});
 						});
 						$scope.dismissModal = function(result) {
