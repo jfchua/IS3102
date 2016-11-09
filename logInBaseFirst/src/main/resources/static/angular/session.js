@@ -76,3 +76,4 @@ app.run(['$rootScope', 'AUTH_EVENTS', 'Auth' ,'$location','$window', '$sessionSt
 			);
 
 		}])
+		

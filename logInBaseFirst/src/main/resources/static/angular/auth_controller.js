@@ -38,6 +38,7 @@ app.factory('Auth', function($window, $sessionStorage){
 		sessionStorage.clear();
 		this.user = null;
 		authenticated = false;
+		Session.stop;
 	},
 	authService.isAuthenticated = function(){
 
