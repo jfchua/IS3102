@@ -5,7 +5,7 @@
         <div class="clearfix">
                                 <ol class="breadcrumb no-bg no-m-t">
                                     <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                    <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                    <li><a ui-sref="IFMS.workspace">Workspace</a></li>
                                     <li><a>View Vendors</a></li>
                                 </ol>
         </div>
@@ -45,8 +45,8 @@
                                      <td>{{ x.description }}</td>
                                      <td>{{ x.contact}}</td>
                                      <td>
-                                                <a  ui-sref="dashboard.updateVendor" ng-click="passVendor(x)" tooltip-placement="top" tooltip="Update Vendor"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                <a  ui-sref="dashboard.deleteVendor" ng-click="passVendor(x)" tooltip-placement="top" tooltip="Delete Vendor"><i class="glyphicon glyphicon-trash"></i></a>
+                                                <a  ui-sref="IFMS.updateVendor" ng-click="passVendor(x)" tooltip-placement="top" tooltip="Update Vendor"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                <a  ui-sref="IFMS.deleteVendor" ng-click="passVendor(x)" tooltip-placement="top" tooltip="Delete Vendor"><i class="glyphicon glyphicon-trash"></i></a>
 
                                          </td>
 
@@ -62,8 +62,8 @@
                     <br>
                     <br>
 
-                     <a ui-sref="dashboard.addVendor" tooltip-placement="right" tooltip="Add a vendor"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
-                    <!--  	<a ui-sref="dashboard.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
+                     <a ui-sref="IFMS.addVendor" tooltip-placement="right" tooltip="Add a vendor"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
+                    <!--  	<a ui-sref="IFMS.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
                     </div>
             </div>
 

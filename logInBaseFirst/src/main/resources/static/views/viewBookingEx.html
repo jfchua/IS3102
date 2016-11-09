@@ -4,8 +4,8 @@
         	<div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
-                                <li><a ui-sref="dashboard.viewAllEventsEx" ng-click="passEvent()">View Events</a></li>                          
+                                <li><a ui-sref="IFMS.workspace">Workspace</a></li>
+                                <li><a ui-sref="IFMS.viewAllEventsEx" ng-click="passEvent()">View Events</a></li>                          
                                 <li><a>View Event Bookings</a></li>
                             </ol>
             </div>
@@ -47,7 +47,7 @@
                              <!-- <td><a ng-model="myValue" href="/#/updateBookingEx" ng-click="updateBooking(x.id)">Update</a></td>-->
                                <td>
                              		<a  ng-show="checkDateBefore(x.event_start_date_time) && checkBookings()" ng-click="deleteBooking(x.id)" tooltip-placement="top" tooltip="Delete Booking"><i class="glyphicon glyphicon-trash"></i></a>
-                             		<a ng-show="x.event.approvalStatus==='APPROVED'||x.event.approvalStatus==='SUCCESSFUL'"     ui-sref="dashboard.viewUnitPlanEx" ng-click="passBooking(x)" tooltip-placement="top" tooltip="Add unit plan"><i class="glyphicon glyphicon-eye-open"></i></a>
+                             		<a ng-show="x.event.approvalStatus==='APPROVED'||x.event.approvalStatus==='SUCCESSFUL'"     ui-sref="IFMS.viewUnitPlanEx" ng-click="passBooking(x)" tooltip-placement="top" tooltip="Add unit plan"><i class="glyphicon glyphicon-eye-open"></i></a>
                              </td>
                              </tr>
                              </tbody>
