@@ -3,6 +3,8 @@ package application.controller;
 import java.security.Principal;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -112,7 +114,13 @@ public class VendorController {
 			String name = (String)jsonObject.get("name");
 			String registration = (String)jsonObject.get("registration");
 			String description = (String)jsonObject.get("description");
-			String contact = (String)jsonObject.get("contact");				
+			String contact = (String)jsonObject.get("contact");	
+			String regex = "^[0-9]{9}[A-Z]{1}$";
+			Pattern pat = Pattern.compile(regex);
+			Matcher get = pat.matcher(registration);		
+			if(!get.matches()){
+				return new ResponseEntity<String>(geeson.toJson("Please enter a valid registration number."),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 			boolean bl = vendorService.createVendor(client, email, name, registration, description, contact);
 			System.out.println("adding vendor " + name);
 			if(!bl){

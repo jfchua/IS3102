@@ -567,7 +567,7 @@ public class UnitController {
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY')")
 	@RequestMapping(value = "/updateRent", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Void> updateRent(@RequestBody String unitObj,HttpServletRequest rq) {
+	public ResponseEntity<String> updateRent(@RequestBody String unitObj,HttpServletRequest rq) {
 
 
 		try{
@@ -600,18 +600,15 @@ public class UnitController {
 			}
 
 			//	Double rent =Double.parseDouble((String)unitJson.get("rent"));
-			if ( rent < 0 ) { return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR); }
+			if ( rent < 0 ) { return new ResponseEntity<String>(geeson.toJson("Please enter a valid rental price."),HttpStatus.INTERNAL_SERVER_ERROR); }
 
 			System.out.println(rent);
-			if(unitService.updateRent(unitId,rent)){
-				System.out.println("RENT UPDATED");
-				return new ResponseEntity<Void>(HttpStatus.OK);
-			}else{
-				return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
+			if(!unitService.updateRent(unitId,rent))
+				return new ResponseEntity<String>(geeson.toJson("Unable to update rent for a unit which is tied to event(s) without payment plan."),HttpStatus.INTERNAL_SERVER_ERROR);
+		    return new ResponseEntity<String>(HttpStatus.OK);			
 		}
 		catch (Exception e){
-			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(geeson.toJson("Server error in updating rent"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
