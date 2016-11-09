@@ -1592,7 +1592,7 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 //EDIT USER PROFILE
 
 //USER PROFILE CONTROLLER
-app.controller('userProfileController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
+app.controller('userProfileController', ['$scope', '$http','ModalService','$state', function ($scope, $http,ModalService,$state) {
 
 	$scope.question = [
 	                   {question: "What is your Mother\'s Maiden name"},
@@ -1631,13 +1631,13 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 			}).then(function(modal) {
 				modal.element.modal();
 				modal.close.then(function(result) {
-					console.log("OK");
+					//console.log("OK");
 				});
 			});
 			$scope.dismissModal = function(result) {
 				close(result, 200); // close, but give 200ms for bootstrap to animate
 
-				console.log("in dissmiss");
+				//console.log("in dissmiss");
 			};
 		});
 		send.error(function(data){

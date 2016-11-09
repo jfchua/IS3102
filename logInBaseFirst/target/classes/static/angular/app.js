@@ -847,14 +847,6 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('/401',{
-                                				  url:'/401',
-                                				  templateUrl: '/views/401.html',
-                                				  controller: 'passController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.all]
-                                				  }
-                                			  })	
                                 			  .state('dashboard.createNewUser',{
                                 				  url:'/createNewUser',
                                 				  templateUrl: '/views/createUser.html',
@@ -903,9 +895,16 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
+							.state('404',{
+								url:'/404.html',
+								templateUrl: 'views/404.html',
+								controller: 'usersController',
+								data: {
+									authorizedRoles: [USER_ROLES.all]
+								}
+                                			  })
 
-
-                                			  $urlRouterProvider.otherwise('/login');
+                                			  $urlRouterProvider.otherwise('404.html');
 
 
                                 			  /*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
@@ -1593,7 +1592,7 @@ app.controller('viewUserList', ['$scope','$http','$location','ModalService',
 //EDIT USER PROFILE
 
 //USER PROFILE CONTROLLER
-app.controller('userProfileController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
+app.controller('userProfileController', ['$scope', '$http','ModalService','$state', function ($scope, $http,ModalService,$state) {
 
 	$scope.question = [
 	                   {question: "What is your Mother\'s Maiden name"},
@@ -1632,13 +1631,13 @@ app.controller('userProfileController', ['$scope', '$http','ModalService', funct
 			}).then(function(modal) {
 				modal.element.modal();
 				modal.close.then(function(result) {
-					console.log("OK");
+					//console.log("OK");
 				});
 			});
 			$scope.dismissModal = function(result) {
 				close(result, 200); // close, but give 200ms for bootstrap to animate
 
-				console.log("in dissmiss");
+				//console.log("in dissmiss");
 			};
 		});
 		send.error(function(data){
