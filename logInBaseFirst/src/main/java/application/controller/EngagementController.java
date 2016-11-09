@@ -24,12 +24,14 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import application.entity.AuditLog;
 import application.entity.Beacon;
 import application.entity.Building;
 import application.entity.Discount;
 import application.entity.Level;
 import application.entity.User;
 import application.exception.UserNotFoundException;
+import application.repository.AuditLogRepository;
 import application.repository.BuildingRepository;
 import application.repository.CategoryRepository;
 import application.repository.FeedbackRepository;
@@ -54,15 +56,17 @@ public class EngagementController {
 	private final FeedbackRepository feedbackRepository;
 	private final CategoryRepository categoryRepository;
 	private final BuildingRepository buildingRepository;
+	private final AuditLogRepository auditLogRepository;
 	Gson gson = new Gson();
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 
 	@Autowired
-	public EngagementController(BuildingRepository buildingRepository, CategoryRepository categoryRepository, FeedbackRepository feedbackRepository,EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
+	public EngagementController(AuditLogRepository auditLogRepository,BuildingRepository buildingRepository, CategoryRepository categoryRepository, FeedbackRepository feedbackRepository,EngagementService engagementService, EventService eventService, TicketingService ticketingService, EventExternalService eeventService, BookingService bookingService,
 			UserService userService) {
 		super();
 		this.eventExternalService = eeventService;
+		this.auditLogRepository = auditLogRepository;
 		this.bookingService = bookingService;
 		this.buildingRepository = buildingRepository;
 		this.userService = userService;
@@ -137,6 +141,13 @@ public class EngagementController {
 				return new ResponseEntity<String>(gson.toJson("Server error in adding discount"),HttpStatus.INTERNAL_SERVER_ERROR);
 
 			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Event");
+			al.setAction("Add discount for event ID:  " + eventId + " for " + name);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		catch (Exception e){
@@ -193,7 +204,13 @@ public class EngagementController {
 				return new ResponseEntity<String>(gson.toJson("Server error in getting discount"),HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			Gson gson = new Gson();
-
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Event");
+			al.setAction("Delete discount of ID:  " + eventId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 			return new ResponseEntity<String>(gson.toJson(discounts),HttpStatus.OK);
 		}
 		catch (Exception e){
@@ -206,11 +223,11 @@ public class EngagementController {
 	@ResponseBody
 	public ResponseEntity<String> updateDiscount(@RequestBody String discount, HttpServletRequest rq) throws UserNotFoundException {
 
-		/*		Principal principal = rq.getUserPrincipal();
+		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}*/
+		}
 		try{
 
 			Object obj1 = parser.parse(discount);
@@ -225,7 +242,13 @@ public class EngagementController {
 				return new ResponseEntity<String>(gson.toJson("Server error in updating discount"),HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			Gson gson = new Gson();
-
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Event");
+			al.setAction("Update discount of ID:  " + discountId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 			return new ResponseEntity<String>(gson.toJson(discounts),HttpStatus.OK);
 		}
 		catch (Exception e){
@@ -255,7 +278,13 @@ public class EngagementController {
 			if ( !discounts){
 				return new ResponseEntity<String>(gson.toJson("Server error in deleting beacon"),HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Event");
+			al.setAction("Delete beacon of ID:  " + beaconId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		catch (Exception e){
@@ -267,7 +296,11 @@ public class EngagementController {
 	@RequestMapping(value = "/updateBeacon", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> updateBeacon(@RequestBody String discount, HttpServletRequest rq) throws UserNotFoundException {
-
+		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		try{
 			System.err.println("inside update");
 			Object obj1 = parser.parse(discount);
@@ -279,6 +312,13 @@ public class EngagementController {
 			if ( !bl){
 				return new ResponseEntity<String>(gson.toJson("Server error in updating beacon"),HttpStatus.INTERNAL_SERVER_ERROR);
 			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Event");
+			al.setAction("Update beacon of ID:  " + beaconId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		catch (Exception e){
@@ -309,6 +349,13 @@ public class EngagementController {
 				return new ResponseEntity<String>(gson.toJson("Server error in adding beacon"),HttpStatus.INTERNAL_SERVER_ERROR);
 
 			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Event");
+			al.setAction("Add beacon of UUID:  " + uuid + " to event of ID: " + eventId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		catch (Exception e){

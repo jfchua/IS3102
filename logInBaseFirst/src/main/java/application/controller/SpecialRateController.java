@@ -134,6 +134,13 @@ public class SpecialRateController {
 					System.out.println("invalid rate");
 					return new ResponseEntity<String>(geeson.toJson("Period has already existed, please choose another period."), HttpStatus.INTERNAL_SERVER_ERROR);
 				}
+				AuditLog al = new AuditLog();
+				al.setTimeToNow();
+				al.setSystem("Finance");
+				al.setAction("Add special rate of " + rate);
+				al.setUser(usr.get());
+				al.setUserEmail(usr.get().getEmail());
+				auditLogRepository.save(al);
 					
 			}
 			catch (Exception e){
@@ -165,6 +172,13 @@ public class SpecialRateController {
 							return new ResponseEntity<String>(geeson.toJson("Deleting a special rate attached to current events is not allowed."), HttpStatus.INTERNAL_SERVER_ERROR);
 						boolean bl=specialRateService.deleteSpecialRate(client, rateId);
 						System.out.println(bl);	
+						AuditLog al = new AuditLog();
+						al.setTimeToNow();
+						al.setSystem("Finance");
+						al.setAction("Delete special rate of ID " + rateId);
+						al.setUser(usr.get());
+						al.setUserEmail(usr.get().getEmail());
+						auditLogRepository.save(al);
 					}
 					catch (Exception e){
 						return new ResponseEntity<String>(HttpStatus.CONFLICT);
@@ -203,6 +217,13 @@ public class SpecialRateController {
 						if(!bl){
 							return new ResponseEntity<String>(geeson.toJson("Period has already existed, please choose another period."), HttpStatus.INTERNAL_SERVER_ERROR);
 						}
+						AuditLog al = new AuditLog();
+						al.setTimeToNow();
+						al.setSystem("Finance");
+						al.setAction("Update special rate of ID " + rateId);
+						al.setUser(usr.get());
+						al.setUserEmail(usr.get().getEmail());
+						auditLogRepository.save(al);
 					}
 					catch (Exception e){
 						return new ResponseEntity<String>(HttpStatus.CONFLICT);

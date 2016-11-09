@@ -30,6 +30,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.reflect.TypeToken;
 
+import application.entity.AuditLog;
 import application.entity.Building;
 import application.entity.ClientOrganisation;
 import application.entity.Icon;
@@ -39,6 +40,7 @@ import application.entity.User;
 import application.exception.InvalidFileUploadException;
 import application.exception.InvalidIconException;
 import application.exception.UserNotFoundException;
+import application.repository.AuditLogRepository;
 import application.service.BuildingService;
 import application.service.FileUploadCheckingService;
 import application.service.LevelService;
@@ -53,15 +55,17 @@ public class LevelController {
 	private final UserService userService;
 	private JSONParser parser = new JSONParser();
 	private final FileUploadCheckingService fileService;
+	private AuditLogRepository auditLogRepository;
 	private Gson geeson= new Gson();
 
 	@Autowired
-	public LevelController(LevelService levelService, UserService userService,BuildingService buildingService,FileUploadCheckingService fileService) {
+	public LevelController(AuditLogRepository auditLogRepository, LevelService levelService, UserService userService,BuildingService buildingService,FileUploadCheckingService fileService) {
 		super();
 		this.buildingService = buildingService;
 		this.levelService = levelService;
 		this.userService = userService;
 		this.fileService=fileService;
+		this.auditLogRepository = auditLogRepository;
 	}
 	
 	@PreAuthorize("hasAnyAuthority('ROLE_PROPERTY', 'ROLE_EXTEVE')")
@@ -268,6 +272,16 @@ public class LevelController {
 						return new ResponseEntity<String>(HttpStatus.CONFLICT);
 					}else{
 						String levelIdToReturn = Long.toString(level.getId());
+						
+						AuditLog al = new AuditLog();
+						al.setTimeToNow();
+						al.setSystem("Property");
+						al.setAction("Add level: id" + levelIdToReturn);
+						al.setUser(usr.get());
+						al.setUserEmail(usr.get().getEmail());
+						auditLogRepository.save(al);
+						
+						
 						return new ResponseEntity<String>(levelIdToReturn ,HttpStatus.OK);
 					}				
 				}
@@ -299,14 +313,24 @@ public class LevelController {
 					//long buildingId = (Long)jsonObject.get("buildingId");
 					long levelId = (Long)jsonObject.get("levelId");
 					boolean bl = levelService.deleteLevel(client, levelId);
+
 					if(!bl){
 						System.out.println("cannot delete");
 						return new ResponseEntity<String>(geeson.toJson("Unable to delete level with existing events"),HttpStatus.INTERNAL_SERVER_ERROR);
 					}	
+					AuditLog al = new AuditLog();
+					al.setTimeToNow();
+					al.setSystem("Property");
+					al.setAction("Delete level: id" + levelId);
+					al.setUser(usr.get());
+					al.setUserEmail(usr.get().getEmail());
+					auditLogRepository.save(al);
 				}
 				catch (Exception e){
 					return new ResponseEntity<String>(geeson.toJson("Server error deleting building"),HttpStatus.INTERNAL_SERVER_ERROR);
 				}
+
+				
 				return new ResponseEntity<String>(HttpStatus.OK);
 			}
 			
@@ -340,6 +364,13 @@ public class LevelController {
 						System.out.println("out of range");
 						return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 					}
+					AuditLog al = new AuditLog();
+					al.setTimeToNow();
+					al.setSystem("Property");
+					al.setAction("Update level: id" + levelId);
+					al.setUser(usr.get());
+					al.setUserEmail(usr.get().getEmail());
+					auditLogRepository.save(al);
 				}
 				catch (Exception e){
 					return new ResponseEntity<Void>(HttpStatus.CONFLICT);

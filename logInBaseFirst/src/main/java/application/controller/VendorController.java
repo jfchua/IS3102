@@ -30,12 +30,14 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import application.entity.AuditLog;
 import application.entity.ClientOrganisation;
 import application.entity.User;
 import application.entity.Vendor;
 import application.exception.InvalidEmailException;
 import application.exception.UserNotFoundException;
 import application.exception.VendorNotFoundException;
+import application.repository.AuditLogRepository;
 import application.repository.VendorRepository;
 import application.service.ClientOrganisationService;
 import application.service.UserService;
@@ -49,13 +51,15 @@ public class VendorController {
 	private final ClientOrganisationService clientOrganisationService;
 	private final UserService userService;
 	private VendorRepository vendorRepository;
+	private AuditLogRepository auditLogRepository;
 	private JSONParser parser = new JSONParser();
 	private Gson geeson = new Gson();
 
 	@Autowired
-	public VendorController(VendorService vendorService, ClientOrganisationService clientOrganisationService,
+	public VendorController(AuditLogRepository auditLogRepository,VendorService vendorService, ClientOrganisationService clientOrganisationService,
 			VendorRepository vendorRepository, UserService userService) {
 		super();
+		this.auditLogRepository  = auditLogRepository;
 		this.vendorService = vendorService;	
 		this.clientOrganisationService = clientOrganisationService;
 		this.vendorRepository = vendorRepository;
@@ -126,6 +130,13 @@ public class VendorController {
 			if(!bl){
 				return new ResponseEntity<String>(geeson.toJson("Server error in creating vendor"),HttpStatus.INTERNAL_SERVER_ERROR);
 			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Property");
+			al.setAction("Add vendor " + name);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 
 		}
 		catch (InvalidEmailException e){
@@ -185,6 +196,13 @@ public class VendorController {
 			System.out.println(vendorId);	
 			boolean bl=vendorService.deleteVendor(client, vendorId);
 			System.out.println(bl);	
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Property");
+			al.setAction("Delete vendor of ID " + vendorId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch ( VendorNotFoundException e){
 			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -223,6 +241,13 @@ public class VendorController {
 			if(!bl){
 				return new ResponseEntity<String>(HttpStatus.CONFLICT);
 			}
+			AuditLog al = new AuditLog();
+			al.setTimeToNow();
+			al.setSystem("Property");
+			al.setAction("Update vendor of ID" + vendorId);
+			al.setUser(usr.get());
+			al.setUserEmail(usr.get().getEmail());
+			auditLogRepository.save(al);
 		}
 		catch ( VendorNotFoundException e){
 			return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);

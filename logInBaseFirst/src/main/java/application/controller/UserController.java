@@ -103,6 +103,7 @@ public class UserController {
 
 		//Assume client org has ClientOrg name, One admin user which is to be created.
 		try{
+			
 			Object obj = parser.parse(clientOrgJSON);
 			JSONObject jsonObject = (JSONObject) obj;
 			DateFormat sdf = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss");
@@ -130,7 +131,6 @@ public class UserController {
  			userRolesToAddIn2.add(roleRepository.getRoleByName("ROLE_USER"));
  			userService.createNewUser(userService.getUserByEmail(email).get().getClientOrganisation(), "chuajinfa@gmail.com", userRolesToAddIn2);
  			System.out.println("CREATED USER FOR CHUAJINFA with client org" + userService.getUserByEmail(email).get().getClientOrganisation().getOrganisationName());*/
-
 
 		}
 		catch ( InvalidEmailException e ){

@@ -142,6 +142,13 @@ public class PaymentPolicyController {
 					System.out.println("invalid rate");
 					return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 				}
+				AuditLog al = new AuditLog();
+				al.setTimeToNow();
+				al.setSystem("Finance");
+				al.setAction("Add payment policy of rate " + rate);
+				al.setUser(usr.get());
+				al.setUserEmail(usr.get().getEmail());
+				auditLogRepository.save(al);
 					
 			}
 			catch (Exception e){
@@ -169,7 +176,14 @@ public class PaymentPolicyController {
 						long rateId = (Long)jsonObject.get("id");
 						System.out.println(rateId);	
 						boolean bl=paymentPolicyService.deletePaymentPolicy(client, rateId);
-						System.out.println(bl);	
+						System.out.println(bl);
+						AuditLog al = new AuditLog();
+						al.setTimeToNow();
+						al.setSystem("Finance");
+						al.setAction("Delete payment policy of ID " + rateId);
+						al.setUser(usr.get());
+						al.setUserEmail(usr.get().getEmail());
+						auditLogRepository.save(al);
 					}
 					catch (Exception e){
 						return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -205,6 +219,13 @@ public class PaymentPolicyController {
 						if(!bl){
 							return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 						}
+						AuditLog al = new AuditLog();
+						al.setTimeToNow();
+						al.setSystem("Finance");
+						al.setAction("Update payment policy of ID " + rateId);
+						al.setUser(usr.get());
+						al.setUserEmail(usr.get().getEmail());
+						auditLogRepository.save(al);
 					}
 					catch (Exception e){
 						return new ResponseEntity<Void>(HttpStatus.CONFLICT);

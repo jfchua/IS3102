@@ -3582,6 +3582,22 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','ModalService',
 //7. Audit Logs
 //===========================================================================
 app.controller('auditLogController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
+	
+	var subz = sessionStorage.getItem('subscriptions');
+	$scope.IsTicketingSub = function(){
+		//console.log("ISTICKETING: " + (subz.indexOf("TICKETING") > -1));
+		return (subz.indexOf("TICKETING") > -1);
+	}
+
+	$scope.IsFinanceSub = function(){
+		//console.log("ISFINANCE: " + (subz.indexOf("FINANCE") > -1));
+		return (subz.indexOf("FINANCE") > -1);
+	}
+
+	$scope.IsBISub = function(){
+		return (subz.indexOf("BI") > -1);
+	}
+	
 	$scope.submit = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
