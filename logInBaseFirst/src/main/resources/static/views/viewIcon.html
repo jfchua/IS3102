@@ -3,7 +3,7 @@
         <div class="clearfix">
                         <ol class="breadcrumb no-bg no-m-t">
                             <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                            <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                            <li><a ui-sref="IFMS.workspace">Workspace</a></li>
                             <li><a>View Icons</a></li>
                         </ol>
         </div>
@@ -40,7 +40,7 @@
                          <td>{{ x.iconType }}</td>
                          <td>{{ x.iconPath }}</td> 
                           <td><img  class="svgtest" ng-src="{{x.iconPath}}" alt="{{x.iconPath}}" width="50px" height="50px"></td> 
-                         <td><a  ui-sref="dashboard.updateIcon" ng-click="updateIcon(x)">Update</a></td>
+                         <td><a  ui-sref="IFMS.updateIcon" ng-click="updateIcon(x)">Update</a></td>
                           <td><a ng-click="remove(x)">Delete</a></td>
                          </tr>
                          </tbody>
@@ -53,7 +53,7 @@
 		<br>
 		<br>
 		<br>
-		 <a ui-sref="dashboard.addIcon" tooltip-placement="right" tooltip="Add a icon"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
-		<!--  	<a ui-sref="dashboard.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
+		 <a ui-sref="IFMS.addIcon" tooltip-placement="right" tooltip="Add a icon"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
+		<!--  	<a ui-sref="IFMS.addBuilding"><button class="btn btn-primary"><span><i class="glyphicon glyphicon-plus-sign"></i></span>  Add a building</button></a>-->
 		</div>
 	</div>
