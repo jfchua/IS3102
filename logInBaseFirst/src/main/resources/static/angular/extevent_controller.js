@@ -217,12 +217,10 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event);
 	}
 
-
+/*
 	$scope.getBookings = function(id){	
 		$scope.dataToShare = [];	  
 		$scope.shareMyData = function (myValue) {
-			//$scope.dataToShare = myValue;
-			//shareData.addData($scope.dataToShare);
 		}
 		$scope.url = "https://localhost:8443/booking/viewAllBookings/"+id;
 		//$scope.dataToShare = [];
@@ -242,11 +240,11 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 			//$location.path("/viewLevels");
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			//$state.go("dashboard.viewAllEventsEx");
 			console.log('GET Booking FAILED! ' + JSON.stringify(response));
 		});
 
-	}
+	}*/
 }]);
 //VIEW ALL APPROVED EVENTS
 app.controller('viewApprovedEventsExController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
@@ -649,57 +647,54 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		}
 		console.log("finish selecting units");	
 
-		$scope.checkAvail = function(){
-			console.log("start checking availability");
-			$scope.data = {};
-
-			if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date){
-				ModalService.showModal({
-
-					templateUrl: "views/errorMessageTemplate.html",
-					controller: "errorMessageModalController",
-					inputs: {
-						message: "Please make sure you have entered the starting and ending dates to check for availability and rent calculation",
-					}
-				}).then(function(modal) {
-					modal.element.modal();
-					modal.close.then(function(result) {
-						console.log("OK");
-						$scope.selectedUnits = [];
-						$scope.currentlySelectedUnit = '';
-					});
-				});
-				return;
-			}
-			var dataObj = {
-					units: $scope.selectedUnits,
-					event_start_date: ($scope.event.event_start_date).toString(),
-					event_end_date: ($scope.event.event_end_date).toString(),
-			};
-			console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-			var send = $http({
-				method  : 'POST',
-				url     : 'https://localhost:8443/event/checkAvailability',
-				data    : dataObj //forms user object
-			});
-			$scope.avail = "";
-			send.success(function(){
-				$scope.avail = "AVAILABLE!";
-				console.log($scope.avail);
-			});
-			send.error(function(){
-				$scope.avail = "NOT AVAILABLE!";
-				console.log($scope.avail);
-			});
-		}
+		
 	}
-	$scope.components={};
+	
+	$scope.checkAvail = function(){
+		$scope.avail = "";
+		console.log("start checking availability");
+		$scope.data = {};	
+        if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date||$scope.selectedUnits.length == 0 ){
+	               $scope.avail = "";
+		}
+        else{
+        	var dataObj = {
+    				units: $scope.selectedUnits,
+    				event_start_date: ($scope.event.event_start_date).toString(),
+    				event_end_date: ($scope.event.event_end_date).toString(),
+    		};
+    		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		var send = $http({
+			method  : 'POST',
+			url     : 'https://localhost:8443/event/checkAvailability',
+			data    : dataObj //forms user object
+		});
+		
+		send.success(function(){
+			$scope.avail = "AVAILABLE!";
+			console.log($scope.avail);
+		});
+		send.error(function(){
+			$scope.avail = "NOT AVAILABLE!";
+			console.log($scope.avail);
+		});
+	}
+	}
+	
+	
+	
 	$scope.checkRent = function(){
+		$scope.components={};
+		$scope.totalRent = 0.00;
+		$scope.totalRentAfter = 0.00;
 		console.log("start checking rent");
 		$scope.data = {};
-		if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date){
-			return;
+		if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date ||$scope.selectedUnits.length == 0 ){
+			$scope.components={};
+			$scope.totalRent = 0.00;
+			$scope.totalRentAfter = 0.00;
 		}
+		else{
 		var dataObj = {
 				units: $scope.selectedUnits,
 				event_start_date: ($scope.event.event_start_date).toString(),
@@ -717,7 +712,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 			$scope.order_item = "num";
 			$scope.order_reverse = false;
 			console.log($scope.components);
-			console.log("get component success");
+			console.log("OOOOO");
 		});
 		send.error(function(response){
 			//alert("get component failure");
@@ -736,8 +731,10 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 		});
 		send1.error(function(response){
 			$scope.totalRent = response;
+			$scope.totalRentAfter = response*1.07;
 			console.log($scope.totalRent);
 		});	
+		}
 	}
 	
 	$scope.eventTypes=[{'name':'Concert','eventType':'CONCERT'},
@@ -971,6 +968,7 @@ app.filter('orderObjectBy', function() {
 
 
 app.controller('updateEController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService){
+	$scope.selectedBookingsUnits = {};
 	angular.element(document).ready(function () {
 		//VIEW EVENT
 		$scope.event1 = shareData.getData();
@@ -1131,15 +1129,21 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 	}
 
 	$scope.checkAvail = function(){
+		$scope.avail = "";
 		console.log("start checking availability");
 		$scope.data = {};
-
+		if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date ||$scope.selectedBookingsUnits.length == 0 ){
+			$scope.avail = "";
+		}
+		else{
 		var dataObj = {	
-				id: $scope.event.id,
+				eventId: $scope.event.id,
 				units: $scope.selectedBookingsUnits,
 				event_start_date: ($scope.event.event_start_date).toString(),
 				event_end_date: ($scope.event.event_end_date).toString(),
 		};
+		//console.log($scope.event.id);
+		//console.log($scope.event.event_start_date);
 		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
 		var send = $http({
 			method  : 'POST',
@@ -1156,14 +1160,20 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 			console.log($scope.avail);
 		});
 	}
-
-	$scope.components={};
+	}
+	
 	$scope.checkRent = function(){
+		$scope.components={};
+		$scope.totalRent = 0.00;
+		$scope.totalRentAfter = 0.00;
 		console.log("start checking rent");
 		$scope.data = {};
-		if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date){
-			return;
+		if ( !$scope.event || !$scope.event.event_start_date || !$scope.event.event_end_date ||$scope.selectedBookingsUnits.length == 0 ){
+			$scope.components={};
+			$scope.totalRent = 0.00;
+			$scope.totalRentAfter = 0.00;
 		}
+		else{
 		var dataObj = {
 				units: $scope.selectedBookingsUnits,
 				event_start_date: ($scope.event.event_start_date).toString(),
@@ -1200,10 +1210,11 @@ app.controller('updateEController', ['$scope', '$http','$state','$routeParams','
 		});
 		send1.error(function(response){
 			$scope.totalRent = response;
+			$scope.totalRentAfter = response*1.07;
 			console.log($scope.totalRent);
 		});	
 	}
-	
+	}
 
 
 	$scope.eventTypes=[{'name':'Concert','eventType':'CONCERT'},

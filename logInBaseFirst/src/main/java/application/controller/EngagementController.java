@@ -201,7 +201,7 @@ public class EngagementController {
 			return new ResponseEntity<String>(gson.toJson("Server error in getting discount"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@RequestMapping(value = "/updateDiscount", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> updateDiscount(@RequestBody String discount, HttpServletRequest rq) throws UserNotFoundException {
@@ -219,7 +219,7 @@ public class EngagementController {
 			Long discountId = (Long)jsonObject.get("discountId");
 			String name = (String)jsonObject.get("retailerName");
 			String msg = (String)jsonObject.get("message");
-            
+
 			boolean discounts = engagementService.updateDiscount(discountId, name, msg);
 			if ( !discounts){
 				return new ResponseEntity<String>(gson.toJson("Server error in updating discount"),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -233,8 +233,8 @@ public class EngagementController {
 			return new ResponseEntity<String>(gson.toJson("Server error in updating discount"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	
+
+
 	@RequestMapping(value = "/deleteBeacon", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> deleteBeacon(@RequestBody String discount, HttpServletRequest rq) throws UserNotFoundException {
@@ -263,7 +263,7 @@ public class EngagementController {
 			return new ResponseEntity<String>(gson.toJson("Server error in deleting beacon"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@RequestMapping(value = "/updateBeacon", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> updateBeacon(@RequestBody String discount, HttpServletRequest rq) throws UserNotFoundException {
@@ -286,11 +286,11 @@ public class EngagementController {
 			return new ResponseEntity<String>(gson.toJson("Server error in updating beacon"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@RequestMapping(value = "/addBeacon", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> addBeacon(@RequestBody String discount, HttpServletRequest rq) throws UserNotFoundException {
-     	Principal principal = rq.getUserPrincipal();
+		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -331,7 +331,7 @@ public class EngagementController {
 
 			JSONObject jsonObject = (JSONObject) obj1;
 			Long eventId = (Long)jsonObject.get("eventId");
-            
+
 			Set<Beacon> beacons = engagementService.getBeacons(eventId);
 			Gson gson = new Gson();
 
@@ -340,6 +340,33 @@ public class EngagementController {
 		catch (Exception e){
 
 			return new ResponseEntity<String>(gson.toJson("Server error in getting discount"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value = "/getBeaconMessage", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> getBeaconMessage(@RequestBody String beacon, HttpServletRequest rq) throws UserNotFoundException {
+
+		/*		Principal principal = rq.getUserPrincipal();
+		Optional<User> usr = userService.getUserByEmail(principal.getName());
+		if ( !usr.isPresent() ){
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}*/
+		try{
+
+			Object obj1 = parser.parse(beacon);
+
+			JSONObject jsonObject = (JSONObject) obj1;
+			String eventId = (String)jsonObject.get("beaconUUID");
+
+			String message = engagementService.getBeaconMessage(eventId);
+			Gson gson = new Gson();
+
+			return new ResponseEntity<String>(gson.toJson(message),HttpStatus.OK);
+		}
+		catch (Exception e){
+
+			return new ResponseEntity<String>(gson.toJson("Server error in getting beacon message"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

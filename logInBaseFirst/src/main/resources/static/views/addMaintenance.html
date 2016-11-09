@@ -27,14 +27,14 @@
 				<form>
 					<div class="form-group">
 						<label for="exampleInput">Start Date</label> <input
-							type="datetime-local" ng-model="maintenance.start"
-							ng-change='checkDateErr(maintenance.start,maintenance.end)'
+							type="datetime-local" step="3600" ng-model="maintenance.start"
+							ng-change='checkDateErr(maintenance.start,maintenance.end); checkAvail()'
 							class="form-control" placeholder="Enter start date">
 					</div>
 					<div class="form-group">
 						<label for="exampleInput">End Date</label> <input
-							type="datetime-local" ng-model="maintenance.end"
-							ng-change='checkDateErr(maintenance.start,maintenance.end)'
+							type="datetime-local" step="3600" ng-model="maintenance.end"
+							ng-change='checkDateErr(maintenance.start,maintenance.end); checkAvail()'
 							class="form-control" placeholder="Enter end date">
 					</div>
 					<div class="form-group">

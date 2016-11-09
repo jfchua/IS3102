@@ -1638,18 +1638,21 @@ app.controller('rentController', ['$scope',  '$timeout','$http','shareData','$st
 						};
 
 					},function(response){
+						/*console.log(response.data);
+						console.log(response);
+						console.log("999");*/
 						ModalService.showModal({
-
+							
 							templateUrl: "views/errorMessageTemplate.html",
 							controller: "errorMessageModalController",
 							inputs: {
-								message: "Did not update rent for unit "+unit.unitNumber
+								message: response.data,
 							}
 						}).then(function(modal) {
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								//	$state.go("dashboard.viewLevels");
+								$state.reload();
 							});
 						});
 						$scope.dismissModal = function(result) {

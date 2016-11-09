@@ -98,7 +98,7 @@ public class SpecialRateServiceImpl implements SpecialRateService {
 			Optional<SpecialRate> rate1 = getSpecialRateById(id);
 			Set<SpecialRate> rates = client.getSpecialRates();
 			for(SpecialRate r : rates){
-				if(period.equals(r.getPeriod()))
+				if(period.equals(r.getPeriod()) && r.getId()!=id)
 					return false;
 			}
 			if(rate1.isPresent()&&rates.contains(rate1.get())){

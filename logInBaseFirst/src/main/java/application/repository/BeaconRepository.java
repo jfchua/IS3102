@@ -13,6 +13,6 @@ public interface BeaconRepository extends JpaRepository<Beacon, Long> {
 		        value = "SELECT * FROM beacon m where m.beaconuuid = :name", 
 		        nativeQuery=true
 		   )
-	 public Discount getDiscountByCode(@Param("name") String name);
+	 public Beacon getBeaconByUUID(@Param("name") String name);
 	 
 }

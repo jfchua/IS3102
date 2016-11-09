@@ -146,6 +146,7 @@ public class BookingController {
 							booking.getEvent().setCategories(null);
 							booking.getEvent().setEventOrg(null);
 							booking.getEvent().setPaymentPlan(null);
+							booking.getEvent().setFeedbacks(null);
 							booking.getUnit().setBookings(null);
 							booking.getUnit().setLevel(null);
 							booking.getUnit().setMaintenanceSchedule(null);

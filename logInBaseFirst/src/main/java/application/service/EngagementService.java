@@ -29,5 +29,7 @@ public interface EngagementService {
 	boolean deleteBeacon(User user, Long beaconId) throws EventNotFoundException;
 
 	public Set<Beacon> getBeacons(Long eventId) throws EventNotFoundException;
+	
+	public String getBeaconMessage(String beaconUUID);
 }
 
