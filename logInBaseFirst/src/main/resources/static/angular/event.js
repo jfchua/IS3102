@@ -188,7 +188,7 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 			//$location.path("/viewLevels");
 		});
 		getEvent.error(function(response){
-			//$state.go("dashboard.viewAllEvents");
+			//$state.go("IFMS.viewAllEvents");
 			//alert("Error, " + response);
 			console.log('GET Event FAILED! ' + JSON.stringify(response));
 		});			
@@ -279,7 +279,7 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 			//$location.path("/viewLevels");
 		});
 		getNotifications.error(function(response){
-			$state.go("dashboard.viewEventOrganizers");
+			$state.go("IFMS.viewEventOrganizers");
 			console.log('GET NOTIFICATIONS FAILED! ' + JSON.stringify(response));
 		});
 
@@ -484,7 +484,7 @@ app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareDat
 							modal.element.modal();
 							modal.close.then(function(result) {
 								//console.log("OK");
-								$state.go("dashboard.viewAllEvents");
+								$state.go("IFMS.viewAllEvents");
 							});
 						});
 						$scope.dismissModal = function(result) {
@@ -506,7 +506,7 @@ app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareDat
 							modal.element.modal();
 							modal.close.then(function(result) {
 								//console.log("OK");
-								$state.go("dashboard.viewAllEvents");
+								$state.go("IFMS.viewAllEvents");
 							});
 						});
 						$scope.dismissModal = function(result) {
@@ -746,7 +746,7 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$state','$route
 				modal.element.modal();
 				modal.close.then(function(result) {
 					//console.log("OK");
-					$state.go("dashboard.viewAllEvents");
+					$state.go("IFMS.viewAllEvents");
 				});
 			});
 			$scope.dismissModal = function(result) {
@@ -880,7 +880,7 @@ app.controller('notificationController', ['$scope', '$http','shareData','$state'
 			//$location.path("/viewLevels");
 		});
 		getNotifications.error(function(response){
-			$state.go("dashboard.viewEventOrganizers");
+			$state.go("IFMS.viewEventOrganizers");
 			console.log('GET NOTIFICATIONS FAILED! ' + JSON.stringify(response));
 		});		
 	})
@@ -926,7 +926,7 @@ app.controller('ticketSaleDetailsController', ['$scope', '$http','$state','$rout
 			$scope.event = response;
 		});
 		getEvent.error(function(response){
-			$state.go("dashboard.viewTicketSales");
+			$state.go("IFMS.viewTicketSales");
 			console.log('GET PAYMENT FAILED! ');
 		});
 
@@ -949,7 +949,7 @@ app.controller('ticketSaleDetailsController', ['$scope', '$http','$state','$rout
 			$scope.sales = response;
 		});
 		getSales.error(function(response){
-			$state.go("dashboard.viewTicketSales");
+			$state.go("IFMS.viewTicketSales");
 			console.log('GET EVENTS FAILED! ');
 		});
 

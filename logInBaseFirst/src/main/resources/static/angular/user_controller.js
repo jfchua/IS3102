@@ -39,7 +39,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 			console.log("VERIFIED WITH NAME: " + response.name);
 			$rootScope.authenticated = true;
 			Auth.setUser(response);
-			$state.go('dashboard.workspace', {param :response.principal.user.clientOrganisation.organisationName});
+			$state.go('IFMS.workspace', {param :response.principal.user.clientOrganisation.organisationName});
 			
 			console.log("pre callback");
 			callback && callback();
