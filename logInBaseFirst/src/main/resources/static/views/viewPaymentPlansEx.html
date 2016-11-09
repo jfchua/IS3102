@@ -33,6 +33,7 @@
                            <th>Actions</th>
                        
                            </tr>
+                           </thead>
                          <tbody>
                          <tr ng-repeat="x in plans | filter:paymentPlanNull|orderObjectBy:order_item:order_reverse">
                             <td>{{ x.id }}</td>
@@ -46,7 +47,7 @@
                            </td>
                         </tr>
                          </tbody>
-                         </thead>
+                         
                     </table>
                     <p>Total outstanding is : {{totalAmount}}</p>				
 				</div>
