@@ -217,12 +217,10 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 		console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.event);
 	}
 
-
+/*
 	$scope.getBookings = function(id){	
 		$scope.dataToShare = [];	  
 		$scope.shareMyData = function (myValue) {
-			//$scope.dataToShare = myValue;
-			//shareData.addData($scope.dataToShare);
 		}
 		$scope.url = "https://localhost:8443/booking/viewAllBookings/"+id;
 		//$scope.dataToShare = [];
@@ -242,11 +240,11 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 			//$location.path("/viewLevels");
 		});
 		getBookings.error(function(response){
-			$state.go("dashboard.viewAllEventsEx");
+			//$state.go("dashboard.viewAllEventsEx");
 			console.log('GET Booking FAILED! ' + JSON.stringify(response));
 		});
 
-	}
+	}*/
 }]);
 //VIEW ALL APPROVED EVENTS
 app.controller('viewApprovedEventsExController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
