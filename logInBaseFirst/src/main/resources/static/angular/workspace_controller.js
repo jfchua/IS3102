@@ -9,14 +9,16 @@ app.controller('workspaceController', function ($scope, $http,shareData,Auth) {
 			console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");
 			$scope.getEvents();
 			$scope.getMaints();
+			$scope.getTodos();
 		}else if(Auth.hasRoles('ROLE_EXTEVE')){
 			console.log("GET CALENDAR EVENTS FOR EXTERNAL EVENT ORGANISOR ROLE");
 			$scope.getExEvents();
+			$scope.getTodos();
 		}else{
 			console.log("NOT GETTING CALENDAR EVENTS");
 			
 		}
-		$scope.getTodos();
+		
 			
 	   
 	 });//END OF READY
@@ -117,7 +119,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 		//CONFIG CALENDAR
 	   $scope.uiConfig = {
 			      calendar:{
-			        width: 600,
+			        
 			        editable:false,
 			        header:{
 			          left: 'month agendaWeek agendaDay',
@@ -125,8 +127,52 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 			          right: 'today prev,next'
 			        },
 			        eventClick: $scope.alertEventOnClick,
-			        eventDrop: $scope.alertOnDrop,
-			        eventResize: $scope.alertOnResize
+			       
+			        eventResize: $scope.alertOnResize,
+       		 	 	eventDrop: function(event, delta, revertFunc) {
+    		 		 
+    		 		 console.log(event);
+    		 		console.log(event.className[0]);
+    		 		 console.log("start updating todo");
+    		 		$http({
+						method : "POST",
+						url : "https://localhost:8443/todo/updateToDoTask",
+						data: {id:event.className[0], date: event.start}
+					}).then(function mySuccess(response) {
+						console.log("UPDATE TO DO LIST");
+//						$http({
+//							method: 'GET',
+//							url: 'https://localhost:8443/todo/getToDoList'
+//						}).success(function (result) {
+							$scope.eventSources.length=0;
+
+							//VIEW EVENTS
+							if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
+								console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");
+								$scope.getEvents();
+								$scope.getMaints();
+	                            $scope.getTodos();
+							}else if(Auth.hasRoles('ROLE_EXTEVE')){
+								console.log("GET CALENDAR EVENTS FOR EXTERNAL EVENT ORGANISOR ROLE");
+								$scope.getExEvents();
+	                            $scope.getTodos();
+							}else{
+								console.log("NOT GETTING CALENDAR EVENTS");
+								
+							}
+							
+							
+//						}).error(function(result){
+//							//do something
+//							console.log("ERROR GETTING TODO LIST");
+//						})
+					
+					}, function myError(response) {
+						//alert(response);
+					});
+    		 		 
+
+    		     }
 			      }
 			    };
 	   $scope.eventSources=[];
@@ -294,8 +340,8 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 
 		         var todo=[{start: $scope.saved[index].date,
 		        		 	title:$scope.saved[index].task,
-		        		 	className: ['newtask'],
-		        		 	editable:false,
+		        		 	className: [$scope.saved[index].id],
+		        		 	editable:true,
 		        		 	color: 'SteelBlue'
 		         			}];
 		        		 
@@ -388,13 +434,13 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 							data: {task:newTask, date: newTaskDate}
 						}).then(function mySuccess(response) {
 							console.log("ADDED NEW TO DO LIST");
-							$http({
-								method: 'GET',
-								url: 'https://localhost:8443/todo/getToDoList'
-							}).success(function (result) {
+//							$http({
+//								method: 'GET',
+//								url: 'https://localhost:8443/todo/getToDoList'
+//							}).success(function (result) {
 								//$scope.saved = result;
 								//GET TODOS	
-								getTdList();
+								//getTdList();//might need to get back
 								$scope.eventSources.length=0;
 								//console.log("after add");
 								//console.log($scope.eventSources);
@@ -403,23 +449,25 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 									console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");
 									$scope.getEvents();
 									$scope.getMaints();
+									$scope.getTodos();
 								}else if(Auth.hasRoles('ROLE_EXTEVE')){
 									console.log("GET CALENDAR EVENTS FOR EXTERNAL EVENT ORGANISOR ROLE");
 									$scope.getExEvents();
+									$scope.getTodos();
 								}else{
 									console.log("NOT GETTING CALENDAR EVENTS");
 									
 								}
-								$scope.getTodos();
+								
 								//FOR PROPERTY MANAGER: GET MAINTENANCES		
 								/*if(Auth.hasRoles('ROLE_PROPERTY')){
 									
 								}*/
 								
-							}).error(function(result){
-								//do something
-								console.log("ERROR GETTING TODO LIST");
-							})
+//							}).error(function(result){
+//								//do something
+//								console.log("ERROR GETTING TODO LIST");
+//							})
 						
 							//$route.reload();
 							//console.log("refresh page")
@@ -429,7 +477,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 
 
 						}, function myError(response) {
-							alert(response);
+							//alert(response);
 						});
 						$scope.newTask = '';
 						$scope.newTaskDate = '';
@@ -444,7 +492,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 							data: id
 						}).then(function mySuccess(response) {
 							console.log("Successfully delete task with Id: " + id);
-							$scope.saved = [];
+							//$scope.saved = [];
 							$http({
 								method: 'GET',
 								url: 'https://localhost:8443/todo/getToDoList'
@@ -468,19 +516,21 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 								//console.log("after add");
 								//console.log($scope.eventSources);
 								//VIEW EVENTS
-								/*if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
+								if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
 									console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");
 									$scope.getEvents();
 									$scope.getMaints();
+									$scope.getTodos();
 								}else if(Auth.hasRoles('ROLE_EXTEVE')){
 									console.log("GET CALENDAR EVENTS FOR EXTERNAL EVENT ORGANISOR ROLE");
 									$scope.getExEvents();
+									$scope.getTodos();
 								}else{
 									console.log("NOT GETTING CALENDAR EVENTS");
 									
 								}
-								*/
-								$scope.getTodos();
+								
+								
 							}).error(function(result){
 								//do something
 								console.log("ERROR GETTING TODO LIST");
