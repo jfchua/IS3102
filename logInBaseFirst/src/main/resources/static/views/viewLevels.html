@@ -1,8 +1,8 @@
 <div class="clearfix">
                         <ol class="breadcrumb no-bg no-m-t">
                             <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                            <li><a href="#/dashboard">Workspace</a></li>
-                            <li><a ui-sref="dashboard.viewBuilding">View Buildings</a></li>
+                            <li><a ui-sref="IFMS.workspace">Workspace</a></li>
+                            <li><a ui-sref="IFMS.viewBuilding">View Buildings</a></li>
                              <li><a>View Levels</a></li>
                         </ol>
 </div>
@@ -39,9 +39,9 @@
                              <td><img ng-hide="x.filePath==null" class="svgtest" ng-src="{{x.filePath}}"  width="100px" height="100px"></td> 
                              <!--<td><a href="/#/updateLevel">Update</a></td>-->
                              <td>
-                             		<a  ui-sref="dashboard.updateLevel" ng-click="passLevel(x)" tooltip-placement="top" tooltip="Update Level"><i class="glyphicon glyphicon-pencil"></i></a>
-                             		<a  ui-sref="dashboard.deleteLevel" ng-click="passLevel(x)" tooltip-placement="top" tooltip="Delete Level"><i class="glyphicon glyphicon-trash"></i></a>
-                             		<a  ui-sref="dashboard.viewFloorPlan" ng-click="passLevel(x)" tooltip-placement="top" tooltip="Floor Plan"><i class="glyphicon glyphicon-eye-open"></i></a>	
+                             		<a  ui-sref="IFMS.updateLevel" ng-click="passLevel(x)" tooltip-placement="top" tooltip="Update Level"><i class="glyphicon glyphicon-pencil"></i></a>
+                             		<a  ui-sref="IFMS.deleteLevel" ng-click="passLevel(x)" tooltip-placement="top" tooltip="Delete Level"><i class="glyphicon glyphicon-trash"></i></a>
+                             		<a  ui-sref="IFMS.viewFloorPlan" ng-click="passLevel(x)" tooltip-placement="top" tooltip="Floor Plan"><i class="glyphicon glyphicon-eye-open"></i></a>	
                              			</td>
                             </tr>
                         </tbody>
