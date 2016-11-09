@@ -34,7 +34,6 @@ import application.exception.EventNotFoundException;
 import application.repository.AuditLogRepository;
 import application.repository.BeaconRepository;
 import application.repository.CategoryRepository;
-import application.repository.ClientOrganisationRepository;
 import application.repository.DiscountRepository;
 import application.repository.EventRepository;
 import application.repository.FeedbackRepository;
@@ -169,7 +168,6 @@ public class EngagementServiceImpl implements EngagementService{
 
 	@Override
 	public Set<Discount> getDiscounts(Long eventId) throws EventNotFoundException {
-		// TODO Auto-generated method stub
 		Event e = eventService.getEventById(eventId).get();
 		try{
 			return e.getDiscounts();
@@ -267,7 +265,7 @@ public class EngagementServiceImpl implements EngagementService{
 
 	@Override
 	public boolean deleteBeacon(User user, Long beaconId) throws EventNotFoundException {
-		
+
 		try{
 			System.err.println("START TO DELETE");
 			Beacon beacon = beaconRepository.findOne(beaconId);
@@ -296,16 +294,22 @@ public class EngagementServiceImpl implements EngagementService{
 
 	@Override
 	public Set<Beacon> getBeacons(Long eventId) throws EventNotFoundException {
-			// TODO Auto-generated method stub
-			Event e = eventService.getEventById(eventId).get();
-			try{
-				return e.getBeacon();
-			}
-			catch ( Exception ex){
-				System.err.println("Exception at getDiscounts in service class" + ex.getMessage());
+		Event e = eventService.getEventById(eventId).get();
+		try{
+			return e.getBeacon();
+		}
+		catch ( Exception ex){
+			System.err.println("Exception at getDiscounts in service class" + ex.getMessage());
 
-			}
-			return null;
+		}
+		return null;
+	}
+
+	@Override
+	public String getBeaconMessage(String beaconUUID) {
+		Beacon b = beaconRepository.getBeaconByUUID(beaconUUID);
+		return b.getMessage();
+
 	}
 
 }
