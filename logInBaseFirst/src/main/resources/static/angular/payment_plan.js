@@ -9,7 +9,7 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 			console.log("DISPLAY ALL PAYMENT PLANS");
 			console.log($scope.plans);
 		},function(response){
-			alert("did not view plans");
+			//alert("did not view plans");
 		}	
 		)
 		
@@ -39,19 +39,96 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 			var file = new Blob([data], {type: 'application/pdf'});
 			var fileURL = URL.createObjectURL(file);
 			//window.open(fileURL);
-			$state.reload();
-			alert('DOWNLOADED!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Invoice is sent to the event organiser successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllPaymentPlans");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		send.error(function(data){
-			alert('DOWNLOAD GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to generate invoice",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		}); 
 	}
 	
 	$scope.runTimer = function(){
 		$http.get("//localhost:8443/payment/runTimer").then(function(response){
-			alert("timer is running");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Timer is activated successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllPaymentPlans");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		},function(response){
-			alert("fail to activate timer");
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to activate timer",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		}	
 		)	
 	}
@@ -77,10 +154,49 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 			var file = new Blob([data], {type: 'application/pdf'});
 			var fileURL = URL.createObjectURL(file);
 			window.open(fileURL);
-			alert('DOWNLOADED!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Report is successfully generated.',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllPaymentPlans");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		send.error(function(data){
-			alert('DOWNLOAD GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to generate report",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -108,7 +224,7 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 			$scope.events = response.data;
 			console.log("DISPLAY ALL PAYMENT PLANS");
 		},function(response){
-			alert("did not view plans");
+			//alert("did not view plans");
 		}	
 		)	
 	});
@@ -132,8 +248,8 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 			$scope.plan = response;
 		});
 		send.error(function(response){
-			$scope.totalRent = response;
-			console.log($scope.totalRent);
+			//$scope.totalRent = response;
+			console.log(response);
 		});	
 	}
 	$scope.addPaymentPlan = function(){
@@ -153,16 +269,16 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 		console.log("SUBMIT PAYMENT PLAN");
 		console.log(JSON.stringify(dataObj));
 
-		var send = $http({
+		var send1 = $http({
 			method  : 'POST',
 			url     : 'https://localhost:8443/payment/addPaymentPlan',
 			data    : dataObj //forms user object
 		});
 
 		console.log("SAVING THE PAYMENT");
-		send.success(function(){
+		send1.success(function(){
 			
-			alert('PAYMENT IS SAVED! DOWNLOAD THE INVOICE!! GOING BACK TO VIEW PAYMENT PLANS');
+			//alert('PAYMENT IS SAVED! DOWNLOAD THE INVOICE!! GOING BACK TO VIEW PAYMENT PLANS');
 			
 			var send = $http({
 				method  : 'POST',
@@ -178,15 +294,74 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 				var file = new Blob([data], {type: 'application/pdf'});
 				var fileURL = URL.createObjectURL(file);
 				//window.open(fileURL);
-				alert('DOWNLOADED!');
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Invoice is sent to the event organiser successfully',
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+						//$state.go("dashboard.viewAllOutstandingBalance");
+					});
+				});
+
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 			});
 			send.error(function(data){
-				alert('DOWNLOAD GOT ERROR!');
+				ModalService.showModal({
+
+					templateUrl: "views/errorMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: "Fail to generate invoice",
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+					});
+				});
+
+				//END SHOWMODAL
+
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 			});	
 			$state.go("dashboard.viewAllPaymentPlans");
 		});
-		send.error(function(){
-			alert('SAVING PAYMENT GOT ERROR!');
+		send1.error(function(){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to save payment plan",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -245,7 +420,7 @@ app.controller('updatePaymentController', ['$scope', '$http','$state','$routePar
 
 		console.log("UPDATING THE PAYMENT");
 		send.success(function(){		
-alert('PAYMENT IS UPDATED! DOWNLOAD THE INVOICE!! GOING BACK TO VIEW PAYMENT PLANS');
+//alert('PAYMENT IS UPDATED! DOWNLOAD THE INVOICE!! GOING BACK TO VIEW PAYMENT PLANS');
 			
 			var send = $http({
 				method  : 'POST',
@@ -260,16 +435,75 @@ alert('PAYMENT IS UPDATED! DOWNLOAD THE INVOICE!! GOING BACK TO VIEW PAYMENT PLA
 				var file = new Blob([data], {type: 'application/pdf'});
 				var fileURL = URL.createObjectURL(file);
 				//window.open(fileURL);
-				alert('DOWNLOADED!');
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Invoice is sent to the event organiser successfully',
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+						//$state.go("dashboard.viewAllOutstandingBalance");
+					});
+				});
+
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 			});
 			send.error(function(data){
-				alert('DOWNLOAD GOT ERROR!');
+				ModalService.showModal({
+
+					templateUrl: "views/errorMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: "Fail to generate invoice",
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+					});
+				});
+
+				//END SHOWMODAL
+
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 			});	
 
 			$state.go("dashboard.viewAllPaymentPlans");
 		});
 		send.error(function(){
-			alert('SAVING PAYMENT GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to save payment plan",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -285,7 +519,7 @@ app.controller('balanceController', ['$scope', '$http','$state','$routeParams','
 			console.log("DISPLAY ALL ORGS OUTSTANDING BALANCE");
 			console.log($scope.orgs);
 		},function(response){
-			alert("did not view balance");
+			//alert("did not view balance");
 		}	
 		)	
 	});
@@ -317,7 +551,7 @@ app.controller('eventListController', ['$scope', '$http','$state','$routeParams'
 			$scope.events = response;
 		});
 		getEvents.error(function(response){
-			$state.go("dashboard.viewAllOutstandingBalance");
+			//$state.go("dashboard.viewAllOutstandingBalance");
 			console.log('GET EVENTS FAILED! ');
 		});
 	});
@@ -343,7 +577,7 @@ app.controller('receivedPController', ['$scope', '$http','$state','$routeParams'
 			$scope.selectedPlan;
 		});
 		getEvents.error(function(response){
-			$state.go("dashboard.viewAllOutstandingBalance");
+			//$state.go("dashboard.viewAllOutstandingBalance");
 			console.log('GET PLANS FAILED! ');
 		});
 	});
@@ -367,12 +601,61 @@ app.controller('receivedPController', ['$scope', '$http','$state','$routeParams'
 			console.log("RESPONSE IS" + JSON.stringify(response));
 		});
 		getLevels.error(function(){
-			alert('Get Payment Plan Details error!!!!!!!!!!');
+			//alert('Get Payment Plan Details error!!!!!!!!!!');
 		});			
 	}
 	
 	$scope.updateReceivedPayment = function(){
 		$scope.data = {};
+		
+				if (!$scope.chequeNum || !$scope.amountPaid || $scope.amountPaid <= 0){
+					ModalService.showModal({
+
+						templateUrl: "views/errorMessageTemplate.html",
+						controller: "errorMessageModalController",
+						inputs: {
+							message: "Ensure that you have entered all fields",
+						}
+					}).then(function(modal) {
+						modal.element.modal();
+						modal.close.then(function(result) {
+							console.log("OK");
+
+						});
+					});
+
+					$scope.dismissModal = function(result) {
+						close(result, 200); // close, but give 200ms for bootstrap to animate
+
+						console.log("in dissmiss");
+					};
+					return;
+				}
+		
+				if ($scope.amountPaid != $scope.paymentPlan.nextPayment){
+					ModalService.showModal({
+
+						templateUrl: "views/errorMessageTemplate.html",
+						controller: "errorMessageModalController",
+						inputs: {
+							message: "Ensure that you have entered the correct amount",
+						}
+					}).then(function(modal) {
+						modal.element.modal();
+						modal.close.then(function(result) {
+							console.log("OK");
+
+						});
+					});
+
+					$scope.dismissModal = function(result) {
+						close(result, 200); // close, but give 200ms for bootstrap to animate
+
+						console.log("in dissmiss");
+					};
+					return;
+				}
+		
 		var dataObj = {			
 				id: $scope.paymentPlan.id,
 				amountPaid: ($scope.amountPaid).toString(),
@@ -388,11 +671,49 @@ app.controller('receivedPController', ['$scope', '$http','$state','$routeParams'
 
 		console.log("SAVING THE PAYMENT PLan");
 		send.success(function(){		
-			alert('PAYMENT IS SAVED! GOING BACK TO VIEW ALL OUTSTANDING BALANCES');
-			$state.go("dashboard.viewAllOutstandingBalance");
+					ModalService.showModal({
+
+						templateUrl: "views/popupMessageTemplate.html",
+						controller: "errorMessageModalController",
+						inputs: {
+							message: 'Received payment is updated.',
+						}
+					}).then(function(modal) {
+						modal.element.modal();
+						modal.close.then(function(result) {
+							console.log("OK");
+							$state.go("dashboard.viewAllOutstandingBalance");
+						});
+					});
+
+					$scope.dismissModal = function(result) {
+						close(result, 200); // close, but give 200ms for bootstrap to animate
+
+						console.log("in dissmiss");
+					};
+			
 		});
 		send.error(function(){
-			alert('SAVING PAYMENT GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to update received payment",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	}
 }]);
@@ -406,7 +727,7 @@ app.controller('eventWithTicketController', ['$scope', '$http','$state','$routeP
 			$scope.events = response.data;
 			console.log("DISPLAY ALL EVENTS");
 		},function(response){
-			alert("did not view events");
+			//alert("did not view events");
 		}	
 		)	
 	});
@@ -436,13 +757,38 @@ app.controller('ticketRController', ['$scope', '$http','$state','$routeParams','
 			$scope.payment = response;
 		});
 		getEvents.error(function(response){
-			$state.go("dashboard.viewEventsWithTicketSales");
+			//$state.go("dashboard.viewEventsWithTicketSales");
 			console.log('GET PAYMENT FAILED! ');
 		});
 	});
 	
 	$scope.updateTicketRevenue = function(){
 		$scope.data = {};
+		
+		if (!$scope.ticket || $scope.ticket <= 0){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered valid ticket revenue amount",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		
 		var dataObj = {			
 				id: $scope.payment.id,
 				ticket: ($scope.ticket).toString(),
@@ -457,11 +803,49 @@ app.controller('ticketRController', ['$scope', '$http','$state','$routeParams','
 
 		console.log("SAVING THE TICKET REVENUE");
 		send.success(function(){		
-			alert('TICKET REVENUE IS UPDATED! GOING BACK TO VIEW ALL EVENTS WITH TICKET SALES');
-			$state.go("dashboard.viewEventsWithTicketSales");
+					ModalService.showModal({
+
+						templateUrl: "views/popupMessageTemplate.html",
+						controller: "errorMessageModalController",
+						inputs: {
+							message: 'Ticket revenue is updated.',
+						}
+					}).then(function(modal) {
+						modal.element.modal();
+						modal.close.then(function(result) {
+							console.log("OK");
+							$state.go("dashboard.viewEventsWithTicketSales");
+						});
+					});
+
+					$scope.dismissModal = function(result) {
+						close(result, 200); // close, but give 200ms for bootstrap to animate
+
+						console.log("in dissmiss");
+					};		
+			
 		});
 		send.error(function(){
-			alert('UPDATING TICKET REVENUE GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to update ticket revenue",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	}
 	
@@ -491,13 +875,37 @@ app.controller('outgoingController', ['$scope', '$http','$state','$routeParams',
 			$scope.amountToBePaid = (0-$scope.payment.payable).toString();
 		});
 		getEvents.error(function(response){
-			$state.go("dashboard.viewEventsWithTicketSales");
+			//$state.go("dashboard.viewEventsWithTicketSales");
 			console.log('GET PAYMENT FAILED! ');
 		});			
 	});
 	
 	$scope.updateOutgoingPayment = function(){
 		$scope.data = {};
+		if (!$scope.cheque){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered cheque number before you proceed",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
+			return;
+		}
+						
 		var dataObj = {			
 				id: $scope.payment.id,
 				toBePaid: $scope.amountToBePaid,
@@ -512,11 +920,48 @@ app.controller('outgoingController', ['$scope', '$http','$state','$routeParams',
 
 		console.log("SAVING THE OUTGOING PAYMENT");
 		send.success(function(){		
-			alert('OUTGOING PAYMENT IS UPDATED! GOING BACK TO VIEW ALL EVENTS WITH TICKET SALES');
-			$state.go("dashboard.viewEventsWithTicketSales");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Outgoing payment is updated.',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewEventsWithTicketSales");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};					
 		});
 		send.error(function(){
-			alert('SAVING OUTGOING PAYMENT GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to update outgoing payment",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	}
 	
@@ -544,7 +989,7 @@ app.controller('paymentHistoryController', ['$scope', '$http','$state','$routePa
 			$scope.payments = response;
 		});
 		getPayments.error(function(response){
-			$state.go("dashboard.viewAllOutstandingBalance");
+			//$state.go("dashboard.viewAllOutstandingBalance");
 			console.log('GET PAYMENTS FAILED! ');
 		});
 	});
@@ -559,7 +1004,7 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 			console.log("DISPLAY ALL PAYMENT PLANS");
 			console.log($scope.policy);
 		},function(response){
-			alert("did not view plans");
+			//alert("did not view plans");
 		}	
 		)
 		
@@ -568,7 +1013,7 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 			console.log("DISPLAY TURNOVER RATIO");
 			console.log($scope.turnover);
 		},function(response){
-			alert("did not view turnover ratio");
+			//alert("did not view turnover ratio");
 		}	
 		)
 		
@@ -577,7 +1022,7 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 			console.log("DISPLAY DSO");
 			console.log($scope.days);
 		},function(response){
-			alert("did not view DSO");
+			//alert("did not view DSO");
 		}	
 		)
 		
@@ -586,28 +1031,142 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 		shareData.addData(policy);
 	}
     $scope.deletePolicy = function(){
-    	console.log("Start deleting");
-    	if(confirm('CONFIRM TO DELETE POLICY ?')){
-			var tempObj ={id:$scope.policy.id};
-			console.log("fetch id "+ tempObj);
-			//var buildings ={name: $scope.name, address: $scope.address};
-			$http.post("//localhost:8443/policy/deletePaymentPolicy", JSON.stringify(tempObj)).then(function(response){
-				//$scope.buildings = response.data;
-				console.log("DELETE");
-				alert('PAYMENT POLICY IS DELETED! GOING BACK TO VIEW PAYMENT POLICY...');
-				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$state.go("dashboard.viewPaymentPolicy");
-			},function(response){
-				alert("DID NOT DELETE PAYMENT POLICY");
-				//console.log("response is : ")+JSON.stringify(response);
-			}	
-			)
-		}
+    	ModalService.showModal({
+			templateUrl: "views/yesno.html",
+			controller: "YesNoController",
+			inputs: {
+				message: 'Do you wish to delete payment policy '+$scope.policy.id+' ?',
+			}
+		}).then(function(modal) {
+			modal.element.modal();
+			modal.close.then(function(result) {
+				if(result){
+					$scope.data = {};
+					console.log("Start deleting policy");
+					//$scope.vendor = shareData.getData();
+					console.log($scope.policy.id);
+					var tempObj ={id:$scope.policy.id};
+					console.log("fetch id "+ tempObj);
+					$http.post("//localhost:8443/policy/deletePaymentPolicy", JSON.stringify(tempObj)).then(function(response){
+						ModalService.showModal({
+
+							templateUrl: "views/popupMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: 'Payment policy deleted successfully',
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewPaymentPolicy");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+
+					},function(data){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: "Fail to delete payment policy",
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								console.log("OK");
+								$state.go("dashboard.viewPaymentPolicy");
+							});
+						});
+
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+
+							console.log("in dissmiss");
+						};
+						//END SHOWMODAL
+					}	
+					)
+				}
+			});
+		});
+
+		$scope.dismissModal = function(result) {
+			close(result, 200); // close, but give 200ms for bootstrap to animate
+
+			console.log("in dissmiss");
+		};
     }
  
 	$scope.addPaymentPolicy = function(){
 		
 		$scope.data = {};
+		if (!$scope.policy.depositRate || !$scope.policy.subsequentNumber  || !$scope.policy.numOfDueDays 
+				||!$scope.policy.interimPeriod){
+			ModalService.showModal({
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered all the fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		if ($scope.policy.depositRate < 0 || $scope.policy.depositRate > 1){
+			ModalService.showModal({
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered valid deposit rate",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		if ($scope.policy.subsequentNumber < 0 || $scope.policy.numOfDueDays < 0 ||$scope.policy.interimPeriod < 0 ){
+			ModalService.showModal({
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered valid values",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		
 		var dataObj = {			
 				depositRate: $scope.policy.depositRate,
 				subsequentNumber: $scope.policy.subsequentNumber,
@@ -623,11 +1182,48 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 
 		console.log("SAVING THE PAYMENT POLICY");
 		send.success(function(){		
-			alert('PAYMENT POLICY IS SAVED! GOING BACK TO VIEW PAYMENTPOLICY');
-			$state.go("dashboard.viewPaymentPolicy");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Payment policy is saved.',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewPaymentPolicy");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};								
 		});
 		send.error(function(){
-			alert('SAVING PAYMENT POLICY GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to save payment policy",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -638,7 +1234,7 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 		$scope.policy1 = shareData.getData();	
 		//console.log("$scope.policy1");
 		console.log($scope.policy1);
-		//console.log("$scope.policy2");
+		//console.log("$scope.policy2");	
 		var dataObj = {						
 				depositRate: $scope.policy1.depositRate,
 				subsequentNumber: $scope.policy1.subsequentNumber,
@@ -654,6 +1250,64 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 	$scope.updatePaymentPolicy = function(){
 		//alert("SUCCESS");
 		$scope.data = {};
+		if (!$scope.policy.depositRate || !$scope.policy.subsequentNumber  || !$scope.policy.numOfDueDays 
+				||!$scope.policy.interimPeriod){
+			ModalService.showModal({
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered all the fields",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		if ($scope.policy.depositRate < 0 || $scope.policy.depositRate > 1){
+			ModalService.showModal({
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered valid deposit rate",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+				console.log("in dissmiss");
+			};
+			return;
+		}
+		if ($scope.policy.subsequentNumber < 0 || $scope.policy.numOfDueDays < 0 ||$scope.policy.interimPeriod < 0 ){
+			ModalService.showModal({
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Ensure that you have entered valid values",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+				console.log("in dissmiss");
+			};
+			return;
+		}
 		var dataObj = {				
 		        id:$scope.policy.id,
 				depositRate: $scope.policy.depositRate,
@@ -669,11 +1323,48 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 		});
 		console.log("SAVING THE PAYMENT POLICY");
 		send.success(function(){		
-			alert('PAYMENT POLICY IS SAVED! GOING BACK TO VIEW PAYMENTPOLICY');
-			$state.go("dashboard.viewPaymentPolicy");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Payment policy is saved.',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewPaymentPolicy");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};					
 		});
 		send.error(function(){
-			alert('SAVING PAYMENT POLICY GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to save payment policy",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -687,7 +1378,7 @@ app.controller('invoiceController', ['$scope', '$http', function ($scope, $http)
 			$scope.plans = response.data;
 			console.log("DISPLAY ALL PAYMENT PLANS");
 		},function(response){
-			alert("did not view plans");
+			//alert("did not view plans");
 		}	
 		)	
 	});
@@ -713,7 +1404,7 @@ app.controller('invoiceController', ['$scope', '$http', function ($scope, $http)
 			console.log(JSON.stringify(response));
 		});
 		getPlan.error(function(){
-			alert('Get Payment Plan Details error!!!!!!!!!!');
+			//alert('Get Payment Plan Details error!!!!!!!!!!');
 		});			
 		
 	}
@@ -740,10 +1431,49 @@ app.controller('invoiceController', ['$scope', '$http', function ($scope, $http)
 			var file = new Blob([data], {type: 'application/pdf'});
 			var fileURL = URL.createObjectURL(file);
 			//window.open(fileURL);
-			alert('DOWNLOADED!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Invoice is sent to the event organiser successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllPaymentPlans");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		send.error(function(data){
-			alert('Invoice has already been generated. Please select a new payment plan.');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to generate invoice",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 }]);

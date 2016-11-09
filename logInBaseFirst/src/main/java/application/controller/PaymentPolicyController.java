@@ -276,8 +276,10 @@ public class PaymentPolicyController {
 						//System.out.println(payment.getDepositRate());  
 						Calendar cal = Calendar.getInstance();
 						int day = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-						Double days = 1/ratio * day;
-						NumberFormat formatter = new DecimalFormat("#0.00");  
+						NumberFormat formatter = new DecimalFormat("#0.00"); 
+						if(formatter.format(ratio).equals(0.00))
+							return new ResponseEntity<String>("NA", HttpStatus.OK);
+						Double days = 1/ratio * day;					 
 						Gson gson2 = new Gson();
 						String json = gson2.toJson(ratio);
 					    if(ratio != null)
