@@ -9,7 +9,7 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 			console.log("DISPLAY ALL PAYMENT PLANS");
 			console.log($scope.plans);
 		},function(response){
-			alert("did not view plans");
+			//alert("did not view plans");
 		}	
 		)
 		
@@ -39,19 +39,96 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 			var file = new Blob([data], {type: 'application/pdf'});
 			var fileURL = URL.createObjectURL(file);
 			//window.open(fileURL);
-			$state.reload();
-			alert('DOWNLOADED!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Invoice is sent to the event organiser successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllPaymentPlans");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		send.error(function(data){
-			alert('DOWNLOAD GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to generate invoice",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		}); 
 	}
 	
 	$scope.runTimer = function(){
 		$http.get("//localhost:8443/payment/runTimer").then(function(response){
-			alert("timer is running");
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Timer is activated successfully',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllPaymentPlans");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		},function(response){
-			alert("fail to activate timer");
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to activate timer",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		}	
 		)	
 	}
@@ -77,10 +154,49 @@ app.controller('paymentController', ['$scope', '$http','$state','$routeParams','
 			var file = new Blob([data], {type: 'application/pdf'});
 			var fileURL = URL.createObjectURL(file);
 			window.open(fileURL);
-			alert('DOWNLOADED!');
+			ModalService.showModal({
+
+				templateUrl: "views/popupMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: 'Report is successfully generated.',
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+					$state.go("dashboard.viewAllPaymentPlans");
+				});
+			});
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 		send.error(function(data){
-			alert('DOWNLOAD GOT ERROR!');
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to generate report",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
@@ -108,7 +224,7 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 			$scope.events = response.data;
 			console.log("DISPLAY ALL PAYMENT PLANS");
 		},function(response){
-			alert("did not view plans");
+			//alert("did not view plans");
 		}	
 		)	
 	});
@@ -153,14 +269,14 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 		console.log("SUBMIT PAYMENT PLAN");
 		console.log(JSON.stringify(dataObj));
 
-		var send = $http({
+		var send1 = $http({
 			method  : 'POST',
 			url     : 'https://localhost:8443/payment/addPaymentPlan',
 			data    : dataObj //forms user object
 		});
 
 		console.log("SAVING THE PAYMENT");
-		send.success(function(){
+		send1.success(function(){
 			
 			alert('PAYMENT IS SAVED! DOWNLOAD THE INVOICE!! GOING BACK TO VIEW PAYMENT PLANS');
 			
@@ -178,15 +294,74 @@ app.controller('addPaymentController', ['$scope', '$http','$state','$routeParams
 				var file = new Blob([data], {type: 'application/pdf'});
 				var fileURL = URL.createObjectURL(file);
 				//window.open(fileURL);
-				alert('DOWNLOADED!');
+				ModalService.showModal({
+
+					templateUrl: "views/popupMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: 'Invoice is sent to the event organiser successfully',
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+						//$state.go("dashboard.viewAllOutstandingBalance");
+					});
+				});
+
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 			});
 			send.error(function(data){
-				alert('DOWNLOAD GOT ERROR!');
+				ModalService.showModal({
+
+					templateUrl: "views/errorMessageTemplate.html",
+					controller: "errorMessageModalController",
+					inputs: {
+						message: "Fail to generate invoice",
+					}
+				}).then(function(modal) {
+					modal.element.modal();
+					modal.close.then(function(result) {
+						console.log("OK");
+					});
+				});
+
+				//END SHOWMODAL
+
+				$scope.dismissModal = function(result) {
+					close(result, 200); // close, but give 200ms for bootstrap to animate
+
+					console.log("in dissmiss");
+				};
 			});	
 			$state.go("dashboard.viewAllPaymentPlans");
 		});
-		send.error(function(){
-			alert('SAVING PAYMENT GOT ERROR!');
+		send1.error(function(){
+			ModalService.showModal({
+
+				templateUrl: "views/errorMessageTemplate.html",
+				controller: "errorMessageModalController",
+				inputs: {
+					message: "Fail to save payment plan",
+				}
+			}).then(function(modal) {
+				modal.element.modal();
+				modal.close.then(function(result) {
+					console.log("OK");
+				});
+			});
+
+			//END SHOWMODAL
+
+			$scope.dismissModal = function(result) {
+				close(result, 200); // close, but give 200ms for bootstrap to animate
+
+				console.log("in dissmiss");
+			};
 		});
 	};
 
