@@ -5,8 +5,8 @@
 	<div class="clearfix">
 		<ol class="breadcrumb no-bg no-m-t">
 			<li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-			<li><a ui-sref="dashboard.workspace">Workspace</a></li>
-			<li><a ui-sref="dashboard.viewAllEventsEx">View Events</a></li>
+			<li><a ui-sref="IFMS.workspace">Workspace</a></li>
+			<li><a ui-sref="IFMS.viewAllEventsEx">View Events</a></li>
 			<li><a>Configure Beacons</a></li>
 		</ol>
 	</div>
@@ -43,7 +43,7 @@
 							<td>{{ x.beaconUUID }}</td>
 							<td>{{ x.message }}</td>
 
-							<td><a ui-sref="dashboard.updateBeaconEx"
+							<td><a ui-sref="IFMS.updateBeaconEx"
 								ng-click="passBeacon(x)" tooltip-placement="top"
 								tooltip="Update Beacon"><i
 									class="glyphicon glyphicon-pencil"></i></a> <a
@@ -57,7 +57,7 @@
 		</div>
 	</div>
 	<div class="col-md-3">
-		<br> <br> <br> <a ui-sref="dashboard.addBeaconEx"
+		<br> <br> <br> <a ui-sref="IFMS.addBeaconEx"
 			tooltip-placement="right" tooltip="Add a new beacon"><button
 				type="button" class="btn btn-primary btn-circle btn-lg">
 				<i class="glyphicon glyphicon-plus"></i>
