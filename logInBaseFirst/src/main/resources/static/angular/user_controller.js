@@ -35,41 +35,23 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 		console.log("REACHED HERE BEFORE HTTP GET " +  JSON.stringify(headers));
 		$http.get('//localhost:8443/user/loginVerify', {headers: headers}).success(function(response) {
 		//	$http.get('//172.20.10.3:8443/user/loginVerify', {headers: headers}).success(function(response) {
-			console.log(response.principal.user.clientOrganisation.organisationName);
-			console.log(response);
-			console.log("RESPONSE IS" + JSON.stringify(response));
-			console.log("RESPONSE NAME IS " + JSON.stringify(response.name));
-
-			if (response.name) {
-				console.log("VERIFIED WITH NAME: " + response.name);
-				$rootScope.authenticated = true;
-				Auth.setUser(response);
-				console.log(response);
-				console.log(response.principal.user.clientOrganisation.organisationName);
-				$state.go('dashboard.workspace', {param :response.principal.user.clientOrganisation.organisationName});
-				//return true;
-			} else {
-				console.log("NO VERIFIED");
-				$rootScope.authenticated = false;
-				if ( $location.path() != "/reset" && !$location.path().startsWith("/resetPassword/") ){
-					$location.path("/login");
-				}
-				//return false;
-			}
+	
+			console.log("VERIFIED WITH NAME: " + response.name);
+			$rootScope.authenticated = true;
+			Auth.setUser(response);
+			$state.go('dashboard.workspace', {param :response.principal.user.clientOrganisation.organisationName});
+			
 			console.log("pre callback");
 			callback && callback();
-		}, function(response) {
+		}).error(function(response) {
 			console.log("BAD RESPONSE AUTHENTICATION");
 			//alert(JSON.stringify(response));
 			$rootScope.authenticated = false;
-			alert("Please log in again");
-			reset();
+			alert("Failed to login");
+			$state.reload();
 
-			if ( $location.path() != "/reset" && !$location.path().startsWith("/resetPassword/") ){
-				$location.path("/login");
-			}     
-			callback && callback();
-			return false
+			//callback && callback();
+			return false;
 		});
 
 	}
@@ -258,21 +240,21 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 
 
 	function reset(){
-		//self.email='';
-		//self.password='';
-		//$scope.ctrler.email = '';
-		//$scope.ctrler.pass1 = '';
-		//$scope.ctrler.pass2 = '';
-		//$scope.controller.credentials.username = '';
-		//$scope.controller.credentials.password = '';
-		/*if ( typeof $scope.ctrler.pass1 !== 'undefined' ){
+		self.email='';
+		self.password='';
+		$scope.ctrler.email = '';
+		$scope.ctrler.pass1 = '';
+		$scope.ctrler.pass2 = '';
+		$scope.controller.credentials.username = '';
+		$scope.controller.credentials.password = '';
+		if ( typeof $scope.ctrler.pass1 !== 'undefined' ){
 			$scope.ctrler.pass1 = '';
 		}
 		if (undefined != $scope.ctrler.pass1 ){
-			$scope.ctrler.pass1 = '';*/
+			$scope.ctrler.pass1 = '';
+		}
+
 	}
-
-
 
 	 	
 
