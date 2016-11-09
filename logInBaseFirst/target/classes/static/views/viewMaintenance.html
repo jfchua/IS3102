@@ -2,7 +2,7 @@
             <div class="clearfix">
                             <ol class="breadcrumb no-bg no-m-t">
                                 <li class="active"><i class="glyphicon glyphicon-dashboard"></i></li>
-                                <li><a ui-sref="dashboard.workspace">Workspace</a></li>
+                                <li><a ui-sref="IFMS.workspace">Workspace</a></li>
                                 <li><a>View Maintenances</a></li>
                             </ol>
             </div>
@@ -40,11 +40,11 @@
                          <td>{{ x.description }}</td>
                         
                              <td>
-                             		<a ng-show="checkDateBefore(x.start)"  ui-sref="dashboard.updateMaintenance" ng-click="passMaintenance(x)" 
+                             		<a ng-show="checkDateBefore(x.start)"  ui-sref="IFMS.updateMaintenance" ng-click="passMaintenance(x)" 
                              		tooltip-placement="top" tooltip="Update Maintenance"><i class="glyphicon glyphicon-pencil"></i></a>
-                             		<a ng-show="checkDateBefore(x.start)" ui-sref="dashboard.deleteMaintenance" ng-click="passMaintenance(x)" 
+                             		<a ng-show="checkDateBefore(x.start)" ui-sref="IFMS.deleteMaintenance" ng-click="passMaintenance(x)" 
                              		tooltip-placement="top" tooltip="Delete Maintenance"><i class="glyphicon glyphicon-trash"></i></a>
-                             		<a ui-sref="dashboard.viewMaintenanceSchedule" ng-click="passMaintenance(x)" 
+                             		<a ui-sref="IFMS.viewMaintenanceSchedule" ng-click="passMaintenance(x)" 
 								    tooltip-placement="top" tooltip="View Maintenance Schedule"><i class="glyphicon glyphicon-eye-open"></i></a>
                              </td>
                          </tr>
@@ -57,7 +57,7 @@
             <br>
             <br>
             <br>
-             <a ui-sref="dashboard.addMaintenance" tooltip-placement="right" tooltip="Add a Maintenance Request"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
+             <a ui-sref="IFMS.addMaintenance" tooltip-placement="right" tooltip="Add a Maintenance Request"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-plus"></i></button></a>  
              <a ng-click="generateReport()" tooltip-placement="right" tooltip="Generate Monthly Maintenance Report"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-th-list"></i></button></a>            
               <a ng-click="runTimer()" tooltip-placement="right" tooltip="Activate Timer"><button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-time"></i></button></a>  						
 			</div>

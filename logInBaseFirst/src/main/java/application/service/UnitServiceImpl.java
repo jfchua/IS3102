@@ -326,9 +326,9 @@ public class UnitServiceImpl implements UnitService {
 		int sizeX2=unit2.getSizex();
 		int sizeY2=unit2.getSizey();
 		
-		if( ((col1+sizeX1>=col2)&&(row1+sizeY1>=row2))&&((col1<=col2+sizeX2)&&(row1<=row2+sizeY2))){
+		if( ((col1+sizeX1>col2)&&(row1+sizeY1>row2))&&((col1<col2+sizeX2)&&(row1<row2+sizeY2))){
 			return false;
-		}else if (((col1<=col2+sizeX2)&&(row1+sizeY1>=row2))&&((col1+sizeX1>=col2)&&(row1<=row2+sizeY2))){
+		}else if (((col1<col2+sizeX2)&&(row1+sizeY1>row2))&&((col1+sizeX1>col2)&&(row1<row2+sizeY2))){
 			return false;
 		}else{
 			return true;

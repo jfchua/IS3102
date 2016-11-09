@@ -459,9 +459,9 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 //				  } ).then(function(){
 					  var dataObj={levelId:levelId,type: $scope.specialType};
 					  $http.post('/property/addDefaultIcon', JSON.stringify(dataObj)).then(function(response){
-						  $scope.units=[];
-						  console.log("empty");
-						  console.log($scope.units);
+						//  $scope.units=[];
+						//  console.log("empty");
+						//  console.log($scope.units);
 						  $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
 							  console.log(angular.fromJson(response.data));
 							  $scope.units=angular.fromJson(response.data);
@@ -777,6 +777,7 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					    	   
 					    	   //console.log($element);
 					    	 //  console.log(unit);
+					    	   console.log("X:"+unit.sizeX+"Y:"+unit.sizeY+"row:"+unit.row+"col:"+unit.col);
 					    	   $scope.updateUnit(unit);
 					       } // optional callback fired when item is finished resizing
 					    },
@@ -788,7 +789,9 @@ app.controller('floorPlanController', function ($scope, $http,shareData,$state,M
 					       stop: function(event, $element, unit) {
 					    	   //console.log($element);
 					    	   //console.log(unit);
+					    	   console.log("X:"+unit.sizeX+"Y:"+unit.sizeY+"row:"+unit.row+"col:"+unit.col);
 					    	   $scope.updateUnit(unit);
+					    	   
 					       } // optional callback fired when item is finished dragging
 					    }
 					};
