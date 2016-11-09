@@ -847,14 +847,6 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles:[USER_ROLES.finance]
                                 				  }
                                 			  })
-                                			  .state('/401',{
-                                				  url:'/401',
-                                				  templateUrl: '/views/401.html',
-                                				  controller: 'passController',
-                                				  data: {
-                                					  authorizedRoles: [USER_ROLES.all]
-                                				  }
-                                			  })	
                                 			  .state('dashboard.createNewUser',{
                                 				  url:'/createNewUser',
                                 				  templateUrl: '/views/createUser.html',
@@ -903,9 +895,16 @@ var app = angular.module('app', [ 'ui.router',
                                 					  authorizedRoles: [USER_ROLES.user]
                                 				  }
                                 			  })
+							.state('404',{
+								url:'/404.html',
+								templateUrl: 'views/404.html',
+								controller: 'usersController',
+								data: {
+									authorizedRoles: [USER_ROLES.all]
+								}
+                                			  })
 
-
-                                			  $urlRouterProvider.otherwise('/login');
+                                			  $urlRouterProvider.otherwise('404.html');
 
 
                                 			  /*$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';*/
