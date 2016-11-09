@@ -16,7 +16,7 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 			console.log($scope.events);
 
 		},function(response){
-			alert("did not view all feedback");
+			console.log("did not view all events");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
@@ -45,48 +45,9 @@ app.controller('eventExternalController', ['$scope', '$rootScope', '$http','$sta
 			return isTrue;
 		}
 
-		/*
-		$scope.checkTicket= function (id) {
-			var noTicSold = true;
-			$scope.cats = {};
-			var getBookings = $http({
-				method  : 'GET',
-				url     : 'https://localhost:8443/event/viewAllCategories/' + id        
-			});
-			console.log("Getting the bookings using the url: " + $scope.url);
-			getBookings.success(function(response){
-				$scope.cats = response;
-				console.log("DISPLAY ALL Categories");
-				console.log($scope.cats);
-			});
-			getBookings.error(function(response){
-				alert("did not view all categories");
-			});
-			angular.forEach($scope.cats, function() {
-
-				if(noTicSold==true&&$scope.cats[index].tickets.length>0)
-					noTicSold = false;
-				else
-					index = index + 1;
-			});
-		    return noTicSold;
-		}*/
-
 
 	});
-	/*
-	$scope.viewApprovedEvents = function(){
-		$scope.data = {};
-		$http.get("//localhost:8443/event/viewApprovedEvents").then(function(response){
-			$scope.events = response.data;
-			console.log("DISPLAY ALL EVENT");
-			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
 
-		},function(response){
-			alert("did not view approved events");
-		}	
-		)	
-	}*/
 
 	$scope.getEvent = function(event){	
 		shareData.addData(event);
@@ -264,7 +225,7 @@ app.controller('viewApprovedEventsExController', ['$scope', '$http','$state','$r
 			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
 
 		},function(response){
-			alert("did not view approved events");
+			console.log("did not view approved events");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)
@@ -488,7 +449,7 @@ app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareD
 				}).then(function(modal) {
 					modal.element.modal();
 					modal.close.then(function(result) {
-						console.log("OK");
+						$state.go("IFMS.viewAllEventsEx");
 					});
 				});
 
@@ -498,12 +459,9 @@ app.controller('deleteEventExController', ['$scope',  '$timeout','$http','shareD
 					console.log("in dissmiss");
 				};
 
-				//	alert('EVENT IS DELETED! GOING BACK TO VIEW EVENTS...');
-				//if (confirm('LEVEL IS SAVED! GO BACK TO VIEW BUILDINGS?'))
-				$state.go("IFMS.viewAllEventsEx");
+
 			},function(response){
 				console.log("DID NOT CANCEL EVENT");
-				//console.log("response is : ")+JSON.stringify(response);
 			}	
 			)
 		}
@@ -835,7 +793,7 @@ app.controller('addEController', ['$scope', '$http','$state','$routeParams','sha
 							templateUrl: "views/popupMessageTemplate.html",
 							controller: "errorMessageModalController",
 							inputs: {
-								message: 'event and its associated image has been updated successfully',
+								message: 'Event and its associated image has been updated successfully',
 							}
 						}).then(function(modal) {
 							modal.element.modal();
@@ -1579,7 +1537,7 @@ app.controller('paymentExController', ['$scope', '$http','$state','$routeParams'
 			console.log("DISPLAY ALL PAYMENT PLANS");
 			console.log($scope.plans);
 		},function(response){
-			alert("did not view plans");
+			console.log("did not view plans");
 		}	
 		)
 
@@ -1588,7 +1546,7 @@ app.controller('paymentExController', ['$scope', '$http','$state','$routeParams'
 			console.log("DISPLAY TOTAL BALANCE");
 			console.log($scope.totalAmount);
 		},function(response){
-			alert("did not view plans");
+			console.log("did not view plans");
 		}	
 		)
 	});

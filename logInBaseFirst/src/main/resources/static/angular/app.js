@@ -1008,7 +1008,7 @@ app.controller("userCtrl",['$scope','ModalService', function userCtrl($scope,Mod
 			$scope.model = response;
 		});
 		fetch.error(function(response){
-			alert('Failure to fetch all users!');
+			console.log('Failure to fetch all users!');
 		});
 
 	};
@@ -2421,7 +2421,7 @@ app.controller('eventExternalController', ['$scope', '$http','$location','$route
 			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
 
 		},function(response){
-			alert("did not view all events");
+			console.log("did not view all events");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
@@ -2437,7 +2437,7 @@ app.controller('eventExternalController', ['$scope', '$http','$location','$route
 			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
 
 		},function(response){
-			alert("did not view approved events");
+			console.log("did not view approved events");
 			//console.log("response is : ")+JSON.stringify(response);
 		}	
 		)	
@@ -2641,7 +2641,7 @@ app.controller('bookingController', ['$scope','$http','$location','$routeParams'
 				console.log('DELETE BOOKING FAILED! ' + JSON.stringify(response));
 			});
 		} else {
-			alert("Cancel deleting booking");
+			console.log("Cancel deleting booking");
 		}
 	}
 }])
@@ -2759,7 +2759,7 @@ app.controller('auditLogController', ['$scope', '$http','ModalService', function
 		console.log('Senders Gotten');
 	});
 	getUsers.error(function(){
-		alert('Get sender error!');
+		console.log('Get sender error!');
 	});
 
 }]);
@@ -2791,7 +2791,7 @@ app.controller('UsersIndexController', ['$scope','$http','ModalService', functio
 					}
 					counter++;					
 				}
-				alert("Tasks for this day: " + arrayTasks);
+				//alert("Tasks for this day: " + arrayTasks);
 
 			},
 			dateClick: function(){
