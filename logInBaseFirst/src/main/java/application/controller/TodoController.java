@@ -3,6 +3,7 @@ package application.controller;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
@@ -26,6 +27,7 @@ import application.entity.ToDoTask;
 import application.entity.User;
 import application.exception.ToDoTaskNotFoundException;
 import application.exception.UserNotFoundException;
+import application.repository.ToDoTaskRepository;
 import application.service.ToDoTaskService;
 import application.service.UserService;
 
@@ -38,16 +40,17 @@ public class TodoController {
 	private final UserService userService;
 	private final ToDoTaskService toDoTaskService;
 	private Gson geeson = new Gson();
-	
+	private final ToDoTaskRepository toDoTaskRepository;
 	
 	private JSONParser parser = new JSONParser();
 
 
 	@Autowired
-	public TodoController(UserService userService,ToDoTaskService toDoTaskService) {
+	public TodoController(UserService userService,ToDoTaskService toDoTaskService,ToDoTaskRepository toDoTaskRepository) {
 		super();
 		this.userService = userService;
 		this.toDoTaskService =  toDoTaskService;
+		this.toDoTaskRepository = toDoTaskRepository;
 
 	}
 
@@ -156,4 +159,44 @@ public class TodoController {
 	public String getTodoPartialPage() {
 		return "todo/layout";
 	}
+	
+	
+	
+	
+	//Security filters for inputs needs to be added
+		//This method takes in a String which is the new toDoTask to be added.
+		//Call $http.post(URL,stringToAdd);
+		@RequestMapping(value = "/updateToDoTask", method = RequestMethod.POST)
+		@ResponseBody
+		public ResponseEntity<String> updateToDoTask(@RequestBody String toDoTaskJSON,HttpServletRequest rq) {
+			System.out.println("TYPE STH HERE FOR TODOTASK");
+			try{
+				Principal principal = rq.getUserPrincipal();
+				User currUser = (User)userService.getUserByEmail(principal.getName()).get();
+				Object obj = parser.parse(toDoTaskJSON);
+				JSONObject jsonObject = (JSONObject) obj;
+
+			
+				long id = (Long)jsonObject.get("id");	
+				//System.out.println(id);
+				String date = (String)jsonObject.get("date");
+				//System.out.println(date);
+				Date dateParsed = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+				ToDoTask todo=toDoTaskRepository.findOne(id);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dateParsed);
+				cal.add(Calendar.DATE, 1); 
+				todo.setDate(cal.getTime());
+				toDoTaskRepository.saveAndFlush(todo);
+				System.out.println("updating todotask to usrname: " + currUser.getEmail());
+			}
+			catch ( UserNotFoundException e){
+				return new ResponseEntity<String>(geeson.toJson(e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			catch (Exception e){
+				System.out.println("EEPTOIN" + e.toString() + "   " + e.getMessage());
+				return new ResponseEntity<String>(geeson.toJson("Server error in updating to do task"),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}
 }
