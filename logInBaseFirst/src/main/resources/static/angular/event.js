@@ -5,8 +5,7 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 			}
 	};
 	angular.element(document).ready(function () {
-		console.log("test succes");
-		console.log($scope.events);
+		
 		$scope.data = {};
 
 		//var buildings ={name: $scope.name, address: $scope.address};
@@ -14,8 +13,7 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 			$scope.events = response.data;
 			$scope.order_item = "id";
 			$scope.order_reverse = false;
-			console.log($scope.events);
-			console.log("DISPLAY ALL EVENT fir event manager");
+			
 			
 			$scope.currentPage = 1;
 			var eventsSorted
@@ -150,7 +148,7 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 		$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
 			$scope.events = response.data;
 			console.log("DISPLAY ALL EVENT");
-			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
+			//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
 
 		},function(response){
 			console.log(response);
@@ -176,7 +174,7 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 			method  : 'GET',
 			url     : 'https://localhost:8443/event/getEvent/' + id        
 		});
-		console.log("Getting the event using the url: " + $scope.url);
+		//console.log("Getting the event using the url: " + $scope.url);
 		getEvent.success(function(response){
 			//$scope.dataToShare.push(id);
 			//$location.path("/viewLevels/"+id);
@@ -255,7 +253,7 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 
 	$scope.getNotifications = function(id){		
 		$scope.dataToShare = [];	  
-		console.log(id);
+	//	console.log(id);
 		$scope.shareMyData = function (myValue) {
 			//$scope.dataToShare = myValue;
 			//shareData.addData($scope.dataToShare);
@@ -267,7 +265,7 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 			method  : 'GET',
 			url     : 'https://localhost:8443/eventManager/getNotifications/' + id        
 		});
-		console.log("Getting the event organizer using the url: " + $scope.url);
+		//console.log("Getting the event organizer using the url: " + $scope.url);
 		getNotifications.success(function(response){
 			//$scope.dataToShare.push(id);
 			//$location.path("/viewLevels/"+id);
@@ -286,7 +284,7 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 
 	$scope.complexResult = null;
 	$scope.showAModal = function(event) {
-		console.log(event);
+		//console.log(event);
 		// Just provide a template url, a controller and call 'showModal'.
 		ModalService.showModal({
 
@@ -314,13 +312,13 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 		console.log("Start updating");
 		$scope.data = {};
 		//$scope.event = JSON.parse(shareData.getData());
-		console.log($scope.event.id);
+		//console.log($scope.event.id);
 		var dataObj = {				
 				id: $scope.event.id,
 				event_approval_status: $scope.event.approvalStatus,
 		};		
-		console.log(dataObj.event_approval_status);
-		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+		//console.log(dataObj.event_approval_status);
+		//console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
 
 		var send = $http({
 			method  : 'POST',
@@ -342,14 +340,14 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 			}).then(function(modal) {
 				modal.element.modal();
 				modal.close.then(function(result) {
-					console.log("OK");
+					//console.log("OK");
 					$state.reload();
 				});
 			});
 			$scope.dismissModal = function(result) {
 				close(result, 200); // close, but give 200ms for bootstrap to animate
 
-				console.log("in dissmiss");
+				//console.log("in dissmiss");
 			};
 
 		});
@@ -364,14 +362,14 @@ app.controller('eventController', ['$scope', '$http','$state','$routeParams','sh
 			}).then(function(modal) {
 				modal.element.modal();
 				modal.close.then(function(result) {
-					console.log("OK");
+					//console.log("OK");
 
 				});
 			});
 			$scope.dismissModal = function(result) {
 				close(result, 200); // close, but give 200ms for bootstrap to animate
 
-				console.log("in dissmiss");
+				//console.log("in dissmiss");
 			};
 		});
 	};
@@ -392,58 +390,58 @@ app.filter('orderObjectBy', function() {
 	};
 });
 
-app.controller('successfulEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
-	$scope.eventFilter={
-			event:{
-				approvalStatus:"SUCCESSFUL"
-			}
-	};
-	angular.element(document).ready(function () {
-		$scope.data = {};
-
-		//var buildings ={name: $scope.name, address: $scope.address};
-		$http.get("//localhost:8443/eventManager/viewAllEvents").then(function(response){
-			$scope.events = response.data;
-			console.log("DISPLAY ALL EVENT fir event manager");
-			//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
-			
-		},function(response){
-			console.log(response);
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)	
-
-	});
-	$scope.passEvent = function(event){
-		shareData.addData(event);
-	}
-}]);
-app.controller('canceledEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
-	$scope.eventFilter={
-			event:{
-				approvalStatus:"CANCELLED"
-			}
-	};
-	angular.element(document).ready(function () {
-		$scope.data = {};
-
-		//var buildings ={name: $scope.name, address: $scope.address};
-		$http.get("//localhost:8443/eventManager/viewAllEvents").then(function(response){
-			$scope.events = response.data;
-			console.log("DISPLAY ALL EVENT fir event manager");
-			//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
-
-		},function(response){
-			console.log(response);
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)	
-
-	});
-	$scope.passEvent = function(event){
-		shareData.addData(event);
-	}
-}]);
+//app.controller('successfulEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+//	$scope.eventFilter={
+//			event:{
+//				approvalStatus:"SUCCESSFUL"
+//			}
+//	};
+//	angular.element(document).ready(function () {
+//		$scope.data = {};
+//
+//		//var buildings ={name: $scope.name, address: $scope.address};
+//		$http.get("//localhost:8443/eventManager/viewAllEvents").then(function(response){
+//			$scope.events = response.data;
+//			console.log("DISPLAY ALL EVENT fir event manager");
+//			//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
+//			
+//		},function(response){
+//			console.log(response);
+//			//console.log("response is : ")+JSON.stringify(response);
+//		}	
+//		)	
+//
+//	});
+//	$scope.passEvent = function(event){
+//		shareData.addData(event);
+//	}
+//}]);
+//app.controller('canceledEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+//	$scope.eventFilter={
+//			event:{
+//				approvalStatus:"CANCELLED"
+//			}
+//	};
+//	angular.element(document).ready(function () {
+//		$scope.data = {};
+//
+//		//var buildings ={name: $scope.name, address: $scope.address};
+//		$http.get("//localhost:8443/eventManager/viewAllEvents").then(function(response){
+//			$scope.events = response.data;
+//			console.log("DISPLAY ALL EVENT fir event manager");
+//			//console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.buildings);
+//
+//		},function(response){
+//			console.log(response);
+//			//console.log("response is : ")+JSON.stringify(response);
+//		}	
+//		)	
+//
+//	});
+//	$scope.passEvent = function(event){
+//		shareData.addData(event);
+//	}
+//}]);
 //DELETE EVENT
 app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareData','$state','ModalService', function ($scope,  $timeout,$http ,shareData,$state,ModalService) {
 	angular.element(document).ready(function () {
@@ -481,14 +479,14 @@ app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareDat
 						}).then(function(modal) {
 							modal.element.modal();
 							modal.close.then(function(result) {
-								console.log("OK");
+								//console.log("OK");
 								$state.go("dashboard.viewAllEvents");
 							});
 						});
 						$scope.dismissModal = function(result) {
 							close(result, 200); // close, but give 200ms for bootstrap to animate
 
-							console.log("in dissmiss");
+							//console.log("in dissmiss");
 						};
 						//END SHOWMODAL
 						
@@ -503,14 +501,14 @@ app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareDat
 						}).then(function(modal) {
 							modal.element.modal();
 							modal.close.then(function(result) {
-								console.log("OK");
+								//console.log("OK");
 								$state.go("dashboard.viewAllEvents");
 							});
 						});
 						$scope.dismissModal = function(result) {
 							close(result, 200); // close, but give 200ms for bootstrap to animate
 
-							console.log("in dissmiss");
+							//console.log("in dissmiss");
 						};
 					}	
 					)
@@ -521,140 +519,140 @@ app.controller('deleteEventController', ['$scope',  '$timeout','$http','shareDat
 		$scope.dismissModal = function(result) {
 			close(result, 200); // close, but give 200ms for bootstrap to animate
 
-			console.log("in dissmiss");
+			//console.log("in dissmiss");
 		};
 
 	}
 
 }])
 
-//VIEW APPROVED EVENTS
-app.controller('viewApprovedEventController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService','$filter',function ($scope, $http,$state, $routeParams, shareData,ModalService,$filter) {
-	angular.element(document).ready(function () {
-		$scope.data = {};
-		$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
-			$scope.events = response.data;
-			console.log("DISPLAY ALL EVENT");
-			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
-			$scope.currentPage = 1;
-			var eventsSorted
-			//SORT EVENTS BY ID
-			$scope.order = function () {
-				eventsSorted = $filter('orderBy')($scope.events, 'id');
-			}
-			$scope.order();
-			//SET PAGINATION TO BE 10 PER PAGE
-			$scope.changePage=function(currentPage){
-				var begin = (($scope.currentPage - 1) * 10)
-				var  end = begin + 10;
-				$scope.displayEvents= eventsSorted.slice(begin, end);
-			}
-			$scope.changePage(1);
-		},function(response){
-			console.log("did not view approved events");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)	
-
-
-	});
-
-
-	$scope.passEvent = function(event){
-		shareData.addData(event);
-	}
-	$scope.complexResult = null;
-	$scope.showAModal = function(event) {
-		console.log(event);
-		// Just provide a template url, a controller and call 'showModal'.
-		ModalService.showModal({
-
-			templateUrl: "views/updateEventStatusTemplate.html",
-			controller: "updateEventStatusController",
-			inputs: {
-				title: "Update Event Status",
-				event:event
-			}
-		}).then(function(modal) {
-			modal.element.modal();
-			modal.close.then(function(result) {
-				$scope.event  = result.event;
-				$scope.updateEventStatus();
-			});
-		});
-
-	};
-
-	$scope.dismissModal = function(result) {
-		close(result, 200); // close, but give 200ms for bootstrap to animate
-	};
-
-	$scope.updateEventStatus = function(){
-		console.log("Start updating");
-		$scope.data = {};
-		//$scope.event = JSON.parse(shareData.getData());
-		console.log($scope.event.id);
-		var dataObj = {				
-				id: $scope.event.id,
-				event_approval_status: $scope.event.approvalStatus,
-		};		
-		console.log(dataObj.event_approval_status);
-		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
-
-		var send = $http({
-			method  : 'POST',
-			url     : 'https://localhost:8443/eventManager/updateEventStatus',
-			data    : dataObj //forms user object
-		});
-
-		console.log("UPDATING THE EVENT");
-		send.success(function(){
-			//alert('Successfully saved event status, going back to viewing all approved events');
-
-			ModalService.showModal({
-
-				templateUrl: "views/popupMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: 'Event status is saved successfully. Going back to view events'
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-					$state.reload();
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-		send.error(function(data){
-			//alert(data);
-			ModalService.showModal({       
-				templateUrl: "views/errorMessageTemplate.html",
-				controller: "errorMessageModalController",
-				inputs: {
-					message: data,
-				}
-			}).then(function(modal) {
-				modal.element.modal();
-				modal.close.then(function(result) {
-					console.log("OK");
-
-				});
-			});
-			$scope.dismissModal = function(result) {
-				close(result, 200); // close, but give 200ms for bootstrap to animate
-
-				console.log("in dissmiss");
-			};
-		});
-	};
-
-}]);
+////VIEW APPROVED EVENTS
+//app.controller('viewApprovedEventController', ['$scope', '$http','$state','$routeParams','shareData', 'ModalService','$filter',function ($scope, $http,$state, $routeParams, shareData,ModalService,$filter) {
+//	angular.element(document).ready(function () {
+//		$scope.data = {};
+//		$http.get("//localhost:8443/eventManager/viewApprovedEvents").then(function(response){
+//			$scope.events = response.data;
+//			console.log("DISPLAY ALL EVENT");
+//			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
+//			$scope.currentPage = 1;
+//			var eventsSorted
+//			//SORT EVENTS BY ID
+//			$scope.order = function () {
+//				eventsSorted = $filter('orderBy')($scope.events, 'id');
+//			}
+//			$scope.order();
+//			//SET PAGINATION TO BE 10 PER PAGE
+//			$scope.changePage=function(currentPage){
+//				var begin = (($scope.currentPage - 1) * 10)
+//				var  end = begin + 10;
+//				$scope.displayEvents= eventsSorted.slice(begin, end);
+//			}
+//			$scope.changePage(1);
+//		},function(response){
+//			console.log("did not view approved events");
+//			//console.log("response is : ")+JSON.stringify(response);
+//		}	
+//		)	
+//
+//
+//	});
+//
+//
+//	$scope.passEvent = function(event){
+//		shareData.addData(event);
+//	}
+//	$scope.complexResult = null;
+//	$scope.showAModal = function(event) {
+//		console.log(event);
+//		// Just provide a template url, a controller and call 'showModal'.
+//		ModalService.showModal({
+//
+//			templateUrl: "views/updateEventStatusTemplate.html",
+//			controller: "updateEventStatusController",
+//			inputs: {
+//				title: "Update Event Status",
+//				event:event
+//			}
+//		}).then(function(modal) {
+//			modal.element.modal();
+//			modal.close.then(function(result) {
+//				$scope.event  = result.event;
+//				$scope.updateEventStatus();
+//			});
+//		});
+//
+//	};
+//
+//	$scope.dismissModal = function(result) {
+//		close(result, 200); // close, but give 200ms for bootstrap to animate
+//	};
+//
+//	$scope.updateEventStatus = function(){
+//		console.log("Start updating");
+//		$scope.data = {};
+//		//$scope.event = JSON.parse(shareData.getData());
+//		console.log($scope.event.id);
+//		var dataObj = {				
+//				id: $scope.event.id,
+//				event_approval_status: $scope.event.approvalStatus,
+//		};		
+//		console.log(dataObj.event_approval_status);
+//		console.log("REACHED HERE FOR SUBMIT EVENT " + JSON.stringify(dataObj));
+//
+//		var send = $http({
+//			method  : 'POST',
+//			url     : 'https://localhost:8443/eventManager/updateEventStatus',
+//			data    : dataObj //forms user object
+//		});
+//
+//		console.log("UPDATING THE EVENT");
+//		send.success(function(){
+//			//alert('Successfully saved event status, going back to viewing all approved events');
+//
+//			ModalService.showModal({
+//
+//				templateUrl: "views/popupMessageTemplate.html",
+//				controller: "errorMessageModalController",
+//				inputs: {
+//					message: 'Event status is saved successfully. Going back to view events'
+//				}
+//			}).then(function(modal) {
+//				modal.element.modal();
+//				modal.close.then(function(result) {
+//					console.log("OK");
+//					$state.reload();
+//				});
+//			});
+//			$scope.dismissModal = function(result) {
+//				close(result, 200); // close, but give 200ms for bootstrap to animate
+//
+//				console.log("in dissmiss");
+//			};
+//		});
+//		send.error(function(data){
+//			//alert(data);
+//			ModalService.showModal({       
+//				templateUrl: "views/errorMessageTemplate.html",
+//				controller: "errorMessageModalController",
+//				inputs: {
+//					message: data,
+//				}
+//			}).then(function(modal) {
+//				modal.element.modal();
+//				modal.close.then(function(result) {
+//					console.log("OK");
+//
+//				});
+//			});
+//			$scope.dismissModal = function(result) {
+//				close(result, 200); // close, but give 200ms for bootstrap to animate
+//
+//				console.log("in dissmiss");
+//			};
+//		});
+//	};
+//
+//}]);
 
 app.filter('successfulEventsFilter', [function($filter) {
 	return function(inputArray, searchCriteria, txnStatus){         
@@ -671,31 +669,31 @@ app.filter('successfulEventsFilter', [function($filter) {
 	};
 }]);
 //VIEW TO BE APPROVED EVENTS
-app.controller('viewToBeApprovedEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
-	angular.element(document).ready(function () {
-
-
-		$scope.data = {};
-		$http.get("//localhost:8443/eventManager/viewToBeApprovedEvents").then(function(response){
-			$scope.events = response.data;
-			console.log("DISPLAY ALL EVENT");
-			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
-
-		},function(response){
-			console.log("did not view to-be-approved events");
-			//console.log("response is : ")+JSON.stringify(response);
-		}	
-		)	
-
-
-	});
-
-
-	$scope.passEvent = function(event){
-		shareData.addData(event);
-	}
-
-}]);
+//app.controller('viewToBeApprovedEventController', ['$scope', '$http','$state','$routeParams','shareData', function ($scope, $http,$state, $routeParams, shareData) {
+//	angular.element(document).ready(function () {
+//
+//
+//		$scope.data = {};
+//		$http.get("//localhost:8443/eventManager/viewToBeApprovedEvents").then(function(response){
+//			$scope.events = response.data;
+//			console.log("DISPLAY ALL EVENT");
+//			console.log("EVENT DATA ARE OF THE FOLLOWING: " + $scope.events);
+//
+//		},function(response){
+//			console.log("did not view to-be-approved events");
+//			//console.log("response is : ")+JSON.stringify(response);
+//		}	
+//		)	
+//
+//
+//	});
+//
+//
+//	$scope.passEvent = function(event){
+//		shareData.addData(event);
+//	}
+//
+//}]);
 
 //VIEW EVENT DETAILS OF TO BE APPROVED EVENTS / APPROVED EVENTS AND UPDATE STATUS
 app.controller('viewEventDetailsController', ['$scope', '$http','$state','$routeParams','shareData','ModalService',function ($scope, $http,$state, $routeParams, shareData,ModalService) {
@@ -743,14 +741,14 @@ app.controller('viewEventDetailsController', ['$scope', '$http','$state','$route
 			}).then(function(modal) {
 				modal.element.modal();
 				modal.close.then(function(result) {
-					console.log("OK");
+					//console.log("OK");
 					$state.go("dashboard.viewAllEvents");
 				});
 			});
 			$scope.dismissModal = function(result) {
 				close(result, 200); // close, but give 200ms for bootstrap to animate
 
-				console.log("in dissmiss");
+				//console.log("in dissmiss");
 			};
 
 			//alert("Successfully approved event, going back to viewing to be approved events");
@@ -802,9 +800,7 @@ app.controller('updateEventStatusController', ['$scope', '$element', 'title', 'c
 
 	$scope.title = title;
 	$scope.event=event;
-	console.log(title);
-	console.log(close);
-	console.log($element);
+	
 	//  This close function doesn't need to use jQuery or bootstrap, because
 	//  the button has the 'data-dismiss' attribute.
 	$scope.close = function() {
@@ -859,7 +855,7 @@ app.controller('notificationController', ['$scope', '$http','shareData','$state'
 	angular.element(document).ready(function () {
 
 		$scope.eventOrg = shareData.getData(); //gets the response data from building controller 
-		console.log($scope.eventOrg);
+		//console.log($scope.eventOrg);
 		var id=$scope.eventOrg.id;
 		$scope.url = "https://localhost:8443/eventManager/getNotifications/"+id;
 		//$scope.dataToShare = [];
@@ -920,7 +916,7 @@ app.controller('ticketSaleDetailsController', ['$scope', '$http','$state','$rout
 		console.log("Getting the event using the url: " + $scope.url);
 		getEvent.success(function(response){
 			console.log('GET PAYMENT PLAN SUCCESS! ');
-			console.log(response);
+			//console.log(response);
 			$scope.event = response;
 		});
 		getEvent.error(function(response){
@@ -942,8 +938,8 @@ app.controller('ticketSaleDetailsController', ['$scope', '$http','$state','$rout
 		console.log("Getting the events using the url: " + $scope.url1);
 		getSales.success(function(response){
 			console.log('GET EVENTS SUCCESS! ');
-			console.log(JSON.stringify(response));
-			console.log(response);
+			//console.log(JSON.stringify(response));
+			//console.log(response);
 			$scope.sales = response;
 		});
 		getSales.error(function(response){
