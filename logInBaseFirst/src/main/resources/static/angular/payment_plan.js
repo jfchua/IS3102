@@ -1002,17 +1002,17 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$http.get("https://localhost:8443/policy/viewPaymentPolicy").then(function(response){
-			console.log(response);
-			console.log(response.data);
+			//console.log(response);
+			//console.log(response.data);
 			console.log("HAHAHA");
-			$scope.policy = response;
+			$scope.policy = response.data;
 			console.log("DISPLAY ALL PAYMENT PLANS");
 			console.log($scope.policy);
 		},function(response){
 			//alert("did not view plans");
 		}	
 		)
-		
+		/*
 		$http.get("//localhost:8443/policy/viewTurnover").then(function(response){
 			$scope.turnover = response.data;
 			console.log("DISPLAY TURNOVER RATIO");
@@ -1029,7 +1029,7 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 		},function(response){
 			//alert("did not view DSO");
 		}	
-		)
+		)*/
 		
 	});
 	$scope.passPaymentPolicy = function(policy){
@@ -1064,7 +1064,7 @@ app.controller('policyController', ['$scope', '$http','$state','$routeParams','s
 							modal.element.modal();
 							modal.close.then(function(result) {
 								console.log("OK");
-								$state.go("IFMS.viewPaymentPolicy");
+								$state.reload();
 							});
 						});
 
