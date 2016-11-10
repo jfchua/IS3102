@@ -32,6 +32,7 @@ import application.entity.AuditLog;
 import application.entity.Building;
 import application.entity.ClientOrganisation;
 import application.entity.Icon;
+import application.entity.Level;
 import application.entity.PaymentPolicy;
 import application.entity.SpecialRate;
 import application.entity.User;
@@ -78,16 +79,40 @@ public class PaymentPolicyController {
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
-		    System.out.println("start view");
+		    System.err.println("start view");
 			PaymentPolicy payment = client.getPaymentPolicy();
-			//System.out.println(payment.getDepositRate());   
-			Gson gson2 = new Gson();
-			String json = gson2.toJson(payment);
-		    if(payment != null)
-			   System.out.println(json);
+			System.out.println(payment.getDepositRate());   
+			//Gson gson2 = new Gson();
+			System.out.println("__");  
+			//String json = gson2.toJson(payment);
+			Gson gson2 = new GsonBuilder()
+					.setExclusionStrategies(new ExclusionStrategy() {
+						public boolean shouldSkipClass(Class<?> clazz) {
+							return (clazz == Level.class);
+						}
+
+						/**
+						 * Custom field exclusion goes here
+						 */
+
+						@Override
+						public boolean shouldSkipField(FieldAttributes f) {
+							//TODO Auto-generated method stub
+							return false;
+						}
+
+					})
+					/**
+					 * Use serializeNulls method if you want To serialize null values 
+					 * By default, Gson does not serialize null values
+					 */
+					.serializeNulls()
+					.create();
 		    return new ResponseEntity<PaymentPolicy>(payment, HttpStatus.OK);
+		 
 			}
 			catch (Exception e){
+				e.printStackTrace();
 				return new ResponseEntity<PaymentPolicy>(HttpStatus.CONFLICT);
 			}
 			//return new ResponseEntity<Void>(HttpStatus.OK);

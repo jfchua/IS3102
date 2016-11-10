@@ -28,10 +28,6 @@ public class PaymentPolicy {
 	 @Column(name = "interim_period")
 	 private int interimPeriod;
 	 
-	 public PaymentPolicy(){
-		 super();
-	 }
-
 	public Double getDepositRate() {
 		return depositRate;
 	}
