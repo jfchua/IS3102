@@ -220,78 +220,108 @@ public class EventServiceImpl implements EventService {
 			if(event1.isPresent()){	
 				Event event = event1.get();	
 				System.out.println("*1");
-				if(checkEvent(client, id)){
-					System.err.println(event.getCategories().isEmpty());
-					System.err.println(event.getCategories()==null);
-					if(!event.getCategories().isEmpty()){
+				//if(checkEvent(client, id)){
+					//System.err.println(event.getCategories().isEmpty());
+					//System.err.println(event.getCategories()==null);
+					if(event.getCategories().size()!=0){
 						System.out.println("*****5");
 						Set<Category> cats = event.getCategories();
 						boolean canBeDeleted = true;
 						for(Category c : cats){
 							Set<Ticket> tics = c.getTickets();	
-							if(!tics.isEmpty()){
+							if(tics.size()!=0){
 								canBeDeleted = false;
 								break;
 							}						
 						}
-						if(!canBeDeleted)
+						if(!canBeDeleted){
+							System.err.println("Has ticket sold, event cannot be deleted");
 							return false;
-						else{
+						}else{
 							for(Category c : cats){
+								c.setEvent(null);
+								c.setTickets(null);
 								categoryRepository.delete(c);
+								categoryRepository.flush();		
 								}
 								System.err.println("*******7");
-								categoryRepository.flush();			
+									
 							}
 						}
-						if(event.getBookings()!=null){
+						if(event.getBookings().size()!=0){
 							System.out.println("**2");
 							Set<BookingAppl> bookings=event.getBookings();
+							System.out.println("**3333");
 							for(BookingAppl b: bookings){	
-								Set<Area> areas = b.getAreas();
-								for(Area a : areas){
-									System.out.println("***3");
-									Square sq = a.getSquare();
-									squareRepository.delete(sq);
-									areaRepository.flush();
-									areaRepository.delete(a);
-									bookingApplRepository.flush();
+								if(b.getAreas().size()!=0){
+									Set<Area> areas = b.getAreas();
+									System.out.println("**2222");
+									for(Area a : areas){
+										System.out.println("***3");
+										Square sq = a.getSquare();
+										squareRepository.delete(sq);
+										squareRepository.flush();
+										a.setBooking(null);
+										a.setSquare(null);
+										areaRepository.delete(a);
+										areaRepository.flush();
+										System.out.println("**2555555");
+									}
 								}
-								bookingApplRepository.flush();
+								
+								System.out.println("**277777");
 								Unit unit = b.getUnit();
 								Set<BookingAppl> bookings1 = unit.getBookings();
 								bookings1.remove(b);
 								unit.setBookings(bookings1);
-								unitRepository.flush();
-								bookings.remove(b);
+								unitRepository.saveAndFlush(unit);
+								b.setUnit(null);
+								b.setAreas(null);
+								b.setEvent(null);
+								bookingApplRepository.flush();
 								bookingApplRepository.delete(b);
+								bookingApplRepository.flush();
 							}
-							event.setBookings(new HashSet<BookingAppl>());
+							//bookings.remove(b);
+							System.out.println("**2999999");
+							
 						}
 						if(event.getPaymentPlan()!= null){
 							System.out.println("****4");
 							PaymentPlan p1 = event.getPaymentPlan();
 							Set<Payment> ps = p1.getPayments();
 							for(Payment p : ps){
+							
 								paymentRepository.delete(p);
+								paymentRepository.flush();
 							}
+							p1.setPayments(null);
+							p1.setEvent(null);
+					
 							paymentPlanRepository.delete(p1);
+							paymentPlanRepository.flush();
 						}
-
-						eventRepository.flush();
+						System.out.println("**564636432");
+						//eventRepository.flush();
 						User eventOrg1 = event.getEventOrg();
-						Set<Event> events = eventOrg1.getEvents();
-						events.remove(event);
-						eventOrg1.setEvents(events);
-						userRepository.flush();
+						Set<Event> eventsUser = eventOrg1.getEvents();
+						eventsUser.remove(event);
+						eventOrg1.setEvents(eventsUser);
+						userRepository.saveAndFlush(eventOrg1);
+						event.setEventOrg(null);
+						event.setBookings(null);
+						event.setBeacons(null);
+						event.setDiscounts(null);
+						event.setFeedbacks(null);
+						System.out.println("**2dddddddddd");
 						eventRepository.delete(event);
 						eventRepository.flush();
-					}
+					//}
 
-				else{
-					System.err.println("Error at checking event in delete event method");
-					return false;
-				}
+//				else{
+//					System.err.println("Error at checking event in delete event method");
+//					return false;
+//				}
 			}
 		}
 		catch (EventNotFoundException e){
