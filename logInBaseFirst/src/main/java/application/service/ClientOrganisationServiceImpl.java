@@ -142,10 +142,13 @@ public class ClientOrganisationServiceImpl implements ClientOrganisationService 
 
 
 	public Collection<ClientOrganisation> getAllClientOrganisations(){
-
-		return clientOrganisationRepository.findAll();
-
-
+        Collection<ClientOrganisation> clients = new HashSet<ClientOrganisation>();
+        Collection<ClientOrganisation> clientsA = clientOrganisationRepository.findAll();
+        for(ClientOrganisation cl : clientsA){
+        	if(!cl.getFee().equals(0.00))
+        		clients.add(cl);
+        }
+		return clients;
 	}
 
 	public boolean deleteClientOrg(Long id) throws ClientOrganisationNotFoundException{
