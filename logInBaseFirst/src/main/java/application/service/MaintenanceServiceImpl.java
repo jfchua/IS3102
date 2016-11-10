@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -636,10 +637,10 @@ public void alertForUpcomingMaintenance() throws UserNotFoundException {
 	for(Maintenance m : maints){
 		Date start = m.getStart();
 		Calendar cal = Calendar.getInstance();
-		long diff = start.getTime() - cal.getTime().getTime();
-		long diff1 = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-		if(diff1 == 3){			
+		cal.add(Calendar.DATE, 3);
+		if(DateUtils.isSameDay(cal.getTime(), start)){			
 		    ClientOrganisation client =clientOrganisationRepository.findOne(m.getClient());
+		    System.err.println(client.getOrganisationName());
 		    Set<User> users = client.getUsers();
 		    Set<User> managers = new HashSet<User>();
 		    User admin = null;
@@ -655,6 +656,7 @@ public void alertForUpcomingMaintenance() throws UserNotFoundException {
 		    for(User u1 : managers){
 		    	messageService.sendMessage(admin, u1, "Upcoming Maintenance", "There is an upcoming maintenance with id " +m.getId()
 		    	+ " and description for " +m.getDescription());
+		    	System.err.println("HAHAHA");
 		    }
 		}
 	}

@@ -16,6 +16,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,15 +68,16 @@ public class PaymentPolicyController {
 		this.auditLogRepository = auditLogRepository;
 	}
 
+	 @PreAuthorize("hasAnyAuthority('ROLE_FINANCE')")
 	// Call this method using $http.get and you will get a JSON format containing an array of building objects.
 	// Each object (building) will contain... long id, collection of levels.
 	@RequestMapping(value = "/viewPaymentPolicy", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<PaymentPolicy> viewPaymentPolicy(HttpServletRequest rq) throws UserNotFoundException {
+	public ResponseEntity<String> viewPaymentPolicy(HttpServletRequest rq) throws UserNotFoundException {
 		Principal principal = rq.getUserPrincipal();
 		Optional<User> usr = userService.getUserByEmail(principal.getName());
 		if ( !usr.isPresent() ){
-			return new ResponseEntity<PaymentPolicy>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 		try{
 			ClientOrganisation client = usr.get().getClientOrganisation();
@@ -88,7 +90,7 @@ public class PaymentPolicyController {
 			Gson gson2 = new GsonBuilder()
 					.setExclusionStrategies(new ExclusionStrategy() {
 						public boolean shouldSkipClass(Class<?> clazz) {
-							return (clazz == Level.class);
+							return false;
 						}
 
 						/**
@@ -108,12 +110,19 @@ public class PaymentPolicyController {
 					 */
 					.serializeNulls()
 					.create();
-		    return new ResponseEntity<PaymentPolicy>(payment, HttpStatus.OK);
+			JSONObject obj1 = new JSONObject();
+			obj1.put("id", payment.getId());
+			obj1.put("depositRate", payment.getDepositRate());
+			obj1.put("subsequentNumber", payment.getSubsequentNumber());
+			obj1.put("numOfDueDays", payment.getNumOfDueDays());
+			obj1.put("interimPeriod", payment.getInterimPeriod());
+			
+		    return new ResponseEntity<String>(obj1.toString(), HttpStatus.OK);
 		 
 			}
 			catch (Exception e){
 				e.printStackTrace();
-				return new ResponseEntity<PaymentPolicy>(HttpStatus.CONFLICT);
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);
 			}
 			//return new ResponseEntity<Void>(HttpStatus.OK);
 		}

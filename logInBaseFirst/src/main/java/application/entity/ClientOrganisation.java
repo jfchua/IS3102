@@ -67,15 +67,15 @@ public class ClientOrganisation {
 	@Column(name = "fee")
 	private Double fee;
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<Building> buildings = new HashSet<Building>();
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<SpecialRate> specialRates = new HashSet<SpecialRate>();
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JsonIgnore
 	private PaymentPolicy paymentPolicy;
 	
@@ -84,11 +84,11 @@ public class ClientOrganisation {
 	@Column(name = "logoFilePath",nullable = true,unique=true)
 	private String logoFilePath;
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<Icon> icons=new HashSet<Icon>();
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<UnitAttributeType> unitAttributeTypes=new HashSet<UnitAttributeType>();
 	
