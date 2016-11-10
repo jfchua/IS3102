@@ -10,6 +10,7 @@ app.controller('workspaceController', function ($scope, $http,shareData,Auth) {
 			$scope.getEvents();
 			$scope.getMaints();
 			$scope.getTodos();
+			console.log( $scope.eventSources);
 		}else if(Auth.hasRoles('ROLE_EXTEVE')){
 			console.log("GET CALENDAR EVENTS FOR EXTERNAL EVENT ORGANISOR ROLE");
 			$scope.getExEvents();
@@ -201,7 +202,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}else if($scope.eventsCalendar[index].approvalStatus=="SUCCESSFUL"){
 					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
 				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
@@ -211,7 +212,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}else if($scope.eventsCalendar[index].approvalStatus=="PROCESSING"){
 					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
 				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
@@ -221,8 +222,9 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}
+				    	index = index + 1;
 				    });
 				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
 				    //console.log( $scope.eventSources);
@@ -289,7 +291,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}else if($scope.eventsCalendar[index].approvalStatus=="SUCCESSFUL"){
 					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
 				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
@@ -299,7 +301,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}else if($scope.eventsCalendar[index].approvalStatus=="PROCESSING"){
 					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
 				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
@@ -309,8 +311,9 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}
+				    	index = index + 1;
 				    });
 				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
 				  //  console.log( $scope.eventSources);
