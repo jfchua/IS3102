@@ -3,12 +3,16 @@ app.controller('workspaceController', function ($scope, $http,shareData,Auth) {
 	 $scope.$parent.eventSources.length=0;
 	   	//console.log( $scope.eventSources);
 	   	//console.log( $scope.$parent.eventSources);
-		
+
 		//VIEW EVENTS
-		if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
+		if(Auth.hasRoles('ROLE_PROPERTY')){
 			console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");
 			$scope.getEvents();
 			$scope.getMaints();
+			$scope.getTodos();
+			console.log( $scope.eventSources);
+		}else if(Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')||Auth.hasRoles('ROLE_EVENT')){
+			$scope.getEvents();
 			$scope.getTodos();
 		}else if(Auth.hasRoles('ROLE_EXTEVE')){
 			console.log("GET CALENDAR EVENTS FOR EXTERNAL EVENT ORGANISOR ROLE");
@@ -149,19 +153,25 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 							$scope.eventSources.length=0;
 
 							//VIEW EVENTS
-							if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
+							if(Auth.hasRoles('ROLE_PROPERTY')){
 								console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");
 								$scope.getEvents();
 								$scope.getMaints();
+								$scope.getTodos();
+								console.log( $scope.eventSources);
+							}else if(Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')||Auth.hasRoles('ROLE_EVENT')){
+								$scope.getEvents();
 								$scope.getTodos();
 							}else if(Auth.hasRoles('ROLE_EXTEVE')){
 								console.log("GET CALENDAR EVENTS FOR EXTERNAL EVENT ORGANISOR ROLE");
 								$scope.getExEvents();
 								$scope.getTodos();
+								
 							}else{
 								console.log("NOT GETTING CALENDAR EVENTS");
 								$scope.getTodos();
 							}
+							
 							
 //						}).error(function(result){
 //							//do something
@@ -201,7 +211,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}else if($scope.eventsCalendar[index].approvalStatus=="SUCCESSFUL"){
 					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
 				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
@@ -211,7 +221,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}else if($scope.eventsCalendar[index].approvalStatus=="PROCESSING"){
 					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
 				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
@@ -221,8 +231,9 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}
+				    	index = index + 1;
 				    });
 				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
 				    //console.log( $scope.eventSources);
@@ -289,7 +300,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}else if($scope.eventsCalendar[index].approvalStatus=="SUCCESSFUL"){
 					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
 				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
@@ -299,18 +310,19 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}else if($scope.eventsCalendar[index].approvalStatus=="PROCESSING"){
 					         var event=[{start: $scope.eventsCalendar[index].event_start_date,
 				        	 		end: $scope.eventsCalendar[index].event_end_date,			         
-				        		 	title:$scope.eventsCalendar[index].event_title+" Processing",
+				        		 	title:$scope.eventsCalendar[index].event_title+" (Processing)",
 				        		 	allDay: false,
 				        		 	color: 'LightSkyBlue'
 				         			}];
 				         
 				        $scope.eventSources.push(event);
-				        	index = index + 1;
+				        	
 				    	}
+				    	index = index + 1;
 				    });
 				   // $scope.eventSources.push([{start:today,end:next,title:"Book Sale 2017",allDay: false}]);//need to delete this line
 				  //  console.log( $scope.eventSources);
@@ -446,19 +458,25 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 								//console.log("after add");
 								//console.log($scope.eventSources);
 								//VIEW EVENTS
-								if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
+								if(Auth.hasRoles('ROLE_PROPERTY')){
 									console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");
 									$scope.getEvents();
 									$scope.getMaints();
+									$scope.getTodos();
+									console.log( $scope.eventSources);
+								}else if(Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')||Auth.hasRoles('ROLE_EVENT')){
+									$scope.getEvents();
 									$scope.getTodos();
 								}else if(Auth.hasRoles('ROLE_EXTEVE')){
 									console.log("GET CALENDAR EVENTS FOR EXTERNAL EVENT ORGANISOR ROLE");
 									$scope.getExEvents();
 									$scope.getTodos();
+									
 								}else{
 									console.log("NOT GETTING CALENDAR EVENTS");
 									$scope.getTodos();
 								}
+								
 				
 								//FOR PROPERTY MANAGER: GET MAINTENANCES		
 								/*if(Auth.hasRoles('ROLE_PROPERTY')){
@@ -517,19 +535,25 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 								//console.log("after add");
 								//console.log($scope.eventSources);
 								//VIEW EVENTS
-								if(Auth.hasRoles('ROLE_PROPERTY')||Auth.hasRoles('ROLE_EVENT')||Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')){
+								if(Auth.hasRoles('ROLE_PROPERTY')){
 									console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");
 									$scope.getEvents();
 									$scope.getMaints();
+									$scope.getTodos();
+									console.log( $scope.eventSources);
+								}else if(Auth.hasRoles('ROLE_FINANCE')||Auth.hasRoles('ROLE_TICKETING')||Auth.hasRoles('ROLE_EVENT')){
+									$scope.getEvents();
 									$scope.getTodos();
 								}else if(Auth.hasRoles('ROLE_EXTEVE')){
 									console.log("GET CALENDAR EVENTS FOR EXTERNAL EVENT ORGANISOR ROLE");
 									$scope.getExEvents();
 									$scope.getTodos();
+									
 								}else{
 									console.log("NOT GETTING CALENDAR EVENTS");
 									$scope.getTodos();
 								}
+								
 								
 								
 							}).error(function(result){
@@ -537,7 +561,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 								console.log("ERROR GETTING TODO LIST");
 							})
 						}, function myError(response) {
-							alert(response);
+							//alert(response);
 						});		
 						//getTdList();
 					
