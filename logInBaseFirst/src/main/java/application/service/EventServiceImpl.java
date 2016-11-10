@@ -221,70 +221,73 @@ public class EventServiceImpl implements EventService {
 				Event event = event1.get();	
 				System.out.println("*1");
 				if(checkEvent(client, id)){
-					
-					if(event.getBookings()!=null){
-						System.out.println("**2");
-						Set<BookingAppl> bookings=event.getBookings();
-						for(BookingAppl b: bookings){	
-							Set<Area> areas = b.getAreas();
-							for(Area a : areas){
-								System.out.println("***3");
-								Square sq = a.getSquare();
-								squareRepository.delete(sq);
-								areaRepository.flush();
-								areaRepository.delete(a);
-								bookingApplRepository.flush();
-							}
-							bookingApplRepository.flush();
-							Unit unit = b.getUnit();
-							Set<BookingAppl> bookings1 = unit.getBookings();
-							bookings1.remove(b);
-							unit.setBookings(bookings1);
-							unitRepository.flush();
-							bookings.remove(b);
-							bookingApplRepository.delete(b);
-						}
-						event.setBookings(new HashSet<BookingAppl>());
-					}
-					if(event.getPaymentPlan()!= null){
-						System.out.println("****4");
-						PaymentPlan p1 = event.getPaymentPlan();
-						Set<Payment> ps = p1.getPayments();
-						for(Payment p : ps){
-							paymentRepository.delete(p);
-						}
-						paymentPlanRepository.delete(p1);
-					}
+					System.err.println(event.getCategories().isEmpty());
+					System.err.println(event.getCategories()==null);
 					if(!event.getCategories().isEmpty()){
 						System.out.println("*****5");
 						Set<Category> cats = event.getCategories();
+						boolean canBeDeleted = true;
 						for(Category c : cats){
-							Set<Ticket> tics = c.getTickets();					
-							for(Ticket t : tics){
-								System.out.println("******6");
-								//t.setCategory(null);
-								//ticketRepository.flush();
-								tics.remove(t);
-								System.err.println("******6");
-								ticketRepository.delete(t);
-							}
-							System.err.println("*******7");
-							categoryRepository.flush();
-							categoryRepository.delete(c);
+							Set<Ticket> tics = c.getTickets();	
+							if(!tics.isEmpty()){
+								canBeDeleted = false;
+								break;
+							}						
 						}
-					}
-					eventRepository.flush();
-					
+						if(!canBeDeleted)
+							return false;
+						else{
+							for(Category c : cats){
+								categoryRepository.delete(c);
+								}
+								System.err.println("*******7");
+								categoryRepository.flush();			
+							}
+						}
+						if(event.getBookings()!=null){
+							System.out.println("**2");
+							Set<BookingAppl> bookings=event.getBookings();
+							for(BookingAppl b: bookings){	
+								Set<Area> areas = b.getAreas();
+								for(Area a : areas){
+									System.out.println("***3");
+									Square sq = a.getSquare();
+									squareRepository.delete(sq);
+									areaRepository.flush();
+									areaRepository.delete(a);
+									bookingApplRepository.flush();
+								}
+								bookingApplRepository.flush();
+								Unit unit = b.getUnit();
+								Set<BookingAppl> bookings1 = unit.getBookings();
+								bookings1.remove(b);
+								unit.setBookings(bookings1);
+								unitRepository.flush();
+								bookings.remove(b);
+								bookingApplRepository.delete(b);
+							}
+							event.setBookings(new HashSet<BookingAppl>());
+						}
+						if(event.getPaymentPlan()!= null){
+							System.out.println("****4");
+							PaymentPlan p1 = event.getPaymentPlan();
+							Set<Payment> ps = p1.getPayments();
+							for(Payment p : ps){
+								paymentRepository.delete(p);
+							}
+							paymentPlanRepository.delete(p1);
+						}
 
-					User eventOrg1 = event.getEventOrg();
-					Set<Event> events = eventOrg1.getEvents();
-					events.remove(event);
-					eventOrg1.setEvents(events);
-					userRepository.saveAndFlush(eventOrg1);
-					//userRepository.flush();
-					eventRepository.delete(event);
-					eventRepository.flush();
-				}
+						eventRepository.flush();
+						User eventOrg1 = event.getEventOrg();
+						Set<Event> events = eventOrg1.getEvents();
+						events.remove(event);
+						eventOrg1.setEvents(events);
+						userRepository.flush();
+						eventRepository.delete(event);
+						eventRepository.flush();
+					}
+
 				else{
 					System.err.println("Error at checking event in delete event method");
 					return false;

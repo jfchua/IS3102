@@ -997,10 +997,15 @@ app.controller('paymentHistoryController', ['$scope', '$http','$state','$routePa
 
 
 app.controller('policyController', ['$scope', '$http','$state','$routeParams','shareData','ModalService', function ($scope, $http,$state, $routeParams, shareData,ModalService) {
+	console.log("HAHAHA");
+
 	angular.element(document).ready(function () {
 		$scope.data = {};	
-		$http.get("//localhost:8443/policy/viewPaymentPolicy").then(function(response){
-			$scope.policy = response.data;
+		$http.get("https://localhost:8443/policy/viewPaymentPolicy").then(function(response){
+			console.log(response);
+			console.log(response.data);
+			console.log("HAHAHA");
+			$scope.policy = response;
 			console.log("DISPLAY ALL PAYMENT PLANS");
 			console.log($scope.policy);
 		},function(response){

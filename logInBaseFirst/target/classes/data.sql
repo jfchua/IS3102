@@ -586,11 +586,11 @@ VALUES('APPROVED','hahaha19','2016-11-12 22:00:00', '2016-11-11 10:00:00', 'Danc
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
 VALUES('PROCESSING','hahaha20','2016-11-16 22:00:00', '2016-11-15 10:00:00', 'Data Analysis Seminar', 'SEMINAR', null, 1, 'UNPAID', 12);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
-VALUES('CANCELLED','hahaha21','2016-11-18 22:00:00', '2016-11-16 10:00:00', 'Presentation', 'SEMINAR', null, 1, 'UNPAID', 12);
+VALUES('APPROVED','hahaha21','2016-11-18 22:00:00', '2016-11-16 10:00:00', 'Presentation', 'SEMINAR', null, 1, 'UNPAID', 12);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
 VALUES('APPROVED','hahaha22','2016-11-20 22:00:00', '2016-11-20 10:00:00', 'Fan Meeting', 'CONCERT', null, 1, 'UNPAID', 12);
 INSERT INTO event(approval_status, event_description, event_end_date, event_start_date, event_title, event_type, file_path, has_ticket, payment_status, event_org_id)
-VALUES('CANCELLED','hahaha23','2016-11-23 22:00:00', '2016-11-22 10:00:00', 'Book Sale', 'FAIR', null, 0, 'UNPAID', 12);
+VALUES('PROCESSING','hahaha23','2016-11-23 22:00:00', '2016-11-22 10:00:00', 'Book Sale', 'FAIR', null, 0, 'UNPAID', 12);
 
 INSERT INTO user_events(user_id, events_id)VALUES(29, 1);
 INSERT INTO user_events(user_id, events_id)VALUES(28, 2);	
