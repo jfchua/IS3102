@@ -348,6 +348,14 @@ INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_i
 VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
 VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 100, 100, './svg/rect.svg', 100, null);
+INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
+VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);
 /*
 --Expo North
 INSERT INTO square(color, height, positionleft, positiontop, type, width, icon_id)
@@ -394,86 +402,95 @@ VALUES('hsl(36, 100%, 66%)', 100, 250, 250, './svg/rect.svg', 100, null);*/
 
 --Expo East
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 38, 100, true, 'HALL A1', 50, 71, 7, 1, 1);
+VALUES('Hall', 20, 100, true, 'HALL A1', 38, 11, 20, 1, 1);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 18, 100, true, 'HALL B1', 51, 52, 7, 1, 2);
+VALUES('Hall', 38, 100, true, 'HALL B1', 50, 72, 7, 1, 2);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL C1', 1, 2, 7, 1, 3);
+VALUES('Hall', 20, 100, true, 'HALL C1', 38, 31, 20, 1, 3);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL D1', 1, 10, 7, 1, 4);
+VALUES('Hall', 20, 100, true, 'HALL D1', 50, 51, 7, 1, 4);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL A2', 1, 16, 7, 2, 5);
+VALUES('Hall', 20, 100, true, 'HALL A2', 38, 11, 20, 2, 5);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL B2', 1, 28, 7, 2, 6);
+VALUES('Hall', 38, 100, true, 'HALL B2', 50, 72, 7, 2, 6);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 38, 100, true, 'HALL C2', 50, 71, 7, 2, 7);
+VALUES('Hall', 20, 100, true, 'HALL C2', 38, 31, 20, 2, 7);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 18, 100, true, 'HALL D2', 51, 52, 7, 2, 8);
+VALUES('Hall', 20, 100, true, 'HALL D2', 50, 51, 7, 2, 8);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL A3', 1, 2, 7, 3, 9);
+VALUES('Hall', 20, 100, true, 'HALL A3', 38, 11, 20, 3, 9);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL B3', 1, 10, 7, 3, 10);
+VALUES('Hall', 38, 100, true, 'HALL B3', 50, 72, 7, 3, 10);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL C3', 1, 16, 7, 3, 11);
+VALUES('Hall', 20, 100, true, 'HALL C3', 38, 31, 20, 3, 11);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL D3', 1, 28, 7, 3, 12);
+VALUES('Hall', 20, 100, true, 'HALL D3', 50, 51, 7, 3, 12);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL A4', 1, 2, 7, 4, 13);
+VALUES('Hall', 20, 100, true, 'HALL A4', 38, 11, 20, 4, 13);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL B4', 1, 10, 7, 4, 14);
+VALUES('Hall', 38, 100, true, 'HALL B4', 50, 72, 7, 4, 14);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL C4', 1, 16, 7, 4, 15);
+VALUES('Hall', 20, 100, true, 'HALL C4', 38, 31, 20, 4, 15);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL D4', 1, 28, 7, 4, 16);
+VALUES('Hall', 20, 100, true, 'HALL D4', 50, 51, 7, 4, 16);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL A5', 1, 2, 7, 5, 17);
+VALUES('Hall', 20, 100, true, 'HALL A6', 38, 11, 20, 6, 17);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL B5', 1, 10, 7, 5, 18);
+VALUES('Hall', 38, 100, true, 'HALL B6', 50, 72, 7, 6, 18);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL C5', 1, 16, 7, 5, 19);
+VALUES('Hall', 20, 100, true, 'HALL C6', 38, 31, 20, 6, 19);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL D5', 1, 28, 7, 5, 20);
+VALUES('Hall', 20, 100, true, 'HALL D6', 50, 51, 7, 6, 20);
+/*INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 20, 100, true, 'HALL A6', 38, 11, 20, 6, 21);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL A6', 1, 2, 7, 6, 21);
+VALUES('Hall', 38, 100, true, 'HALL B6', 50, 72, 7, 6, 22);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL B6', 1, 10, 7, 6, 22);
+VALUES('Hall', 20, 100, true, 'HALL C6', 38, 31, 20, 6, 23);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL C6', 1, 16, 7, 6, 23);
-INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL D6', 1, 28, 7, 6, 24);
+VALUES('Hall', 20, 100, true, 'HALL D6', 50, 51, 7, 6, 24);*/
 -- Expo West
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL E1', 1, 28, 7, 7, 25);
+VALUES('Hall', 14, 100, true, 'HALL E1', 28, 12, 31, 7, 21);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL F1', 1, 2, 7, 7, 26);
+VALUES('Hall', 12, 100, true, 'HALL F1', 28, 12, 45, 7, 22);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL G1', 1, 10, 7, 7, 27);
+VALUES('Hall', 12, 100, true, 'HALL G1', 28, 12, 57, 7, 23);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL H1', 1, 16, 7, 7, 28);
+VALUES('Hall', 25, 100, true, 'HALL H1', 28, 12, 69, 7, 24);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL E2', 1, 28, 7, 8, 29);
+VALUES('Hall', 18, 100, true, 'HALL I1', 21, 19, 94, 7, 25);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL F2', 1, 28, 7, 8, 30);
+VALUES('Hall', 14, 100, true, 'HALL E2', 28, 12, 31, 8, 26);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL G2', 1, 2, 7, 8, 31);
+VALUES('Hall', 12, 100, true, 'HALL F2', 28, 12, 45, 8, 27);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL H2', 1, 10, 7, 8, 32);
+VALUES('Hall', 12, 100, true, 'HALL G2', 28, 12, 57, 8, 28);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL E3', 1, 16, 7, 9, 33);
+VALUES('Hall', 25, 100, true, 'HALL H2', 28, 12, 69, 8, 29);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL F3', 1, 28, 7, 9, 34);
+VALUES('Hall', 18, 100, true, 'HALL I2', 21, 19, 94, 8, 30);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL G3', 1, 28, 7, 9, 35);
+VALUES('Hall', 14, 100, true, 'HALL E3', 28, 12, 31, 9, 31);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL H3', 1, 2, 7, 9, 36);
+VALUES('Hall', 12, 100, true, 'HALL F3', 28, 12, 45, 9, 32);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL E4', 1, 10, 7, 10, 37);
+VALUES('Hall', 12, 100, true, 'HALL G3', 28, 12, 57, 9, 33);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL F4', 1, 16, 7, 10, 38);
+VALUES('Hall', 25, 100, true, 'HALL H3', 28, 12, 69, 9, 34);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL G4', 1, 28, 7, 10, 39);
+VALUES('Hall', 18, 100, true, 'HALL I3', 21, 19, 94, 9, 35);
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
-VALUES('Hall', 1, 100, true, 'HALL H4', 1, 28, 7, 10, 40);
+VALUES('Hall', 14, 100, true, 'HALL E4', 28, 12, 31, 10, 36);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 12, 100, true, 'HALL F4', 28, 12, 45, 10, 37);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 12, 100, true, 'HALL G4', 28, 12, 57, 10, 38);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 25, 100, true, 'HALL H4', 28, 12, 69, 10, 39);
+INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
+VALUES('Hall', 18, 100, true, 'HALL I4', 21, 19, 94, 10, 40);
+
 /*
 --Expo North
 INSERT INTO unit(description, sizex, rent, rentable, unit_number, sizey , col , row , level_id, square_id)
