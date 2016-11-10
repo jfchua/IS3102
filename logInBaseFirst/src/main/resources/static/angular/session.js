@@ -6,7 +6,8 @@ app.run(['$rootScope', 'AUTH_EVENTS', 'Auth' ,'$location','$window', '$sessionSt
 				console.log("Next authorized roles are " + authorizedRoles);
 				if (fromState.name !== '/login' && toState.name !== '/login' 
 					&& toState.name !== 'IFMS' && fromState.name !== 'IFMS'
-						&& fromState.name !== '/'&& fromState.name !== '404') {
+						&& fromState.name !== '/'&& fromState.name !== '404'
+				   && fromState.name !== '/resetPassword' && toState.name !== '/resetPassword') {
 					
 					if (sessionStorage.getItem('user') && $stateParams.param === undefined) {
 						console.log('statechange sessionStorage get item is not null');					
