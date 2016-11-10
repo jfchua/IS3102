@@ -130,7 +130,7 @@ public class UserServiceTest extends AbstractTest {
 	public void testCreateUserAlreadyExists() throws ClientOrganisationNotFoundException, UserNotFoundException, EmailAlreadyExistsException, InvalidEmailException {
 		Set<Role> setOfRoles = new HashSet<Role>();
 		ClientOrganisation tempOrg = clientOrgService.getClientOrganisationByName("Suntec");
-		boolean result = userService.createNewUser(tempOrg, "test", "kenneth1399@hotmail.com", setOfRoles);
+		boolean result = userService.createNewUser(tempOrg, "test", "tkgs.zhao.mingsha@gmail.com", setOfRoles);
 		Assert.assertFalse(result);
 	}
 	

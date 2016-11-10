@@ -65,8 +65,8 @@ public class EventServiceTest extends AbstractTest {
 		unitId = u.getId();
 		unitId2 = u2.getId();
 
-		eService.createEvent(org, user, String.valueOf(unitId), "title", "content", "desc", "status", new Date(), new Date(), "path");
-		eService.createEvent(org, user, String.valueOf(unitId2), "ti2tle", "con2tent", "d2esc", "stat2us", new Date(), new Date(), "pa2th");
+		eService.createEvent(org, user, String.valueOf(unitId), "title", "CONCERT", "desc", "APPROVED", new Date(), new Date(), "path");
+		eService.createEvent(org, user, String.valueOf(unitId2), "ti2tle", "CONCERT", "d2esc", "CANCELLED", new Date(), new Date(), "pa2th");
 
 
 		Set<Event> resultEvent = eventService.getAllEvents(org);
@@ -157,13 +157,13 @@ public class EventServiceTest extends AbstractTest {
 
 	@Test
 	public void testUpdateEventStatusForPayment() throws EventNotFoundException{
-		boolean result = eventService.updateEventStatusForPayment(org, eventId, "PAID");
+		boolean result = eventService.updateEventStatusForPayment(org, eventId, "SUCCESSFUL");
 		Assert.assertTrue(result);
 	}
 
 	@Test(expected=EventNotFoundException.class)
 	public void testUpdateEventStatusForPaymentNotFound() throws EventNotFoundException{
-		boolean result = eventService.updateEventStatusForPayment(org, Long.MAX_VALUE, "PAID");
+		boolean result = eventService.updateEventStatusForPayment(org, Long.MAX_VALUE, "SUCCESSFUL");
 		Assert.assertFalse(result);
 	}			
 

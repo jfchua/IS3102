@@ -158,7 +158,9 @@ app.controller('vendorController', ['$scope', '$http','$state','$routeParams','s
 			//END SHOWMODAL
 		});
 	};
-
+	$scope.upper = function(registration){
+		$scope.vendor.registration = registration.toUpperCase();
+		}
 }]);	
 //UPDATE A VENDOR, DELETE A VENDOR
 //VIEW VENDOR, ADD VENDOR

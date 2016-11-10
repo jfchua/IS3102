@@ -1376,7 +1376,7 @@ app.controller('updatePolicyController', ['$scope', '$http','$state','$routePara
 }]);
 
 
-app.controller('invoiceController', ['$scope', '$http','ModalService', function ($scope, $http,ModalService) {
+app.controller('invoiceController', ['$scope', '$http','ModalService','$state', function ($scope, $http,ModalService,$state) {
 	angular.element(document).ready(function () {
 		$scope.data = {};	
 		$http.get("//localhost:8443/payment/viewAllPaymentPlans").then(function(response){

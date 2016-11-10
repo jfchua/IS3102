@@ -216,8 +216,9 @@ public class EventServiceImpl implements EventService {
 	public boolean deleteEvent(ClientOrganisation client, long id) throws EventNotFoundException {
 		try{		
 			Optional<Event> event1 = getEventById(id);
+			
 			if(event1.isPresent()){	
-				Event event = event1.get();
+				Event event = event1.get();	
 				System.out.println("*1");
 				if(checkEvent(client, id)){
 					System.err.println(event.getCategories().isEmpty());
@@ -286,6 +287,7 @@ public class EventServiceImpl implements EventService {
 						eventRepository.delete(event);
 						eventRepository.flush();
 					}
+
 				else{
 					System.err.println("Error at checking event in delete event method");
 					return false;

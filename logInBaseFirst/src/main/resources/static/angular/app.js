@@ -47,7 +47,16 @@ var app = angular.module('app', [ 'ui.router',
 //                                All UIRouters
  app.config(
 		 function($stateProvider, $urlRouterProvider, $httpProvider, USER_ROLES) { 
-
+											 $stateProvider
+											  .state('/',{
+												  url:'/',
+												  templateUrl: '/views/mainlogin.html',
+												  controller: 'usersController',
+												  data: {
+													  authorizedRoles: [USER_ROLES.all],
+												  }
+								
+											  })
                                 			  $stateProvider
                                 			  .state('/login',{
                                 				  url:'/login',

@@ -19,9 +19,10 @@ app.factory('Auth', function($window, $sessionStorage){
 		sessionStorage.setItem('subscriptions', (user.principal.user.clientOrganisation.systemSubscriptions));
 		console.log("token is set");
 		authenticated = true;
+		userRoles = [];
 		for (i = 0; i<user.authorities.length;i++) {
 			userRoles [i] = user.authorities[i].authority;
-			console.log("Authority present is " + userRoles[i]);
+			//console.log("Authority present is " + userRoles[i]);
 		}
 		//var token = jwt.sign(user, secret, { expiresInMinutes: 60*5 });
 
@@ -33,11 +34,15 @@ app.factory('Auth', function($window, $sessionStorage){
 		return user;
 
 	}
+	authService.getRolez = function(){
+		return userRoles;
+	}
 	authService.remove= function() {
 		console.log("cookies removed");
 		sessionStorage.clear();
 		this.user = null;
 		authenticated = false;
+		
 	},
 	authService.isAuthenticated = function(){
 
@@ -67,7 +72,6 @@ app.factory('Auth', function($window, $sessionStorage){
 	authService.hasRoles = function(authorizedRoles){
 		for (j = 0; j < userRoles.length; j++) {
 			if (userRoles[j] == authorizedRoles) {
-				//console.log("Returning authorized");
 				return true;
 			}
 		}

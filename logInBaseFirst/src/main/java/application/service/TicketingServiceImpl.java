@@ -8,8 +8,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +26,6 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
-import javax.sql.DataSource;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -502,7 +499,7 @@ public class TicketingServiceImpl implements TicketingService {
 					parameters.put("ticketInformation",toPut );
 					parameters.put("qrcode",filePath );
 
-					Connection conn = null;
+/*					Connection conn = null;
 					try {
 						DataSource ds = (DataSource)context.getBean("dataSource");
 
@@ -511,7 +508,7 @@ public class TicketingServiceImpl implements TicketingService {
 					} catch (SQLException e) {
 						System.out.println("************* ERROR: " + e.getMessage());
 						e.printStackTrace();
-					}
+					}*/
 					try{
 						String path = servletContext.getRealPath("/");
 						path += (c.getCategoryName() + "_" + uuid + ".pdf");	
