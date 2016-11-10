@@ -39,7 +39,9 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 			console.log("VERIFIED WITH NAME: " + response.name);
 			$rootScope.authenticated = true;
 			Auth.setUser(response);
-			$state.go('IFMS.workspace', {param :response.principal.user.clientOrganisation.organisationName});
+			setTimeout(function(){ 
+				$state.go('IFMS.workspace', {param :response.principal.user.clientOrganisation.organisationName}, {reload :true});
+			}, 500);
 			
 			console.log("pre callback");
 			callback && callback();
@@ -122,6 +124,7 @@ app.controller('UserController', ['$scope', 'UserService','$stateParams', '$rout
 		.then(
 				function(response) {
 					alert("Password reset link has been sent to your email:" + response.data);
+					$state.go('/login');
 				},
 				function(errResponse){
 					console.log(errResponse);

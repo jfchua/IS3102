@@ -600,8 +600,6 @@ app.controller('viewClientOrgs', ['$scope','$http', '$location','$state', 'Modal
 
 	$scope.delete = function(index){
 		$scope.entity = $scope.Profiles[index];
-		//console.log($scope.entity);
-		//console.log("hahaha");
 		ModalService.showModal({
 			templateUrl: "views/yesno.html",
 			controller: "YesNoController",
