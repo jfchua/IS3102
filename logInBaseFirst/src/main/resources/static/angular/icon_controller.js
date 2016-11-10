@@ -18,72 +18,88 @@ app.controller('iconController',['$scope','$http','shareData', 'ModalService', f
 
 	});
 
+	  
 	$scope.remove = function(icon) { 
-
-		ModalService.showModal({
+		
+        ModalService.showModal({
 			templateUrl: "views/yesno.html",
 			controller: "YesNoController",
 			inputs: {
-				message: 'Do you wish to delete icon of ID '+icon.id+'?'
+				message: "Do you wish to delete " +icon.id+'?',
 			}
 		}).then(function(modal) {
 			modal.element.modal();
 			modal.close.then(function(result) {
 				if(result){
-
 					var dataObj={id:icon.id};
+
 					$http.post('/property/deleteIcon', JSON.stringify(dataObj)).then(function(response){
-						var index = $scope.icons.indexOf(icon);
-						$scope.icons.splice(index, 1);  
+						console.log("Deleted the icon");
+                       // var index = $scope.icons.indexOf(icon);
+						//$scope.icons.splice(index, 1);  
 						ModalService.showModal({
 
 							templateUrl: "views/popupMessageTemplate.html",
 							controller: "errorMessageModalController",
 							inputs: {
-								message: "Icon deleted successfully",
+								message: 'Icon successfully deleted',
 							}
 						}).then(function(modal) {
 							modal.element.modal();
 							modal.close.then(function(result) {
-								console.log("OK");
-								$state.go($state.current, {}, {reload: true}); 
+                            $state.go($state.current, {}, {reload: true}); 
 							});
 						});
+						$scope.dismissModal = function(result) {
+							close(result, 200); // close, but give 200ms for bootstrap to animate
+						};
+						//END SHOWMODAL
+						//$scope.units=[];
+		  				 $http.post('//localhost:8443/property/viewUnits', JSON.stringify(levelIdObj)).then(function(response){
+		  				       // console.log("pure response is "+response.data);
+		  				
+		  				       // console.log("test anglar.fromJon"+angular.fromJson(response.data));
+		  				        $scope.units=angular.fromJson(response.data);
+		  				
+		  				      },function(response){
+		  				        console.log("DID NOT view");
+		  				       // console.log("response is "+angular.fromJson(response.data).error);
+		  				      })
 
+
+					},function(response){
+						ModalService.showModal({
+
+							templateUrl: "views/errorMessageTemplate.html",
+							controller: "errorMessageModalController",
+							inputs: {
+								message: "Did not delete icon, " + response.data,
+							}
+						}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+								
+							});
+						});
 						$scope.dismissModal = function(result) {
 							close(result, 200); // close, but give 200ms for bootstrap to animate
 
-							console.log("in dissmiss");
-						},function(response){//else is not saved successfully
-							ModalService.showModal({
-
-								templateUrl: "views/errorMessageTemplate.html",
-								controller: "errorMessageModalController",
-								inputs: {
-									message: "Did not delete icon, " + response,
-								}
-							}).then(function(modal) {
-								modal.element.modal();
-								modal.close.then(function(result) {
-									console.log("OK");
-								});
-							});
-
-							$scope.dismissModal = function(result) {
-								close(result, 200); // close, but give 200ms for bootstrap to animate
-
-								console.log("in dissmiss");
-							};
-						}
-					})
-
+						
+						};
+					}	
+					)
 				}
 			});
 		});
 
+		$scope.dismissModal = function(result) {
+		};
 
-
-	}
+		//END SHOWMODAL
+		      
+		
+		   
+	}//END REMOVE
 
 	$scope.updateIcon = function(icon){
 		//push icon to shareData
@@ -301,7 +317,7 @@ app.controller('updateIconController', ['$scope', 'Upload', '$timeout','$http','
 
 
 //UPLOAD CSV
-app.controller('csvController', function ($scope, $http,shareData,ModalService) {
+app.controller('csvController', function ($scope, $http,shareData,ModalService,$state) {
 
 	angular.element(document).ready(function () {
 
@@ -327,7 +343,7 @@ app.controller('csvController', function ($scope, $http,shareData,ModalService) 
 	$scope.attributeTypes=[];
 	$scope.updatedView=false;
 	$scope.csvCallback = function (result) {
-		console.log($scope.csv.result);
+		//console.log($scope.csv.result);
 		$scope.datas=$scope.csv.result;
 		var contentString=$scope.csv.content;
 		var contentStrings=contentString.split('\n');
@@ -380,6 +396,7 @@ app.controller('csvController', function ($scope, $http,shareData,ModalService) 
 			$scope.datas=[];
 			$scope.attributeTypes=[];
 			$scope.updatedView=false;
+			$state.reload();
 			
 		},function(response){
 			console.log(response);
@@ -405,6 +422,8 @@ app.controller('csvController', function ($scope, $http,shareData,ModalService) 
 			$scope.datas=[];
 			$scope.attributeTypes=[];
 			$scope.updatedView=false;
+			$state.reload();
+			
 		})
 	}
 	$scope.csv = {

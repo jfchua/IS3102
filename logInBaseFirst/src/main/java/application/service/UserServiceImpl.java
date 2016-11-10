@@ -220,9 +220,9 @@ public class UserServiceImpl implements UserService {
 			String password =  t.substring(0,10);		
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String hashedPassword = encoder.encode(password);
-			user.setPasswordHash(hashedPassword); //add salt?
+			user.setPasswordHash(hashedPassword); //add salt?		
+			user.setSecurity(hashedPassword);
 			user.setClientOrganisation(clientOrg);
-
 			//Send created password to the new user's email
 
 			//CREATE USER END
@@ -234,7 +234,7 @@ public class UserServiceImpl implements UserService {
 
 			userRepository.save(user);
 			clientOrganisationRepository.save(clientOrg);
-			emailService.sendEmail(userEmail, "New IFMS account created", "Please log in using your email and this generated password: " + password + " . Please remember to set your security question to have access to password retrieval services.");
+			emailService.sendEmail(userEmail, "New IFMS account created", "Please log in using your email and this generated password: " + password + ". The answer to the security question when you login is your password.");
 
 
 		}

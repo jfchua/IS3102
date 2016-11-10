@@ -14,11 +14,13 @@ app.controller('workspaceController', function ($scope, $http,shareData,Auth) {
 			console.log("GET CALENDAR EVENTS FOR EXTERNAL EVENT ORGANISOR ROLE");
 			$scope.getExEvents();
 			$scope.getTodos();
+			
 		}else{
 			console.log("NOT GETTING CALENDAR EVENTS");
-			
+			$scope.getTodos();
 		}
 		
+			
 			
 	   
 	 });//END OF READY
@@ -151,16 +153,15 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 								console.log("GET CALENDAR EVENTS FOR PROPERTY ROLE");
 								$scope.getEvents();
 								$scope.getMaints();
-	                            $scope.getTodos();
+								$scope.getTodos();
 							}else if(Auth.hasRoles('ROLE_EXTEVE')){
 								console.log("GET CALENDAR EVENTS FOR EXTERNAL EVENT ORGANISOR ROLE");
 								$scope.getExEvents();
-	                            $scope.getTodos();
+								$scope.getTodos();
 							}else{
 								console.log("NOT GETTING CALENDAR EVENTS");
-								
+								$scope.getTodos();
 							}
-							
 							
 //						}).error(function(result){
 //							//do something
@@ -456,9 +457,9 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 									$scope.getTodos();
 								}else{
 									console.log("NOT GETTING CALENDAR EVENTS");
-									
+									$scope.getTodos();
 								}
-								
+				
 								//FOR PROPERTY MANAGER: GET MAINTENANCES		
 								/*if(Auth.hasRoles('ROLE_PROPERTY')){
 									
@@ -527,7 +528,7 @@ app.controller('dashboardController', function ($scope, $http,shareData,$state,A
 									$scope.getTodos();
 								}else{
 									console.log("NOT GETTING CALENDAR EVENTS");
-									
+									$scope.getTodos();
 								}
 								
 								
