@@ -13,7 +13,8 @@ import org.junit.runners.Suite;
 	   BuildingServiceTest.class,
 	   FileUploadCheckingServiceTest.class,
 	   VendorServiceTest.class,
-	   IconServiceTest.class
+	   IconServiceTest.class,
+	   EventServiceTest.class
 	   
 	})
 public class PropertySystemTestSuite

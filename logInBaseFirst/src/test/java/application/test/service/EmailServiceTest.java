@@ -1,5 +1,7 @@
 package application.test.service;
 
+import javax.servlet.ServletContext;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,6 +17,8 @@ import application.test.AbstractTest;
 public class EmailServiceTest extends AbstractTest {
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	private ServletContext servletContext;
 
 	@Before
 	public void setUp(){
@@ -33,13 +37,15 @@ public class EmailServiceTest extends AbstractTest {
 	 
 	@Test
 	public void testSendEmailWithAttachment() throws InvalidAttachmentException{
-		emailService.sendEmailWithAttachment("test@test.com", "test", "test", "images/algattasLogo.png");
+		emailService.sendEmailWithAttachment("test@test.com", "test", "test", "algattasLogo.png");
 		//Assert.assertTrue(result);
 	}
 	
 	@Test
 	public void testCheckAttachment() throws InvalidAttachmentException{
-		boolean result = emailService.checkAttachments("images/algattasLogo.png");
+		String path = servletContext.getRealPath("/") + "\\algattasLogo.png";
+		//System.err.println("filepath is " + path);
+		boolean result = emailService.checkAttachments(path);
 		Assert.assertTrue(result);
 	}
 	

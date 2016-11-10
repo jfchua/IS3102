@@ -38,13 +38,13 @@ public class EmailServiceImpl implements EmailService {
 	public boolean checkAttachments(String... attachments) throws InvalidAttachmentException{
 		for ( String currentAttachment : attachments){
 			File f = new File(currentAttachment);
-		//	String[] temp = currentAttachment.split("\\\\");
-		//	System.err.println("tmparr" + temp[0] + "  " + temp[temp.length-1]);
-		//	String currentAttachmentFilename = temp[1]; //Removes the path name, to get the file name
+			//	String[] temp = currentAttachment.split("\\\\");
+			//	System.err.println("tmparr" + temp[0] + "  " + temp[temp.length-1]);
+			//	String currentAttachmentFilename = temp[1]; //Removes the path name, to get the file name
 			//helper.addAttachment(currentAttachmentFilename, new ClassPathResource(currentAttachment));
-			
+
 			if ( !f.exists() ){
-				return false;
+				throw new InvalidAttachmentException("One or more attachments are invalid!");	
 			}
 		}
 
@@ -65,9 +65,9 @@ public class EmailServiceImpl implements EmailService {
 		} catch (MailException ex) {
 			throw ex;
 		}
-		 catch ( Exception ex ){
-			 throw ex;
-		 }
+		catch ( Exception ex ){
+			throw ex;
+		}
 
 	}
 
@@ -86,11 +86,11 @@ public class EmailServiceImpl implements EmailService {
 				// Add a resource as an attachment
 				for ( String currentAttachment : attachment){
 					File f = new File(currentAttachment);
-				//	String[] temp = currentAttachment.split("\\\\");
-				//	System.err.println("tmparr" + temp[0] + "  " + temp[temp.length-1]);
-				//	String currentAttachmentFilename = temp[1]; //Removes the path name, to get the file name
+					//	String[] temp = currentAttachment.split("\\\\");
+					//	System.err.println("tmparr" + temp[0] + "  " + temp[temp.length-1]);
+					//	String currentAttachmentFilename = temp[1]; //Removes the path name, to get the file name
 					//helper.addAttachment(currentAttachmentFilename, new ClassPathResource(currentAttachment));
-					
+
 					helper.addAttachment(f.getName(), f);
 				}
 
@@ -120,7 +120,7 @@ public class EmailServiceImpl implements EmailService {
 			throw e;
 		}
 	}
-	
+
 
 
 	//TODO: HTML EMAIL
