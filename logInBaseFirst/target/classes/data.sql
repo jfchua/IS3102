@@ -30,10 +30,10 @@ insert into client_organisation (organisation_name, address, end_date, fee, post
 values ("Suntec", "3 Temasek Boulevard", "2017-06-30 22:00:00", "25000.00", "038983", "68221537", "2016-07-01 22:00:00", "green","suntecLogo.png");
 
 --Algattas is client_organisation 3
---insert into client_organisation (organisation_name, address, postal, phone,themecolour,logo_file_path) 
---values ("Algattas", "73 Ubi Road 1","408733", "31580456","red","algattasLogo.png");
+insert into client_organisation (organisation_name, address, end_date, fee, postal, phone, start_date, themecolour,logo_file_path) 
+values ("Algattas", "73 Ubi Road 1","2099-06-30 22:00:00","0.00","408733", "31580456","2010-07-01 22:00:00","red","algattasLogo.png");
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
-VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',1 ,'Kenneth LIM' , '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6','What is your favourite number' );
+VALUES ('superadmin@localhost', '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6',3 ,'Kenneth LIM' , '$2a$04$skH54MFgrVwCYx1lCbDgz.icEeks2GAIfEMi5y1ENtP9klVzj39w6','What is your favourite number' );
 --Algattas superadmin is user 1
 --User 2 to 9
 INSERT INTO user (email, password_hash,client_organisation_id, name ,security, security_question)
