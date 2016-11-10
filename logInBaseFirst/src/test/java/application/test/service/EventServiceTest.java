@@ -53,7 +53,7 @@ public class EventServiceTest extends AbstractTest {
 	public void setUp() throws UserNotFoundException, ClientOrganisationNotFoundException{
 		org = orgService.getClientOrganisationByName("Expo");
 		User user = uService.getUserByEmail("exteve@localhost").get();
-		Level level = lService.create(org, 1, 1, 100, 100, "FILEPATH");
+		Level level = lService.create(org, 1, 1, 500, 500, "FILEPATH");
 		Set<Level> levels = lService.getAllLevels(org, 1);
 		for ( Level l : levels){
 			levelId = l.getId();
@@ -128,13 +128,7 @@ public class EventServiceTest extends AbstractTest {
 		Assert.assertFalse(result);
 	}
 
-	@Test
-	public void testDeleteEvent() throws EventNotFoundException{
-		System.err.println("Delete eventid2");
-		boolean result = eventService.deleteEvent(org, eventId2);
-		System.err.println("result is + " + result);
-		Assert.assertTrue(result);
-	}
+	
 
 	@Test(expected=EventNotFoundException.class)
 	public void testDeleteEventNotFound() throws EventNotFoundException{
@@ -166,6 +160,12 @@ public class EventServiceTest extends AbstractTest {
 		boolean result = eventService.updateEventStatusForPayment(org, Long.MAX_VALUE, "SUCCESSFUL");
 		Assert.assertFalse(result);
 	}			
-
+	@Test
+	public void testDeleteEvent() throws EventNotFoundException{
+		System.err.println("Delete eventid2");
+		boolean result = eventService.deleteEvent(org, eventId2);
+		System.err.println("result is + " + result);
+		Assert.assertTrue(result);
+	}
 
 }
