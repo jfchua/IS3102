@@ -73,9 +73,11 @@ public class EventServiceTest extends AbstractTest {
 		for ( Event e: resultEvent){
 			if ( eventId == -1){
 				eventId = e.getId();
+				System.out.println("eventId "+e.getId());
 			}
 			else{
 				eventId2 = e.getId();
+				System.out.println("eventId2 "+e.getId());
 				break;
 			}
 		}
